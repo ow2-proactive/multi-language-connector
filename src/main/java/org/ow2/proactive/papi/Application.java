@@ -29,7 +29,7 @@
  *                         http://proactive.inria.fr/team_members.htm
  */
 
-package org.ow2.proactive.microservice_template;
+package org.ow2.proactive.papi;
 
 import com.google.common.base.Predicate;
 import org.springframework.boot.SpringApplication;
@@ -86,10 +86,10 @@ public class Application extends WebMvcConfigurerAdapter {
     The following code is for Swagger documentation
      */
     @Bean
-    public Docket microserviceApi() {
+    public Docket papiApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-                .groupName("microservice-template")
+                .groupName("papi")
                 .ignoredParameterTypes(Pageable.class, PagedResourcesAssembler.class)
                 .select()
                 .paths(allowedPaths())
@@ -98,9 +98,9 @@ public class Application extends WebMvcConfigurerAdapter {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("microservice-template API")
-                .description("The purpose of the microservice-template is ...\n")
-                .licenseUrl("https://github.com/ow2-proactive/microservice-template/blob/master/LICENSE")
+                .title("PAPI")
+                .description("The purpose of papi is to offer a standard access to the cloud automation functionnalities\n")
+                .licenseUrl("https://github.com/ow2-proactive/papi/blob/master/LICENSE")
                 .version("1.0")
                 .build();
     }

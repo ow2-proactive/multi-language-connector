@@ -1,24 +1,26 @@
-package org.ow2.proactive.microservice_template.rest;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.ow2.proactive.microservice_template.fixtures.UserFixture;
-import org.ow2.proactive.microservice_template.model.User;
-import org.ow2.proactive.microservice_template.service.UserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+package org.ow2.proactive.papi.rest;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Optional;
 
+import org.ow2.proactive.papi.fixtures.UserFixture;
+import org.ow2.proactive.papi.model.User;
+import org.ow2.proactive.papi.service.UserService;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by Iaroslav on 4/28/2016.

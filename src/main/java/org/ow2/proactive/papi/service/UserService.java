@@ -1,14 +1,14 @@
-package org.ow2.proactive.microservice_template.service;
+package org.ow2.proactive.papi.service;
 
-
-import org.ow2.proactive.microservice_template.model.User;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import org.ow2.proactive.papi.model.User;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("userService")
 @Transactional

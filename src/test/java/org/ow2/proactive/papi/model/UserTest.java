@@ -1,10 +1,10 @@
-package org.ow2.proactive.microservice_template.model;
-
-import org.junit.Test;
-import org.ow2.proactive.microservice_template.fixtures.UserFixture;
+package org.ow2.proactive.papi.model;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.ow2.proactive.papi.fixtures.UserFixture;
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
