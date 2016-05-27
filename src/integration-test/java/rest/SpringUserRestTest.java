@@ -2,8 +2,8 @@ package rest;
 
 import java.util.Collection;
 
-import org.ow2.proactive.papi.Application;
-import org.ow2.proactive.papi.model.User;
+import org.ow2.proactive.procci.Application;
+import org.ow2.proactive.procci.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

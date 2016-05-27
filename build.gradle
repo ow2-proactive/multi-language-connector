@@ -77,7 +77,7 @@ sourceSets {
 }
 
 springBoot {
-    mainClass = 'org.ow2.proactive.papi.Application'
+    mainClass = 'org.ow2.proactive.procci.Application'
 }
 
 war {
