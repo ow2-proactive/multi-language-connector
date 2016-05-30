@@ -36,7 +36,7 @@ package org.ow2.proactive.procci.rest;
 
 import java.util.Collection;
 
-import org.ow2.proactive.procci.model.infrastructure.Compute;
+import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
