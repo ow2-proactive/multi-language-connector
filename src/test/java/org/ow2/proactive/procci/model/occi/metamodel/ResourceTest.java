@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import org.ow2.proactive.procci.model.infrastructure.Compute;
+import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.junit.Test;
 

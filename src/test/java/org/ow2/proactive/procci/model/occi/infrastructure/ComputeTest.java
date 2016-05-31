@@ -1,12 +1,12 @@
-package org.ow2.proactive.procci.model.infrastructure;
+package org.ow2.proactive.procci.model.occi.infrastructure;
 
 
-import org.ow2.proactive.procci.model.infrastructure.action.RestartCompute;
-import org.ow2.proactive.procci.model.infrastructure.action.SaveCompute;
-import org.ow2.proactive.procci.model.infrastructure.action.StartCompute;
-import org.ow2.proactive.procci.model.infrastructure.action.StopCompute;
-import org.ow2.proactive.procci.model.infrastructure.action.SuspendCompute;
-import org.ow2.proactive.procci.model.infrastructure.state.ComputeState;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.RestartCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.SaveCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.StartCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.StopCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.SuspendCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;

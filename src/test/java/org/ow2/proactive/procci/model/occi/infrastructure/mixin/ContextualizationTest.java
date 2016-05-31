@@ -1,10 +1,10 @@
-package org.ow2.proactive.procci.model.infrastructure.mixin;
+package org.ow2.proactive.procci.model.occi.infrastructure.mixin;
 
 import java.util.ArrayList;
 
-import org.ow2.proactive.procci.model.metamodel.Attribute;
-import org.ow2.proactive.procci.model.metamodel.Entity;
-import org.ow2.proactive.procci.model.metamodel.Type;
+import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
+import org.ow2.proactive.procci.model.occi.metamodel.Entity;
+import org.ow2.proactive.procci.model.occi.metamodel.Type;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
