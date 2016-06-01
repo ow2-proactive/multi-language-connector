@@ -19,13 +19,9 @@ public class StorageTest {
                 .title("titleTest")
                 .summary("summaryTest")
                 .state(StorageState.ERROR)
-                .addAction(OfflineStorage.getInstance())
-                .addAction(OnlineStorage.getInstance())
                 .build();
         assertThat(storage.getState()).isEquivalentAccordingToCompareTo(StorageState.ERROR);
         assertThat(storage.getSummary()).isEqualTo("summaryTest");
         assertThat(storage.getTitle()).isEqualTo("titleTest");
-        assertThat(storage.getActions()).containsExactly(OfflineStorage.getInstance(),
-                OnlineStorage.getInstance());
     }
 }

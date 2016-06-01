@@ -47,8 +47,8 @@ import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
-import com.google.common.collect.ImmutableList;
 import lombok.Getter;
+
 
 /**
  * This class represents a generic information processing resource
@@ -67,9 +67,6 @@ public class Compute extends Resource {
     private Float memory; // in Gigabytes
     @Getter
     private ComputeState state;
-
-    @Getter
-    private ImmutableList<ComputeAction> actions;
 
     public enum Architecture {
         X86, X64
@@ -90,12 +87,10 @@ public class Compute extends Resource {
      * @param hostname     is the fully qualified hostname for the instance
      * @param memory       is the maxmimum ram allowed for this instance
      * @param state        is the state aimed by the user or the current state
-     * @param actions      are the action to do on the compute
      */
     private Compute(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
             Architecture architecture, Integer cores, Integer share, String hostname, Float memory,
-            ComputeState state,
-            List<ComputeAction> actions) {
+            ComputeState state) {
         super(url, kind, title, mixins, summary, links);
         setAttributes();
         this.architecture = architecture;
@@ -104,7 +99,6 @@ public class Compute extends Resource {
         this.memory = memory;
         this.hostname = hostname;
         this.state = state;
-        this.actions = new ImmutableList.Builder<ComputeAction>().addAll(actions).build();
     }
 
     public static class Builder {
@@ -119,7 +113,6 @@ public class Compute extends Resource {
         private String hostname;
         private Float memory; // in Gigabytes
         private ComputeState state;
-        private List<ComputeAction> actions;
 
         public Builder(String url) {
             this.url = url;
@@ -133,7 +126,6 @@ public class Compute extends Resource {
             hostname = "";
             memory = null;
             state = null;
-            actions = new ArrayList<>();
         }
 
         public Builder title(String title) {
@@ -186,14 +178,9 @@ public class Compute extends Resource {
             return this;
         }
 
-        public Builder addAction(ComputeAction action) {
-            this.actions.add(action);
-            return this;
-        }
-
         public Compute build() {
             return new Compute(url, InfrastructureKinds.COMPUTE, title, mixins, summary, links, architecture,
-                    cores, share, hostname, memory, state, actions);
+                    cores, share, hostname, memory, state);
         }
 
     }

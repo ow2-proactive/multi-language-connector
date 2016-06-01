@@ -61,9 +61,6 @@ public class Storage extends Resource {
     @Getter
     private StorageState state;
 
-    @Getter
-    private ImmutableList<StorageAction> actions;
-
 
     /**
      * Constructor
@@ -76,18 +73,16 @@ public class Storage extends Resource {
      * @param links   is a set of the Link compositions
      * @param size    is the storage size in GigaBytes
      * @param state   is the state aimed by the user or the current state
-     * @param actions are the actions which will be applied to the Storage instance
      */
     private Storage(String url, Kind kind,
             String title, List<Mixin> mixins,
-            String summary, List<Link> links, Float size, StorageState state, List<StorageAction> actions) {
+            String summary, List<Link> links, Float size, StorageState state) {
 
         super(url, kind,
                 title, mixins, summary, links);
         setAttributes();
         this.size = size;
         this.state = state;
-        this.actions = new ImmutableList.Builder<StorageAction>().addAll(actions).build();
     }
 
     public static class Builder {
@@ -98,7 +93,6 @@ public class Storage extends Resource {
         private StorageState state;
         private List<Mixin> mixins;
         private List<Link> links;
-        private List<StorageAction> actions;
 
         public Builder(String url, Float size) {
             this.url = url;
@@ -108,7 +102,6 @@ public class Storage extends Resource {
             this.state = null;
             this.mixins = new ArrayList<>();
             this.links = new ArrayList<>();
-            this.actions = new ArrayList<>();
         }
 
         public Builder title(String title) {
@@ -136,14 +129,9 @@ public class Storage extends Resource {
             return this;
         }
 
-        public Builder addAction(StorageAction action) {
-            this.actions.add(action);
-            return this;
-        }
 
         public Storage build() {
-            return new Storage(url, InfrastructureKinds.STORAGE, title, mixins, summary, links, size, state,
-                    actions);
+            return new Storage(url, InfrastructureKinds.STORAGE, title, mixins, summary, links, size, state);
         }
     }
 

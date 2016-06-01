@@ -21,8 +21,6 @@ public class NetworkTest {
                 .state(NetworkState.ACTIVE)
                 .title("title")
                 .vlan(2)
-                .addAction(UpNetwork.getInstance())
-                .addAction(DownNetwork.getInstance())
                 .summary("summary")
                 .build();
 
@@ -30,7 +28,6 @@ public class NetworkTest {
         assertThat(network.getTitle()).isEqualTo("title");
         assertThat(network.getLabel()).isEqualTo("label");
         assertThat(network.getVlan()).isEqualTo(new Integer(2));
-        assertThat(network.getActions()).containsExactly(UpNetwork.getInstance(), DownNetwork.getInstance());
         Truth.assertThat(network.getState()).isEqualTo(NetworkState.ACTIVE);
     }
 

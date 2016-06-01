@@ -18,22 +18,6 @@ import static com.google.common.truth.Truth.assertThat;
 public class ComputeTest {
 
     @Test
-    public void computeActionTest() {
-        Compute compute = new Compute.Builder("url")
-                .addAction(StartCompute.getInstance())
-                .addAction(StopCompute.getInstance())
-                .addAction(RestartCompute.getInstance())
-                .addAction(SaveCompute.getInstance())
-                .addAction(SuspendCompute.getInstance())
-                .build();
-        assertThat(compute.getActions()).containsExactly(StartCompute.getInstance(),
-                StopCompute.getInstance(),
-                RestartCompute.getInstance(),
-                SaveCompute.getInstance(),
-                SuspendCompute.getInstance());
-    }
-
-    @Test
     public void computeConstructorTest() {
         Compute compute = new Compute.Builder("url")
                 .architecture(Compute.Architecture.X64)

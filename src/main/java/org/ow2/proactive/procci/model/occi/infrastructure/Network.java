@@ -62,9 +62,6 @@ public class Network extends Resource {
     private String label;
     @Getter
     private NetworkState state;
-    @Getter
-    private ImmutableList<NetworkAction> actions;
-
 
     /**
      * Constructor with all parameters
@@ -78,16 +75,14 @@ public class Network extends Resource {
      * @param vlan    is an identifier
      * @param label   is a tab based on vlan
      * @param state   is the state aimed by the user or the current state
-     * @param actions is the actions that will be executed on the network
      */
     private Network(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
-            Integer vlan, String label, NetworkState state, List<NetworkAction> actions) {
+            Integer vlan, String label, NetworkState state) {
 
         super(url, kind, title, mixins, summary, links);
         this.state = state;
         this.vlan = vlan;
         this.label = label;
-        this.actions = new ImmutableList.Builder<NetworkAction>().addAll(actions).build();
     }
 
     public static class Builder {
@@ -110,7 +105,6 @@ public class Network extends Resource {
             this.vlan = null;
             this.label = "";
             this.state = null;
-            this.actions = new ArrayList<>();
         }
 
         public Builder title(String title) {
@@ -148,14 +142,9 @@ public class Network extends Resource {
             return this;
         }
 
-        public Builder addAction(NetworkAction action) {
-            this.actions.add(action);
-            return this;
-        }
-
         public Network build() {
             return new Network(url, InfrastructureKinds.NETWORK, title, mixins, summary, links, vlan, label,
-                    state, actions);
+                    state);
         }
     }
 
