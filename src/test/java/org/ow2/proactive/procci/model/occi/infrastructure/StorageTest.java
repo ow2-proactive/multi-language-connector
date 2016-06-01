@@ -15,7 +15,8 @@ public class StorageTest {
 
     @Test
     public void constructorTest() {
-        Storage storage = new Storage.Builder("url", new Float(5))
+        Storage storage = new Storage.Builder(new Float(5))
+                .url("url")
                 .title("titleTest")
                 .summary("summaryTest")
                 .state(StorageState.ERROR)

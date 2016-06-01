@@ -20,7 +20,7 @@ public class LinkTest {
     @Test
     public void constructorTest() {
 
-        Resource r1 = new Compute.Builder("url").build();
+        Resource r1 = new Compute.Builder().url("url").build();
         Kind kind = Kinds.LINK;
         List<Mixin> mixins = new ArrayList<>();
         Link link = new Link("user", kind, "title", mixins, r1, "r2", InfrastructureKinds.COMPUTE);
@@ -33,8 +33,9 @@ public class LinkTest {
 
     @Test
     public void builderTest() {
-        Compute compute = new Compute.Builder("compute").build();
-        Link link = new Link.Builder("url", compute, "target")
+        Compute compute = new Compute.Builder().url("compute").build();
+        Link link = new Link.Builder(compute, "target")
+                .url("url")
                 .targetKind(InfrastructureKinds.COMPUTE)
                 .title("titleTest")
                 .build();

@@ -15,8 +15,9 @@ public class StorageLinkTest {
 
     @Test
     public void constructorTest() {
-        Storage storage = new Storage.Builder("storage", new Float(2)).build();
-        StorageLink storageLink = new StorageLink.Builder("storageLink", storage, "targetid", "deviceId")
+        Storage storage = new Storage.Builder(new Float(2)).url("storage").build();
+        StorageLink storageLink = new StorageLink.Builder(storage, "targetid", "deviceId")
+                .url("storageLink")
                 .mountpoint("mountpointTest")
                 .targetKind(InfrastructureKinds.COMPUTE)
                 .title("title")

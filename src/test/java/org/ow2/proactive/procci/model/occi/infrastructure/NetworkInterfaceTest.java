@@ -15,9 +15,9 @@ public class NetworkInterfaceTest {
 
     @Test
     public void maximalConstructorTest() {
-        Compute compute = new Compute.Builder("url:compute").build();
-        NetworkInterface networkInterface = new NetworkInterface.Builder("url:networkinterface", compute,
-                "url:target", "mac", "linktarget")
+        Compute compute = new Compute.Builder().url("url:compute").build();
+        NetworkInterface networkInterface = new NetworkInterface.Builder( compute,"url:target", "mac", "linktarget")
+                .url("url:networkinterface")
                 .title("titleTest")
                 .state(NetworkState.ACTIVE)
                 .targetKind(InfrastructureKinds.STORAGE)

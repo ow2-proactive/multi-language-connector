@@ -37,9 +37,10 @@ public class ResourceTest {
 
     @Test
     public void builderTest() {
-        Compute compute = new Compute.Builder("compute").build();
-        Link link = new Link.Builder("link", compute, "target").build();
-        Resource resource = new Resource.Builder("resource")
+        Compute compute = new Compute.Builder().url("compute").build();
+        Link link = new Link.Builder(compute, "target").url("link").build();
+        Resource resource = new Resource.Builder()
+                .url("resource")
                 .summary("summary")
                 .title("title")
                 .addLink(link)

@@ -16,7 +16,8 @@ public class NetworkTest {
 
     @Test
     public void constructorTest() {
-        Network network = new Network.Builder("url")
+        Network network = new Network.Builder()
+                .url("url")
                 .label("label")
                 .state(NetworkState.ACTIVE)
                 .title("title")
