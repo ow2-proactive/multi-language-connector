@@ -80,19 +80,25 @@ public class Link extends Entity {
     }
 
     public static class Builder {
-        private final String url;
+        private String url;
         private String title;
         private List<Mixin> mixins;
         private final Resource source;
         private final String target;
         private Kind targetKind;
 
-        public Builder(String url, Resource source, String target) {
-            this.url = url;
+        public Builder(Resource source, String target) {
+            this.url = "";
             this.source = source;
             this.target = target;
             this.mixins = new ArrayList<>();
             this.targetKind = null;
+        }
+
+
+        public Builder url(String url){
+            this.url = url;
+            return this;
         }
 
         public Builder addMixin(Mixin mixin) {

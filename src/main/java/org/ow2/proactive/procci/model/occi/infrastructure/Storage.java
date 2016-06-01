@@ -39,6 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.ow2.proactive.procci.model.occi.infrastructure.action.StorageAction;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
@@ -85,23 +88,30 @@ public class Storage extends Resource {
         this.state = state;
     }
 
+    @EqualsAndHashCode
+    @ToString
     public static class Builder {
-        private final String url;
         private final Float size;
+        private  String url;
         private String title;
         private String summary;
         private StorageState state;
         private List<Mixin> mixins;
         private List<Link> links;
 
-        public Builder(String url, Float size) {
-            this.url = url;
+        public Builder(Float size) {
             this.size = size;
+            this.url = "";
             this.title = "";
             this.summary = "";
             this.state = null;
             this.mixins = new ArrayList<>();
             this.links = new ArrayList<>();
+        }
+
+        public Builder url(String url){
+            this.url = url;
+            return this;
         }
 
         public Builder title(String title) {

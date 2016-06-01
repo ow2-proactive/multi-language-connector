@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
@@ -85,8 +87,10 @@ public class StorageLink extends Link {
         this.state = state;
     }
 
+    @EqualsAndHashCode
+    @ToString
     public static class Builder {
-        private final String url;
+        private String url;
         private String title;
         private List<Mixin> mixins;
         private final Resource source;
@@ -96,15 +100,20 @@ public class StorageLink extends Link {
         private String mountpoint;
         private NetworkState state;
 
-        public Builder(String url, Resource source, String target, String deviceId) {
-            this.url = url;
+        public Builder(Resource source, String target, String deviceId) {
             this.source = source;
             this.target = target;
             this.deviceId = deviceId;
+            this.url = "";
             this.title = "";
             this.mixins = new ArrayList<>();
             this.targetKind = null;
             this.mountpoint = "";
+        }
+
+        public Builder url(String url){
+            this.url = url;
+            return this;
         }
 
         public Builder title(String title) {

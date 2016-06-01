@@ -73,18 +73,23 @@ public class Resource extends Entity {
     }
 
     public static class Builder {
-        private final String url;
+        private String url;
         private String title;
         private List<Mixin> mixins;
         private String summary;
         private List<Link> links;
 
-        public Builder(String url) {
-            this.url = url;
+        public Builder() {
+            this.url = "";
             this.title = "";
             this.mixins = new ArrayList<>();
             this.summary = "";
             this.links = new ArrayList<>();
+        }
+
+        public Builder url(String url){
+            this.url = url;
+            return this;
         }
 
         public Builder title(String title) {

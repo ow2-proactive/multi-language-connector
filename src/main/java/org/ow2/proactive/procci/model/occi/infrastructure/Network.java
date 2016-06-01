@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.ow2.proactive.procci.model.occi.infrastructure.action.NetworkAction;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
@@ -85,8 +87,10 @@ public class Network extends Resource {
         this.label = label;
     }
 
+    @EqualsAndHashCode
+    @ToString
     public static class Builder {
-        private final String url;
+        private String url;
         private String title;
         private List<Mixin> mixins;
         private String summary;
@@ -96,8 +100,8 @@ public class Network extends Resource {
         private NetworkState state;
         private List<NetworkAction> actions;
 
-        public Builder(String url) {
-            this.url = url;
+        public Builder() {
+            this.url = "";
             this.title = "";
             this.mixins = new ArrayList<>();
             this.summary = "";
@@ -105,6 +109,11 @@ public class Network extends Resource {
             this.vlan = null;
             this.label = "";
             this.state = null;
+        }
+
+        public Builder url(String url){
+            this.url = url;
+            return this;
         }
 
         public Builder title(String title) {

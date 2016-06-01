@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import lombok.*;
 import org.ow2.proactive.procci.model.occi.infrastructure.action.ComputeAction;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
@@ -47,7 +48,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
-import lombok.Getter;
 
 
 /**
@@ -88,7 +88,7 @@ public class Compute extends Resource {
      * @param memory       is the maxmimum ram allowed for this instance
      * @param state        is the state aimed by the user or the current state
      */
-    private Compute(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
+    public Compute(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
             Architecture architecture, Integer cores, Integer share, String hostname, Float memory,
             ComputeState state) {
         super(url, kind, title, mixins, summary, links);
@@ -101,31 +101,45 @@ public class Compute extends Resource {
         this.state = state;
     }
 
+    @EqualsAndHashCode @ToString
     public static class Builder {
-        private final String url;
+        @Getter @Setter
+        private  String url;
+        @Getter @Setter
         private String title;
-        private List<Mixin> mixins;
+        //private List<Mixin> mixins;
+        @Getter @Setter
         private String summary;
-        private List<Link> links;
+        //private List<Link> links;
+        @Getter @Setter
         private Architecture architecture;
+        @Getter @Setter
         private Integer cores;
+        @Getter @Setter
         private Integer share;
+        @Getter @Setter
         private String hostname;
+        @Getter @Setter
         private Float memory; // in Gigabytes
         private ComputeState state;
 
-        public Builder(String url) {
-            this.url = url;
+        public Builder() {
+            this.url = "";
             title = "";
-            mixins = new ArrayList<>();
+            //mixins = new ArrayList<>();
             summary = "";
-            links = new ArrayList<>();
+            //links = new ArrayList<>();
             architecture = null;
             cores = null;
             share = null;
             hostname = "";
             memory = null;
             state = null;
+        }
+
+        public Builder url(String url){
+            this.url = url;
+            return this;
         }
 
         public Builder title(String title) {
@@ -139,12 +153,12 @@ public class Compute extends Resource {
         }
 
         public Builder addMixin(Mixin mixin) {
-            this.mixins.add(mixin);
+           // this.mixins.add(mixin);
             return this;
         }
 
         public Builder addLink(Link link) {
-            this.links.add(link);
+            //this.links.add(link);
             return this;
         }
 
@@ -179,7 +193,7 @@ public class Compute extends Resource {
         }
 
         public Compute build() {
-            return new Compute(url, InfrastructureKinds.COMPUTE, title, mixins, summary, links, architecture,
+            return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary, new ArrayList<>(), architecture,
                     cores, share, hostname, memory, state);
         }
 

@@ -61,6 +61,13 @@ public abstract class Entity {
     @Setter
     private List<Mixin> mixins;
 
+    public Entity(){
+        this.id = UUID.randomUUID().toString();
+        this.kind = new Kind.Builder("test","entity").build();
+        this.title = "";
+        this.mixins = new ArrayList<>();
+    }
+
     /**
      * Minimal constructor
      *
