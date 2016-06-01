@@ -80,8 +80,8 @@ public class StorageLinkRest {
     //-------------------Create a StorageLink--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<StorageLink> createStorageLink(@RequestBody StorageLink storage) {
-        logger.debug("Creating StorageLink "+ storage.getId());
+    public ResponseEntity<StorageLink> createStorageLink(@RequestBody StorageLink.Builder storage) {
+        logger.debug("Creating StorageLink "+ storage.build().getId());
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -89,7 +89,7 @@ public class StorageLinkRest {
     //------------------- Update a StorageLink --------------------------------------------------------
 
     @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-    public ResponseEntity<StorageLink> updateStorageLink(@PathVariable("id") String id, @RequestBody StorageLink storage) {
+    public ResponseEntity<StorageLink> updateStorageLink(@PathVariable("id") String id, @RequestBody StorageLink.Builder storage) {
         logger.debug("Updating StorageLink " + id);
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }

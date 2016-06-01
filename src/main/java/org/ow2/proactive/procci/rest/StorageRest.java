@@ -80,8 +80,8 @@ public class StorageRest {
     //-------------------Create a Storage--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Storage> createStorage(@RequestBody Storage storage) {
-        logger.debug("Creating Storage "+ storage.getId());
+    public ResponseEntity<Storage> createStorage(@RequestBody Storage.Builder storage) {
+        logger.debug("Creating Storage "+ storage.build().getId());
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -89,7 +89,7 @@ public class StorageRest {
     //------------------- Update a Storage --------------------------------------------------------
 
     @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-    public ResponseEntity<Storage> updateStorage(@PathVariable("id") String id, @RequestBody Storage storage) {
+    public ResponseEntity<Storage> updateStorage(@PathVariable("id") String id, @RequestBody Storage.Builder storage) {
         logger.debug("Updating Storage " + id);
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }

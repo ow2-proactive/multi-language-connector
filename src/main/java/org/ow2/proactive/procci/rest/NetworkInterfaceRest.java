@@ -79,8 +79,8 @@ public class NetworkInterfaceRest {
     //-------------------Create a NetworkInterface--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<NetworkInterface> createNetworkInterface(@RequestBody NetworkInterface storage) {
-        logger.debug("Creating NetworkInterface "+ storage.getId());
+    public ResponseEntity<NetworkInterface> createNetworkInterface(@RequestBody NetworkInterface.Builder storage) {
+        logger.debug("Creating NetworkInterface "+ storage.build().getId());
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -88,7 +88,7 @@ public class NetworkInterfaceRest {
     //------------------- Update a NetworkInterface --------------------------------------------------------
 
     @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-    public ResponseEntity<NetworkInterface> updateNetworkInterface(@PathVariable("id") String id, @RequestBody NetworkInterface storage) {
+    public ResponseEntity<NetworkInterface> updateNetworkInterface(@PathVariable("id") String id, @RequestBody NetworkInterface.Builder storage) {
         logger.debug("Updating NetworkInterface " + id);
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }

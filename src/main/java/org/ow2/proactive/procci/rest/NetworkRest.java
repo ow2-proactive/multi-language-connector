@@ -79,8 +79,8 @@ public class NetworkRest {
     //-------------------Create a Network--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Network> createNetwork(@RequestBody Network network) {
-        logger.debug("Creating Network "+ network.getId());
+    public ResponseEntity<Network> createNetwork(@RequestBody Network.Builder network) {
+        logger.debug("Creating Network "+ network.build().getId());
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -88,7 +88,7 @@ public class NetworkRest {
     //------------------- Update a Network --------------------------------------------------------
 
     @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-    public ResponseEntity<Network> updateNetwork(@PathVariable("id") String id, @RequestBody Network network) {
+    public ResponseEntity<Network> updateNetwork(@PathVariable("id") String id, @RequestBody Network.Builder network) {
         logger.debug("Updating Network " + id);
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }

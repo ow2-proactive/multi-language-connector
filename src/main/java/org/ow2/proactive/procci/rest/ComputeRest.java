@@ -80,8 +80,8 @@ public class ComputeRest {
         //-------------------Create a Compute--------------------------------------------------------
 
         @RequestMapping(method = RequestMethod.POST)
-        public ResponseEntity<Compute> createCompute(@RequestBody Compute compute) {
-            logger.debug("Creating Compute "+ compute.getId());
+        public ResponseEntity<Compute> createCompute(@RequestBody Compute.Builder compute) {
+            logger.debug("Creating Compute "+ compute.getHostname());
             return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
         }
 
@@ -89,7 +89,7 @@ public class ComputeRest {
         //------------------- Update a Compute --------------------------------------------------------
 
         @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-        public ResponseEntity<Compute> updateCompute(@PathVariable("id") String id, @RequestBody Compute compute) {
+        public ResponseEntity<Compute> updateCompute(@PathVariable("id") String id, @RequestBody Compute.Builder compute) {
             logger.debug("Updating Compute " + id);
             return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
         }
