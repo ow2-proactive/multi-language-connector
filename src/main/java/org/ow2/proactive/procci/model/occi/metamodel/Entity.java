@@ -51,11 +51,11 @@ import lombok.Setter;
  */
 public abstract class Entity {
     @Getter
-    private final URI id;
+    private final String id;
     @Getter
     @Setter
     private String title;
-    @Getter
+    @Getter 
     private final Kind kind;
     @Getter
     @Setter
@@ -68,11 +68,12 @@ public abstract class Entity {
      * @param kind is the kind instance which uniquely identify the instance
      */
     public Entity(String url, Kind kind) {
-        try {
-            this.id = new URI("urn:" + url + ":" + UUID.randomUUID().toString());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Wrong URL given for the entity :" + url + "/");
+        if(url.equals("")){
+            this.id = UUID.randomUUID().toString();
+        }else {
+            this.id = url;
         }
+
         this.kind = kind;
         this.title = "";
         this.mixins = new ArrayList<>();
@@ -87,15 +88,16 @@ public abstract class Entity {
      * @param mixins are the mixins instance associate to the instance
      */
     public Entity(String url, Kind kind, String title, List<Mixin> mixins) {
-        try {
-            this.id = new URI("urn:" + url + ":" + UUID.randomUUID().toString());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Wrong URL given for the entity :" + url + "/");
+        if(url.equals("")){
+            url=UUID.randomUUID().toString();
         }
+        this.id = url;
+
         this.kind = kind;
         this.title = title;
         this.mixins = mixins;
     }
+
 
     public static Set<Attribute> getAttributes() {
         Set<Attribute> attributes = new HashSet<>();

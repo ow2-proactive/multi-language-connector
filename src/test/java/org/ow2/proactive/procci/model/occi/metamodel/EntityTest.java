@@ -30,7 +30,7 @@ public class EntityTest {
         mixins.add(contextualization);
         EntityImplemented implemented = new EntityImplemented("url", k, "titleTest2", mixins);
 
-        assertThat(implemented.getId().toString()).startsWith("urn:url:");
+        assertThat(implemented.getId().toString()).startsWith("url");
         assertThat(implemented.getKind()).isEqualTo(k);
         assertThat(implemented.getTitle()).isEqualTo("titleTest2");
         assertThat(implemented.getMixins()).containsExactly(contextualization);

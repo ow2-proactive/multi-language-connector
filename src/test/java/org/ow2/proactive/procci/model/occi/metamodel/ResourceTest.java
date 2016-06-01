@@ -32,7 +32,7 @@ public class ResourceTest {
         assertThat(resource.getLinks()).isEqualTo(links);
         assertThat(resource.getMixins()).isEqualTo(mixins);
         assertThat(resource.getKind()).isEqualTo(kind);
-        assertThat(resource.getId().toString()).startsWith("urn:url:");
+        assertThat(resource.getId().toString()).startsWith("url");
     }
 
     @Test

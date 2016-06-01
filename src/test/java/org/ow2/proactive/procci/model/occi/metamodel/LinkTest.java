@@ -26,7 +26,7 @@ public class LinkTest {
         Link link = new Link("user", kind, "title", mixins, r1, "r2", InfrastructureKinds.COMPUTE);
         assertThat(link.getSource()).isEqualTo(r1);
         assertThat(link.getKind()).isEqualTo(kind);
-        assertThat(link.getId().toString()).startsWith("urn:user:");
+        assertThat(link.getId().toString()).startsWith("user");
         assertThat(link.getTitle().equals("title"));
         assertThat(link.getTargetKind()).isEqualTo(InfrastructureKinds.COMPUTE);
     }

@@ -37,6 +37,7 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Set;
+import java.util.UUID;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableSet;
@@ -50,7 +51,7 @@ import lombok.Getter;
 public class Category {
 
     @Getter
-    private final URI scheme;
+    private final String scheme;
     @Getter
     private final String term;
     @Getter
@@ -67,10 +68,11 @@ public class Category {
      * @param attributes are the category and sub-types attributes
      */
     public Category(String scheme, String term, String title, Set<Attribute> attributes) {
-        try {
-            this.scheme = new URI(scheme);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(scheme);
+        if(scheme.equals("")){
+            this.scheme = UUID.randomUUID().toString();
+        }
+        else {
+            this.scheme = scheme;
         }
         this.title = title;
         this.term = term;
