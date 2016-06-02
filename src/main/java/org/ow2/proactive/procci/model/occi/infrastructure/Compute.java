@@ -34,14 +34,11 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import lombok.*;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.ComputeAction;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
@@ -75,7 +72,7 @@ public class Compute extends Resource {
     /**
      * Constructor with the maximal arguments
      *
-     * @param url          is the user url
+     * @param url          is the instance identifier
      * @param kind         is the compute kind
      * @param title        is the display name of the instance
      * @param mixins       are the mixins instance associate to the instance
@@ -88,7 +85,7 @@ public class Compute extends Resource {
      * @param memory       is the maxmimum ram allowed for this instance
      * @param state        is the state aimed by the user or the current state
      */
-    public Compute(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
+    Compute(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
             Architecture architecture, Integer cores, Integer share, String hostname, Float memory,
             ComputeState state) {
         super(url, kind, title, mixins, summary, links);
@@ -99,104 +96,6 @@ public class Compute extends Resource {
         this.memory = memory;
         this.hostname = hostname;
         this.state = state;
-    }
-
-    @EqualsAndHashCode @ToString
-    public static class Builder {
-        @Getter @Setter
-        private  String url;
-        @Getter @Setter
-        private String title;
-        //private List<Mixin> mixins;
-        @Getter @Setter
-        private String summary;
-        //private List<Link> links;
-        @Getter @Setter
-        private Architecture architecture;
-        @Getter @Setter
-        private Integer cores;
-        @Getter @Setter
-        private Integer share;
-        @Getter @Setter
-        private String hostname;
-        @Getter @Setter
-        private Float memory; // in Gigabytes
-        private ComputeState state;
-
-        public Builder() {
-            this.url = "";
-            title = "";
-            //mixins = new ArrayList<>();
-            summary = "";
-            //links = new ArrayList<>();
-            architecture = null;
-            cores = null;
-            share = null;
-            hostname = "";
-            memory = null;
-            state = null;
-        }
-
-        public Builder url(String url){
-            this.url = url;
-            return this;
-        }
-
-        public Builder title(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder summary(String summary) {
-            this.summary = summary;
-            return this;
-        }
-
-        public Builder addMixin(Mixin mixin) {
-           // this.mixins.add(mixin);
-            return this;
-        }
-
-        public Builder addLink(Link link) {
-            //this.links.add(link);
-            return this;
-        }
-
-        public Builder architecture(Architecture architecture) {
-            this.architecture = architecture;
-            return this;
-        }
-
-        public Builder cores(Integer cores) {
-            this.cores = cores;
-            return this;
-        }
-
-        public Builder share(Integer share) {
-            this.share = share;
-            return this;
-        }
-
-        public Builder hostame(String hostname) {
-            this.hostname = hostname;
-            return this;
-        }
-
-        public Builder memory(Float memory) {
-            this.memory = memory;
-            return this;
-        }
-
-        public Builder state(ComputeState state) {
-            this.state = state;
-            return this;
-        }
-
-        public Compute build() {
-            return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary, new ArrayList<>(), architecture,
-                    cores, share, hostname, memory, state);
-        }
-
     }
 
     public String getMessage() {
@@ -214,4 +113,5 @@ public class Compute extends Resource {
         attributes.add(Attributes.COMPUTE_MESSAGE);
         return attributes;
     }
+
 }

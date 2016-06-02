@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
+import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class LinkTest {
 
     @Test
     public void builderTest() {
-        Compute compute = new Compute.Builder().url("compute").build();
+        Compute compute = new ComputeBuilder().url("compute").build();
         Link link = new Link.Builder(compute, "target")
                 .url("url")
                 .targetKind(InfrastructureKinds.COMPUTE)

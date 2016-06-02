@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
+import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ public class ResourceTest {
 
     @Test
     public void builderTest() {
-        Compute compute = new Compute.Builder().url("compute").build();
+        Compute compute = new ComputeBuilder().url("compute").build();
         Link link = new Link.Builder(compute, "target").url("link").build();
         Resource resource = new Resource.Builder()
                 .url("resource")

@@ -20,7 +20,7 @@ public class ComputeTest {
 
     @Test
     public void computeConstructorTest() {
-        Compute compute = new Compute.Builder()
+        Compute compute = new ComputeBuilder()
                 .url("url")
                 .architecture(Compute.Architecture.X64)
                 .cores(5)
