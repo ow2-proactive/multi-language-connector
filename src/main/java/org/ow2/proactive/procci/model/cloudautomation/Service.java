@@ -39,7 +39,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Infrastructure {
+public class Service {
 
     @Getter
     private final Action action;
@@ -121,8 +121,8 @@ public class Infrastructure {
             return this;
         }
 
-        public Infrastructure build(){
-            return new Infrastructure(action,type,infrastructure,endpoint,model,name,stateName,stateType
+        public Service build(){
+            return new Service(action,type,infrastructure,endpoint,model,name,stateName,stateType
                     ,description);
         }
 
