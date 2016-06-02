@@ -37,30 +37,31 @@ package org.ow2.proactive.procci.model.cloudautomation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.json.simple.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class Service {
 
-    @Getter
     private final Action action;
-    @Getter
     private final String type;
-    @Getter
     private final String infrastructure;
-    @Getter
     private final String endpoint;
-    @Getter
     private final String model;
-    @Getter
     private final String name;
-    @Getter
     private final String stateName;
-    @Getter
     private final String stateType;
-    @Getter
     private final String description;
+    private final JSONObject jsonService;
+    private final JSONObject jsonVariables;
 
-    public  static class Builder{
+    public static class Builder{
 
         private final Action action;
         private final String type;
@@ -71,6 +72,8 @@ public class Service {
         private  String stateName;
         private  String stateType;
         private  String description;
+        private JSONObject jsonService;
+        private JSONObject jsonVariables;
 
         public Builder(String type,String infrastructure,String endpoint, Action action){
             this.type = type;
@@ -82,6 +85,11 @@ public class Service {
             this.stateName = "";
             this.stateType = "";
             this.description = "";
+            this.jsonService = new JSONObject();
+            this.jsonService.put("type",type);
+            this.jsonService.put("infrastructure",infrastructure);
+            this.jsonService.put("endpoint",endpoint);
+            this.jsonVariables = jsonVariables;
         }
 
         public Builder(String type,String infrastructure,String endpoint, String actionType){
@@ -94,36 +102,56 @@ public class Service {
             this.stateName = "";
             this.stateType = "";
             this.description = "";
+            this.jsonService = new JSONObject();
+            this.jsonService.put("type",type);
+            this.jsonService.put("infrastructure",infrastructure);
+            this.jsonService.put("endpoint",endpoint);
+            this.jsonVariables = jsonVariables;
         }
 
         public Builder model(String model){
             this.model = model;
+            jsonService.putIfAbsent("model",model);
             return this;
         }
 
         public Builder name(String name){
             this.name = name;
+            jsonService.putIfAbsent("name",name);
             return this;
         }
 
         public Builder stateName(String stateName){
             this.stateName = stateName;
+            jsonService.putIfAbsent("state_name",stateName);
             return this;
         }
 
         public Builder stateType(String stateType){
             this.stateType = stateType;
+            jsonService.putIfAbsent("state_type",stateType);
             return this;
         }
 
         public Builder description(String description){
             this.description = description;
+            jsonService.putIfAbsent("description",description);
             return this;
         }
 
         public Service build(){
             return new Service(action,type,infrastructure,endpoint,model,name,stateName,stateType
-                    ,description);
+                    ,description,jsonService,jsonVariables);
+        }
+
+        public JSONObject getCloudAutomationModel(){
+            JSONObject service = new JSONObject();
+            JSONObject action = this.action.getJsonObject();
+            JSONObject query = new JSONObject();
+            query.put("service",service);
+            query.put("action",action);
+            query.put("variables",jsonVariables);
+            return query;
         }
 
     }

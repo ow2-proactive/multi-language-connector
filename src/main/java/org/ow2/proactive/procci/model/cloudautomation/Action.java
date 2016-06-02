@@ -37,23 +37,27 @@ package org.ow2.proactive.procci.model.cloudautomation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.json.simple.JSONObject;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
 public class Action {
-    @Getter
+
     private String type;
-    @Getter
     private String name;
-    @Getter
     private String description;
-    @Getter
     private String originStates;
-    @Getter
     private String icon;
+    private JSONObject jsonAction;
+
+    public JSONObject getJsonObject(){
+        return jsonAction;
+    }
 
     public static class Builder{
 
         private final String type;
+        private JSONObject jsonAction;
         private String name;
         private String originStates;
         private String description;
@@ -65,32 +69,37 @@ public class Action {
             this.originStates = "";
             this.description = "";
             this.icon = "";
+            this.jsonAction = new JSONObject();
+            this.jsonAction.put("type",type);
         }
 
         public Builder name(String name){
             this.name = name;
+            this.jsonAction.putIfAbsent("name",name);
             return this;
         }
 
         public Builder originStates(String originStates){
             this.originStates = originStates;
+            this.jsonAction.putIfAbsent("origin_states",originStates);
             return this;
         }
 
         public Builder description(String description){
             this.description = description;
+            this.jsonAction.putIfAbsent("description",description);
             return this;
         }
 
         public Builder icon(String icon){
             this.icon = icon;
+            this.jsonAction.putIfAbsent("icon",icon);
             return this;
         }
 
         public Action build(){
-            return new Action(type,name,originStates,description,icon);
+            return new Action(type,name,originStates,description,icon, jsonAction);
         }
-
 
     }
 
