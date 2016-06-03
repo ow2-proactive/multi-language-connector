@@ -134,15 +134,15 @@ public class Compute extends Resource {
         final int largeMemory = 500;
 
         if(this.architecture.equals(smallArchitecture) && this.cores<mediumCores && this.memory<mediumMemory){
-            //small favor
+            //small flavor
             return 1;
         }
         else if(this.cores<largeCores && this.memory<largeMemory){
-            //medium favor
+            //medium flavor
             return 2;
         }
         else {
-            //large favor
+            //large flavor
             return 3;
         }
 

@@ -102,8 +102,7 @@ public class Service {
             this.stateType = "";
             this.description = "";
             this.jsonService = new JSONObject();
-            this.jsonService.put("type",type);
-            this.jsonService.put("endpoint",endpoint);
+            this.jsonService.put("name",name);
             this.jsonVariables = new JSONObject();
         }
 
