@@ -54,6 +54,8 @@ public class ServiceTest {
 
     @Test
     public void getCloudAutomationModelTest(){
-        
+        assertThat(service.getCloudAutomationModel()).containsEntry("service",service.getJsonService());
+        assertThat(service.getCloudAutomationModel()).containsEntry("variables",service.getJsonVariables());
+        assertThat(service.getCloudAutomationModel()).containsEntry("action",service.getAction().getJsonAction());
     }
 }

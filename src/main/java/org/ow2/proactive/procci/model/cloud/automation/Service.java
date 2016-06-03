@@ -56,11 +56,9 @@ public class Service {
     private final JSONObject jsonVariables;
 
     public JSONObject getCloudAutomationModel(){
-        JSONObject service = new JSONObject();
-        JSONObject action = this.action.getJsonAction();
         JSONObject query = new JSONObject();
-        query.put("service",service);
-        query.put("action",action);
+        query.put("service",jsonService);
+        query.put("action",action.getJsonAction());
         query.put("variables",jsonVariables);
         return query;
     }
