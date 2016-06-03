@@ -32,7 +32,7 @@
  *
  *  * $$ACTIVEEON_INITIAL_DEV$$
  */
-package org.ow2.proactive.procci.model.cloudautomation;
+package org.ow2.proactive.procci.model.cloud.automation;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -43,16 +43,12 @@ import org.json.simple.JSONObject;
 @Getter
 public class Action {
 
-    private String type;
-    private String name;
-    private String description;
-    private String originStates;
-    private String icon;
-    private JSONObject jsonAction;
-
-    public JSONObject getJsonObject(){
-        return jsonAction;
-    }
+    private final String type;
+    private final String name;
+    private final String description;
+    private final String originStates;
+    private final String icon;
+    private final JSONObject jsonAction;
 
     public static class Builder{
 
@@ -98,7 +94,7 @@ public class Action {
         }
 
         public Action build(){
-            return new Action(type,name,originStates,description,icon, jsonAction);
+            return new Action(type,name,description,originStates,icon, jsonAction);
         }
 
     }

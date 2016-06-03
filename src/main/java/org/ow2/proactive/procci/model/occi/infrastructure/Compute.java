@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.*;
+import org.ow2.proactive.procci.model.cloud.automation.Service;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
@@ -113,5 +114,40 @@ public class Compute extends Resource {
         attributes.add(Attributes.COMPUTE_MESSAGE);
         return attributes;
     }
+
+    public Service toPCAModel(){
+        Service.Builder serviceBuilder = new Service.Builder("Docker","create");
+        serviceBuilder.addVariable("instance_name",this.getId());
+        serviceBuilder.addVariable("infrastructure_name","openstack_activeeon");
+        serviceBuilder.addVariable("instance_image","5126265f-e10a-451f-b38c-eebe54b637eb");
+        serviceBuilder.addVariable("instance_flavor",String.valueOf(getInstanceFlavor()));
+        serviceBuilder.addVariable("instance_key","activeeon");
+        return serviceBuilder.build();
+    }
+
+    private int getInstanceFlavor(){
+
+        final String smallArchitecture = "x86";
+        final int mediumCores = 2;
+        final int mediumMemory = 50;
+        final int largeCores = 16;
+        final int largeMemory = 500;
+
+        if(this.architecture.equals(smallArchitecture) && this.cores<mediumCores && this.memory<mediumMemory){
+            //small favor
+            return 1;
+        }
+        else if(this.cores<largeCores && this.memory<largeMemory){
+            //medium favor
+            return 2;
+        }
+        else {
+            //large favor
+            return 3;
+        }
+
+    }
+
+
 
 }

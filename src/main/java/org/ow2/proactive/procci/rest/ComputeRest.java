@@ -36,10 +36,12 @@ package org.ow2.proactive.procci.rest;
 
 import java.util.Collection;
 
+import org.json.simple.JSONObject;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.request.CloudAutomationRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -83,7 +85,9 @@ public class ComputeRest {
         @RequestMapping(method = RequestMethod.POST)
         public ResponseEntity<Compute> createCompute(@RequestBody ComputeBuilder compute) {
             logger.debug("Creating Compute "+ compute.getHostname());
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+            JSONObject pcaModel = compute.build().toPCAModel().getCloudAutomationModel();
+            String result = new CloudAutomationRequest(pcaModel).sendRequest();
+            return new ResponseEntity<>(compute.summary(result).build(),HttpStatus.OK);
         }
 
 
