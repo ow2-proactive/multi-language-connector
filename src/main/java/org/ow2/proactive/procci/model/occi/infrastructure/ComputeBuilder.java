@@ -10,46 +10,39 @@ import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mael on 02/06/16.
  */
 @EqualsAndHashCode
 @ToString
-@Getter
-@Setter
 public class ComputeBuilder {
 
-    private  String url;
-
+    private final String url;
     private String title;
-    //private List<Mixin> mixins;
     private String summary;
-    //private List<Link> links;
     private Compute.Architecture architecture;
     private Integer cores;
     private Integer share;
-    private String hostname;
     private Float memory; // in Gigabytes
+    private String hostname;
     private ComputeState state;
+    private List<Link> links;
+    private List<Mixin> mixins;
 
-    public ComputeBuilder() {
-        this.url = "";
+    public ComputeBuilder(String url) {
+        this.url = url;
         title = "";
-        //mixins = new ArrayList<>();
         summary = "";
-        //links = new ArrayList<>();
         architecture = null;
         cores = null;
         share = null;
         hostname = "";
         memory = null;
         state = null;
-    }
-
-    public ComputeBuilder url(String url){
-        this.url = url;
-        return this;
+        mixins = new ArrayList<>();
+        links = new ArrayList<>();
     }
 
     public ComputeBuilder title(String title) {
@@ -62,13 +55,14 @@ public class ComputeBuilder {
         return this;
     }
 
+
     public ComputeBuilder addMixin(Mixin mixin) {
-        // this.mixins.add(mixin);
+        this.mixins.add(mixin);
         return this;
     }
 
     public ComputeBuilder addLink(Link link) {
-        //this.links.add(link);
+        this.links.add(link);
         return this;
     }
 

@@ -56,7 +56,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping(value = "/compute/")
+@RequestMapping(value = Constant.computePath)
 public class ComputeRest {
 
         private final Logger logger = LogManager.getRootLogger();
@@ -65,7 +65,7 @@ public class ComputeRest {
 
         @RequestMapping(method = RequestMethod.GET)
         public ResponseEntity<Collection<Compute>> listAllComputes() {
-            logger.debug("Creating all Compute instances");
+            logger.debug("Get all Compute instances");
             return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
         }
 
@@ -83,27 +83,42 @@ public class ComputeRest {
         //-------------------Create a Compute--------------------------------------------------------
 
         @RequestMapping(method = RequestMethod.POST)
-        public ResponseEntity<Compute> createCompute(@RequestBody ComputeBuilder compute) {
-            logger.debug("Creating Compute "+ compute.getHostname());
-            JSONObject pcaModel = compute.build().toPCAModel().getCloudAutomationModel();
+        public ResponseEntity<Compute> createCompute(@RequestBody Compute compute) {
+            logger.debug("Creating Compute "+ compute.getTitle());
+            JSONObject pcaModel = compute.toPCAModel("create").getCloudAutomationModel();
             String result = new CloudAutomationRequest(pcaModel).sendRequest();
-            return new ResponseEntity<>(compute.summary(result).build(),HttpStatus.OK);
+            //todo manage the content of result
+            return new ResponseEntity<>(compute,HttpStatus.OK);
         }
 
+        //------------------- Apply an action on a Compute --------------------------------------------------------
+
+        @RequestMapping(value = "{action}", method = RequestMethod.POST)
+        public ResponseEntity<Compute> actionOnCompute(@PathVariable("action") String action, @RequestBody Compute compute) {
+            logger.debug("Action "+ action+" on the Compute " + compute.getTitle());
+            JSONObject pcaModel = compute.toPCAModel(action).getCloudAutomationModel();
+            String result = new CloudAutomationRequest(pcaModel).sendRequest();
+            //todo manage the content of result
+            return new ResponseEntity<>(compute,HttpStatus.OK);
+        }
 
         //------------------- Update a Compute --------------------------------------------------------
 
-        @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-        public ResponseEntity<Compute> updateCompute(@PathVariable("id") String id, @RequestBody ComputeBuilder compute) {
-            logger.debug("Updating Compute " + id);
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+        public ResponseEntity<Compute> updateCompute(@RequestBody Compute compute) {
+            logger.debug("Updating Compute " + compute.getId());
+            JSONObject pcaModel = compute.toPCAModel("update").getCloudAutomationModel();
+            String result = new CloudAutomationRequest(pcaModel).sendRequest();
+            return new ResponseEntity<>(compute,HttpStatus.NOT_IMPLEMENTED);
         }
 
         //------------------- Delete a Compute --------------------------------------------------------
 
-        @RequestMapping(value = "{name}", method = RequestMethod.DELETE)
-        public ResponseEntity<Compute> deleteCompute(@PathVariable("name") String name) {
-            logger.debug("Fetching & Deleting Compute with name " + name);
+        @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+        public ResponseEntity<Compute> deleteCompute(@PathVariable("id") String id) {
+            logger.debug("Fetching & Deleting Compute with name " + id);
+            JSONObject pcaModel = new ComputeBuilder(id).build().toPCAModel("delete").getCloudAutomationModel();
+            String result = new CloudAutomationRequest(pcaModel).sendRequest();
             return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
         }
 

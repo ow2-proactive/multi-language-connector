@@ -42,23 +42,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import lombok.*;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Entity is the abstract type that will gather the information contained in Resource and Link
  */
+@ToString @EqualsAndHashCode
 public abstract class Entity {
     @Getter
-    private final String id;
+    private String id;
     @Getter
-    @Setter
     private String title;
-    @Getter 
+    @Getter(AccessLevel.PROTECTED)
     private final Kind kind;
-    @Getter
-    @Setter
+    @Getter(AccessLevel.PROTECTED)
     private List<Mixin> mixins;
 
     public Entity(){

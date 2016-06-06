@@ -51,6 +51,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 /**
  * This class represents a generic information processing resource
  */
+@ToString @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
 public class Compute extends Resource {
 
     @Getter
@@ -115,38 +116,17 @@ public class Compute extends Resource {
         return attributes;
     }
 
-    public Service toPCAModel(){
-        Service.Builder serviceBuilder = new Service.Builder("Docker","create");
-        serviceBuilder.addVariable("instance_name",this.getId());
-        serviceBuilder.addVariable("infrastructure_name","openstack_activeeon");
-        serviceBuilder.addVariable("instance_image","5126265f-e10a-451f-b38c-eebe54b637eb");
-        serviceBuilder.addVariable("instance_flavor",String.valueOf(getInstanceFlavor()));
-        serviceBuilder.addVariable("instance_key","activeeon");
+    public Service toPCAModel(String action){
+        Service.Builder serviceBuilder = new Service.Builder("Infrastructure",action);
+        serviceBuilder.addVariable("instance_name",this.getTitle());
+        serviceBuilder.addVariable("architecture",this.architecture.toString());
+        serviceBuilder.addVariable("cores",this.cores.toString());
+        serviceBuilder.addVariable("hostname",this.share.toString());
+        serviceBuilder.addVariable("memory",this.memory.toString());
         return serviceBuilder.build();
     }
 
-    private int getInstanceFlavor(){
 
-        final String smallArchitecture = "x86";
-        final int mediumCores = 2;
-        final int mediumMemory = 50;
-        final int largeCores = 16;
-        final int largeMemory = 500;
-
-        if(this.architecture.equals(smallArchitecture) && this.cores<mediumCores && this.memory<mediumMemory){
-            //small flavor
-            return 1;
-        }
-        else if(this.cores<largeCores && this.memory<largeMemory){
-            //medium flavor
-            return 2;
-        }
-        else {
-            //large flavor
-            return 3;
-        }
-
-    }
 
 
 

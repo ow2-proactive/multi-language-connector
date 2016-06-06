@@ -28,7 +28,6 @@ public class NetworkInterfaceTest {
         Truth.assertThat(networkInterface.getTarget().toString()).isEqualTo("url:target");
         assertThat(networkInterface.getMac()).isEqualTo("mac");
         Truth.assertThat(networkInterface.getSource()).isEqualTo(compute);
-        Truth.assertThat(networkInterface.getKind()).isEqualTo(InfrastructureKinds.NETWORK_INTERFACE);
         Truth.assertThat(networkInterface.getId().toString()).contains("url:networkinterface");
         assertThat(networkInterface.getLinkInterface()).isEqualTo("linktarget");
     }
