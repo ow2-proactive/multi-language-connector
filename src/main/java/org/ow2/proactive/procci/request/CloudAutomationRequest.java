@@ -34,7 +34,6 @@ public class CloudAutomationRequest {
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             //wr.writeBytes(urlParameters);
-            content.put("url",getCloudAutomationURL());
             wr.writeBytes(content.toJSONString());
             wr.flush();
             wr.close();
