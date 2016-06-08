@@ -34,17 +34,18 @@
  */
 package org.ow2.proactive.procci.model.occi.infrastructure.state;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+
 public enum ComputeState {
 
     ACTIVE("active state"), INACTIVE("inactive state"), SUSPENDED("suspended state"), ERROR("error state");
 
+    @Getter
     private String message;
 
     ComputeState(String m) {
         this.message = m;
     }
 
-    public String getMessage() {
-        return message;
-    }
 }

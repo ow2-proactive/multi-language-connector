@@ -64,7 +64,7 @@ public class Compute extends Resource {
     private String hostname;
     @Getter
     private Float memory; // in Gigabytes
-    @Getter
+    @Getter(AccessLevel.PROTECTED)
     private ComputeState state;
 
     public enum Architecture {
@@ -100,10 +100,6 @@ public class Compute extends Resource {
         this.state = state;
     }
 
-    public String getMessage() {
-        return state.getMessage();
-    }
-
     private static Set<Attribute> setAttributes() {
         Set<Attribute> attributes = Resource.getAttributes();
         attributes.add(Attributes.ARCHITECTURE);
@@ -125,9 +121,5 @@ public class Compute extends Resource {
         serviceBuilder.addVariable("memory",this.memory.toString());
         return serviceBuilder.build();
     }
-
-
-
-
 
 }

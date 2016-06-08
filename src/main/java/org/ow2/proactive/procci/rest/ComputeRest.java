@@ -86,7 +86,7 @@ public class ComputeRest {
         public ResponseEntity<Compute> createCompute(@RequestBody Compute compute) {
             logger.debug("Creating Compute "+ compute.getTitle());
             JSONObject pcaModel = compute.toPCAModel("create").getCloudAutomationModel();
-            String result = new CloudAutomationRequest(pcaModel).sendRequest();
+            String result = new CloudAutomationRequest().sendRequest(pcaModel);
             //todo manage the content of result
             return new ResponseEntity<>(compute,HttpStatus.OK);
         }
@@ -97,7 +97,7 @@ public class ComputeRest {
         public ResponseEntity<Compute> actionOnCompute(@PathVariable("action") String action, @RequestBody Compute compute) {
             logger.debug("Action "+ action+" on the Compute " + compute.getTitle());
             JSONObject pcaModel = compute.toPCAModel(action).getCloudAutomationModel();
-            String result = new CloudAutomationRequest(pcaModel).sendRequest();
+            String result = new CloudAutomationRequest().sendRequest(pcaModel);
             //todo manage the content of result
             return new ResponseEntity<>(compute,HttpStatus.OK);
         }
@@ -108,8 +108,9 @@ public class ComputeRest {
         public ResponseEntity<Compute> updateCompute(@RequestBody Compute compute) {
             logger.debug("Updating Compute " + compute.getId());
             JSONObject pcaModel = compute.toPCAModel("update").getCloudAutomationModel();
-            String result = new CloudAutomationRequest(pcaModel).sendRequest();
-            return new ResponseEntity<>(compute,HttpStatus.NOT_IMPLEMENTED);
+            String result = new CloudAutomationRequest().sendRequest(pcaModel);
+            //todo manage the content of result
+            return new ResponseEntity<>(compute,HttpStatus.OK);
         }
 
         //------------------- Delete a Compute --------------------------------------------------------
@@ -118,17 +119,9 @@ public class ComputeRest {
         public ResponseEntity<Compute> deleteCompute(@PathVariable("id") String id) {
             logger.debug("Fetching & Deleting Compute with name " + id);
             JSONObject pcaModel = new ComputeBuilder(id).build().toPCAModel("delete").getCloudAutomationModel();
-            String result = new CloudAutomationRequest(pcaModel).sendRequest();
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-        }
-
-
-        //------------------- Delete All Computes --------------------------------------------------------
-
-        @RequestMapping(method = RequestMethod.DELETE)
-        public ResponseEntity<Compute> deleteAllComputes() {
-            logger.debug("Deleting All Computes");
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+            String result = new CloudAutomationRequest().sendRequest(pcaModel);
+            //todo manage the content of result
+            return new ResponseEntity<>(HttpStatus.OK);
         }
 
     }
