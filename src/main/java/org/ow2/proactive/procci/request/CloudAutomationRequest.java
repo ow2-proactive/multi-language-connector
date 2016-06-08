@@ -1,28 +1,23 @@
 package org.ow2.proactive.procci.request;
 
-import lombok.AllArgsConstructor;
 import org.json.simple.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Properties;
 
 /**
  * Created by mael on 02/06/16.
  */
-@AllArgsConstructor
+
 public class CloudAutomationRequest {
 
     private static final String PCA_SERVICE = "http://localhost:4444";
 
-    private final JSONObject content;
-
-    public String sendRequest(){
+    public String sendRequest(JSONObject content){
         String result;
         try{
-
             URL obj = new URL(PCA_SERVICE);
 
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -39,6 +34,7 @@ public class CloudAutomationRequest {
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             //wr.writeBytes(urlParameters);
+            content.put("url",getCloudAutomationURL());
             wr.writeBytes(content.toJSONString());
             wr.flush();
             wr.close();
@@ -64,6 +60,32 @@ public class CloudAutomationRequest {
         }
 
         return result;
+    }
+
+    private String getCloudAutomationURL(){
+        Properties prop = new Properties();
+        InputStream input = null;
+
+        try {
+
+            prop.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
+
+            // return the property value
+            return prop.getProperty("cloud-automation-service.url");
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Unable to get the cloud automation service url from config.properties");
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
 }
