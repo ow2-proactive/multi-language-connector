@@ -110,7 +110,6 @@ public class Application extends WebMvcConfigurerAdapter {
 
     private Predicate<String> allowedPaths() {
         List<String> pathList = new ArrayList<String>();
-        pathList.add("/users.*");
         pathList.add("/compute.*");
         //pathList.add("/storage.*");
         //pathList.add("/network.*");
