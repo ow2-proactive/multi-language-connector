@@ -26,55 +26,7 @@ import static org.springframework.http.HttpHeaders.USER_AGENT;
  */
 
 public class CloudAutomationRequest {
-
-    private static final String PCA_SERVICE = "http://localhost:4444";
-
-    /*public String sendRequest(JSONObject content){
-        String result;
-        try{
-            URL obj = new URL(PCA_SERVICE);
-
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-            //add request header
-            con.setRequestMethod("POST");
-
-            con.setRequestProperty("Content-Type", "application.json");
-            //con.setRequestProperty("Accept", "application/json");
-
-
-            con.setRequestProperty("sessionid","467ec32b15538a75ab1651a3a81ecdf634e39ec467ec32b15538a75ab18000");
-
-            // Send post request
-            con.setDoOutput(true);
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(content.toJSONString());
-            wr.flush();
-            wr.close();
-
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'POST' request to URL : " + PCA_SERVICE);
-            //System.out.println("Post parameters : " + urlParameters);
-            System.out.println("Response Code : " + responseCode);
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            result = response.toString();
-        }catch (Exception e){
-            return "Exception in Compute : "+e.toString();
-        }
-
-        return result;
-    }
-*/
+    
     private String getCloudAutomationURL(){
         Properties prop = new Properties();
         InputStream input = null;
