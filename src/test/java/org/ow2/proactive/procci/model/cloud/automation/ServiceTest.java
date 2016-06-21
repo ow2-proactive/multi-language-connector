@@ -14,10 +14,9 @@ public class ServiceTest {
 
     @Before
     public void setup(){
-        service = new Service.Builder("nameTest","create")
+        service = new Service.Builder("modelTest","nameTest","create")
                 .description("descriptionTest")
                 .endpoint("endpointTest")
-                .model("modelTest")
                 .stateName("stateNameTest")
                 .stateType("stateTypeTest")
                 .type("typeTest")
@@ -47,7 +46,7 @@ public class ServiceTest {
         assertThat(service.getAction().getType()).matches("create");
 
         //constructor with action parameter test
-        service = new Service.Builder("nameTest2",new Action.Builder("actionTest2").build()).build();
+        service = new Service.Builder("modelTest","nameTest2",new Action.Builder("actionTest2").build()).build();
         assertThat(service.getAction().getType()).matches("actionTest2");
         assertThat(service.getName()).matches("nameTest2");
     }

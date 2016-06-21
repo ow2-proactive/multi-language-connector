@@ -55,11 +55,30 @@ public class Service {
     private final JSONObject jsonService;
     private final JSONObject jsonVariables;
 
+    /**
+     * Create a json object which contains the service data according to the cloud automation model
+     * @return
+     */
     public JSONObject getCloudAutomationModel(){
         JSONObject query = new JSONObject();
         query.put("service",jsonService);
         query.put("action",action.getJsonAction());
         query.put("variables",jsonVariables);
+        return query;
+    }
+
+    //PCA service should be improved in order to be able to receive the upper request
+    /**
+     * create a valid request for the cloud automation service
+      * @return return a valid json which contains the current instance data
+     */
+    public JSONObject getCloudAutomationServiceRequest(){
+        JSONObject query = new JSONObject();
+        query.put("service_model",model);
+        query.put("service_name",name);
+        JSONObject json = (JSONObject) jsonVariables.clone();
+        json.put("infrastructure_name","");
+        query.put("variables",json);
         return query;
     }
 
@@ -76,11 +95,11 @@ public class Service {
         private JSONObject jsonService;
         private JSONObject jsonVariables;
 
-        public Builder(String name, Action action){
+        public Builder(String model, String name, Action action){
             this.type = "";
             this.endpoint = "";
             this.action = action;
-            this.model = "";
+            this.model = model;
             this.name = name;
             this.stateName = "";
             this.stateType = "";
@@ -90,11 +109,11 @@ public class Service {
             this.jsonVariables = new JSONObject();
         }
 
-        public Builder(String name, String actionType){
+        public Builder(String model, String name, String actionType){
             this.type = "";
             this.endpoint = "";
             this.action = new Action.Builder(actionType).build();
-            this.model = "";
+            this.model = model;
             this.name = name;
             this.stateName = "";
             this.stateType = "";
@@ -102,12 +121,6 @@ public class Service {
             this.jsonService = new JSONObject();
             this.jsonService.put("name",name);
             this.jsonVariables = new JSONObject();
-        }
-
-        public Builder model(String model){
-            this.model = model;
-            jsonService.putIfAbsent("model",model);
-            return this;
         }
 
         public Builder type(String type){

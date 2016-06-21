@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
@@ -38,7 +39,7 @@ public class ResourceTest {
 
     @Test
     public void builderTest() {
-        Compute compute = new ComputeBuilder("compute").build();
+        Compute compute = new ComputeBuilder("compute","").build();
         Link link = new Link.Builder(compute, "target").url("link").build();
         Resource resource = new Resource.Builder()
                 .url("resource")

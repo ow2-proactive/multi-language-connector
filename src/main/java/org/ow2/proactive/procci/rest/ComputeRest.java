@@ -42,6 +42,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.request.CloudAutomationRequest;
+import org.ow2.proactive.procci.request.HTTPException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -85,9 +86,12 @@ public class ComputeRest {
         @RequestMapping(method = RequestMethod.POST)
         public ResponseEntity<Compute> createCompute(@RequestBody Compute compute) {
             logger.debug("Creating Compute "+ compute.getTitle());
-            JSONObject pcaModel = compute.toPCAModel("create").getCloudAutomationModel();
-            String result = new CloudAutomationRequest().sendRequest(pcaModel);
-            //todo manage the content of result
+            JSONObject pcaModel = compute.toPCAModel("create").getCloudAutomationServiceRequest();
+            try{
+                new CloudAutomationRequest().sendRequest(pcaModel);
+            }catch (HTTPException e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             return new ResponseEntity<>(compute,HttpStatus.OK);
         }
 
@@ -96,9 +100,12 @@ public class ComputeRest {
         @RequestMapping(value = "{action}", method = RequestMethod.POST)
         public ResponseEntity<Compute> actionOnCompute(@PathVariable("action") String action, @RequestBody Compute compute) {
             logger.debug("Action "+ action+" on the Compute " + compute.getTitle());
-            JSONObject pcaModel = compute.toPCAModel(action).getCloudAutomationModel();
-            String result = new CloudAutomationRequest().sendRequest(pcaModel);
-            //todo manage the content of result
+            JSONObject pcaModel = compute.toPCAModel(action).getCloudAutomationServiceRequest();
+            try {
+                new CloudAutomationRequest().sendRequest(pcaModel);
+            }catch (HTTPException e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             return new ResponseEntity<>(compute,HttpStatus.OK);
         }
 
@@ -107,20 +114,26 @@ public class ComputeRest {
         @RequestMapping(value = "{id}", method = RequestMethod.PUT)
         public ResponseEntity<Compute> updateCompute(@RequestBody Compute compute) {
             logger.debug("Updating Compute " + compute.getId());
-            JSONObject pcaModel = compute.toPCAModel("update").getCloudAutomationModel();
-            String result = new CloudAutomationRequest().sendRequest(pcaModel);
-            //todo manage the content of result
+            JSONObject pcaModel = compute.toPCAModel("update").getCloudAutomationServiceRequest();
+            try {
+                String result = new CloudAutomationRequest().sendRequest(pcaModel);
+            }catch (HTTPException e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             return new ResponseEntity<>(compute,HttpStatus.OK);
         }
 
         //------------------- Delete a Compute --------------------------------------------------------
 
         @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-        public ResponseEntity<Compute> deleteCompute(@PathVariable("id") String id) {
+        public ResponseEntity<Compute> deleteCompute(@PathVariable("id") String id, @PathVariable String sessionid) {
             logger.debug("Fetching & Deleting Compute with name " + id);
-            JSONObject pcaModel = new ComputeBuilder(id).build().toPCAModel("delete").getCloudAutomationModel();
-            String result = new CloudAutomationRequest().sendRequest(pcaModel);
-            //todo manage the content of result
+            JSONObject pcaModel = new ComputeBuilder(id,sessionid).build().toPCAModel("delete").getCloudAutomationModel();
+            try{
+                new CloudAutomationRequest().sendRequest(pcaModel);
+            }catch (HTTPException e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
             return new ResponseEntity<>(HttpStatus.OK);
         }
 

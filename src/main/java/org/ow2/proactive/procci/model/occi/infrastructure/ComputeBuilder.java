@@ -27,12 +27,14 @@ public class ComputeBuilder {
     private Integer share;
     private Float memory; // in Gigabytes
     private String hostname;
+    private String sessionid;
     private ComputeState state;
     private List<Link> links;
     private List<Mixin> mixins;
 
-    public ComputeBuilder(String url) {
+    public ComputeBuilder(String url,String sessionid) {
         this.url = url;
+        this.sessionid = sessionid;
         title = "";
         summary = "";
         architecture = null;
@@ -98,7 +100,7 @@ public class ComputeBuilder {
 
     public Compute build() {
         return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary, new ArrayList<>(), architecture,
-                cores, share, hostname, memory, state);
+                cores, share, hostname, memory, sessionid, state);
     }
 
 }

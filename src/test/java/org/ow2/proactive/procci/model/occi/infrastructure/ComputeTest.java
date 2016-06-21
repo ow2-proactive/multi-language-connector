@@ -15,12 +15,11 @@ import static com.google.common.truth.Truth.assertThat;
 /**
  * Created by mael on 2/24/16.
  */
-@Ignore
 public class ComputeTest {
 
     @Test
     public void computeConstructorTest() {
-        Compute compute = new ComputeBuilder("url")
+        Compute compute = new ComputeBuilder("url","")
                 .architecture(Compute.Architecture.X64)
                 .cores(5)
                 .hostame("hostname")
