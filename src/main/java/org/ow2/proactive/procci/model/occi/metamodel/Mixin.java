@@ -38,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import lombok.AccessLevel;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;

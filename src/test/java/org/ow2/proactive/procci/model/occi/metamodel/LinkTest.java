@@ -34,7 +34,7 @@ public class LinkTest {
 
     @Test
     public void builderTest() {
-        Compute compute = new ComputeBuilder("compute","").build();
+        Compute compute = new ComputeBuilder().url("compute").build();
         Link link = new Link.Builder(compute, "target")
                 .url("url")
                 .targetKind(InfrastructureKinds.COMPUTE)

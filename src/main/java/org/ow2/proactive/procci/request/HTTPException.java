@@ -8,7 +8,7 @@ import lombok.ToString;
 /**
  * Created by mael on 21/06/16.
  */
-@Getter @AllArgsConstructor @EqualsAndHashCode @ToString
+@Getter @AllArgsConstructor @ToString
 public class HTTPException extends Exception {
     private String message;
 }

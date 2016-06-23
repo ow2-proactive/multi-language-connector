@@ -19,22 +19,24 @@ import java.util.List;
 @ToString
 public class ComputeBuilder {
 
-    private final String url;
+    private String url;
+    @Getter
     private String title;
     private String summary;
+    @Getter
     private Compute.Architecture architecture;
+    @Getter
     private Integer cores;
     private Integer share;
+    @Getter
     private Float memory; // in Gigabytes
     private String hostname;
-    private String sessionid;
     private ComputeState state;
     private List<Link> links;
     private List<Mixin> mixins;
 
-    public ComputeBuilder(String url,String sessionid) {
-        this.url = url;
-        this.sessionid = sessionid;
+    public ComputeBuilder() {
+        this.url = "";
         title = "";
         summary = "";
         architecture = null;
@@ -45,6 +47,11 @@ public class ComputeBuilder {
         state = null;
         mixins = new ArrayList<>();
         links = new ArrayList<>();
+    }
+
+    public ComputeBuilder url(String url){
+        this.url = url;
+        return this;
     }
 
     public ComputeBuilder title(String title) {
@@ -100,7 +107,7 @@ public class ComputeBuilder {
 
     public Compute build() {
         return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary, new ArrayList<>(), architecture,
-                cores, share, hostname, memory, sessionid, state);
+                cores, share, hostname, memory, state);
     }
 
 }

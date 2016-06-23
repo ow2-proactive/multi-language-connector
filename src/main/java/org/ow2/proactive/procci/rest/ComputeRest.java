@@ -41,6 +41,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Credentials;
 import org.ow2.proactive.procci.request.CloudAutomationRequest;
 import org.ow2.proactive.procci.request.HTTPException;
 import org.springframework.http.HttpStatus;
@@ -63,7 +64,7 @@ public class ComputeRest {
         private final Logger logger = LogManager.getRootLogger();
 
         //-------------------Retrieve All Computes--------------------------------------------------------
-
+/*
         @RequestMapping(method = RequestMethod.GET)
         public ResponseEntity<Collection<Compute>> listAllComputes() {
             logger.debug("Get all Compute instances");
@@ -78,25 +79,26 @@ public class ComputeRest {
             logger.debug("Get Compute ");
             return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
-        }
+        }*/
 
 
         //-------------------Create a Compute--------------------------------------------------------
 
         @RequestMapping(method = RequestMethod.POST)
-        public ResponseEntity<Compute> createCompute(@RequestBody Compute compute) {
-            logger.debug("Creating Compute "+ compute.getTitle());
-            JSONObject pcaModel = compute.toPCAModel("create").getCloudAutomationServiceRequest();
+        public ResponseEntity<Compute> createCompute(@RequestBody ComputeBuilder compute) {
+            System.out.println("Compute =====> "+compute);
+            logger.debug("Creating Compute "+ compute.build().getTitle());
+            JSONObject pcaModel = compute.build().toPCAModel("create").getCloudAutomationServiceRequest();
             try{
                 new CloudAutomationRequest().sendRequest(pcaModel);
             }catch (HTTPException e){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(compute,HttpStatus.OK);
+            return new ResponseEntity<>(compute.build(),HttpStatus.OK);
         }
 
         //------------------- Apply an action on a Compute --------------------------------------------------------
-
+    /*
         @RequestMapping(value = "{action}", method = RequestMethod.POST)
         public ResponseEntity<Compute> actionOnCompute(@PathVariable("action") String action, @RequestBody Compute compute) {
             logger.debug("Action "+ action+" on the Compute " + compute.getTitle());
@@ -113,7 +115,7 @@ public class ComputeRest {
 
         @RequestMapping(value = "{id}", method = RequestMethod.PUT)
         public ResponseEntity<Compute> updateCompute(@RequestBody Compute compute) {
-            logger.debug("Updating Compute " + compute.getId());
+            logger.debug("Updating Compute " + compute.getTitle());
             JSONObject pcaModel = compute.toPCAModel("update").getCloudAutomationServiceRequest();
             try {
                 String result = new CloudAutomationRequest().sendRequest(pcaModel);
@@ -136,5 +138,5 @@ public class ComputeRest {
             }
             return new ResponseEntity<>(HttpStatus.OK);
         }
-
+*/
     }

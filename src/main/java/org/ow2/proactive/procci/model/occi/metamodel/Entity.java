@@ -54,9 +54,9 @@ public abstract class Entity {
     private String id;
     @Getter
     private String title;
-    @Getter(AccessLevel.PROTECTED)
+    @Getter
     private final Kind kind;
-    @Getter(AccessLevel.PROTECTED)
+    @Getter
     private List<Mixin> mixins;
 
     public Entity(){

@@ -65,8 +65,6 @@ public class Compute extends Resource {
     @Getter
     private Float memory; // in Gigabytes
     @Getter
-    private String sessionid;
-    @Getter(AccessLevel.PROTECTED)
     private ComputeState state;
 
 
@@ -91,7 +89,7 @@ public class Compute extends Resource {
      * @param state        is the state aimed by the user or the current state
      */
     Compute(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
-            Architecture architecture, Integer cores, Integer share, String hostname, Float memory, String sessionid,
+            Architecture architecture, Integer cores, Integer share, String hostname, Float memory,
             ComputeState state) {
         super(url, kind, title, mixins, summary, links);
         setAttributes();
@@ -100,7 +98,6 @@ public class Compute extends Resource {
         this.share = share;
         this.memory = memory;
         this.hostname = hostname;
-        this.sessionid = sessionid;
         this.state = state;
     }
 
@@ -117,13 +114,11 @@ public class Compute extends Resource {
     }
 
     public Service toPCAModel(String action){
-        Service.Builder serviceBuilder = new Service.Builder("100","compute",action);
+        Service.Builder serviceBuilder = new Service.Builder("compute","create_compute",action);
         serviceBuilder.addVariable("instance_name",this.getTitle());
         serviceBuilder.addVariable("architecture",this.architecture.toString());
         serviceBuilder.addVariable("cores",this.cores.toString());
-        serviceBuilder.addVariable("hostname",this.share.toString());
         serviceBuilder.addVariable("memory",this.memory.toString());
-        serviceBuilder.addVariable("sessionid",this.sessionid.toString());
         return serviceBuilder.build();
     }
 
