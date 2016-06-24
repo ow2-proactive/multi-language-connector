@@ -38,6 +38,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.json.simple.JSONObject;
+import org.ow2.proactive.procci.model.occi.infrastructure.StorageLink;
 
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -75,7 +76,7 @@ public class Service {
     public JSONObject getCloudAutomationServiceRequest(){
         JSONObject query = new JSONObject();
         query.put("service_model",model);
-        query.put("service_name",name);
+        query.put("service_name","");
         JSONObject json = (JSONObject) jsonVariables.clone();
         json.put("infrastructure_name","");
         query.put("variables",json);
@@ -85,9 +86,9 @@ public class Service {
     public static class Builder{
 
         private final Action action;
-        private String model;
+        private final String model;
         private String type;
-        private final String name;
+        private String name;
         private String description;
         private String endpoint;
         private String stateName;
@@ -95,32 +96,38 @@ public class Service {
         private JSONObject jsonService;
         private JSONObject jsonVariables;
 
-        public Builder(String model, String name, Action action){
+        public Builder(String model, Action action){
             this.type = "";
             this.endpoint = "";
             this.action = action;
             this.model = model;
-            this.name = name;
+            this.name = "";
             this.stateName = "";
             this.stateType = "";
             this.description = "";
             this.jsonService = new JSONObject();
-            this.jsonService.put("name",name);
+            this.jsonService.put("model",model);
             this.jsonVariables = new JSONObject();
         }
 
-        public Builder(String model, String name, String actionType){
+        public Builder(String model, String actionType){
             this.type = "";
             this.endpoint = "";
             this.action = new Action.Builder(actionType).build();
             this.model = model;
-            this.name = name;
+            this.name = "";
             this.stateName = "";
             this.stateType = "";
             this.description = "";
             this.jsonService = new JSONObject();
-            this.jsonService.put("name",name);
+            this.jsonService.put("model",model);
             this.jsonVariables = new JSONObject();
+        }
+
+        public Builder name(String name){
+            this.name = name;
+            jsonService.put("name",name);
+            return this;
         }
 
         public Builder type(String type){

@@ -114,7 +114,7 @@ public class Compute extends Resource {
     }
 
     public Service toPCAModel(String action){
-        Service.Builder serviceBuilder = new Service.Builder("compute","create_compute",action);
+        Service.Builder serviceBuilder = new Service.Builder("compute",action);
         serviceBuilder.addVariable("instance_name",this.getTitle());
         serviceBuilder.addVariable("architecture",this.architecture.toString());
         serviceBuilder.addVariable("cores",this.cores.toString());
