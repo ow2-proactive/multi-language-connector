@@ -41,9 +41,8 @@ import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
-import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Credentials;
+import org.ow2.proactive.procci.request.CloudAutomationException;
 import org.ow2.proactive.procci.request.CloudAutomationRequest;
-import org.ow2.proactive.procci.request.HTTPException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -64,11 +63,15 @@ public class ComputeRest {
         private final Logger logger = LogManager.getRootLogger();
 
         //-------------------Retrieve All Computes--------------------------------------------------------
-/*
+
         @RequestMapping(method = RequestMethod.GET)
-        public ResponseEntity<Collection<Compute>> listAllComputes() {
+        public ResponseEntity<JSONObject> listAllComputes() {
             logger.debug("Get all Compute instances");
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+            try {
+                return new ResponseEntity<>(new CloudAutomationRequest().getRequest(),HttpStatus.OK);
+            } catch (CloudAutomationException e) {
+                return new  ResponseEntity<>(e.getJsonError(),HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
 
 
@@ -79,22 +82,23 @@ public class ComputeRest {
             logger.debug("Get Compute ");
             return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 
-        }*/
+        }
 
 
         //-------------------Create a Compute--------------------------------------------------------
 
         @RequestMapping(method = RequestMethod.POST)
-        public ResponseEntity<Compute> createCompute(@RequestBody ComputeBuilder compute) {
-            System.out.println("Compute =====> "+compute);
+        public ResponseEntity<JSONObject> createCompute(@RequestBody ComputeBuilder compute) {
             logger.debug("Creating Compute "+ compute.build().getTitle());
             JSONObject pcaModel = compute.build().toPCAModel("create").getCloudAutomationServiceRequest();
-            try{
-                new CloudAutomationRequest().sendRequest(pcaModel);
-            }catch (HTTPException e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            try {
+                return new ResponseEntity<>(new CloudAutomationRequest().postRequest(pcaModel),HttpStatus.OK);
+            } catch (CloudAutomationException e) {
+                return new ResponseEntity<>(e.getJsonError(),HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            return new ResponseEntity<>(compute.build(),HttpStatus.OK);
+
+
+
         }
 
         //------------------- Apply an action on a Compute --------------------------------------------------------
@@ -105,7 +109,7 @@ public class ComputeRest {
             JSONObject pcaModel = compute.toPCAModel(action).getCloudAutomationServiceRequest();
             try {
                 new CloudAutomationRequest().sendRequest(pcaModel);
-            }catch (HTTPException e){
+            }catch (CloudAutomationException e){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(compute,HttpStatus.OK);
@@ -119,7 +123,7 @@ public class ComputeRest {
             JSONObject pcaModel = compute.toPCAModel("update").getCloudAutomationServiceRequest();
             try {
                 String result = new CloudAutomationRequest().sendRequest(pcaModel);
-            }catch (HTTPException e){
+            }catch (CloudAutomationException e){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(compute,HttpStatus.OK);
@@ -133,7 +137,7 @@ public class ComputeRest {
             JSONObject pcaModel = new ComputeBuilder(id,sessionid).build().toPCAModel("delete").getCloudAutomationModel();
             try{
                 new CloudAutomationRequest().sendRequest(pcaModel);
-            }catch (HTTPException e){
+            }catch (CloudAutomationException e){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(HttpStatus.OK);

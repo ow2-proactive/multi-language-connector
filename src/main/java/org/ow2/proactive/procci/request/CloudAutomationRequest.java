@@ -2,12 +2,17 @@ package org.ow2.proactive.procci.request;
 
 import org.apache.http.HttpResponse;
 
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.util.Properties;
@@ -16,20 +21,51 @@ import java.util.Properties;
  * Created by mael on 02/06/16.
  */
 
+/**
+ * Manage the connection and the request with Cloud Automation Microservices
+ */
 public class CloudAutomationRequest {
+
+    private final Logger logger = LogManager.getRootLogger();
+
+    /**
+     * Get the deployed instances from Cloud Automation Service
+     * @return a json object containing the request results
+     */
+    public JSONObject getRequest() throws CloudAutomationException {
+        final String url = getProperty("server.endpoint") + "/cloud-automation-service/serviceInstances";
+        JSONObject result = new JSONObject();
+        try {
+            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+            HttpGet getRequest = new HttpGet(url);
+
+            HttpResponse response = httpClient.execute(getRequest);
+            String serverOutput = readHttpResponse(response);
+            httpClient.close();
+            result = (JSONObject) new JSONParser().parse(serverOutput);
+        } catch (IOException ex){
+            launchException(ex);
+        } catch (ParseException ex){
+            launchException(ex);
+        } catch (Exception ex) {
+            launchException(ex);
+        }
+
+        return result;
+    }
 
 
     /**
      * Send a request to pca service with a header containing the session id and sending content
      * @param content is which is send to the cloud automation service
      * @return the information about gathered from cloud automation service
-     * @throws HTTPException is thrown if something failed during the connection
+     * @throws CloudAutomationException is thrown if something failed during the connection
      */
-    public String sendRequest(JSONObject content) throws HTTPException{
+    public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
         final String url = getProperty("server.endpoint") + "/cloud-automation-service/serviceInstances";
-        StringBuffer result = new StringBuffer();
+        JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost postRequest = new HttpPost(url);
@@ -40,28 +76,19 @@ public class CloudAutomationRequest {
 
             HttpResponse response = httpClient.execute(postRequest);
 
-            if (response.getStatusLine().getStatusCode() != 200) {
-
-                throw new RuntimeException("Send Request Failed : HTTP error code : "
-                        + response.getStatusLine().getStatusCode());
-            }
-
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader((response.getEntity().getContent())));
-
-            String output;
-            System.out.println("Output from Server .... \n");
-            while ((output = br.readLine()) != null) {
-                System.out.println(output);
-                result.append(output);
-            }
+            String serverOutput = readHttpResponse(response);
             httpClient.close();
+            result = (JSONObject) new JSONParser().parse(serverOutput);
+        } catch (IOException ex){
+            launchException(ex);
+        } catch (ParseException ex){
+            launchException(ex);
         } catch (Exception ex) {
-            throw new HTTPException(ex.getMessage());
+            launchException(ex);
         }
-
-        return result.toString();
+        return result;
     }
+
 
     /**
      * Get the property from the configuration file config.properties
@@ -121,9 +148,7 @@ public class CloudAutomationRequest {
                     new InputStreamReader((response.getEntity().getContent())));
 
             String output;
-            System.out.println("Output from Server .... \n");
             while ((output = br.readLine()) != null) {
-                System.out.println(output);
                 result.append(output);
             }
             httpClient.close();
@@ -131,5 +156,41 @@ public class CloudAutomationRequest {
             System.out.println(ex.getMessage());
         }
         return result.toString();
+    }
+
+    /**
+     * Read an http respond and convert it into a string
+     * @param response is the http response
+     * @return a string containing the information from response
+     * @throws IOException occur if problem occur with the buffer
+     */
+    private String readHttpResponse(HttpResponse response) throws IOException {
+        StringBuffer serverOutput = new StringBuffer();
+        if (response.getStatusLine().getStatusCode() != 200) {
+
+            throw new RuntimeException("Send Request Failed : HTTP error code : "
+                    + response.getStatusLine().getStatusCode());
+        }
+
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader((response.getEntity().getContent())));
+
+        String output;
+        while ((output = br.readLine()) != null) {
+            serverOutput.append(output);
+        }
+        return serverOutput.toString();
+    }
+
+    /**
+     * Launch an CloudAutomation exception and log it
+     * @param ex the exception to be logged
+     * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
+     */
+    private void launchException(Exception ex) throws CloudAutomationException {
+        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, "+ ex.getClass() + "in postRequest : "+ex.getMessage());
+        JSONObject result = new JSONObject();
+        result.put("exception",ex.getMessage());
+        throw new CloudAutomationException(result);
     }
 }
