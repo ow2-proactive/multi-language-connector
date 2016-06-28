@@ -62,8 +62,8 @@ public class Action {
         JSONObject jsonAction = new JSONObject();
         jsonAction.put("type",type);
         jsonAction.put("name",name);
-        jsonAction.put("origin_states",originStates);
         jsonAction.put("description",description);
+        jsonAction.put("origin_states",originStates);
         jsonAction.put("icon",icon);
         return jsonAction;
     }
