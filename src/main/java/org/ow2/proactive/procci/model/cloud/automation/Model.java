@@ -38,7 +38,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,26 +55,25 @@ public class Model {
     private final String stateName;
     private final String stateType;
     private final String description;
+    private final String icon;
     private final Map<String,String> variables;
 
     public Model(JSONObject CASResponse){
         this.action = new Action((JSONObject) CASResponse.getOrDefault("action",new JSONObject()));
         this.type = CASResponse.getOrDefault("type","").toString();
-        this.endpoint = CASResponse.getOrDefault("endpoint","").toString();
-        this.model = CASResponse.getOrDefault("model","").toString();
-        this.name = CASResponse.getOrDefault("name","").toString();
-        this.stateName = CASResponse.getOrDefault("state_name","").toString();
+        this.endpoint = CASResponse.getOrDefault("instanceEndpoint","").toString();
+        this.model = CASResponse.getOrDefault("serviceModel","").toString();
+        this.name = CASResponse.getOrDefault("serviceName","").toString();
+        this.stateName = CASResponse.getOrDefault("serviceInstanceStatus","").toString();
         this.stateType = CASResponse.getOrDefault("state_type","").toString();
         this.description = CASResponse.getOrDefault("description","").toString();
+        this.icon = CASResponse.getOrDefault("icon","").toString();
         this.variables = new HashMap<>();
-        JSONObject variables = (JSONObject) CASResponse.getOrDefault("variables",new JSONObject());
-        for(Object key : variables.keySet()){
-            variables.put(key.toString(),variables.get(key));
-        }
+        variables.put("id",CASResponse.getOrDefault("serviceInstanceId","").toString());
+        variables.put("name",CASResponse.getOrDefault("serviceInstanceName","").toString());
     }
 
-
-
+    
     /**
      * Create a json object which contains the service data according to the cloud automation model
      * @return a json representation of the class model
@@ -89,6 +87,7 @@ public class Model {
         jsonService.put("state_name",stateName);
         jsonService.put("state_type",stateType);
         jsonService.put("description",description);
+        jsonService.put("icon",icon);
         JSONObject jsonVariables = new JSONObject();
         jsonVariables.putAll(variables);
         JSONObject query = new JSONObject();
@@ -98,15 +97,15 @@ public class Model {
         return query;
     }
 
-    //PCA service should be improved in order to be able to receive the upper request
+    //CAS should be improved in order to be able to receive the upper json
     /**
      * create a valid request for the cloud automation service
       * @return return a valid json which contains the current instance data
      */
-    public JSONObject getCloudAutomationServiceRequest(){
+    public JSONObject getCASRequest(){
         JSONObject query = new JSONObject();
         query.put("service_model",model);
-        query.put("service_name","");
+        query.put("service_name",name);
         JSONObject variables = new JSONObject();
         variables.putAll(this.variables);
         variables.put("infrastructure_name","");
@@ -125,6 +124,7 @@ public class Model {
         private String endpoint;
         private String stateName;
         private String stateType;
+        private String icon;
         private Map<String,String> variables;
 
         public Builder(String model, Action action){
@@ -136,6 +136,7 @@ public class Model {
             this.stateName = "";
             this.stateType = "";
             this.description = "";
+            this.icon = "";
             this.variables = new HashMap<>();
         }
 
@@ -148,6 +149,7 @@ public class Model {
             this.stateName = "";
             this.stateType = "";
             this.description = "";
+            this.icon = "";
             this.variables = new HashMap<>();
         }
 
@@ -181,6 +183,11 @@ public class Model {
             return this;
         }
 
+        public Builder icon(String icon){
+            this.icon = icon;
+            return this;
+        }
+
         public Builder addVariable(String variableKey, String variableValue){
             this.variables.put(variableKey,variableValue);
             return this;
@@ -189,9 +196,10 @@ public class Model {
 
         public Model build(){
             return new Model(action,type,endpoint,model,name,stateName,stateType
-                    ,description,variables);
+                    ,description,icon,variables);
         }
     }
 
 
 }
+
