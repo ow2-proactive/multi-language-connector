@@ -38,7 +38,8 @@ import java.util.List;
 import java.util.Set;
 
 import lombok.*;
-import org.ow2.proactive.procci.model.cloud.automation.Service;
+import org.json.simple.JSONObject;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
@@ -66,7 +67,6 @@ public class Compute extends Resource {
     private Float memory; // in Gigabytes
     @Getter
     private ComputeState state;
-
 
     public enum Architecture {
         X86, X64
@@ -113,8 +113,8 @@ public class Compute extends Resource {
         return attributes;
     }
 
-    public Service toPCAModel(String action){
-        Service.Builder serviceBuilder = new Service.Builder("compute",action);
+    public Model toPCAModel(String action){
+        Model.Builder serviceBuilder = new Model.Builder("occi.infrastructure.compute",action);
         serviceBuilder.addVariable("instance_name",this.getTitle());
         serviceBuilder.addVariable("architecture",this.architecture.toString());
         serviceBuilder.addVariable("cores",this.cores.toString());

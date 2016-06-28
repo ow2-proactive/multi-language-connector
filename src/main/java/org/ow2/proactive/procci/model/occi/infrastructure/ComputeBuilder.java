@@ -2,7 +2,6 @@ package org.ow2.proactive.procci.model.occi.infrastructure;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
@@ -80,13 +79,32 @@ public class ComputeBuilder {
         return this;
     }
 
+    public ComputeBuilder architecture(String architecture){
+        if(architecture.equals(Compute.Architecture.X64.toString())){
+            this.architecture = Compute.Architecture.X64;
+        }else if(architecture.equals(Compute.Architecture.X86.toString())){
+            this.architecture = Compute.Architecture.X86;
+        }
+        return this;
+    }
+
     public ComputeBuilder cores(Integer cores) {
         this.cores = cores;
         return this;
     }
 
+    public ComputeBuilder cores(String cores){
+        this.cores = Integer.parseInt(cores);
+        return this;
+    }
+
     public ComputeBuilder share(Integer share) {
         this.share = share;
+        return this;
+    }
+
+    public ComputeBuilder share(String share){
+        this.share = Integer.parseInt(share);
         return this;
     }
 
@@ -100,8 +118,34 @@ public class ComputeBuilder {
         return this;
     }
 
+    public ComputeBuilder memory(String memory) {
+        this.memory = Float.parseFloat(memory);
+        return this;
+    }
+
     public ComputeBuilder state(ComputeState state) {
         this.state = state;
+        return this;
+    }
+
+    public ComputeBuilder state(String state) {
+        switch (state) {
+            case "RUNNING":
+                this.state = ComputeState.ACTIVE;
+                break;
+            case "STOPPED":
+                this.state = ComputeState.SUSPENDED;
+                break;
+            case "PENDING":
+                this.state = ComputeState.INACTIVE;
+                break;
+            case "TERMINATED":
+                this.state = ComputeState.INACTIVE;
+                break;
+            case "ERROR":
+                this.state = ComputeState.ERROR;
+                break;
+        }
         return this;
     }
 

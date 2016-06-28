@@ -39,6 +39,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.json.simple.JSONObject;
 
+
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class Action {
@@ -48,12 +49,28 @@ public class Action {
     private final String description;
     private final String originStates;
     private final String icon;
-    private final JSONObject jsonAction;
+
+    public Action(JSONObject CASResponse){
+        this.type = CASResponse.getOrDefault("type","").toString();
+        this.name = CASResponse.getOrDefault("name","").toString();
+        this.description = CASResponse.getOrDefault("description","").toString();
+        this.originStates = CASResponse.getOrDefault("origin_states","").toString();
+        this.icon = CASResponse.getOrDefault("icon","").toString();
+    }
+
+    public JSONObject getJson(){
+        JSONObject jsonAction = new JSONObject();
+        jsonAction.put("type",type);
+        jsonAction.put("name",name);
+        jsonAction.put("origin_states",originStates);
+        jsonAction.put("description",description);
+        jsonAction.put("icon",icon);
+        return jsonAction;
+    }
 
     public static class Builder{
 
         private final String type;
-        private JSONObject jsonAction;
         private String name;
         private String originStates;
         private String description;
@@ -65,36 +82,30 @@ public class Action {
             this.originStates = "";
             this.description = "";
             this.icon = "";
-            this.jsonAction = new JSONObject();
-            this.jsonAction.put("type",type);
         }
 
         public Builder name(String name){
             this.name = name;
-            this.jsonAction.putIfAbsent("name",name);
             return this;
-        }
+         }
 
         public Builder originStates(String originStates){
             this.originStates = originStates;
-            this.jsonAction.putIfAbsent("origin_states",originStates);
             return this;
         }
 
         public Builder description(String description){
             this.description = description;
-            this.jsonAction.putIfAbsent("description",description);
             return this;
         }
 
         public Builder icon(String icon){
             this.icon = icon;
-            this.jsonAction.putIfAbsent("icon",icon);
             return this;
         }
 
         public Action build(){
-            return new Action(type,name,description,originStates,icon, jsonAction);
+            return new Action(type,name,description,originStates,icon);
         }
 
     }

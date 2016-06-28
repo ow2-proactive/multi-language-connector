@@ -52,7 +52,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 public abstract class Entity {
     @Getter
     private String id;
-    @Getter
+    @Getter @Setter(AccessLevel.PROTECTED)
     private String title;
     @Getter
     private final Kind kind;

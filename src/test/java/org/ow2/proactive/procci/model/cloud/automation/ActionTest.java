@@ -22,10 +22,10 @@ public class ActionTest {
         assertThat(action.getName()).matches("instance name");
         assertThat(action.getOriginStates()).matches("inactive");
         assertThat(action.getType()).matches("Docker");
-        assertThat(action.getJsonAction()).containsKey("icon");
-        assertThat(action.getJsonAction()).containsKey("name");
-        assertThat(action.getJsonAction()).containsKey("description");
-        assertThat(action.getJsonAction()).containsKey("type");
-        assertThat(action.getJsonAction()).containsKey("origin_states");
+        assertThat(action.getJson()).containsKey("icon");
+        assertThat(action.getJson()).containsKey("name");
+        assertThat(action.getJson()).containsKey("description");
+        assertThat(action.getJson()).containsKey("type");
+        assertThat(action.getJson()).containsKey("origin_states");
     }
 }

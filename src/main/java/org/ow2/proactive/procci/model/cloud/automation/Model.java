@@ -38,12 +38,15 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.json.simple.JSONObject;
-import org.ow2.proactive.procci.model.occi.infrastructure.StorageLink;
+import org.json.simple.parser.JSONParser;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class Service {
+public class Model {
 
     private final Action action;
     private final String type;
@@ -53,17 +56,44 @@ public class Service {
     private final String stateName;
     private final String stateType;
     private final String description;
-    private final JSONObject jsonService;
-    private final JSONObject jsonVariables;
+    private final Map<String,String> variables;
+
+    public Model(JSONObject CASResponse){
+        this.action = new Action((JSONObject) CASResponse.getOrDefault("action",new JSONObject()));
+        this.type = CASResponse.getOrDefault("type","").toString();
+        this.endpoint = CASResponse.getOrDefault("endpoint","").toString();
+        this.model = CASResponse.getOrDefault("model","").toString();
+        this.name = CASResponse.getOrDefault("name","").toString();
+        this.stateName = CASResponse.getOrDefault("state_name","").toString();
+        this.stateType = CASResponse.getOrDefault("state_type","").toString();
+        this.description = CASResponse.getOrDefault("description","").toString();
+        this.variables = new HashMap<>();
+        JSONObject variables = (JSONObject) CASResponse.getOrDefault("variables",new JSONObject());
+        for(Object key : variables.keySet()){
+            variables.put(key.toString(),variables.get(key));
+        }
+    }
+
+
 
     /**
      * Create a json object which contains the service data according to the cloud automation model
-     * @return
+     * @return a json representation of the class model
      */
-    public JSONObject getCloudAutomationModel(){
+    public JSONObject getJson(){
+        JSONObject jsonService = new JSONObject();
+        jsonService.put("model",model);
+        jsonService.put("name",name);
+        jsonService.put("type",type);
+        jsonService.put("endpoint",endpoint);
+        jsonService.put("state_name",stateName);
+        jsonService.put("state_type",stateType);
+        jsonService.put("description",description);
+        JSONObject jsonVariables = new JSONObject();
+        jsonVariables.putAll(variables);
         JSONObject query = new JSONObject();
         query.put("service",jsonService);
-        query.put("action",action.getJsonAction());
+        query.put("action",action.getJson());
         query.put("variables",jsonVariables);
         return query;
     }
@@ -77,9 +107,11 @@ public class Service {
         JSONObject query = new JSONObject();
         query.put("service_model",model);
         query.put("service_name","");
-        JSONObject json = (JSONObject) jsonVariables.clone();
-        json.put("infrastructure_name","");
-        query.put("variables",json);
+        JSONObject variables = new JSONObject();
+        variables.putAll(this.variables);
+        variables.put("infrastructure_name","");
+        query.put("variables",variables);
+        query.put("action",action.getJson());
         return query;
     }
 
@@ -93,8 +125,7 @@ public class Service {
         private String endpoint;
         private String stateName;
         private String stateType;
-        private JSONObject jsonService;
-        private JSONObject jsonVariables;
+        private Map<String,String> variables;
 
         public Builder(String model, Action action){
             this.type = "";
@@ -105,9 +136,7 @@ public class Service {
             this.stateName = "";
             this.stateType = "";
             this.description = "";
-            this.jsonService = new JSONObject();
-            this.jsonService.put("model",model);
-            this.jsonVariables = new JSONObject();
+            this.variables = new HashMap<>();
         }
 
         public Builder(String model, String actionType){
@@ -119,55 +148,48 @@ public class Service {
             this.stateName = "";
             this.stateType = "";
             this.description = "";
-            this.jsonService = new JSONObject();
-            this.jsonService.put("model",model);
-            this.jsonVariables = new JSONObject();
+            this.variables = new HashMap<>();
         }
 
         public Builder name(String name){
             this.name = name;
-            jsonService.put("name",name);
             return this;
         }
 
         public Builder type(String type){
             this.type = type;
-            jsonService.putIfAbsent("type",type);
             return this;
         }
 
         public Builder endpoint(String endpoint){
             this.endpoint = endpoint;
-            jsonService.putIfAbsent("endpoint",endpoint);
             return this;
         }
 
         public Builder stateName(String stateName){
             this.stateName = stateName;
-            jsonService.putIfAbsent("state_name",stateName);
             return this;
         }
 
         public Builder stateType(String stateType){
             this.stateType = stateType;
-            jsonService.putIfAbsent("state_type",stateType);
             return this;
         }
 
         public Builder description(String description){
             this.description = description;
-            jsonService.putIfAbsent("description",description);
             return this;
         }
 
         public Builder addVariable(String variableKey, String variableValue){
-            this.jsonVariables.put(variableKey,variableValue);
+            this.variables.put(variableKey,variableValue);
             return this;
         }
 
-        public Service build(){
-            return new Service(action,type,endpoint,model,name,stateName,stateType
-                    ,description,jsonService,jsonVariables);
+
+        public Model build(){
+            return new Model(action,type,endpoint,model,name,stateName,stateType
+                    ,description,variables);
         }
     }
 

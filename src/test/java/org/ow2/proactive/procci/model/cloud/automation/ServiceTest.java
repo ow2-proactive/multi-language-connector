@@ -1,5 +1,6 @@
 package org.ow2.proactive.procci.model.cloud.automation;
 
+import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,11 +11,11 @@ import static com.google.common.truth.Truth.assertThat;
  */
 public class ServiceTest {
 
-    private Service service;
+    private Model service;
 
     @Before
     public void setup(){
-        service = new Service.Builder("modelTest","create")
+        service = new Model.Builder("modelTest","create")
                 .name("nameTest")
                 .description("descriptionTest")
                 .endpoint("endpointTest")
@@ -37,25 +38,25 @@ public class ServiceTest {
         assertThat(service.getModel()).matches("modelTest");
         assertThat(service.getStateName()).matches("stateNameTest");
         assertThat(service.getStateType()).matches("stateTypeTest");
-        assertThat(service.getJsonVariables()).containsExactly("firstKey","firstValue","secondKey","secondValue");
-        assertThat(service.getJsonService()).containsKey("name");
-        assertThat(service.getJsonService()).containsKey("description");
-        assertThat(service.getJsonService()).containsKey("endpoint");
-        assertThat(service.getJsonService()).containsKey("state_name");
-        assertThat(service.getJsonService()).containsKey("state_type");
-        assertThat(service.getJsonService()).containsKey("type");
+        assertThat(service.getVariables()).containsExactly("firstKey","firstValue","secondKey","secondValue");
+        assertThat(service.getName()).matches("nameTest");
+        assertThat(service.getDescription()).matches("descriptionTest");
+        assertThat(service.getEndpoint()).matches("endpointTest");
+        assertThat(service.getStateName()).matches("stateNameTest");
+        assertThat(service.getStateType()).matches("stateTypeTest");
         assertThat(service.getAction().getType()).matches("create");
 
         //constructor with action parameter test
-        service = new Service.Builder("modelTest2",new Action.Builder("actionTest2").build()).build();
+        service = new Model.Builder("modelTest2",new Action.Builder("actionTest2").build()).build();
         assertThat(service.getAction().getType()).matches("actionTest2");
         assertThat(service.getModel()).matches("modelTest2");
+
     }
 
     @Test
-    public void getCloudAutomationModelTest(){
-        assertThat(service.getCloudAutomationModel()).containsEntry("service",service.getJsonService());
-        assertThat(service.getCloudAutomationModel()).containsEntry("variables",service.getJsonVariables());
-        assertThat(service.getCloudAutomationModel()).containsEntry("action",service.getAction().getJsonAction());
+    public void getJSONTest(){
+        assertThat(service.getJson()).containsKey("service");
+        assertThat(service.getJson()).containsKey("variables");
+        assertThat(service.getJson()).containsKey("action");
     }
 }
