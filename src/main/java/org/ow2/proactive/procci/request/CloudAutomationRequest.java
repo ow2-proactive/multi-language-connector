@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
 
 import java.io.*;
 import java.util.Properties;
@@ -29,7 +30,7 @@ public class CloudAutomationRequest {
     private final Logger logger = LogManager.getRootLogger();
 
     /**
-     * Get the deployed instances from Cloud Automation Service
+     * Get the deployed instances from Cloud Automation Model
      * @return a json object containing the request results
      */
     public JSONObject getRequest() throws CloudAutomationException {
@@ -53,6 +54,27 @@ public class CloudAutomationRequest {
 
         return result;
     }
+
+    /**
+     *  Give the instance information thanks to its name
+     * @param name is the instance name
+     * @return the instance information
+     * @throws CloudAutomationException is thrown if an error occur during the connection with CAS or the login
+     */
+    public JSONObject getRequestByName(String name) throws CloudAutomationException {
+        JSONObject response = getRequest();
+        Model model;
+        for(Object key : response.keySet()){
+            model = new Model((JSONObject) response.get(key));
+            if(model.getVariables().get("name").equals(name)){
+                return model.getJson();
+            }
+        }
+        JSONObject result = new JSONObject();
+        result.put("exception",name+" was not found");
+        return result;
+    }
+
 
 
     /**
@@ -188,7 +210,7 @@ public class CloudAutomationRequest {
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
     private void launchException(Exception ex) throws CloudAutomationException {
-        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, "+ ex.getClass() + "in postRequest : "+ex.getMessage());
+        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, "+ ex.getClass() + " in postRequest : "+ex.getMessage());
         JSONObject result = new JSONObject();
         result.put("exception",ex.getMessage());
         throw new CloudAutomationException(result);

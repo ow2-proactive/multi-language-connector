@@ -42,7 +42,9 @@ import org.json.simple.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Cloud Automation model
+ */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class Model {
@@ -58,24 +60,28 @@ public class Model {
     private final String icon;
     private final Map<String,String> variables;
 
+    /**
+     * Create the cloud automation model from the Cloud Automation Service response
+     * @param CASResponse is the Cloud Automation Service Response
+     */
     public Model(JSONObject CASResponse){
         this.action = new Action((JSONObject) CASResponse.getOrDefault("action",new JSONObject()));
-        this.type = CASResponse.getOrDefault("type","").toString();
-        this.endpoint = CASResponse.getOrDefault("instanceEndpoint","").toString();
-        this.model = CASResponse.getOrDefault("serviceModel","").toString();
-        this.name = CASResponse.getOrDefault("serviceName","").toString();
-        this.stateName = CASResponse.getOrDefault("serviceInstanceStatus","").toString();
-        this.stateType = CASResponse.getOrDefault("state_type","").toString();
-        this.description = CASResponse.getOrDefault("description","").toString();
-        this.icon = CASResponse.getOrDefault("icon","").toString();
+        this.type = (String) CASResponse.getOrDefault("type","");
+        this.endpoint = (String) CASResponse.getOrDefault("instanceEndpoint","");
+        this.model = (String) CASResponse.getOrDefault("serviceModel","");
+        this.name = (String) CASResponse.getOrDefault("serviceName","");
+        this.stateName = (String) CASResponse.getOrDefault("serviceInstanceStatus","");
+        this.stateType = (String) CASResponse.getOrDefault("state_type","");
+        this.description = (String) CASResponse.getOrDefault("description","");
+        this.icon = (String) CASResponse.getOrDefault("icon","");
         this.variables = new HashMap<>();
-        variables.put("id",CASResponse.getOrDefault("serviceInstanceId","").toString());
-        variables.put("name",CASResponse.getOrDefault("serviceInstanceName","").toString());
+        variables.put("id", (String) CASResponse.getOrDefault("serviceInstanceId",""));
+        variables.put("name",(String) CASResponse.getOrDefault("serviceInstanceName",""));
     }
 
-    
+
     /**
-     * Create a json object which contains the service data according to the cloud automation model
+     * Create a json object which contains the cloud automation model and its values
      * @return a json representation of the class model
      */
     public JSONObject getJson(){
