@@ -3,6 +3,8 @@ package org.ow2.proactive.procci.request;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import static com.google.common.truth.Truth.assertThat;
 
 /**
@@ -15,8 +17,9 @@ public class CloudAutomationRequestTest {
         assertThat(new CloudAutomationRequest().getProperty("server.endpoint")).isNotEmpty();
     }
 
-    @Ignore @Test
+    //@Test
     public void getSessionIdTest(){
         assertThat(new CloudAutomationRequest().getSessionId()).isNotEmpty();
     }
+
 }

@@ -69,7 +69,16 @@ public class Compute extends Resource {
     private ComputeState state;
 
     public enum Architecture {
-        X86, X64
+        X86, X64;
+
+        public static Architecture getArchitetecture(String archi){
+            if(archi.equalsIgnoreCase("x64")){
+                return X64;
+            }
+            else{
+                return X86;
+            }
+        }
     }
 
     /**
@@ -121,5 +130,4 @@ public class Compute extends Resource {
         serviceBuilder.addVariable("memory",this.memory.toString());
         return serviceBuilder.build();
     }
-
 }

@@ -34,28 +34,22 @@
  */
 package org.ow2.proactive.procci.rest;
 
-import java.util.Collection;
 
 import org.json.simple.JSONObject;
-import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.request.CloudAutomationException;
 import org.ow2.proactive.procci.request.CloudAutomationRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Implement CRUD methods for REST service
  */
-
 @RestController
 @RequestMapping(value = Constant.computePath)
 public class ComputeRest {
@@ -78,9 +72,16 @@ public class ComputeRest {
         //-------------------Retrieve Single Compute--------------------------------------------------------
 
         @RequestMapping(value = "{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<Compute> getCompute(@PathVariable("name") String name) {
+        public ResponseEntity getCompute(@PathVariable("name") String name) {
             logger.debug("Get Compute ");
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+            try {
+                JSONObject computeJSon = new CloudAutomationRequest().getRequestByName(name);
+                Model computeModel = new Model(computeJSon);
+                ComputeBuilder computeBuilder = new ComputeBuilder().update(computeModel);
+                return new ResponseEntity<>(computeBuilder.build(), HttpStatus.OK);
+            }catch (CloudAutomationException e){
+                return new ResponseEntity<>(e.getJsonError(),HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
         }
 
@@ -88,16 +89,17 @@ public class ComputeRest {
         //-------------------Create a Compute--------------------------------------------------------
 
         @RequestMapping(method = RequestMethod.POST)
-        public ResponseEntity<JSONObject> createCompute(@RequestBody ComputeBuilder compute) {
+        public ResponseEntity createCompute(@RequestBody ComputeBuilder compute) throws InterruptedException {
             logger.debug("Creating Compute "+ compute.build().getTitle());
-            JSONObject pcaModel = compute.build().toPCAModel("create").getCloudAutomationServiceRequest();
+            JSONObject pcaModel = compute.build().toPCAModel("create").getCASRequest();
             try {
-                return new ResponseEntity<>(new CloudAutomationRequest().postRequest(pcaModel),HttpStatus.OK);
+                JSONObject json = new CloudAutomationRequest().postRequest(pcaModel);
+                Model model = new Model(json);
+                compute.update(model);
+                return new ResponseEntity<>(compute.build(),HttpStatus.CREATED);
             } catch (CloudAutomationException e) {
                 return new ResponseEntity<>(e.getJsonError(),HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
-
 
         }
 

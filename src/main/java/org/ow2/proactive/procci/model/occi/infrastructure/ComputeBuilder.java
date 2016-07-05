@@ -3,6 +3,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
@@ -149,9 +150,18 @@ public class ComputeBuilder {
         return this;
     }
 
+    public ComputeBuilder update(Model pca){
+        title = pca.getVariables().get("instance_name");
+        architecture = Compute.Architecture.getArchitetecture(pca.getVariables().get("architecture"));
+        cores = Integer.parseInt(pca.getVariables().get("cores"));
+        memory = Float.parseFloat(pca.getVariables().get("memory"));
+        return this;
+    }
+
     public Compute build() {
         return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary, new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
     }
+
 
 }

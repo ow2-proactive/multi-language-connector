@@ -40,6 +40,9 @@ import lombok.Getter;
 import org.json.simple.JSONObject;
 
 
+/**
+ * Action describes the action part of the cloud automation model
+ */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class Action {
