@@ -71,12 +71,15 @@ public class Compute extends Resource {
     public enum Architecture {
         X86, X64;
 
-        public static Architecture getArchitetecture(String archi){
-            if(archi.equalsIgnoreCase("x64")){
+        public static Architecture getArchitecture(String archi){
+            if(X64.toString().equalsIgnoreCase(archi)){
                 return X64;
             }
-            else{
+            else if(X86.toString().equalsIgnoreCase(archi)){
                 return X86;
+            }
+            else{
+                return null;
             }
         }
     }

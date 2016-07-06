@@ -151,10 +151,19 @@ public class ComputeBuilder {
     }
 
     public ComputeBuilder update(Model pca){
+        System.out.println(pca.getVariables().toString());
         title = pca.getVariables().get("instance_name");
-        architecture = Compute.Architecture.getArchitetecture(pca.getVariables().get("architecture"));
-        cores = Integer.parseInt(pca.getVariables().get("cores"));
-        memory = Float.parseFloat(pca.getVariables().get("memory"));
+        architecture = Compute.Architecture.getArchitecture(pca.getVariables().get("architecture"));
+        String cores = pca.getVariables().get("cores");
+        if(cores!=null && (!cores.isEmpty())  ) {
+            this.cores = Integer.parseInt(cores);
+        }
+
+        String memory = pca.getVariables().get("memory");
+        if( (memory!=null && !memory.isEmpty()) ) {
+            this.memory = Float.parseFloat(memory);
+        }
+
         return this;
     }
 
