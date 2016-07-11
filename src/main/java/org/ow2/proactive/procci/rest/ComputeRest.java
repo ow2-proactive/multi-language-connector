@@ -90,7 +90,7 @@ public class ComputeRest {
         @RequestMapping(method = RequestMethod.POST)
         public ResponseEntity<JSONObject> createCompute(@RequestBody ComputeBuilder compute) {
             logger.debug("Creating Compute "+ compute.build().getTitle());
-            JSONObject pcaModel = compute.build().toPCAModel("create").getCloudAutomationServiceRequest();
+            JSONObject pcaModel = compute.build().toPCAModel("create").getCASRequest();
             try {
                 return new ResponseEntity<>(new CloudAutomationRequest().postRequest(pcaModel),HttpStatus.OK);
             } catch (CloudAutomationException e) {
