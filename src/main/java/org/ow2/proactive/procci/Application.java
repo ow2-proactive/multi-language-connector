@@ -108,10 +108,6 @@ public class Application extends WebMvcConfigurerAdapter {
     private Predicate<String> allowedPaths() {
         List<String> pathList = new ArrayList<String>();
         pathList.add("/compute.*");
-        //pathList.add("/storage.*");
-        //pathList.add("/network.*");
-        //pathList.add("/networkInterface.*");
-        //pathList.add("/storageLink.*");
         String pathRegex = "("+pathList.get(0)+")";
         for(int i=1;i<pathList.size();i++){
             pathRegex += "|(" + pathList.get(i)+")";
