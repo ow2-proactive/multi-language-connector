@@ -99,7 +99,12 @@ public class ComputeRest {
 
         }
 
-        //------------------- Apply an action on a Compute --------------------------------------------------------
+
+    /**
+     * The following method will be added soon
+     */
+
+    //------------------- Apply an action on a Compute --------------------------------------------------------
     /*
         @RequestMapping(value = "{action}", method = RequestMethod.POST)
         public ResponseEntity<Compute> actionOnCompute(@PathVariable("action") String action, @RequestBody Compute compute) {
