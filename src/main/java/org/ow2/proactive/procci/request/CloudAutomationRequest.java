@@ -45,11 +45,11 @@ public class CloudAutomationRequest {
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
         } catch (IOException ex){
-            launchException(ex);
+            raiseException(ex);
         } catch (ParseException ex){
-            launchException(ex);
+            raiseException(ex);
         } catch (Exception ex) {
-            launchException(ex);
+            raiseException(ex);
         }
 
         return result;
@@ -102,11 +102,11 @@ public class CloudAutomationRequest {
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
         } catch (IOException ex){
-            launchException(ex);
+            raiseException(ex);
         } catch (ParseException ex){
-            launchException(ex);
+            raiseException(ex);
         } catch (Exception ex) {
-            launchException(ex);
+            raiseException(ex);
         }
         return result;
     }
@@ -205,11 +205,11 @@ public class CloudAutomationRequest {
     }
 
     /**
-     * Launch an CloudAutomation exception and log it
+     * Raise an CloudAutomation exception and log it
      * @param ex the exception to be logged
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
-    private void launchException(Exception ex) throws CloudAutomationException {
+    private void raiseException(Exception ex) throws CloudAutomationException {
         logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, "+ ex.getClass() + " in postRequest : "+ex.getMessage());
         JSONObject result = new JSONObject();
         result.put("exception",ex.getMessage());
