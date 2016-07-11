@@ -4,7 +4,7 @@
  *    Parallel, Distributed, Multi-Core Computing for
  *    Enterprise Grids & Clouds
  *
- * Copyright (C) 1997-2015 INRIA/University of
+ * Copyright (C) 1997-2016 INRIA/University of
  *                 Nice-Sophia Antipolis/ActiveEon
  * Contact: proactive@ow2.org or contact@activeeon.com
  *
@@ -33,8 +33,6 @@
  *  * $$ACTIVEEON_INITIAL_DEV$$
  */
 package org.ow2.proactive.procci.rest;
-
-import java.util.Collection;
 
 import org.json.simple.JSONObject;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
