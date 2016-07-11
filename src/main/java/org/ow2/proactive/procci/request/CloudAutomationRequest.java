@@ -129,14 +129,14 @@ public class CloudAutomationRequest {
             return prop.getProperty(propertyKey);
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.debug(ex.getMessage());
             throw new RuntimeException("Unable to get the cloud automation service url from config.properties");
         } finally {
             if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.debug(e.getMessage());
                 }
             }
         }
@@ -175,7 +175,7 @@ public class CloudAutomationRequest {
             }
             httpClient.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            logger.debug(ex.getMessage());
         }
         return result.toString();
     }
