@@ -19,7 +19,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
  */
 
 /**
- * Indicated the data that will be supplied to kthe compute
+ * Indicated the data that will be supplied to the compute
  */
 public class Contextualization extends Mixin {
 
