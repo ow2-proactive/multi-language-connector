@@ -55,7 +55,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping(value = Constant.computePath)
+@RequestMapping(value = Constant.COMPUTE_PATH)
 public class ComputeRest {
 
         private final Logger logger = LogManager.getRootLogger();
