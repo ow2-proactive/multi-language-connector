@@ -28,9 +28,8 @@ The WAR file produced by Gradle can also be deployed in the embedded Jetty conta
 Sometimes the gradle processes are not killing properly when you stop the running application. If you receive the message "the port is already in use" on starting microservice, then kill all suspending gradle processes for previous task. You can do it manually or use in IntelliJ IDEA Gradle killer plugin.
 
 ## Example
-The service is organized with a complete RESTful example. The example follows MVC packaging structure and covered by tests.
-The purpose of example to make more easy developing of new service.
-To try it out use Swagger or (http://localhost:8080/compute).<br>
+The service is organized with a complete RESTful example. 
+To try it out use Swagger or (http://localhost:8080/compute).
 
 ## Swagger
 
