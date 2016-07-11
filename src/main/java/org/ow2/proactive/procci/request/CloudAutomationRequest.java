@@ -34,7 +34,7 @@ public class CloudAutomationRequest {
      * @return a json object containing the request results
      */
     public JSONObject getRequest() throws CloudAutomationException {
-        final String url = getProperty("server.endpoint") + "/cloud-automation-service/serviceInstances";
+        final String url = getProperty("server.endpoint") + getProperty("server.cloud-automation-service.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -86,7 +86,7 @@ public class CloudAutomationRequest {
     public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String url = getProperty("server.endpoint") + "/cloud-automation-service/serviceInstances";
+        final String url = getProperty("server.endpoint") + getProperty("server.cloud-automation-service.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
