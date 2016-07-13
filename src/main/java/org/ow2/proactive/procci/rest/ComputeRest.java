@@ -4,7 +4,7 @@
  *    Parallel, Distributed, Multi-Core Computing for
  *    Enterprise Grids & Clouds
  *
- * Copyright (C) 1997-2015 INRIA/University of
+ * Copyright (C) 1997-2016 INRIA/University of
  *                 Nice-Sophia Antipolis/ActiveEon
  * Contact: proactive@ow2.org or contact@activeeon.com
  *
@@ -34,11 +34,13 @@
  */
 package org.ow2.proactive.procci.rest;
 
-import java.util.Collection;
-
-import org.ow2.proactive.procci.model.infrastructure.Compute;
+import org.json.simple.JSONObject;
+import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.request.CloudAutomationException;
+import org.ow2.proactive.procci.request.CloudAutomationRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +55,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping(value = "/compute/")
+@RequestMapping(value = Constant.COMPUTE_PATH)
 public class ComputeRest {
 
         private final Logger logger = LogManager.getRootLogger();
@@ -61,9 +63,13 @@ public class ComputeRest {
         //-------------------Retrieve All Computes--------------------------------------------------------
 
         @RequestMapping(method = RequestMethod.GET)
-        public ResponseEntity<Collection<Compute>> listAllComputes() {
-            logger.debug("Creating all Compute instances");
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        public ResponseEntity<JSONObject> listAllComputes() {
+            logger.debug("Get all Compute instances");
+            try {
+                return new ResponseEntity<>(new CloudAutomationRequest().getRequest(),HttpStatus.OK);
+            } catch (CloudAutomationException e) {
+                return new  ResponseEntity<>(e.getJsonError(),HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
 
 
@@ -80,35 +86,64 @@ public class ComputeRest {
         //-------------------Create a Compute--------------------------------------------------------
 
         @RequestMapping(method = RequestMethod.POST)
-        public ResponseEntity<Compute> createCompute(@RequestBody Compute compute) {
-            logger.debug("Creating Compute "+ compute.getId());
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        public ResponseEntity<JSONObject> createCompute(@RequestBody ComputeBuilder compute) {
+            logger.debug("Creating Compute "+ compute.build().getTitle());
+            JSONObject pcaModel = compute.build().toPCAModel("create").getCASRequest();
+            try {
+                return new ResponseEntity<>(new CloudAutomationRequest().postRequest(pcaModel),HttpStatus.OK);
+            } catch (CloudAutomationException e) {
+                return new ResponseEntity<>(e.getJsonError(),HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+
+
         }
 
 
+    /**
+     * The following method will be added soon
+     */
+
+    //------------------- Apply an action on a Compute --------------------------------------------------------
+    /*
+        @RequestMapping(value = "{action}", method = RequestMethod.POST)
+        public ResponseEntity<Compute> actionOnCompute(@PathVariable("action") String action, @RequestBody Compute compute) {
+            logger.debug("Action "+ action+" on the Compute " + compute.getTitle());
+            JSONObject pcaModel = compute.toPCAModel(action).getCloudAutomationServiceRequest();
+            try {
+                new CloudAutomationRequest().sendRequest(pcaModel);
+            }catch (CloudAutomationException e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(compute,HttpStatus.OK);
+        }
+
         //------------------- Update a Compute --------------------------------------------------------
 
-        @RequestMapping(value = "{name}", method = RequestMethod.PUT)
-        public ResponseEntity<Compute> updateCompute(@PathVariable("id") String id, @RequestBody Compute compute) {
-            logger.debug("Updating Compute " + id);
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        @RequestMapping(value = "{id}", method = RequestMethod.PUT)
+        public ResponseEntity<Compute> updateCompute(@RequestBody Compute compute) {
+            logger.debug("Updating Compute " + compute.getTitle());
+            JSONObject pcaModel = compute.toPCAModel("update").getCloudAutomationServiceRequest();
+            try {
+                String result = new CloudAutomationRequest().sendRequest(pcaModel);
+            }catch (CloudAutomationException e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(compute,HttpStatus.OK);
         }
 
         //------------------- Delete a Compute --------------------------------------------------------
 
-        @RequestMapping(value = "{name}", method = RequestMethod.DELETE)
-        public ResponseEntity<Compute> deleteCompute(@PathVariable("name") String name) {
-            logger.debug("Fetching & Deleting Compute with name " + name);
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+        public ResponseEntity<Compute> deleteCompute(@PathVariable("id") String id, @PathVariable String sessionid) {
+            logger.debug("Fetching & Deleting Compute with name " + id);
+            JSONObject pcaModel = new ComputeBuilder(id,sessionid).build().toPCAModel("delete").getCloudAutomationModel();
+            try{
+                new CloudAutomationRequest().sendRequest(pcaModel);
+            }catch (CloudAutomationException e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
         }
-
-
-        //------------------- Delete All Computes --------------------------------------------------------
-
-        @RequestMapping(method = RequestMethod.DELETE)
-        public ResponseEntity<Compute> deleteAllComputes() {
-            logger.debug("Deleting All Computes");
-            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-        }
-
+*/
     }

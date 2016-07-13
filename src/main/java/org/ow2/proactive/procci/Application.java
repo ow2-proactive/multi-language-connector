@@ -3,7 +3,7 @@
  *    Parallel, Distributed, Multi-Core Computing for
  *    Enterprise Grids & Clouds
  *
- * Copyright (C) 1997-2015 INRIA/University of
+ * Copyright (C) 1997-2016 INRIA/University of
  *                 Nice-Sophia Antipolis/ActiveEon
  * Contact: proactive@ow2.org or contact@activeeon.com
  *
@@ -41,8 +41,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -89,11 +87,10 @@ public class Application extends WebMvcConfigurerAdapter {
     The following code is for Swagger documentation
      */
     @Bean
-    public Docket papiApi() {
+    public Docket procciApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .groupName("procci")
-                .ignoredParameterTypes(Pageable.class, PagedResourcesAssembler.class)
                 .select()
                 .paths(allowedPaths())
                 .build();
@@ -101,7 +98,7 @@ public class Application extends WebMvcConfigurerAdapter {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("PAPI")
+                .title("DSL connector")
                 .description("The purpose of procci is to offer a standard access to the cloud automation functionnalities\n")
                 .licenseUrl("https://github.com/ow2-proactive/procci/blob/master/LICENSE")
                 .version("1.0")
@@ -110,7 +107,6 @@ public class Application extends WebMvcConfigurerAdapter {
 
     private Predicate<String> allowedPaths() {
         List<String> pathList = new ArrayList<String>();
-        pathList.add("/users.*");
         pathList.add("/compute.*");
         String pathRegex = "("+pathList.get(0)+")";
         for(int i=1;i<pathList.size();i++){
