@@ -79,7 +79,7 @@ public class Network extends Resource {
      * @param state   is the state aimed by the user or the current state
      */
     private Network(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
-            Integer vlan, String label, NetworkState state) {
+                    Integer vlan, String label, NetworkState state) {
 
         super(url, kind, title, mixins, summary, links);
         this.state = state;
@@ -111,7 +111,7 @@ public class Network extends Resource {
             this.state = null;
         }
 
-        public Builder url(String url){
+        public Builder url(String url) {
             this.url = url;
             return this;
         }

@@ -49,7 +49,7 @@ public class ComputeBuilder {
         links = new ArrayList<>();
     }
 
-    public ComputeBuilder url(String url){
+    public ComputeBuilder url(String url) {
         this.url = url;
         return this;
     }
@@ -80,10 +80,10 @@ public class ComputeBuilder {
         return this;
     }
 
-    public ComputeBuilder architecture(String architecture){
-        if(architecture.equals(Compute.Architecture.X64.toString())){
+    public ComputeBuilder architecture(String architecture) {
+        if (architecture.equals(Compute.Architecture.X64.toString())) {
             this.architecture = Compute.Architecture.X64;
-        }else if(architecture.equals(Compute.Architecture.X86.toString())){
+        } else if (architecture.equals(Compute.Architecture.X86.toString())) {
             this.architecture = Compute.Architecture.X86;
         }
         return this;
@@ -94,7 +94,7 @@ public class ComputeBuilder {
         return this;
     }
 
-    public ComputeBuilder cores(String cores){
+    public ComputeBuilder cores(String cores) {
         this.cores = Integer.parseInt(cores);
         return this;
     }
@@ -104,7 +104,7 @@ public class ComputeBuilder {
         return this;
     }
 
-    public ComputeBuilder share(String share){
+    public ComputeBuilder share(String share) {
         this.share = Integer.parseInt(share);
         return this;
     }
@@ -150,17 +150,17 @@ public class ComputeBuilder {
         return this;
     }
 
-    public ComputeBuilder update(Model pca){
+    public ComputeBuilder update(Model pca) {
         System.out.println(pca.getVariables().toString());
         title = pca.getVariables().get("instance_name");
         architecture = Compute.Architecture.getArchitecture(pca.getVariables().get("architecture"));
         String cores = pca.getVariables().get("cores");
-        if(cores!=null && (!cores.isEmpty())  ) {
+        if (cores != null && (!cores.isEmpty())) {
             this.cores = Integer.parseInt(cores);
         }
 
         String memory = pca.getVariables().get("memory");
-        if( (memory!=null && !memory.isEmpty()) ) {
+        if ((memory != null && !memory.isEmpty())) {
             this.memory = Float.parseFloat(memory);
         }
 

@@ -49,7 +49,7 @@ public abstract class StorageAction extends Action {
      * @param attributes are the action properties
      */
     public StorageAction(String scheme, String term, String title,
-            Set<Attribute> attributes) {
+                         Set<Attribute> attributes) {
         super(scheme, term, title, attributes);
     }
 }

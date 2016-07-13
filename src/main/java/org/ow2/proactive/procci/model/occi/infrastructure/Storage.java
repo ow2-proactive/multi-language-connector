@@ -78,8 +78,8 @@ public class Storage extends Resource {
      * @param state   is the state aimed by the user or the current state
      */
     private Storage(String url, Kind kind,
-            String title, List<Mixin> mixins,
-            String summary, List<Link> links, Float size, StorageState state) {
+                    String title, List<Mixin> mixins,
+                    String summary, List<Link> links, Float size, StorageState state) {
 
         super(url, kind,
                 title, mixins, summary, links);
@@ -92,7 +92,7 @@ public class Storage extends Resource {
     @ToString
     public static class Builder {
         private final Float size;
-        private  String url;
+        private String url;
         private String title;
         private String summary;
         private StorageState state;
@@ -109,7 +109,7 @@ public class Storage extends Resource {
             this.links = new ArrayList<>();
         }
 
-        public Builder url(String url){
+        public Builder url(String url) {
             this.url = url;
             return this;
         }

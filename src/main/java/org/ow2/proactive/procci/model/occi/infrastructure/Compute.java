@@ -52,7 +52,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 /**
  * This class represents a generic information processing resource
  */
-@ToString @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class Compute extends Resource {
 
     @Getter
@@ -71,14 +73,12 @@ public class Compute extends Resource {
     public enum Architecture {
         X86, X64;
 
-        public static Architecture getArchitecture(String archi){
-            if(X64.toString().equalsIgnoreCase(archi)){
+        public static Architecture getArchitecture(String archi) {
+            if (X64.toString().equalsIgnoreCase(archi)) {
                 return X64;
-            }
-            else if(X86.toString().equalsIgnoreCase(archi)){
+            } else if (X86.toString().equalsIgnoreCase(archi)) {
                 return X86;
-            }
-            else{
+            } else {
                 return null;
             }
         }
@@ -125,12 +125,12 @@ public class Compute extends Resource {
         return attributes;
     }
 
-    public Model toPCAModel(String action){
-        Model.Builder serviceBuilder = new Model.Builder("occi.infrastructure.compute",action);
-        serviceBuilder.addVariable("instance_name",this.getTitle());
-        serviceBuilder.addVariable("architecture",this.architecture.toString());
-        serviceBuilder.addVariable("cores",this.cores.toString());
-        serviceBuilder.addVariable("memory",this.memory.toString());
+    public Model toPCAModel(String action) {
+        Model.Builder serviceBuilder = new Model.Builder("occi.infrastructure.compute", action);
+        serviceBuilder.addVariable("instance_name", this.getTitle());
+        serviceBuilder.addVariable("architecture", this.architecture.toString());
+        serviceBuilder.addVariable("cores", this.cores.toString());
+        serviceBuilder.addVariable("memory", this.memory.toString());
         return serviceBuilder.build();
     }
 }

@@ -47,7 +47,9 @@ import com.google.common.collect.ImmutableList;
 /**
  * Resource describes a concrete resource that can be inspected or manipulated
  */
-@NoArgsConstructor @ToString @EqualsAndHashCode(callSuper=true)
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public class Resource extends Entity {
 
     @Getter
@@ -67,7 +69,7 @@ public class Resource extends Entity {
      * @param links   is a set of the Link compositions
      */
     protected Resource(String url, Kind kind, String title, List<Mixin> mixins,
-            String summary, List<Link> links) {
+                       String summary, List<Link> links) {
         super(url, kind, title, mixins);
         this.summary = summary;
         this.links = new ImmutableList.Builder<Link>().addAll(links).build();
@@ -88,7 +90,7 @@ public class Resource extends Entity {
             this.links = new ArrayList<>();
         }
 
-        public Builder url(String url){
+        public Builder url(String url) {
             this.url = url;
             return this;
         }

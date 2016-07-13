@@ -31,6 +31,7 @@ public class CloudAutomationRequest {
 
     /**
      * Get the deployed instances from Cloud Automation Model
+     *
      * @return a json object containing the request results
      */
     public JSONObject getRequest() throws CloudAutomationException {
@@ -44,9 +45,9 @@ public class CloudAutomationRequest {
             String serverOutput = readHttpResponse(response);
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
-        } catch (IOException ex){
+        } catch (IOException ex) {
             raiseException(ex);
-        } catch (ParseException ex){
+        } catch (ParseException ex) {
             raiseException(ex);
         } catch (Exception ex) {
             raiseException(ex);
@@ -56,7 +57,8 @@ public class CloudAutomationRequest {
     }
 
     /**
-     *  Give the instance information thanks to its name
+     * Give the instance information thanks to its name
+     *
      * @param name is the instance name
      * @return the instance information
      * @throws CloudAutomationException is thrown if an error occur during the connection with CAS or the login
@@ -64,21 +66,21 @@ public class CloudAutomationRequest {
     public JSONObject getRequestByName(String name) throws CloudAutomationException {
         JSONObject response = getRequest();
         Model model;
-        for(Object key : response.keySet()){
+        for (Object key : response.keySet()) {
             model = new Model((JSONObject) response.get(key));
-            if(model.getVariables().get("name").equals(name)){
+            if (model.getVariables().get("name").equals(name)) {
                 return model.getJson();
             }
         }
         JSONObject result = new JSONObject();
-        result.put("exception",name+" was not found");
+        result.put("exception", name + " was not found");
         return result;
     }
 
 
-
     /**
      * Send a request to pca service with a header containing the session id and sending content
+     *
      * @param content is which is send to the cloud automation service
      * @return the information about gathered from cloud automation service
      * @throws CloudAutomationException is thrown if something failed during the connection
@@ -91,7 +93,7 @@ public class CloudAutomationRequest {
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost postRequest = new HttpPost(url);
-            postRequest.addHeader(PCA_SERVICE_SESSIONID,getSessionId());
+            postRequest.addHeader(PCA_SERVICE_SESSIONID, getSessionId());
             StringEntity input = new StringEntity(content.toJSONString());
             input.setContentType("application/json");
             postRequest.setEntity(input);
@@ -101,9 +103,9 @@ public class CloudAutomationRequest {
             String serverOutput = readHttpResponse(response);
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
-        } catch (IOException ex){
+        } catch (IOException ex) {
             raiseException(ex);
-        } catch (ParseException ex){
+        } catch (ParseException ex) {
             raiseException(ex);
         } catch (Exception ex) {
             raiseException(ex);
@@ -114,10 +116,11 @@ public class CloudAutomationRequest {
 
     /**
      * Get the property from the configuration file config.properties
+     *
      * @param propertyKey is the key of the variable
      * @return the value of the variable
      */
-    String getProperty(String propertyKey){
+    String getProperty(String propertyKey) {
         Properties prop = new Properties();
         InputStream input = null;
 
@@ -144,13 +147,14 @@ public class CloudAutomationRequest {
     }
 
     /**
-     *  Send a request to the scheduler with the name and the password from the configuration file in order to get the
-     *  session id
+     * Send a request to the scheduler with the name and the password from the configuration file in order to get the
+     * session id
+     *
      * @return the session id
      */
-     String getSessionId(){
+    String getSessionId() {
         final String SCHEDULER_LOGIN_URL = getProperty("login.endpoint");
-        final String SCHEDULER_REQUEST = "username="+ getProperty("login.name")+"&password="+getProperty("login.password");
+        final String SCHEDULER_REQUEST = "username=" + getProperty("login.name") + "&password=" + getProperty("login.password");
 
         StringBuffer result = new StringBuffer();
         try {
@@ -182,6 +186,7 @@ public class CloudAutomationRequest {
 
     /**
      * Read an http respond and convert it into a string
+     *
      * @param response is the http response
      * @return a string containing the information from response
      * @throws IOException occur if problem occur with the buffer
@@ -206,13 +211,14 @@ public class CloudAutomationRequest {
 
     /**
      * Raise an CloudAutomation exception and log it
+     *
      * @param ex the exception to be logged
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
     private void raiseException(Exception ex) throws CloudAutomationException {
-        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, "+ ex.getClass() + " in postRequest : "+ex.getMessage());
+        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + ex.getClass() + " in postRequest : " + ex.getMessage());
         JSONObject result = new JSONObject();
-        result.put("exception",ex.getMessage());
+        result.put("exception", ex.getMessage());
         throw new CloudAutomationException(result);
     }
 }

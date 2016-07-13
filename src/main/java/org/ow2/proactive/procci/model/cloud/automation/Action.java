@@ -53,25 +53,25 @@ public class Action {
     private final String originStates;
     private final String icon;
 
-    public Action(JSONObject CASResponse){
-        this.type = CASResponse.getOrDefault("type","").toString();
-        this.name = CASResponse.getOrDefault("name","").toString();
-        this.description = CASResponse.getOrDefault("description","").toString();
-        this.originStates = CASResponse.getOrDefault("origin_states","").toString();
-        this.icon = CASResponse.getOrDefault("icon","").toString();
+    public Action(JSONObject CASResponse) {
+        this.type = CASResponse.getOrDefault("type", "").toString();
+        this.name = CASResponse.getOrDefault("name", "").toString();
+        this.description = CASResponse.getOrDefault("description", "").toString();
+        this.originStates = CASResponse.getOrDefault("origin_states", "").toString();
+        this.icon = CASResponse.getOrDefault("icon", "").toString();
     }
 
-    public JSONObject getJson(){
+    public JSONObject getJson() {
         JSONObject jsonAction = new JSONObject();
-        jsonAction.put("type",type);
-        jsonAction.put("name",name);
-        jsonAction.put("description",description);
-        jsonAction.put("origin_states",originStates);
-        jsonAction.put("icon",icon);
+        jsonAction.put("type", type);
+        jsonAction.put("name", name);
+        jsonAction.put("description", description);
+        jsonAction.put("origin_states", originStates);
+        jsonAction.put("icon", icon);
         return jsonAction;
     }
 
-    public static class Builder{
+    public static class Builder {
 
         private final String type;
         private String name;
@@ -79,7 +79,7 @@ public class Action {
         private String description;
         private String icon;
 
-        public Builder(String type){
+        public Builder(String type) {
             this.type = type;
             this.name = "";
             this.originStates = "";
@@ -87,28 +87,28 @@ public class Action {
             this.icon = "";
         }
 
-        public Builder name(String name){
+        public Builder name(String name) {
             this.name = name;
             return this;
-         }
+        }
 
-        public Builder originStates(String originStates){
+        public Builder originStates(String originStates) {
             this.originStates = originStates;
             return this;
         }
 
-        public Builder description(String description){
+        public Builder description(String description) {
             this.description = description;
             return this;
         }
 
-        public Builder icon(String icon){
+        public Builder icon(String icon) {
             this.icon = icon;
             return this;
         }
 
-        public Action build(){
-            return new Action(type,name,description,originStates,icon);
+        public Action build() {
+            return new Action(type, name, description, originStates, icon);
         }
 
     }

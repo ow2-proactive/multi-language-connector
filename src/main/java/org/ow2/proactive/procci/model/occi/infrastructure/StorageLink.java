@@ -77,8 +77,8 @@ public class StorageLink extends Link {
      * @param mountPoint point to where is mounted the guest OS
      */
     private StorageLink(String url, Kind kind, String title, List<Mixin> mixins,
-            Resource source, String target, String deviceId, String mountPoint, Kind targetkind,
-            NetworkState state) {
+                        Resource source, String target, String deviceId, String mountPoint, Kind targetkind,
+                        NetworkState state) {
 
         super(url, kind, title, mixins, source, target, targetkind);
         setAttributes();
@@ -111,7 +111,7 @@ public class StorageLink extends Link {
             this.mountpoint = "";
         }
 
-        public Builder url(String url){
+        public Builder url(String url) {
             this.url = url;
             return this;
         }

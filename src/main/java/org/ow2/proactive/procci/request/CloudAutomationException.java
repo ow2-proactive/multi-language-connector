@@ -13,7 +13,9 @@ import org.json.simple.JSONObject;
 /**
  * The Exception occur when an http request fail with an other Cloud Automation microservice
  */
-@Getter @AllArgsConstructor @ToString
+@Getter
+@AllArgsConstructor
+@ToString
 public class CloudAutomationException extends Exception {
     private JSONObject jsonError;
 }

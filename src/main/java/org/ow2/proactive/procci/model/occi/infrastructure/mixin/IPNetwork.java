@@ -67,13 +67,13 @@ public class IPNetwork extends Mixin {
     /**
      * Constructor with all the parameters
      *
-     * @param address   is the IP network address
-     * @param gateway   is the IP adress
-     * @param dynamic defines the allocation protocol
-     * @param entities  is the set of resource instances
+     * @param address  is the IP network address
+     * @param gateway  is the IP adress
+     * @param dynamic  defines the allocation protocol
+     * @param entities is the set of resource instances
      */
     public IPNetwork(String address, String gateway, boolean dynamic,
-            List<Entity> entities) throws UnknownHostException {
+                     List<Entity> entities) throws UnknownHostException {
         super(Identifiers.NETWORK_SCHEME, Identifiers.IPNETWORK, Identifiers.IPNETWORK,
                 setAttributes(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(), entities);
         this.address = address;

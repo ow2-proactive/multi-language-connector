@@ -57,67 +57,67 @@ import java.util.List;
 @RequestMapping(value = Constant.COMPUTE_PATH)
 public class ComputeRest {
 
-        private final Logger logger = LogManager.getRootLogger();
+    private final Logger logger = LogManager.getRootLogger();
 
-        //-------------------Retrieve All Computes--------------------------------------------------------
+    //-------------------Retrieve All Computes--------------------------------------------------------
 
-        @RequestMapping(method = RequestMethod.GET)
-        public ResponseEntity<List<Compute>> listAllComputes() {
-            logger.debug("Get all Compute instances");
-            try {
-                JSONObject resources = new CloudAutomationRequest().getRequest();
-                List results = new ArrayList();
-                ComputeBuilder compute;
-                Model computeModel;
-                for(Object key : resources.keySet()){
-                    computeModel = new Model((JSONObject) resources.get(key));
-                    compute = new ComputeBuilder().update(computeModel);
-                    results.add(compute);
-                }
-
-                return new ResponseEntity<>(results,HttpStatus.OK);
-            } catch (CloudAutomationException e) {
-                logger.debug(e.getJsonError());
-                return new  ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-
-        //-------------------Retrieve Single Compute--------------------------------------------------------
-
-        @RequestMapping(value = "{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<Compute> getCompute(@PathVariable("name") String name) {
-            logger.debug("Get Compute ");
-            try {
-                JSONObject computeJSon = new CloudAutomationRequest().getRequestByName(name);
-                Model computeModel = new Model(computeJSon);
-                ComputeBuilder computeBuilder = new ComputeBuilder().update(computeModel);
-                return new ResponseEntity<>(computeBuilder.build(), HttpStatus.OK);
-            }catch (CloudAutomationException e){
-                logger.debug(e.getJsonError());
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<List<Compute>> listAllComputes() {
+        logger.debug("Get all Compute instances");
+        try {
+            JSONObject resources = new CloudAutomationRequest().getRequest();
+            List results = new ArrayList();
+            ComputeBuilder compute;
+            Model computeModel;
+            for (Object key : resources.keySet()) {
+                computeModel = new Model((JSONObject) resources.get(key));
+                compute = new ComputeBuilder().update(computeModel);
+                results.add(compute);
             }
 
+            return new ResponseEntity<>(results, HttpStatus.OK);
+        } catch (CloudAutomationException e) {
+            logger.debug(e.getJsonError());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    //-------------------Retrieve Single Compute--------------------------------------------------------
+
+    @RequestMapping(value = "{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Compute> getCompute(@PathVariable("name") String name) {
+        logger.debug("Get Compute ");
+        try {
+            JSONObject computeJSon = new CloudAutomationRequest().getRequestByName(name);
+            Model computeModel = new Model(computeJSon);
+            ComputeBuilder computeBuilder = new ComputeBuilder().update(computeModel);
+            return new ResponseEntity<>(computeBuilder.build(), HttpStatus.OK);
+        } catch (CloudAutomationException e) {
+            logger.debug(e.getJsonError());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
 
-        //-------------------Create a Compute--------------------------------------------------------
 
-        @RequestMapping(method = RequestMethod.POST)
-        public ResponseEntity<Compute> createCompute(@RequestBody ComputeBuilder compute) throws InterruptedException {
-            logger.debug("Creating Compute "+ compute.build().getTitle());
-            JSONObject pcaModel = compute.build().toPCAModel("create").getCASRequest();
-            try {
-                JSONObject json = new CloudAutomationRequest().postRequest(pcaModel);
-                Model model = new Model(json);
-                compute.update(model);
-                return new ResponseEntity<>(compute.build(),HttpStatus.CREATED);
-            } catch (CloudAutomationException e) {
-                logger.debug(e.getJsonError());
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+    //-------------------Create a Compute--------------------------------------------------------
 
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Compute> createCompute(@RequestBody ComputeBuilder compute) throws InterruptedException {
+        logger.debug("Creating Compute " + compute.build().getTitle());
+        JSONObject pcaModel = compute.build().toPCAModel("create").getCASRequest();
+        try {
+            JSONObject json = new CloudAutomationRequest().postRequest(pcaModel);
+            Model model = new Model(json);
+            compute.update(model);
+            return new ResponseEntity<>(compute.build(), HttpStatus.CREATED);
+        } catch (CloudAutomationException e) {
+            logger.debug(e.getJsonError());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+    }
 
 
     /**
@@ -166,4 +166,4 @@ public class ComputeRest {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 */
-    }
+}

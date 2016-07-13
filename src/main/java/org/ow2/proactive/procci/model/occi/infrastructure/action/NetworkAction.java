@@ -49,7 +49,7 @@ public abstract class NetworkAction extends Action {
      * @param attributes are the action properties
      */
     public NetworkAction(String scheme, String term, String title,
-            Set<Attribute> attributes) {
+                         Set<Attribute> attributes) {
         super(scheme, term, title, attributes);
     }
 }

@@ -58,69 +58,73 @@ public class Model {
     private final String stateType;
     private final String description;
     private final String icon;
-    private final Map<String,String> variables;
+    private final Map<String, String> variables;
 
     /**
      * Create the cloud automation model from the Cloud Automation Service response
+     *
      * @param CASResponse is the Cloud Automation Service Response
      */
-    public Model(JSONObject CASResponse){
-        this.action = new Action((JSONObject) CASResponse.getOrDefault("action",new JSONObject()));
-        this.type = (String) CASResponse.getOrDefault("type","");
-        this.endpoint = (String) CASResponse.getOrDefault("instanceEndpoint","");
-        this.model = (String) CASResponse.getOrDefault("serviceModel","");
-        this.name = (String) CASResponse.getOrDefault("serviceName","");
-        this.stateName = (String) CASResponse.getOrDefault("serviceInstanceStatus","");
-        this.stateType = (String) CASResponse.getOrDefault("state_type","");
-        this.description = (String) CASResponse.getOrDefault("description","");
-        this.icon = (String) CASResponse.getOrDefault("icon","");
+    public Model(JSONObject CASResponse) {
+        this.action = new Action((JSONObject) CASResponse.getOrDefault("action", new JSONObject()));
+        this.type = (String) CASResponse.getOrDefault("type", "");
+        this.endpoint = (String) CASResponse.getOrDefault("instanceEndpoint", "");
+        this.model = (String) CASResponse.getOrDefault("serviceModel", "");
+        this.name = (String) CASResponse.getOrDefault("serviceName", "");
+        this.stateName = (String) CASResponse.getOrDefault("serviceInstanceStatus", "");
+        this.stateType = (String) CASResponse.getOrDefault("state_type", "");
+        this.description = (String) CASResponse.getOrDefault("description", "");
+        this.icon = (String) CASResponse.getOrDefault("icon", "");
         this.variables = new HashMap<>();
-        variables.put("id", (String) CASResponse.getOrDefault("serviceInstanceId",""));
-        variables.put("name",(String) CASResponse.getOrDefault("serviceInstanceName",""));
+        variables.put("id", (String) CASResponse.getOrDefault("serviceInstanceId", ""));
+        variables.put("name", (String) CASResponse.getOrDefault("serviceInstanceName", ""));
     }
 
 
     /**
      * Create a json object which contains the cloud automation model and its values
+     *
      * @return a json representation of the class model
      */
-    public JSONObject getJson(){
+    public JSONObject getJson() {
         JSONObject jsonService = new JSONObject();
-        jsonService.put("model",model);
-        jsonService.put("name",name);
-        jsonService.put("type",type);
-        jsonService.put("endpoint",endpoint);
-        jsonService.put("state_name",stateName);
-        jsonService.put("state_type",stateType);
-        jsonService.put("description",description);
-        jsonService.put("icon",icon);
+        jsonService.put("model", model);
+        jsonService.put("name", name);
+        jsonService.put("type", type);
+        jsonService.put("endpoint", endpoint);
+        jsonService.put("state_name", stateName);
+        jsonService.put("state_type", stateType);
+        jsonService.put("description", description);
+        jsonService.put("icon", icon);
         JSONObject jsonVariables = new JSONObject();
         jsonVariables.putAll(variables);
         JSONObject query = new JSONObject();
-        query.put("service",jsonService);
-        query.put("action",action.getJson());
-        query.put("variables",jsonVariables);
+        query.put("service", jsonService);
+        query.put("action", action.getJson());
+        query.put("variables", jsonVariables);
         return query;
     }
 
     //CAS should be improved in order to be able to receive the upper json
+
     /**
      * create a valid request for the cloud automation service
-      * @return return a valid json which contains the current instance data
+     *
+     * @return return a valid json which contains the current instance data
      */
-    public JSONObject getCASRequest(){
+    public JSONObject getCASRequest() {
         JSONObject query = new JSONObject();
-        query.put("service_model",model);
-        query.put("service_name",name);
+        query.put("service_model", model);
+        query.put("service_name", name);
         JSONObject variables = new JSONObject();
         variables.putAll(this.variables);
-        variables.put("infrastructure_name","");
-        query.put("variables",variables);
-        query.put("action",action.getJson());
+        variables.put("infrastructure_name", "");
+        query.put("variables", variables);
+        query.put("action", action.getJson());
         return query;
     }
 
-    public static class Builder{
+    public static class Builder {
 
         private final Action action;
         private final String model;
@@ -131,9 +135,9 @@ public class Model {
         private String stateName;
         private String stateType;
         private String icon;
-        private Map<String,String> variables;
+        private Map<String, String> variables;
 
-        public Builder(String model, Action action){
+        public Builder(String model, Action action) {
             this.type = "";
             this.endpoint = "";
             this.action = action;
@@ -146,7 +150,7 @@ public class Model {
             this.variables = new HashMap<>();
         }
 
-        public Builder(String model, String actionType){
+        public Builder(String model, String actionType) {
             this.type = "";
             this.endpoint = "";
             this.action = new Action.Builder(actionType).build();
@@ -159,50 +163,50 @@ public class Model {
             this.variables = new HashMap<>();
         }
 
-        public Builder name(String name){
+        public Builder name(String name) {
             this.name = name;
             return this;
         }
 
-        public Builder type(String type){
+        public Builder type(String type) {
             this.type = type;
             return this;
         }
 
-        public Builder endpoint(String endpoint){
+        public Builder endpoint(String endpoint) {
             this.endpoint = endpoint;
             return this;
         }
 
-        public Builder stateName(String stateName){
+        public Builder stateName(String stateName) {
             this.stateName = stateName;
             return this;
         }
 
-        public Builder stateType(String stateType){
+        public Builder stateType(String stateType) {
             this.stateType = stateType;
             return this;
         }
 
-        public Builder description(String description){
+        public Builder description(String description) {
             this.description = description;
             return this;
         }
 
-        public Builder icon(String icon){
+        public Builder icon(String icon) {
             this.icon = icon;
             return this;
         }
 
-        public Builder addVariable(String variableKey, String variableValue){
-            this.variables.put(variableKey,variableValue);
+        public Builder addVariable(String variableKey, String variableValue) {
+            this.variables.put(variableKey, variableValue);
             return this;
         }
 
 
-        public Model build(){
-            return new Model(action,type,endpoint,model,name,stateName,stateType
-                    ,description,icon,variables);
+        public Model build() {
+            return new Model(action, type, endpoint, model, name, stateName, stateType
+                    , description, icon, variables);
         }
     }
 

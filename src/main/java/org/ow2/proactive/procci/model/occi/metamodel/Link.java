@@ -68,7 +68,7 @@ public class Link extends Entity {
      * @param targetKind is the kind of the target
      */
     protected Link(String url, Kind kind, String title, List<Mixin> mixins,
-            Resource source, String target, Kind targetKind) {
+                   Resource source, String target, Kind targetKind) {
         super(url, kind, title, mixins);
         this.source = source;
         try {
@@ -96,7 +96,7 @@ public class Link extends Entity {
         }
 
 
-        public Builder url(String url){
+        public Builder url(String url) {
             this.url = url;
             return this;
         }
