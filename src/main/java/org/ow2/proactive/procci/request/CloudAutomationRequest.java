@@ -34,7 +34,7 @@ public class CloudAutomationRequest {
      * @return a json object containing the request results
      */
     public JSONObject getRequest() throws CloudAutomationException {
-        final String url = getProperty("server.endpoint") + "/cloud-automation-service/serviceInstances";
+        final String url = getProperty("server.endpoint") + getProperty("server.cloud-automation-service.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -45,11 +45,11 @@ public class CloudAutomationRequest {
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
         } catch (IOException ex){
-            launchException(ex);
+            raiseException(ex);
         } catch (ParseException ex){
-            launchException(ex);
+            raiseException(ex);
         } catch (Exception ex) {
-            launchException(ex);
+            raiseException(ex);
         }
 
         return result;
@@ -86,7 +86,7 @@ public class CloudAutomationRequest {
     public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String url = getProperty("server.endpoint") + "/cloud-automation-service/serviceInstances";
+        final String url = getProperty("server.endpoint") + getProperty("server.cloud-automation-service.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -102,11 +102,11 @@ public class CloudAutomationRequest {
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
         } catch (IOException ex){
-            launchException(ex);
+            raiseException(ex);
         } catch (ParseException ex){
-            launchException(ex);
+            raiseException(ex);
         } catch (Exception ex) {
-            launchException(ex);
+            raiseException(ex);
         }
         return result;
     }
@@ -129,14 +129,14 @@ public class CloudAutomationRequest {
             return prop.getProperty(propertyKey);
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.debug(ex.getMessage());
             throw new RuntimeException("Unable to get the cloud automation service url from config.properties");
         } finally {
             if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.debug(e.getMessage());
                 }
             }
         }
@@ -175,7 +175,7 @@ public class CloudAutomationRequest {
             }
             httpClient.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            logger.debug(ex.getMessage());
         }
         return result.toString();
     }
@@ -205,11 +205,11 @@ public class CloudAutomationRequest {
     }
 
     /**
-     * Launch an CloudAutomation exception and log it
+     * Raise an CloudAutomation exception and log it
      * @param ex the exception to be logged
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
-    private void launchException(Exception ex) throws CloudAutomationException {
+    private void raiseException(Exception ex) throws CloudAutomationException {
         logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, "+ ex.getClass() + " in postRequest : "+ex.getMessage());
         JSONObject result = new JSONObject();
         result.put("exception",ex.getMessage());

@@ -4,7 +4,7 @@
  *    Parallel, Distributed, Multi-Core Computing for
  *    Enterprise Grids & Clouds
  *
- * Copyright (C) 1997-2015 INRIA/University of
+ * Copyright (C) 1997-2016 INRIA/University of
  *                 Nice-Sophia Antipolis/ActiveEon
  * Contact: proactive@ow2.org or contact@activeeon.com
  *
@@ -34,11 +34,9 @@
  */
 package org.ow2.proactive.procci.rest;
 
-
-import org.apache.logging.log4j.core.jackson.ListOfMapEntryDeserializer;
-import org.json.simple.JSONObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
@@ -56,7 +54,7 @@ import java.util.List;
  * Implement CRUD methods for REST service
  */
 @RestController
-@RequestMapping(value = Constant.computePath)
+@RequestMapping(value = Constant.COMPUTE_PATH)
 public class ComputeRest {
 
         private final Logger logger = LogManager.getRootLogger();
@@ -121,7 +119,12 @@ public class ComputeRest {
 
         }
 
-        //------------------- Apply an action on a Compute --------------------------------------------------------
+
+    /**
+     * The following method will be added soon
+     */
+
+    //------------------- Apply an action on a Compute --------------------------------------------------------
     /*
         @RequestMapping(value = "{action}", method = RequestMethod.POST)
         public ResponseEntity<Compute> actionOnCompute(@PathVariable("action") String action, @RequestBody Compute compute) {
