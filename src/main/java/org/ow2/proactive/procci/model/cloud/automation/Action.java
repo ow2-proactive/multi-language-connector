@@ -37,6 +37,7 @@ package org.ow2.proactive.procci.model.cloud.automation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.json.simple.JSONObject;
 
 
@@ -45,6 +46,7 @@ import org.json.simple.JSONObject;
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@ToString
 public class Action {
 
     private final String type;

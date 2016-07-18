@@ -90,7 +90,6 @@ public class ComputeRest {
         logger.debug("Get Compute ");
         try {
             Model computeModel = new CloudAutomationRequest().getRequestByName(name);
-            System.out.println("get model :" + computeModel.toString());
             ComputeBuilder computeBuilder = new ComputeBuilder().update(computeModel);
             return new ResponseEntity<>(computeBuilder.build(), HttpStatus.OK);
         } catch (CloudAutomationException e) {
@@ -108,9 +107,8 @@ public class ComputeRest {
         logger.debug("Creating Compute " + compute.build().getTitle());
         JSONObject pcaModel = compute.build().toPCAModel("create").getCASRequest();
         try {
-            JSONObject request = new CloudAutomationRequest().postRequest(pcaModel);
+            new CloudAutomationRequest().postRequest(pcaModel);
             Model model = new CloudAutomationRequest().getRequestByName(compute.getTitle());
-            System.out.println("create compute model : "+model.toString());
             compute.update(model);
             return new ResponseEntity<>(compute.build(), HttpStatus.CREATED);
         } catch (CloudAutomationException e) {

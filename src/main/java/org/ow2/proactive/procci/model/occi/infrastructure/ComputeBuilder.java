@@ -151,8 +151,7 @@ public class ComputeBuilder {
     }
 
     public ComputeBuilder update(Model pca) {
-        System.out.println(pca.getVariables().toString());
-        title = pca.getVariables().get("instance_name");
+        title = pca.getVariables().get("name");
         architecture = Compute.Architecture.getArchitecture(pca.getVariables().get("architecture"));
         String cores = pca.getVariables().get("cores");
         if (cores != null && (!cores.isEmpty())) {

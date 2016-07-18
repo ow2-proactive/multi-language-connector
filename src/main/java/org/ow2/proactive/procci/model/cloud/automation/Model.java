@@ -37,6 +37,7 @@ package org.ow2.proactive.procci.model.cloud.automation;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import java.util.Map;
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@ToString
 public class Model {
 
     private final Action action;
