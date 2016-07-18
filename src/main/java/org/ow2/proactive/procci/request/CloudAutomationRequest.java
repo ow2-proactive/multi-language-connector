@@ -63,18 +63,20 @@ public class CloudAutomationRequest {
      * @return the instance information
      * @throws CloudAutomationException is thrown if an error occur during the connection with CAS or the login
      */
-    public JSONObject getRequestByName(String name) throws CloudAutomationException {
+    public Model getRequestByName(String name) throws CloudAutomationException {
         JSONObject response = getRequest();
-        Model model;
+        Model model = null;
         for (Object key : response.keySet()) {
             model = new Model((JSONObject) response.get(key));
             if (model.getVariables().get("name").equals(name)) {
-                return model.getJson();
+                return model;
             }
         }
-        JSONObject result = new JSONObject();
-        result.put("exception", name + " was not found");
-        return result;
+        if(model==null) {
+            raiseException("\""+name + "\" was not found");
+
+        }
+        return model;
     }
 
 
@@ -216,9 +218,16 @@ public class CloudAutomationRequest {
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
     private void raiseException(Exception ex) throws CloudAutomationException {
-        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + ex.getClass() + " in postRequest : " + ex.getMessage());
+        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + ex.getClass() +" : "+  ex.getMessage());
         JSONObject result = new JSONObject();
         result.put("exception", ex.getMessage());
+        throw new CloudAutomationException(result);
+    }
+
+    private void raiseException(String exceptionMessage) throws CloudAutomationException {
+        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + exceptionMessage);
+        JSONObject result = new JSONObject();
+        result.put("exception", exceptionMessage);
         throw new CloudAutomationException(result);
     }
 }
