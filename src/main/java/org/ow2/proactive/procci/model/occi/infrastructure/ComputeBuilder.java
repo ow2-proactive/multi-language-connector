@@ -81,9 +81,9 @@ public class ComputeBuilder {
     }
 
     public ComputeBuilder architecture(String architecture) {
-        if (architecture.equals(Compute.Architecture.X64.toString())) {
+        if (Compute.Architecture.X64.toString().equalsIgnoreCase(architecture)) {
             this.architecture = Compute.Architecture.X64;
-        } else if (architecture.equals(Compute.Architecture.X86.toString())) {
+        } else if (Compute.Architecture.X86.toString().equalsIgnoreCase(architecture)) {
             this.architecture = Compute.Architecture.X86;
         }
         return this;
@@ -151,8 +151,11 @@ public class ComputeBuilder {
     }
 
     public ComputeBuilder update(Model pca) {
-        title = pca.getVariables().get("name");
-        architecture = Compute.Architecture.getArchitecture(pca.getVariables().get("architecture"));
+        this.url(pca.getVariables().getOrDefault("id",""))
+                .title(pca.getVariables().getOrDefault("name",""))
+                .architecture(Compute.Architecture.getArchitecture(pca.getVariables().get("architecture")))
+                .state(pca.getStateName())
+                .hostame(pca.getEndpoint());
         String cores = pca.getVariables().get("cores");
         if (cores != null && (!cores.isEmpty())) {
             this.cores = Integer.parseInt(cores);
