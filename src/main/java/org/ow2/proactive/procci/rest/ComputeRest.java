@@ -72,7 +72,7 @@ public class ComputeRest {
             for (Object key : resources.keySet()) {
                 computeModel = new Model((JSONObject) resources.get(key));
                 compute = new ComputeBuilder().update(computeModel);
-                results.add(compute);
+                results.add(compute.build());
             }
 
             return new ResponseEntity<>(results, HttpStatus.OK);
