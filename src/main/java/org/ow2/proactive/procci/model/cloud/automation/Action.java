@@ -54,11 +54,11 @@ public class Action {
     private final String icon;
 
     public Action(JSONObject CASResponse) {
-        this.type = CASResponse.getOrDefault("type", "").toString();
-        this.name = CASResponse.getOrDefault("name", "").toString();
-        this.description = CASResponse.getOrDefault("description", "").toString();
-        this.originStates = CASResponse.getOrDefault("origin_states", "").toString();
-        this.icon = CASResponse.getOrDefault("icon", "").toString();
+        this.type = (String) CASResponse.getOrDefault("type", "");
+        this.name = (String) CASResponse.getOrDefault("name", "");
+        this.description = (String) CASResponse.getOrDefault("description", "");
+        this.originStates = (String) CASResponse.getOrDefault("origin_states", "");
+        this.icon = (String) CASResponse.getOrDefault("icon", "");
     }
 
     public JSONObject getJson() {
