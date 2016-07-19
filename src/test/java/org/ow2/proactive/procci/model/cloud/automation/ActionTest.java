@@ -50,11 +50,11 @@ public class ActionTest {
                 .name("instance name")
                 .originStates("inactive")
                 .build();
-        assertThat(action.getJson()).containsKey("icon");
-        assertThat(action.getJson()).containsKey("name");
-        assertThat(action.getJson()).containsKey("description");
-        assertThat(action.getJson()).containsKey("type");
-        assertThat(action.getJson()).containsKey("origin_states");
+        assertThat(action.getJson()).containsKey("pca.action.icon");
+        assertThat(action.getJson()).containsKey("pca.action.name");
+        assertThat(action.getJson()).containsKey("pca.action.description");
+        assertThat(action.getJson()).containsKey("pca.action.type");
+        assertThat(action.getJson()).containsKey("pca.action.origin.states");
     }
 
 }

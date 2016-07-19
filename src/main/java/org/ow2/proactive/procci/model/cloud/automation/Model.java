@@ -116,13 +116,15 @@ public class Model {
      */
     public JSONObject getCASRequest() {
         JSONObject query = new JSONObject();
-        query.put("service_model", model);
-        query.put("service_name", name);
+        JSONObject service = action.getJson();
+        service.put("pca.service.model", model);
+        service.put("pca.service.name", name);
+
         JSONObject variables = new JSONObject();
         variables.putAll(this.variables);
-        variables.put("infrastructure_name", "");
+
         query.put("variables", variables);
-        query.put("action", action.getJson());
+        query.put("genericInfo", service);
         return query;
     }
 

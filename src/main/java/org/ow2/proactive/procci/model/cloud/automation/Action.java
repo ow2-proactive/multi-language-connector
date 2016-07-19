@@ -65,11 +65,11 @@ public class Action {
 
     public JSONObject getJson() {
         JSONObject jsonAction = new JSONObject();
-        jsonAction.put("type", type);
-        jsonAction.put("name", name);
-        jsonAction.put("description", description);
-        jsonAction.put("origin_states", originStates);
-        jsonAction.put("icon", icon);
+        jsonAction.put("pca.action.type", type);
+        jsonAction.put("pca.action.name", name);
+        jsonAction.put("pca.action.description", description);
+        jsonAction.put("pca.action.origin.states", originStates);
+        jsonAction.put("pca.action.icon", icon);
         return jsonAction;
     }
 
