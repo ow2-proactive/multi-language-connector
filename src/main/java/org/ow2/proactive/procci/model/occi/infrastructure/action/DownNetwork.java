@@ -1,9 +1,9 @@
 package org.ow2.proactive.procci.model.occi.infrastructure.action;
 
-import java.util.HashSet;
-
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
+
+import java.util.HashSet;
 
 /**
  * Created by mael on 3/4/16.

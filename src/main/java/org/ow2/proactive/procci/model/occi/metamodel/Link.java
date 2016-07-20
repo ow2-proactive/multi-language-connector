@@ -34,15 +34,15 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import lombok.Getter;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
-import lombok.Getter;
 
 /**
  * Link defines the base associaction between 2 resources

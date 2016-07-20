@@ -34,15 +34,15 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
 import lombok.*;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Resource describes a concrete resource that can be inspected or manipulated

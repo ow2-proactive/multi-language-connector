@@ -34,16 +34,13 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Set;
-import java.util.UUID;
-
-import lombok.AccessLevel;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableSet;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Category is the basis type of identification mecanism

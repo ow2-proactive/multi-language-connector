@@ -35,16 +35,11 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+
+import java.util.*;
 
 
 /**

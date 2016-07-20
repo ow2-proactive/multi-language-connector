@@ -34,10 +34,10 @@
  */
 package org.ow2.proactive.procci.model.occi.infrastructure.action;
 
-import java.util.Set;
-
 import org.ow2.proactive.procci.model.occi.metamodel.Action;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
+
+import java.util.Set;
 
 public abstract class StorageAction extends Action {
     /**

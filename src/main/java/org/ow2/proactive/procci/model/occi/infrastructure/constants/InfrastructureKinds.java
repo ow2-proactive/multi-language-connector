@@ -4,15 +4,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.Network;
 import org.ow2.proactive.procci.model.occi.infrastructure.NetworkInterface;
 import org.ow2.proactive.procci.model.occi.infrastructure.StorageLink;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.DownNetwork;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.OfflineStorage;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.OnlineStorage;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.RestartCompute;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.SaveCompute;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.StartCompute;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.StopCompute;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.SuspendCompute;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.UpNetwork;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.*;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 

@@ -34,14 +34,13 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import com.google.common.collect.ImmutableList;
+import lombok.Getter;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import lombok.AccessLevel;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-import com.google.common.collect.ImmutableList;
-import lombok.Getter;
 
 /**
  * Mixin is an extension mecanism which enables to new resource capablilities

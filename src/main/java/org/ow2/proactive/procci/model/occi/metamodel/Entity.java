@@ -34,16 +34,10 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-
 import lombok.*;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+
+import java.util.*;
 
 /**
  * Entity is the abstract type that will gather the information contained in Resource and Link

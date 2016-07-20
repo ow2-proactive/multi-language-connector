@@ -35,21 +35,17 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
-import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
-import org.ow2.proactive.procci.model.occi.metamodel.Kind;
-import org.ow2.proactive.procci.model.occi.metamodel.Link;
-import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
-import org.ow2.proactive.procci.model.occi.metamodel.Resource;
-import lombok.Getter;
+import org.ow2.proactive.procci.model.occi.metamodel.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 
 /**

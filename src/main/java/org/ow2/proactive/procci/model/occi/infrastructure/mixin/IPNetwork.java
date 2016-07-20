@@ -35,21 +35,17 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure.mixin;
 
+import lombok.Getter;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
+import org.ow2.proactive.procci.model.occi.metamodel.*;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.metamodel.Action;
-import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
-import org.ow2.proactive.procci.model.occi.metamodel.Entity;
-import org.ow2.proactive.procci.model.occi.metamodel.Kind;
-import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
-import lombok.Getter;
 
 /**
  * This class supports L3/L4 capabilities with the Network class
