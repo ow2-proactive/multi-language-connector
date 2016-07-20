@@ -1,7 +1,6 @@
 package org.ow2.proactive.procci.request;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.json.simple.JSONObject;

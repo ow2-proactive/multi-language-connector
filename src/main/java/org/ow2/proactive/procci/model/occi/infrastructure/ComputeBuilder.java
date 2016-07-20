@@ -1,5 +1,6 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,25 +13,31 @@ import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.ow2.proactive.procci.model.ModelConstant.*;
+
 /**
  * Created by mael on 02/06/16.
  */
 @EqualsAndHashCode
 @ToString
 public class ComputeBuilder {
-
+    @Getter(AccessLevel.PACKAGE)
     private String url;
     @Getter
     private String title;
+    @Getter(AccessLevel.PACKAGE)
     private String summary;
     @Getter
     private Compute.Architecture architecture;
     @Getter
     private Integer cores;
+    @Getter(AccessLevel.PACKAGE)
     private Integer share;
     @Getter
     private Float memory; // in Gigabytes
+    @Getter(AccessLevel.PACKAGE)
     private String hostname;
+    @Getter(AccessLevel.PACKAGE)
     private ComputeState state;
     private List<Link> links;
     private List<Mixin> mixins;
@@ -95,7 +102,9 @@ public class ComputeBuilder {
     }
 
     public ComputeBuilder cores(String cores) {
-        this.cores = Integer.parseInt(cores);
+        if (cores != null && (!cores.isEmpty())) {
+            this.cores = Integer.parseInt(cores);
+        }
         return this;
     }
 
@@ -105,7 +114,9 @@ public class ComputeBuilder {
     }
 
     public ComputeBuilder share(String share) {
-        this.share = Integer.parseInt(share);
+        if (share != null && (!share.isEmpty())) {
+            this.share = Integer.parseInt(share);
+        }
         return this;
     }
 
@@ -120,7 +131,9 @@ public class ComputeBuilder {
     }
 
     public ComputeBuilder memory(String memory) {
-        this.memory = Float.parseFloat(memory);
+        if ((memory != null && !memory.isEmpty())) {
+            this.memory = Float.parseFloat(memory);
+        }
         return this;
     }
 
@@ -150,21 +163,16 @@ public class ComputeBuilder {
         return this;
     }
 
-    public ComputeBuilder update(Model pca) {
-        this.url(pca.getVariables().getOrDefault("id",""))
-                .title(pca.getVariables().getOrDefault("name",""))
-                .architecture(Compute.Architecture.getArchitecture(pca.getVariables().get("architecture")))
-                .state(pca.getStateName())
-                .hostame(pca.getEndpoint());
-        String cores = pca.getVariables().get("cores");
-        if (cores != null && (!cores.isEmpty())) {
-            this.cores = Integer.parseInt(cores);
-        }
-
-        String memory = pca.getVariables().get("memory");
-        if ((memory != null && !memory.isEmpty())) {
-            this.memory = Float.parseFloat(memory);
-        }
+    public ComputeBuilder update(Model cloudAutomation) {
+        this.url(cloudAutomation.getVariables().getOrDefault(INSTANCE_ID, ""))
+                .title(cloudAutomation.getVariables().getOrDefault(TITLE, ""))
+                .architecture(cloudAutomation.getVariables().get(ARCHITECTURE))
+                .state(cloudAutomation.getVariables().getOrDefault(STATE, ""))
+                .hostame(cloudAutomation.getVariables().getOrDefault(HOSTNAME, ""))
+                .cores(cloudAutomation.getVariables().getOrDefault(CORES, ""))
+                .memory(cloudAutomation.getVariables().getOrDefault(MEMORY, ""))
+                .share(cloudAutomation.getVariables().getOrDefault(SHARE, ""))
+                .summary(cloudAutomation.getVariables().getOrDefault(SUMMARY, ""));
 
         return this;
     }

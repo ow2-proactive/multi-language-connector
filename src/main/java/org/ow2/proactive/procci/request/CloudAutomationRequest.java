@@ -1,7 +1,6 @@
 package org.ow2.proactive.procci.request;
 
 import org.apache.http.HttpResponse;
-
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -15,7 +14,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
@@ -69,14 +71,14 @@ public class CloudAutomationRequest {
         for (Object key : response.keySet()) {
             model = new Model((JSONObject) response.get(key));
             if (model.getVariables().get("name").equals(name)) {
+                System.out.println(model);
                 return model;
             }
         }
-        if(model==null) {
-            raiseException("\""+name + "\" was not found");
 
-        }
-        return model;
+        raiseException("\"" + name + "\" was not found");
+
+        return null;
     }
 
 
@@ -218,7 +220,7 @@ public class CloudAutomationRequest {
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
     private void raiseException(Exception ex) throws CloudAutomationException {
-        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + ex.getClass() +" : "+  ex.getMessage());
+        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + ex.getClass() + " : " + ex.getMessage());
         JSONObject result = new JSONObject();
         result.put("exception", ex.getMessage());
         throw new CloudAutomationException(result);

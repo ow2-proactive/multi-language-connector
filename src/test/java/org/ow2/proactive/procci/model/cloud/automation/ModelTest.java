@@ -16,14 +16,14 @@ public class ModelTest {
 
     @Before
     public void setup(){
-        cas = new Model.Builder("modelTest","create")
-                .name("nameTest")
-                .description("descriptionTest")
-                .endpoint("endpointTest")
-                .stateName("stateNameTest")
-                .stateType("stateTypeTest")
-                .type("typeTest")
-                .icon("iconTest")
+        cas = new Model.Builder("modelTest","actionTypeTest")
+                .serviceType("typeTest")
+                .serviceName("nameTest")
+                .serviceDescription("descriptionTest")
+                .actionName("actionNameTest")
+                .actionDescription("actionDescriptionTest")
+                .actionOriginStates("originStatesTest")
+                .actionIcon("iconTest")
                 .addVariable("firstKey","firstValue")
                 .addVariable("secondKey","secondValue")
                 .build();
@@ -32,94 +32,68 @@ public class ModelTest {
     @Test
     public void constructorTest(){
 
-        //constructor test without the action in parameter
-        assertThat(cas.getType()).matches("typeTest");
-        assertThat(cas.getName()).matches("nameTest");
-        assertThat(cas.getDescription()).matches("descriptionTest");
-        assertThat(cas.getEndpoint()).matches("endpointTest");
-        assertThat(cas.getModel()).matches("modelTest");
-        assertThat(cas.getStateName()).matches("stateNameTest");
-        assertThat(cas.getStateType()).matches("stateTypeTest");
+        assertThat(cas.getServiceModel()).matches("modelTest");
+        assertThat(cas.getServiceType()).matches("typeTest");
+        assertThat(cas.getServiceName()).matches("nameTest");
+        assertThat(cas.getServiceDescription()).matches("descriptionTest");
+        assertThat(cas.getActionType()).matches("actionTypeTest");
+        assertThat(cas.getActionName()).matches("actionNameTest");
+        assertThat(cas.getActionDescription()).matches("actionDescriptionTest");
+        assertThat(cas.getActionOriginStates()).matches("originStatesTest");
+        assertThat(cas.getActionIcon()).matches("iconTest");
         assertThat(cas.getVariables()).containsExactly("firstKey","firstValue","secondKey","secondValue");
-        assertThat(cas.getAction().getType()).matches("create");
-
-        //constructor with action parameter test
-        cas = new Model.Builder("modelTest2",new Action.Builder("actionTest2").build()).build();
-        assertThat(cas.getAction().getType()).matches("actionTest2");
-        assertThat(cas.getModel()).matches("modelTest2");
-
     }
 
     @Test
     public void jsonConstructorTest(){
         JSONObject json = new JSONObject();
-        json.put("serviceModel","occi.infrastructure.compute");
-        json.put("serviceName","nameTest");
-        json.put("serviceInstanceId","idTest");
-        json.put("serviceInstanceName","instanceNameTest");
-        json.put("serviceInstanceStatus","statusName");
-        json.put("infrastuctureName","infraTest");
-        json.put("instanceId","instanceIdTest");
-        json.put("instanceEndpoint","endpointTest");
 
-        Model model = new Model(json);
+        JSONObject genericInfo = new JSONObject();
+        genericInfo.put("pca.service.model","modelTest");
+        genericInfo.put("pca.service.type","typeTest");
+        genericInfo.put("pca.service.name","nameTest");
+        genericInfo.put("pca.service.description","descriptionTest");
+        genericInfo.put("pca.action.type","actionTypeTest");
+        genericInfo.put("pca.action.name","actionNameTest");
+        genericInfo.put("pca.action.description","actionDescriptionTest");
+        genericInfo.put("pca.action.origin.states","originStatesTest");
+        genericInfo.put("pca.action.icon","iconTest");
 
-        assertThat(model.getModel()).matches("occi.infrastructure.compute");
-        assertThat(model.getName()).matches("nameTest");
-        assertThat(model.getStateName()).matches("statusName");
-        assertThat(model.getVariables()).containsExactly("id","idTest","name","instanceNameTest");
+        JSONObject variables = new JSONObject();
+        variables.put("firstKey","firstValue");
+        variables.put("secondKey","secondValue");
 
+        json.put("genericInfo",genericInfo);
+        json.put("variables",variables);
+
+        assertThat(new Model(json)).isEqualTo(cas);
     }
 
-    @Test @Ignore
+    @Test
     public void getJsonTest(){
-        assertThat(cas.getJson()).containsKey("service");
-        assertThat(cas.getJson()).containsKey("action");
+        assertThat(cas.getJson()).containsKey("genericInfo");
         assertThat(cas.getJson()).containsKey("variables");
 
-        JSONObject service = (JSONObject) cas.getJson().get("service");
-        JSONObject action = (JSONObject) cas.getJson().get("action");
+        JSONObject service = (JSONObject) cas.getJson().get("genericInfo");
         JSONObject variables = (JSONObject) cas.getJson().get("variables");
 
-        assertThat(service).containsEntry("model","modelTest");
-        assertThat(service).containsEntry("type","typeTest");
-        assertThat(service).containsEntry("name","nameTest");
-        assertThat(service).containsEntry("description","descriptionTest");
-        assertThat(service).containsEntry("endpoint","endpointTest");
-        assertThat(service).containsEntry("icon","iconTest");
-
-        assertThat(action).containsEntry("type","create");
-        assertThat(action).containsEntry("name","");
-        assertThat(action).containsKey("origin_states");
-
-        assertThat(variables).containsEntry("firstKey","firstValue");
-        assertThat(variables).containsEntry("secondKey","secondValue");
-
-    }
-
-    @Test
-    public void getCASRequestTest(){
-
-        assertThat(cas.getCASRequest()).containsKey("variables");
-        assertThat(cas.getCASRequest()).containsKey("genericInfo");
-
-        JSONObject service = (JSONObject) cas.getCASRequest().get("genericInfo");
         assertThat(service).containsEntry("pca.service.model","modelTest");
+        assertThat(service).containsEntry("pca.service.type","typeTest");
         assertThat(service).containsEntry("pca.service.name","nameTest");
-        assertThat(service).containsEntry("pca.action.type","create");
+        assertThat(service).containsEntry("pca.service.description","descriptionTest");
+        assertThat(service).containsEntry("pca.action.type","actionTypeTest");
+        assertThat(service).containsEntry("pca.action.name","actionNameTest");
+        assertThat(service).containsEntry("pca.action.description","actionDescriptionTest");
+        assertThat(service).containsEntry("pca.action.origin.states","originStatesTest");
+        assertThat(service).containsEntry("pca.action.icon","iconTest");
 
-        JSONObject variables = (JSONObject) cas.getCASRequest().get("variables");
         assertThat(variables).containsEntry("firstKey","firstValue");
         assertThat(variables).containsEntry("secondKey","secondValue");
-
-
-
     }
 
     @Test
-    public void getJSONTest(){
-        assertThat(cas.getJson()).containsKey("service");
-        assertThat(cas.getJson()).containsKey("variables");
-        assertThat(cas.getJson()).containsKey("action");
+    public void crossedTest(){
+        assertThat(cas).isEqualTo(new Model(cas.getJson()));
     }
+
 }

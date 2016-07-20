@@ -34,19 +34,19 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import java.util.List;
-import java.util.Set;
-
-import lombok.*;
-import org.json.simple.JSONObject;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
-import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
-import org.ow2.proactive.procci.model.occi.metamodel.Kind;
-import org.ow2.proactive.procci.model.occi.metamodel.Link;
-import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
-import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import org.ow2.proactive.procci.model.occi.metamodel.*;
+
+import java.util.List;
+import java.util.Set;
+
+import static org.ow2.proactive.procci.model.ModelConstant.*;
 
 
 /**
@@ -56,6 +56,8 @@ import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class Compute extends Resource {
+
+    private static final String COMPUTE_MODEL = "occi.infrastructure.compute";
 
     @Getter
     private Architecture architecture;
@@ -72,16 +74,6 @@ public class Compute extends Resource {
 
     public enum Architecture {
         X86, X64;
-
-        public static Architecture getArchitecture(String archi) {
-            if (X64.toString().equalsIgnoreCase(archi)) {
-                return X64;
-            } else if (X86.toString().equalsIgnoreCase(archi)) {
-                return X86;
-            } else {
-                return null;
-            }
-        }
     }
 
     /**
@@ -125,12 +117,17 @@ public class Compute extends Resource {
         return attributes;
     }
 
-    public Model toPCAModel(String action) {
-        Model.Builder serviceBuilder = new Model.Builder("occi.infrastructure.compute", action);
-        serviceBuilder.addVariable("instance_name", this.getTitle());
-        serviceBuilder.addVariable("architecture", this.architecture.toString());
-        serviceBuilder.addVariable("cores", this.cores.toString());
-        serviceBuilder.addVariable("memory", this.memory.toString());
+    public Model toCloudAutomationModel(String actionType) {
+
+        Model.Builder serviceBuilder = new Model.Builder(COMPUTE_MODEL, actionType);
+        serviceBuilder.addVariable(TITLE, this.getTitle());
+        serviceBuilder.addVariable(ARCHITECTURE, this.architecture.toString());
+        serviceBuilder.addVariable(CORES, this.cores.toString());
+        serviceBuilder.addVariable(MEMORY, this.memory.toString());
+        serviceBuilder.addVariable(HOSTNAME, this.hostname);
+        serviceBuilder.addVariable(STATE, this.state.getCloudAutomationState());
         return serviceBuilder.build();
     }
+
+
 }

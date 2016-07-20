@@ -34,171 +34,148 @@
  */
 package org.ow2.proactive.procci.model.cloud.automation;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.ow2.proactive.procci.model.ModelConstant.*;
+
 /**
- * Cloud Automation model
+ * Cloud Automation serviceModel
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @ToString
+@EqualsAndHashCode
 public class Model {
 
-    private final Action action;
-    private final String type;
-    private final String endpoint;
-    private final String model;
-    private final String name;
-    private final String stateName;
-    private final String stateType;
-    private final String description;
-    private final String icon;
+    private final String serviceModel;
+    private final String serviceType;
+    private final String serviceName;
+    private final String serviceDescription;
+    private final String actionType;
+    private final String actionName;
+    private final String actionDescription;
+    private final String actionOriginStates;
+    private final String actionIcon;
     private final Map<String, String> variables;
 
     /**
-     * Create the cloud automation model from the Cloud Automation Service response
+     * Create the cloud automation serviceModel from the Cloud Automation Service response
      *
-     * @param CASResponse is the Cloud Automation Service Response
+     * @param CloudAutomationJson is the Cloud Automation Service Response
      */
-    public Model(JSONObject CASResponse) {
-        this.action = new Action((JSONObject) CASResponse.getOrDefault("action", new JSONObject()));
-        this.type = (String) CASResponse.getOrDefault("type", "");
-        this.endpoint = (String) CASResponse.getOrDefault("instanceEndpoint", "");
-        this.model = (String) CASResponse.getOrDefault("serviceModel", "");
-        this.name = (String) CASResponse.getOrDefault("serviceName", "");
-        this.stateName = (String) CASResponse.getOrDefault("serviceInstanceStatus", "");
-        this.stateType = (String) CASResponse.getOrDefault("state_type", "");
-        this.description = (String) CASResponse.getOrDefault("description", "");
-        this.icon = (String) CASResponse.getOrDefault("icon", "");
+    public Model(JSONObject CloudAutomationJson) {
+
+        JSONObject variables = (JSONObject) CloudAutomationJson.getOrDefault(VARIABLES, new JSONObject());
+        JSONObject genericInfo = (JSONObject) CloudAutomationJson.getOrDefault(GENERIC_INFORMATION, new JSONObject());
+
+        this.serviceModel = (String) genericInfo.getOrDefault(SERVICE_MODEL, "");
+        this.serviceType = (String) genericInfo.getOrDefault(SERVICE_TYPE, "");
+        this.serviceName = (String) genericInfo.getOrDefault(SERVICE_NAME, "");
+        this.serviceDescription = (String) genericInfo.getOrDefault(SERVICE_DESCRIPTION, "");
+
+        this.actionType = (String) genericInfo.getOrDefault(ACTION_TYPE, "");
+        this.actionName = (String) genericInfo.getOrDefault(ACTION_NAME, "");
+        this.actionDescription = (String) genericInfo.getOrDefault(ACTION_DESCRIPTION, "");
+        this.actionOriginStates = (String) genericInfo.getOrDefault(ACTION_ORIGIN_STATES, "");
+        this.actionIcon = (String) genericInfo.getOrDefault(ACTION_ICON, "");
+
         this.variables = new HashMap<>();
-        variables.put("id", (String) CASResponse.getOrDefault("serviceInstanceId", ""));
-        variables.put("name", (String) CASResponse.getOrDefault("serviceInstanceName", ""));
+        for (Object key : variables.keySet()) {
+            this.variables.put((String) key, (String) variables.get(key));
+        }
     }
 
 
     /**
-     * Create a json object which contains the cloud automation model and its values
+     * Create a json object which contains the cloud automation serviceModel and its values
      *
-     * @return a json representation of the class model
+     * @return a json representation of the class serviceModel
      */
     public JSONObject getJson() {
         JSONObject jsonService = new JSONObject();
-        jsonService.put("model", model);
-        jsonService.put("name", name);
-        jsonService.put("type", type);
-        jsonService.put("endpoint", endpoint);
-        jsonService.put("state_name", stateName);
-        jsonService.put("state_type", stateType);
-        jsonService.put("description", description);
-        jsonService.put("icon", icon);
+        jsonService.put(SERVICE_MODEL, serviceModel);
+        jsonService.put(SERVICE_TYPE, serviceType);
+        jsonService.put(SERVICE_NAME, serviceName);
+        jsonService.put(SERVICE_DESCRIPTION, serviceDescription);
+
+        jsonService.put(ACTION_TYPE, actionType);
+        jsonService.put(ACTION_NAME, actionName);
+        jsonService.put(ACTION_DESCRIPTION, actionDescription);
+        jsonService.put(ACTION_ORIGIN_STATES, actionOriginStates);
+        jsonService.put(ACTION_ICON, actionIcon);
+
         JSONObject jsonVariables = new JSONObject();
         jsonVariables.putAll(variables);
+
         JSONObject query = new JSONObject();
-        query.put("service", jsonService);
-        query.put("action", action.getJson());
-        query.put("variables", jsonVariables);
-        return query;
-    }
+        query.put(GENERIC_INFORMATION, jsonService);
+        query.put(VARIABLES, jsonVariables);
 
-    //CAS should be improved in order to be able to receive the upper json
-
-    /**
-     * create a valid request for the cloud automation service
-     *
-     * @return return a valid json which contains the current instance data
-     */
-    public JSONObject getCASRequest() {
-        JSONObject query = new JSONObject();
-        JSONObject service = action.getJson();
-        service.put("pca.service.model", model);
-        service.put("pca.service.name", name);
-
-        JSONObject variables = new JSONObject();
-        variables.putAll(this.variables);
-
-        query.put("variables", variables);
-        query.put("genericInfo", service);
         return query;
     }
 
     public static class Builder {
 
-        private final Action action;
-        private final String model;
-        private String type;
-        private String name;
-        private String description;
-        private String endpoint;
-        private String stateName;
-        private String stateType;
-        private String icon;
+        private final String serviceModel;
+        private String serviceType;
+        private String serviceName;
+        private String serviceDescription;
+        private final String actionType;
+        private String actionName;
+        private String actionDescription;
+        private String actionOriginStates;
+        private String actionIcon;
         private Map<String, String> variables;
 
-        public Builder(String model, Action action) {
-            this.type = "";
-            this.endpoint = "";
-            this.action = action;
-            this.model = model;
-            this.name = "";
-            this.stateName = "";
-            this.stateType = "";
-            this.description = "";
-            this.icon = "";
-            this.variables = new HashMap<>();
-        }
-
         public Builder(String model, String actionType) {
-            this.type = "";
-            this.endpoint = "";
-            this.action = new Action.Builder(actionType).build();
-            this.model = model;
-            this.name = "";
-            this.stateName = "";
-            this.stateType = "";
-            this.description = "";
-            this.icon = "";
+            this.serviceModel = model;
+            this.serviceType = "";
+            this.serviceName = "";
+            this.serviceDescription = "";
+            this.actionType = actionType;
+            this.actionName = "";
+            this.actionDescription = "";
+            this.actionOriginStates = "";
+            this.actionIcon = "";
             this.variables = new HashMap<>();
         }
 
-        public Builder name(String name) {
-            this.name = name;
+        public Builder serviceType(String serviceType) {
+            this.serviceType = serviceType;
             return this;
         }
 
-        public Builder type(String type) {
-            this.type = type;
+        public Builder serviceName(String serviceName) {
+            this.serviceName = serviceName;
             return this;
         }
 
-        public Builder endpoint(String endpoint) {
-            this.endpoint = endpoint;
+        public Builder serviceDescription(String serviceDescription) {
+            this.serviceDescription = serviceDescription;
             return this;
         }
 
-        public Builder stateName(String stateName) {
-            this.stateName = stateName;
+        public Builder actionName(String actionName) {
+            this.actionName = actionName;
             return this;
         }
 
-        public Builder stateType(String stateType) {
-            this.stateType = stateType;
+        public Builder actionDescription(String actionDescription) {
+            this.actionDescription = actionDescription;
             return this;
         }
 
-        public Builder description(String description) {
-            this.description = description;
+        public Builder actionOriginStates(String actionOriginStates) {
+            this.actionOriginStates = actionOriginStates;
             return this;
         }
 
-        public Builder icon(String icon) {
-            this.icon = icon;
+        public Builder actionIcon(String actionIcon) {
+            this.actionIcon = actionIcon;
             return this;
         }
 
@@ -207,10 +184,9 @@ public class Model {
             return this;
         }
 
-
         public Model build() {
-            return new Model(action, type, endpoint, model, name, stateName, stateType
-                    , description, icon, variables);
+            return new Model(serviceModel, serviceType, serviceName, serviceDescription, actionType, actionName,
+                    actionDescription, actionOriginStates, actionIcon, variables);
         }
     }
 

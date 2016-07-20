@@ -78,7 +78,7 @@ public class ComputeRest {
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (CloudAutomationException e) {
             logger.debug(e.getJsonError());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -94,7 +94,7 @@ public class ComputeRest {
             return new ResponseEntity<>(computeBuilder.build(), HttpStatus.OK);
         } catch (CloudAutomationException e) {
             logger.debug(e.getJsonError());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -105,15 +105,14 @@ public class ComputeRest {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Compute> createCompute(@RequestBody ComputeBuilder compute) throws InterruptedException {
         logger.debug("Creating Compute " + compute.build().getTitle());
-        JSONObject pcaModel = compute.build().toPCAModel("create").getCASRequest();
+        JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
         try {
-            new CloudAutomationRequest().postRequest(pcaModel);
-            Model model = new CloudAutomationRequest().getRequestByName(compute.getTitle());
+            Model model = new Model(new CloudAutomationRequest().postRequest(pcaModel));
             compute.update(model);
             return new ResponseEntity<>(compute.build(), HttpStatus.CREATED);
         } catch (CloudAutomationException e) {
             logger.debug(e.getJsonError());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

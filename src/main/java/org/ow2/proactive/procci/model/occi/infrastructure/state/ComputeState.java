@@ -34,18 +34,24 @@
  */
 package org.ow2.proactive.procci.model.occi.infrastructure.state;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 
 public enum ComputeState {
 
-    ACTIVE("active state"), INACTIVE("inactive state"), SUSPENDED("suspended state"), ERROR("error state");
+    ACTIVE("active state", "RUNNING"),
+    INACTIVE("inactive state", "STOPPED"),
+    SUSPENDED("suspended state", "STOPPED"),
+    ERROR("error state", "ERROR");
 
     @Getter
     private String message;
 
-    ComputeState(String m) {
+    @Getter
+    private String cloudAutomationState;
+
+    ComputeState(String m, String state) {
         this.message = m;
+        this.cloudAutomationState = state;
     }
 
 }
