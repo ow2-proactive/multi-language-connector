@@ -69,7 +69,7 @@ public abstract class Entity {
      * @param kind is the kind instance which uniquely identify the instance
      */
     public Entity(String url, Kind kind) {
-        if (url.equals("")) {
+        if (("").equals(url)) {
             this.id = UUID.randomUUID().toString();
         } else {
             this.id = url;
@@ -89,7 +89,7 @@ public abstract class Entity {
      * @param mixins are the mixins instance associate to the instance
      */
     public Entity(String url, Kind kind, String title, List<Mixin> mixins) {
-        if (url.equals("")) {
+        if (("").equals(url)) {
             url = UUID.randomUUID().toString();
         }
         this.id = url;

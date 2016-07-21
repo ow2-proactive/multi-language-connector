@@ -66,7 +66,7 @@ public class Category {
      * @param attributes are the category and sub-types attributes
      */
     public Category(String scheme, String term, String title, Set<Attribute> attributes) {
-        if (scheme.equals("")) {
+        if (("").equals(scheme)) {
             this.scheme = UUID.randomUUID().toString();
         } else {
             this.scheme = scheme;
