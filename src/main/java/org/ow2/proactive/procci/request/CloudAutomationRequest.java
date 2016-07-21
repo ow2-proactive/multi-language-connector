@@ -61,24 +61,18 @@ public class CloudAutomationRequest {
     /**
      * Give the instance information thanks to its name
      *
-     * @param name is the instance name
+     * @param id is the instance name
      * @return the instance information
      * @throws CloudAutomationException is thrown if an error occur during the connection with CAS or the login
      */
-    public Model getRequestByName(String name) throws CloudAutomationException {
-        JSONObject response = getRequest();
-        Model model = null;
-        for (Object key : response.keySet()) {
-            model = new Model((JSONObject) response.get(key));
-            if (model.getVariables().get("name").equals(name)) {
-                System.out.println(model);
-                return model;
-            }
+    public Model getRequestByName(String id) throws CloudAutomationException {
+        JSONObject jsonModel = (JSONObject) getRequest().get(id);
+        if(jsonModel!=null){
+            return new Model(jsonModel);
         }
-
-        raiseException("\"" + name + "\" was not found");
-
-        return null;
+        else{
+            return null;
+        }
     }
 
 

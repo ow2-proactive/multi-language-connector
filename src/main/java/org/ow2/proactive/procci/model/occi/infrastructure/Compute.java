@@ -125,7 +125,6 @@ public class Compute extends Resource {
         serviceBuilder.addVariable(CORES, this.cores.toString());
         serviceBuilder.addVariable(MEMORY, this.memory.toString());
         serviceBuilder.addVariable(HOSTNAME, this.hostname);
-        serviceBuilder.addVariable(STATE, this.state.getCloudAutomationState());
         return serviceBuilder.build();
     }
 

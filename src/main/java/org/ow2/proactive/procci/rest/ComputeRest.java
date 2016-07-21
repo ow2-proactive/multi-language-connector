@@ -90,8 +90,13 @@ public class ComputeRest {
         logger.debug("Get Compute ");
         try {
             Model computeModel = new CloudAutomationRequest().getRequestByName(name);
-            ComputeBuilder computeBuilder = new ComputeBuilder().update(computeModel);
-            return new ResponseEntity<>(computeBuilder.build(), HttpStatus.OK);
+            if(computeModel == null){
+                return new ResponseEntity(HttpStatus.NOT_FOUND);
+            }
+            else {
+                ComputeBuilder computeBuilder = new ComputeBuilder().update(computeModel);
+                return new ResponseEntity<>(computeBuilder.build(), HttpStatus.OK);
+            }
         } catch (CloudAutomationException e) {
             logger.debug(e.getJsonError());
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);

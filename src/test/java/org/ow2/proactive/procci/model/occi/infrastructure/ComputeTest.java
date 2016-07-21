@@ -81,6 +81,5 @@ public class ComputeTest {
         assertThat(model.getVariables()).containsEntry("occi.infrastructure.architecture","X64");
         assertThat(model.getVariables()).containsEntry("occi.infrastructure.memory","3.0");
         assertThat(model.getVariables()).containsEntry("occi.infrastructure.title","title");
-        assertThat(model.getVariables()).containsEntry("occi.infrastructure.state","STOPPED");
     }
 }
