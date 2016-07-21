@@ -25,7 +25,7 @@ public class ComputeBuilder {
     private String url;
     @Getter
     private String title;
-    @Getter(AccessLevel.PACKAGE)
+    @Getter
     private String summary;
     @Getter
     private Compute.Architecture architecture;

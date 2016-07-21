@@ -124,7 +124,10 @@ public class Compute extends Resource {
                 .addVariable(ARCHITECTURE, this.architecture)
                 .addVariable(CORES, this.cores)
                 .addVariable(MEMORY, this.memory)
-                .addVariable(HOSTNAME, this.hostname);
+                .addVariable(HOSTNAME, this.hostname)
+                .addVariable(SUMMARY, this.getSummary())
+                .addVariable(STATE, this.state);
+
         return serviceBuilder.build();
     }
 

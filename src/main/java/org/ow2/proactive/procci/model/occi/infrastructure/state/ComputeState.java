@@ -54,4 +54,8 @@ public enum ComputeState {
         this.cloudAutomationState = state;
     }
 
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }
