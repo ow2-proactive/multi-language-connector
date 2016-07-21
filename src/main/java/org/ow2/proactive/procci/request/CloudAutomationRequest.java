@@ -164,7 +164,7 @@ public class CloudAutomationRequest {
             HttpResponse response = httpClient.execute(postRequest);
 
             if (response.getStatusLine().getStatusCode() != 200) {
-                throw new RuntimeException("Get Session Failed : HTTP error code : "
+                throw new RuntimeException("Get Session Failed: HTTP error code : "
                         + response.getStatusLine().getStatusCode());
             }
 
@@ -193,7 +193,7 @@ public class CloudAutomationRequest {
         StringBuffer serverOutput = new StringBuffer();
         if (response.getStatusLine().getStatusCode() != 200) {
 
-            throw new RuntimeException("Send Request Failed : HTTP error code : "
+            throw new RuntimeException("Send Request Failed: HTTP error code : "
                     + response.getStatusLine().getStatusCode());
         }
 

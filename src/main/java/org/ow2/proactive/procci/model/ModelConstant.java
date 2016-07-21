@@ -23,12 +23,14 @@ public class ModelConstant {
     public static final String INSTANCE_ID = "pca.instance.id";
 
     // infrastructure variables
-    public static final String CORES = "occi.infrastructure.cores";
-    public static final String MEMORY = "occi.infrastructure.memory";
     public static final String TITLE = "occi.infrastructure.title";
-    public static final String STATE = "occi.infrastructure.state";
+    public static final String SUMMARY = "occi.infrastructure.summary";
     public static final String HOSTNAME = "occi.infrastructure.hostname";
     public static final String ARCHITECTURE = "occi.infrastructure.architecture";
+    public static final String CORES = "occi.infrastructure.cores";
+    public static final String MEMORY = "occi.infrastructure.memory";
     public static final String SHARE = "occi.infrastructure.share";
-    public static final String SUMMARY = "occi.infrastructure.summary";
+    public static final String STATE = "occi.infrastructure.state";
+
+
 }
