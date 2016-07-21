@@ -214,16 +214,9 @@ public class CloudAutomationRequest {
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
     private void raiseException(Exception ex) throws CloudAutomationException {
-        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + ex.getClass() + " : " + ex.getMessage());
+        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + ex.getClass() + ": " + ex.getMessage());
         JSONObject result = new JSONObject();
         result.put("exception", ex.getMessage());
-        throw new CloudAutomationException(result);
-    }
-
-    private void raiseException(String exceptionMessage) throws CloudAutomationException {
-        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + exceptionMessage);
-        JSONObject result = new JSONObject();
-        result.put("exception", exceptionMessage);
         throw new CloudAutomationException(result);
     }
 }
