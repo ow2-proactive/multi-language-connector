@@ -14,6 +14,6 @@ public class CloudAutomationRequestTest {
 
     @Test
     public void getPropertyTest(){
-        assertThat(new CloudAutomationRequest().getProperty("server.endpoint")).isNotEmpty();
+        assertThat(new CloudAutomationRequest().getProperty("scheduler.login.endpoint")).isNotEmpty();
     }
 }

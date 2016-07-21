@@ -37,7 +37,7 @@ public class CloudAutomationRequest {
      * @return a json object containing the request results
      */
     public JSONObject getRequest() throws CloudAutomationException {
-        final String url = getProperty("server.endpoint") + getProperty("server.cloud-automation-service.endpoint");
+        final String url = getProperty("cloud-automation-service.instances.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -86,7 +86,7 @@ public class CloudAutomationRequest {
     public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String url = getProperty("server.endpoint") + getProperty("server.cloud-automation-service.endpoint");
+        final String url = getProperty("cloud-automation-service.instances.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -151,7 +151,7 @@ public class CloudAutomationRequest {
      * @return the session id
      */
     String getSessionId() {
-        final String SCHEDULER_LOGIN_URL = getProperty("login.endpoint");
+        final String SCHEDULER_LOGIN_URL = getProperty("scheduler.login.endpoint");
         final String SCHEDULER_REQUEST = "username=" + getProperty("login.name") + "&password=" + getProperty("login.password");
 
         StringBuffer result = new StringBuffer();
@@ -214,7 +214,7 @@ public class CloudAutomationRequest {
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
     private void raiseException(Exception ex) throws CloudAutomationException {
-        logger.debug("org.ow2.proactive.procci.request.CloudAutomationRequest, " + ex.getClass() + ": " + ex.getMessage());
+        logger.debug("In "+this.getClass() +": "+ ex.getClass() + ": " + ex.getMessage());
         JSONObject result = new JSONObject();
         result.put("exception", ex.getMessage());
         throw new CloudAutomationException(result);
