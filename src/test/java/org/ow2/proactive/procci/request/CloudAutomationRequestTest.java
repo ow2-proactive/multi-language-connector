@@ -16,10 +16,4 @@ public class CloudAutomationRequestTest {
     public void getPropertyTest(){
         assertThat(new CloudAutomationRequest().getProperty("server.endpoint")).isNotEmpty();
     }
-
-    //@Test
-    public void getSessionIdTest(){
-        assertThat(new CloudAutomationRequest().getSessionId()).isNotEmpty();
-    }
-
 }
