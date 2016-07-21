@@ -119,14 +119,13 @@ public class Compute extends Resource {
 
     public Model toCloudAutomationModel(String actionType) {
 
-        Model.Builder serviceBuilder = new Model.Builder(COMPUTE_MODEL, actionType);
-        serviceBuilder.addVariable(TITLE, this.getTitle());
-        serviceBuilder.addVariable(ARCHITECTURE, this.architecture.toString());
-        serviceBuilder.addVariable(CORES, this.cores.toString());
-        serviceBuilder.addVariable(MEMORY, this.memory.toString());
-        serviceBuilder.addVariable(HOSTNAME, this.hostname);
+        Model.Builder serviceBuilder = new Model.Builder(COMPUTE_MODEL, actionType)
+                .addVariable(TITLE, this.getTitle())
+                .addVariable(ARCHITECTURE, this.architecture)
+                .addVariable(CORES, this.cores)
+                .addVariable(MEMORY, this.memory)
+                .addVariable(HOSTNAME, this.hostname);
         return serviceBuilder.build();
     }
-
 
 }

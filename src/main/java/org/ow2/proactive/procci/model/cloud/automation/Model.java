@@ -184,6 +184,13 @@ public class Model {
             return this;
         }
 
+        public Builder addVariable(String variableKey, Object variableValue) {
+            if(variableValue!=null){
+                this.variables.put(variableKey,variableValue.toString());
+            }
+            return this;
+        }
+
         public Model build() {
             return new Model(serviceModel, serviceType, serviceName, serviceDescription, actionType, actionName,
                     actionDescription, actionOriginStates, actionIcon, variables);
