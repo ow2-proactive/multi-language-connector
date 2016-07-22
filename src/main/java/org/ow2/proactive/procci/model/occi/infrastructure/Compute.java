@@ -34,10 +34,7 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
@@ -63,7 +60,7 @@ public class Compute extends Resource {
     private Architecture architecture;
     @Getter
     private Integer cores;
-    @Getter
+    @Getter(AccessLevel.PROTECTED)
     private Integer share;
     @Getter
     private String hostname;

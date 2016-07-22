@@ -19,15 +19,18 @@ public class ModelConstant {
     public static final String ACTION_ORIGIN_STATES = "pca.action.origin.states";
     public static final String ACTION_ICON = "pca.action.icon";
 
-    //cloud automation instance id
+    //cloud automation variables
     public static final String INSTANCE_ID = "pca.instance.id";
+    public static final String INSTANCE_STATUS = "status";
+    public static final String INSTANCE_ENDPOINT = "endpoint";
+    public static final String INSTANCE_INFRASTRUCTURE_ID = "id";
 
     //cloud automation state status
     public static final String RUNNING_STATE = "RUNNING";
     public static final String STOPPED_STATE = "STOPPED";
-    public static final String PENDING_STATE = "PENDING";
+    public static final String PENDING_STATE = "Deploying";
     public static final String TERMINATED_STATE = "TERMINATED";
-    public static final String ERROR_STATE = "ERROR";
+    public static final String ERROR_STATE = "Error";
 
     // infrastructure variables
     public static final String TITLE = "occi.infrastructure.title";

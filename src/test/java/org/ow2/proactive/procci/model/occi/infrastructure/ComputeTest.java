@@ -56,8 +56,8 @@ public class ComputeTest {
         Model model = new Model.Builder("modelTest","actionTypeTest")
                 .addVariable("occi.infrastructure.memory","2.0")
                 .addVariable("occi.infrastructure.cores","4")
-                .addVariable("occi.infrastructure.hostname","10.0.0.1")
-                .addVariable("occi.infrastructure.state","RUNNING")
+                .addVariable("endpoint","10.0.0.1")
+                .addVariable("status","RUNNING")
                 .addVariable("occi.infrastructure.architecture","x86")
                 .addVariable("occi.infrastructure.title","titleTest")
                 .build();
