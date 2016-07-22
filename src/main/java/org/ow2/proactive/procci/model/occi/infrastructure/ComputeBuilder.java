@@ -144,19 +144,19 @@ public class ComputeBuilder {
 
     public ComputeBuilder state(String state) {
         switch (state) {
-            case "RUNNING":
+            case RUNNING_STATE:
                 this.state = ComputeState.ACTIVE;
                 break;
-            case "STOPPED":
+            case STOPPED_STATE:
                 this.state = ComputeState.SUSPENDED;
                 break;
-            case "PENDING":
+            case PENDING_STATE:
                 this.state = ComputeState.INACTIVE;
                 break;
-            case "TERMINATED":
+            case TERMINATED_STATE:
                 this.state = ComputeState.INACTIVE;
                 break;
-            case "ERROR":
+            case ERROR_STATE:
                 this.state = ComputeState.ERROR;
                 break;
         }

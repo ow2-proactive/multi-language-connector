@@ -22,6 +22,13 @@ public class ModelConstant {
     //cloud automation instance id
     public static final String INSTANCE_ID = "pca.instance.id";
 
+    //cloud automation state status
+    public static final String RUNNING_STATE = "RUNNING";
+    public static final String STOPPED_STATE = "STOPPED";
+    public static final String PENDING_STATE = "PENDING";
+    public static final String TERMINATED_STATE = "TERMINATED";
+    public static final String ERROR_STATE = "ERROR";
+
     // infrastructure variables
     public static final String TITLE = "occi.infrastructure.title";
     public static final String SUMMARY = "occi.infrastructure.summary";
