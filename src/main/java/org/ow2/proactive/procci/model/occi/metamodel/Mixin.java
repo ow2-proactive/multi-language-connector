@@ -71,8 +71,8 @@ public class Mixin extends Category {
      * @param entities   is the set of resource instances
      */
     public Mixin(String scheme, String term, String title, Set<Attribute> attributes,
-            List<Action> actions, List<Mixin> depends, List<Kind> applies,
-            List<Entity> entities) {
+                 List<Action> actions, List<Mixin> depends, List<Kind> applies,
+                 List<Entity> entities) {
         super(scheme, term, title, setAttributes(attributes));
         this.actions = new ImmutableList.Builder<Action>().addAll(actions).build();
         this.depends = new ImmutableList.Builder<Mixin>().addAll(depends).build();

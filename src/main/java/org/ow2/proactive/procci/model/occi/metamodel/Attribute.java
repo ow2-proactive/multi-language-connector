@@ -10,7 +10,7 @@ import lombok.*;
  * Defines the name and properties of the client readable attributes
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode(exclude = { "type", "mutable", "required", "pattern", "defaultValue", "description" })
+@EqualsAndHashCode(exclude = {"type", "mutable", "required", "pattern", "defaultValue", "description"})
 public class Attribute {
 
     @Getter

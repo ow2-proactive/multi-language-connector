@@ -48,20 +48,22 @@ import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 /**
  * Entity is the abstract type that will gather the information contained in Resource and Link
  */
-@ToString @EqualsAndHashCode
+@ToString
+@EqualsAndHashCode
 public abstract class Entity {
     @Getter
     private String id;
-    @Getter @Setter(AccessLevel.PROTECTED)
+    @Getter
+    @Setter(AccessLevel.PROTECTED)
     private String title;
-    @Getter
+    @Getter(AccessLevel.PROTECTED)
     private final Kind kind;
-    @Getter
+    @Getter(AccessLevel.PROTECTED)
     private List<Mixin> mixins;
 
-    public Entity(){
+    public Entity() {
         this.id = UUID.randomUUID().toString();
-        this.kind = new Kind.Builder("test","entity").build();
+        this.kind = new Kind.Builder("test", "entity").build();
         this.title = "";
         this.mixins = new ArrayList<>();
     }
@@ -73,9 +75,9 @@ public abstract class Entity {
      * @param kind is the kind instance which uniquely identify the instance
      */
     public Entity(String url, Kind kind) {
-        if(url.equals("")){
+        if (url.equals("")) {
             this.id = UUID.randomUUID().toString();
-        }else {
+        } else {
             this.id = url;
         }
 
@@ -93,8 +95,8 @@ public abstract class Entity {
      * @param mixins are the mixins instance associate to the instance
      */
     public Entity(String url, Kind kind, String title, List<Mixin> mixins) {
-        if(url.equals("")){
-            url=UUID.randomUUID().toString();
+        if (url.equals("")) {
+            url = UUID.randomUUID().toString();
         }
         this.id = url;
 

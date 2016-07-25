@@ -53,7 +53,7 @@ import lombok.Getter;
 public class Kind extends Category {
 
     @Getter
-    private final ImmutableMap<String,Action> actions;
+    private final ImmutableMap<String, Action> actions;
     @Getter
     private List<Entity> entities;
     @Getter
@@ -65,7 +65,7 @@ public class Kind extends Category {
 
         private String title;
         private Set<Attribute> attributes;
-        private Map<String,Action> actions;
+        private Map<String, Action> actions;
         private Kind parent;
 
         public Builder(String scheme, String term) {
@@ -89,7 +89,7 @@ public class Kind extends Category {
         }
 
         public Builder addAction(Action action) {
-            this.actions.put(action.getTerm(),action);
+            this.actions.put(action.getTerm(), action);
             return this;
         }
 
@@ -120,7 +120,7 @@ public class Kind extends Category {
      * @param parent     is the set of the kind instances
      */
     private Kind(String scheme, String term, String title, Set<Attribute> attributes,
-            Map<String,Action> actions, Kind parent) {
+                 Map<String, Action> actions, Kind parent) {
         super(scheme, term, title, attributes);
         this.actions = new ImmutableMap.Builder<String, Action>() {
         }.putAll(actions).build();

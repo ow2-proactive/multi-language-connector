@@ -3,6 +3,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
@@ -48,7 +49,7 @@ public class ComputeBuilder {
         links = new ArrayList<>();
     }
 
-    public ComputeBuilder url(String url){
+    public ComputeBuilder url(String url) {
         this.url = url;
         return this;
     }
@@ -79,10 +80,10 @@ public class ComputeBuilder {
         return this;
     }
 
-    public ComputeBuilder architecture(String architecture){
-        if(architecture.equals(Compute.Architecture.X64.toString())){
+    public ComputeBuilder architecture(String architecture) {
+        if (Compute.Architecture.X64.toString().equalsIgnoreCase(architecture)) {
             this.architecture = Compute.Architecture.X64;
-        }else if(architecture.equals(Compute.Architecture.X86.toString())){
+        } else if (Compute.Architecture.X86.toString().equalsIgnoreCase(architecture)) {
             this.architecture = Compute.Architecture.X86;
         }
         return this;
@@ -93,7 +94,7 @@ public class ComputeBuilder {
         return this;
     }
 
-    public ComputeBuilder cores(String cores){
+    public ComputeBuilder cores(String cores) {
         this.cores = Integer.parseInt(cores);
         return this;
     }
@@ -103,7 +104,7 @@ public class ComputeBuilder {
         return this;
     }
 
-    public ComputeBuilder share(String share){
+    public ComputeBuilder share(String share) {
         this.share = Integer.parseInt(share);
         return this;
     }
@@ -149,9 +150,29 @@ public class ComputeBuilder {
         return this;
     }
 
+    public ComputeBuilder update(Model pca) {
+        this.url(pca.getVariables().getOrDefault("id",""))
+                .title(pca.getVariables().getOrDefault("name",""))
+                .architecture(Compute.Architecture.getArchitecture(pca.getVariables().get("architecture")))
+                .state(pca.getStateName())
+                .hostame(pca.getEndpoint());
+        String cores = pca.getVariables().get("cores");
+        if (cores != null && (!cores.isEmpty())) {
+            this.cores = Integer.parseInt(cores);
+        }
+
+        String memory = pca.getVariables().get("memory");
+        if ((memory != null && !memory.isEmpty())) {
+            this.memory = Float.parseFloat(memory);
+        }
+
+        return this;
+    }
+
     public Compute build() {
         return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary, new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
     }
+
 
 }

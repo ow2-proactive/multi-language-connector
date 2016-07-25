@@ -48,7 +48,7 @@ import lombok.Getter;
 /**
  * Category is the basis type of identification mecanism
  **/
-@EqualsAndHashCode(exclude = { "title", "attributes" })
+@EqualsAndHashCode(exclude = {"title", "attributes"})
 public class Category {
 
     @Getter
@@ -69,10 +69,9 @@ public class Category {
      * @param attributes are the category and sub-types attributes
      */
     public Category(String scheme, String term, String title, Set<Attribute> attributes) {
-        if(scheme.equals("")){
+        if (scheme.equals("")) {
             this.scheme = UUID.randomUUID().toString();
-        }
-        else {
+        } else {
             this.scheme = scheme;
         }
         this.title = title;

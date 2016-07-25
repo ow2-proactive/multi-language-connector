@@ -38,3 +38,9 @@ Modify the name of microservice-template in title, description, licenseUrl, grou
 To access Swagger API:
 
 [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+## Integration with the scheduler
+
+One solution is to run this portal using the scheduler (copy the dsl-connector.war into scheduling/dist/war/).
+
+If you don't deploy locally, don't forget to update src/main/resource/config.properties

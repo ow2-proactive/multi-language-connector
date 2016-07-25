@@ -18,7 +18,6 @@ public class ActionTest {
                 .name("instance name")
                 .originStates("inactive")
                 .build();
-        System.out.println(action.getJson());
         assertThat(action.getDescription()).matches("this is a test");
         assertThat(action.getIcon()).matches("icon url");
         assertThat(action.getName()).matches("instance name");

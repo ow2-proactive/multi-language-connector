@@ -78,8 +78,8 @@ public class NetworkInterface extends Link {
      * @param linkInterface relates the link to the link's device interface
      */
     public NetworkInterface(String url, Kind kind, String title, List<Mixin> mixins,
-            Resource source, String target, Kind targetKind, String mac, String linkInterface,
-            NetworkState state) {
+                            Resource source, String target, Kind targetKind, String mac, String linkInterface,
+                            NetworkState state) {
 
         super(url, kind, title, mixins, source, target, targetKind);
         setAttributes();
@@ -113,7 +113,7 @@ public class NetworkInterface extends Link {
             this.mixins = new ArrayList<>();
         }
 
-        public Builder url(String url){
+        public Builder url(String url) {
             this.url = url;
             return this;
         }
