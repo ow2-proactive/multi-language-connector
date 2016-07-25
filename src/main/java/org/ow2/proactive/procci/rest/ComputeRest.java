@@ -84,11 +84,11 @@ public class ComputeRest {
 
     //-------------------Retrieve Single Compute--------------------------------------------------------
 
-    @RequestMapping(value = "{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Compute> getCompute(@PathVariable("name") String name) {
+    @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Compute> getCompute(@PathVariable("id") String id) {
         logger.debug("Get Compute ");
         try {
-            Model computeModel = new CloudAutomationRequest().getRequestByName(name);
+            Model computeModel = new CloudAutomationRequest().getRequestById(id);
             if(computeModel == null){
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             }

@@ -70,7 +70,7 @@ public class CloudAutomationRequest {
      * @throws CloudAutomationException is thrown if an error occur during the connection with CAS or the login
      */
     @Autowired
-    public Model getRequestByName(String id) throws CloudAutomationException {
+    public Model getRequestById(String id) throws CloudAutomationException {
         JSONObject jsonModel = (JSONObject) getRequest().get(id);
         if(jsonModel!=null){
             return new Model(jsonModel);
