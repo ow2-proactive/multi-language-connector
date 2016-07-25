@@ -13,6 +13,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +29,7 @@ import java.util.Properties;
 /**
  * Manage the connection and the request with Cloud Automation Microservices
  */
+
 public class CloudAutomationRequest {
 
     private final Logger logger = LogManager.getRootLogger();
@@ -36,6 +39,7 @@ public class CloudAutomationRequest {
      *
      * @return a json object containing the request results
      */
+    @Autowired
     public JSONObject getRequest() throws CloudAutomationException {
         final String url = getProperty("cloud-automation-service.instances.endpoint");
         JSONObject result = new JSONObject();
@@ -65,6 +69,7 @@ public class CloudAutomationRequest {
      * @return the instance information
      * @throws CloudAutomationException is thrown if an error occur during the connection with CAS or the login
      */
+    @Autowired
     public Model getRequestByName(String id) throws CloudAutomationException {
         JSONObject jsonModel = (JSONObject) getRequest().get(id);
         if(jsonModel!=null){
@@ -83,6 +88,7 @@ public class CloudAutomationRequest {
      * @return the information about gathered from cloud automation service
      * @throws CloudAutomationException is thrown if something failed during the connection
      */
+    @Autowired
     public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
@@ -130,14 +136,14 @@ public class CloudAutomationRequest {
             return prop.getProperty(propertyKey);
 
         } catch (IOException ex) {
-            logger.debug(ex.getMessage());
+            logger.error(this.getClass(),ex);
             throw new RuntimeException("Unable to get the cloud automation service url from config.properties");
         } finally {
             if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    logger.debug(e.getMessage());
+                    logger.error(this.getClass(),e);
                 }
             }
         }
@@ -214,7 +220,7 @@ public class CloudAutomationRequest {
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
     private void raiseException(Exception ex) throws CloudAutomationException {
-        logger.debug("In "+this.getClass() +": "+ ex.getClass() + ": " + ex.getMessage());
+        logger.error(this.getClass(),ex);
         JSONObject result = new JSONObject();
         result.put("exception", ex.getMessage());
         throw new CloudAutomationException(result);

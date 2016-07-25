@@ -77,7 +77,7 @@ public class ComputeRest {
 
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (CloudAutomationException e) {
-            logger.debug(e.getJsonError());
+            logger.error(this.getClass(),e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -98,7 +98,7 @@ public class ComputeRest {
                 return new ResponseEntity<>(computeBuilder.build(), HttpStatus.OK);
             }
         } catch (CloudAutomationException e) {
-            logger.debug(e.getJsonError());
+            logger.error(this.getClass(),e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -116,7 +116,7 @@ public class ComputeRest {
             compute.update(model);
             return new ResponseEntity<>(compute.build(), HttpStatus.CREATED);
         } catch (CloudAutomationException e) {
-            logger.debug(e.getJsonError());
+            logger.error(this.getClass(),e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
