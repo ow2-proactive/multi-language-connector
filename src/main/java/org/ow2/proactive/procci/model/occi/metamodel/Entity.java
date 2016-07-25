@@ -43,7 +43,7 @@ import java.util.*;
  * Entity is the abstract type that will gather the information contained in Resource and Link
  */
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(of = {"id"})
 public abstract class Entity {
     @Getter
     private String id;
