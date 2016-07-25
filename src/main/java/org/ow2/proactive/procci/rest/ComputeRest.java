@@ -47,8 +47,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Implement CRUD methods for REST service
@@ -66,14 +67,12 @@ public class ComputeRest {
         logger.debug("Get all Compute instances");
         try {
             JSONObject resources = new CloudAutomationRequest().getRequest();
-            List results = new ArrayList();
-            ComputeBuilder compute;
-            Model computeModel;
-            for (Object key : resources.keySet()) {
-                computeModel = new Model((JSONObject) resources.get(key));
-                compute = new ComputeBuilder().update(computeModel);
-                results.add(compute.build());
-            }
+
+            Set<Object> keyset = resources.keySet();
+
+            List results = keyset.stream().map( key -> new Model((JSONObject) resources.get(key)))
+                    .map( model -> new ComputeBuilder().update(model).build())
+                    .collect(Collectors.toList());
 
             return new ResponseEntity<>(results, HttpStatus.OK);
         } catch (CloudAutomationException e) {
