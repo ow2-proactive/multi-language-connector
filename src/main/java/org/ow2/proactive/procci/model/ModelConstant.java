@@ -28,9 +28,9 @@ public class ModelConstant {
     //cloud automation state status
     public static final String RUNNING_STATE = "RUNNING";
     public static final String STOPPED_STATE = "STOPPED";
-    public static final String PENDING_STATE = "Deploying";
+    public static final String PENDING_STATE = "DEPLOYING";
     public static final String TERMINATED_STATE = "TERMINATED";
-    public static final String ERROR_STATE = "Error";
+    public static final String ERROR_STATE = "ERROR";
 
     // infrastructure variables
     public static final String TITLE = "occi.infrastructure.title";
