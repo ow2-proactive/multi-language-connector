@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.Map;
+
 /**
  * Model rendering for an action
  */
@@ -15,5 +17,5 @@ public class ActionRendering {
     private String term;
     private String scheme;
     private String title;
-    private AttributesRendering attributes;
+    private Map<String,Object> attributes;
 }
