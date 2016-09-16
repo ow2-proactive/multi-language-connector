@@ -66,7 +66,7 @@ public class Kind extends Category {
         public Builder(String scheme, String term) {
             this.scheme = scheme;
             this.term = term;
-            this.title = "kind";
+            this.title = scheme+term;
             attributes = new HashSet<>();
             actions = new HashMap<>();
             parent = null;
