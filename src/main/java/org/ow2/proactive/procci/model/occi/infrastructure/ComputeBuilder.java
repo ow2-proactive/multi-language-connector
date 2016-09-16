@@ -51,7 +51,7 @@ public class ComputeBuilder {
         share = null;
         hostname = "";
         memory = null;
-        state = null;
+        state = ComputeState.ERROR;
         mixins = new ArrayList<>();
         links = new ArrayList<>();
     }
