@@ -4,7 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Model rendering for a link
@@ -16,7 +18,7 @@ public class LinkRendering extends EntityRendering {
     private LinkLocationRendering source;
     private LinkLocationRendering target;
 
-    private LinkRendering(String kind, List<String> mixins, AttributesRendering attributes, List<String> actions,
+    private LinkRendering(String kind, List<String> mixins, Map<String,Object> attributes, List<String> actions,
                           String id, String title, LinkLocationRendering source, LinkLocationRendering target) {
         super(kind, mixins, attributes, actions, id, title);
         this.source = source;
@@ -26,7 +28,7 @@ public class LinkRendering extends EntityRendering {
     public static class Builder {
         private final String kind;
         private List<String> mixins;
-        private AttributesRendering.Builder attributes;
+        private Map<String,Object> attributes;
         private List<String> actions;
         private final String id;
         private String title;
@@ -36,7 +38,7 @@ public class LinkRendering extends EntityRendering {
         public Builder(String kind, String id, LinkLocationRendering source, LinkLocationRendering target) {
             this.kind = kind;
             this.mixins = new ArrayList<>();
-            this.attributes = new AttributesRendering.Builder();
+            this.attributes = new HashMap<>();
             this.actions = new ArrayList<>();
             this.id = id;
             this.title = "";
@@ -50,7 +52,7 @@ public class LinkRendering extends EntityRendering {
         }
 
         public Builder addAttribute(String attributeName, Object attributeValue) {
-            this.attributes.addAttribute(attributeName, attributeValue);
+            this.attributes.put(attributeName, attributeValue);
             return this;
         }
 
@@ -65,7 +67,7 @@ public class LinkRendering extends EntityRendering {
         }
 
         public LinkRendering build() {
-            return new LinkRendering(kind, mixins, attributes.build(), actions, id, title, source, target);
+            return new LinkRendering(kind, mixins, attributes, actions, id, title, source, target);
         }
 
     }

@@ -57,7 +57,7 @@ public abstract class Entity {
 
     public Entity() {
         this.id = UUID.randomUUID().toString();
-        this.kind = new Kind.Builder("test", "entity").build();
+        this.kind = new Kind.Builder("default.kind.url", "entity").build();
         this.title = "";
         this.mixins = new ArrayList<>();
     }

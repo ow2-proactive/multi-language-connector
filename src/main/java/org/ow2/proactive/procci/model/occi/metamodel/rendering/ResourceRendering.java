@@ -4,7 +4,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mael on 14/09/16.
@@ -16,7 +18,7 @@ public class ResourceRendering extends EntityRendering {
     private List<LinkRendering> links;
     private String summary;
 
-    private ResourceRendering(String kind, List<String> mixins, AttributesRendering attributes, List<String> actions,
+    private ResourceRendering(String kind, List<String> mixins, Map<String,Object> attributes, List<String> actions,
                               String id, String title, List<LinkRendering> links, String summary) {
         super(kind, mixins, attributes, actions, id, title);
         this.links = links;
@@ -27,7 +29,7 @@ public class ResourceRendering extends EntityRendering {
 
         private final String kind;
         private List<String> mixins;
-        private AttributesRendering.Builder attributes;
+        private Map<String,Object> attributes;
         private List<String> actions;
         private final String id;
         private String title;
@@ -37,7 +39,7 @@ public class ResourceRendering extends EntityRendering {
         public Builder(String kind, String id) {
             this.kind = kind;
             this.mixins = new ArrayList<>();
-            this.attributes = new AttributesRendering.Builder();
+            this.attributes = new HashMap<>();
             this.actions = new ArrayList<>();
             this.id = id;
             this.title = "";
@@ -51,7 +53,7 @@ public class ResourceRendering extends EntityRendering {
         }
 
         public Builder addAttribute(String attributeName, Object attributeValue) {
-            this.attributes.addAttribute(attributeName, attributeValue);
+            this.attributes.put(attributeName, attributeValue);
             return this;
         }
 
@@ -76,7 +78,7 @@ public class ResourceRendering extends EntityRendering {
         }
 
         public ResourceRendering build() {
-            return new ResourceRendering(kind, mixins, attributes.build(), actions, id, title, links, summary);
+            return new ResourceRendering(kind, mixins, attributes, actions, id, title, links, summary);
         }
     }
 

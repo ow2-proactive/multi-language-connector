@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Model rendering for an entity
@@ -13,11 +14,11 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode
-public class EntityRendering {
+public abstract class EntityRendering {
 
     private String kind;
     private List<String> mixins;
-    private AttributesRendering attributes;
+    private Map<String,Object> attributes;
     private List<String> actions;
     private String id;
     private String title;

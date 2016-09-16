@@ -40,6 +40,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.*;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 
 import java.util.List;
@@ -141,7 +142,7 @@ public class Compute extends Resource {
      *
      * @return the compute rendering
      */
-    public EntitiesRendering getRendering() {
+    public ResourceRendering getRendering() {
 
         ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(), this.getId())
                 .addTitle(this.getTitle())
@@ -151,9 +152,7 @@ public class Compute extends Resource {
                 .addSummary(this.getSummary())
                 .addTitle(this.getTitle());
 
-        return new EntitiesRendering.Builder()
-                .addEntity(this.getId(), resourceRendering.build())
-                .build();
+        return resourceRendering.build();
     }
 
 }
