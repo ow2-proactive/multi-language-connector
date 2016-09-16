@@ -39,6 +39,8 @@ import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.*;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 
 import java.util.List;
 import java.util.Set;
@@ -114,6 +116,12 @@ public class Compute extends Resource {
         return attributes;
     }
 
+    /**
+     * Convert OCCI compute to Proactive Cloud Automation Compute
+     *
+     * @param actionType is the action to apply on the compute
+     * @return the proactive cloud automation model for the compute
+     */
     public Model toCloudAutomationModel(String actionType) {
 
         Model.Builder serviceBuilder = new Model.Builder(COMPUTE_MODEL, actionType)
@@ -126,6 +134,26 @@ public class Compute extends Resource {
                 .addVariable(STATE, this.state);
 
         return serviceBuilder.build();
+    }
+
+    /**
+     * Give the OCCI rendering of a compute
+     *
+     * @return the compute rendering
+     */
+    public EntitiesRendering getRendering() {
+
+        ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(), this.getId())
+                .addTitle(this.getTitle())
+                .addAttribute(Attributes.CORES.getName(), this.cores)
+                .addAttribute(Attributes.MEMORY.getName(), this.memory)
+                .addAttribute(Attributes.COMPUTE_STATE.getName(), this.getState().name())
+                .addSummary(this.getSummary())
+                .addTitle(this.getTitle());
+
+        return new EntitiesRendering.Builder()
+                .addEntity(this.getId(), resourceRendering.build())
+                .build();
     }
 
 }
