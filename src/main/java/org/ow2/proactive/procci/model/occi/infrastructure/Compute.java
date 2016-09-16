@@ -148,7 +148,8 @@ public class Compute extends Resource {
                 .addTitle(this.getTitle())
                 .addAttribute(Attributes.CORES.getName(), this.cores)
                 .addAttribute(Attributes.MEMORY.getName(), this.memory)
-                .addAttribute(Attributes.COMPUTE_STATE.getName(), this.getState().name())
+                .addAttribute(Attributes.COMPUTE_STATE.getName(), this.state.name())
+                .addAttribute(Attributes.HOSTNAME.getName(), this.hostname)
                 .addSummary(this.getSummary())
                 .addTitle(this.getTitle());
 
