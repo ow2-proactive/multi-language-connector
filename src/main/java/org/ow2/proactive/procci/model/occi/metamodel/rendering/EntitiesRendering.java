@@ -1,12 +1,17 @@
 package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by mael on 16/09/16.
+ * Rendering model for entities
  */
+@Getter
+@EqualsAndHashCode
 public class EntitiesRendering {
 
     private final Map<String,EntityRendering> entities;
