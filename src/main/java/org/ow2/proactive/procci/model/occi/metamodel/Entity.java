@@ -56,7 +56,7 @@ public abstract class Entity {
     private List<Mixin> mixins;
 
     public Entity() {
-        this.id = UUID.randomUUID().toString();
+        this.id = generateId();
         this.kind = new Kind.Builder("default.kind.url", "entity").build();
         this.title = "";
         this.mixins = new ArrayList<>();
@@ -70,7 +70,7 @@ public abstract class Entity {
      */
     public Entity(String url, Kind kind) {
         if (("").equals(url)) {
-            this.id = UUID.randomUUID().toString();
+            this.id = generateId();
         } else {
             this.id = url;
         }
@@ -90,7 +90,7 @@ public abstract class Entity {
      */
     public Entity(String url, Kind kind, String title, List<Mixin> mixins) {
         if (("").equals(url)) {
-            url = UUID.randomUUID().toString();
+            url = generateId();
         }
         this.id = url;
 
@@ -107,6 +107,10 @@ public abstract class Entity {
         attributes.add(Attributes.KIND);
         attributes.add(Attributes.MIXINS);
         return attributes;
+    }
+
+    private String generateId(){
+        return "urn:uuid:"+UUID.randomUUID().toString();
     }
 
 }
