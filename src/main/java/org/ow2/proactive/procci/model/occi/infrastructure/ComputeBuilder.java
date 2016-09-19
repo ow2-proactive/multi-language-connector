@@ -9,11 +9,15 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Infrastructu
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.ow2.proactive.procci.model.ModelConstant.*;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.TITLE_NAME;
 
 /**
  * Created by mael on 02/06/16.
@@ -163,19 +167,46 @@ public class ComputeBuilder {
         return this;
     }
 
+    /**
+     *  Set the builder according to the cloud automation model information
+     * @param cloudAutomation is the instance of the cloud automation model for a compute
+     * @return a compute builder with the cloud automation model information mapped into the builder
+     */
     public ComputeBuilder update(Model cloudAutomation) {
         this.url(cloudAutomation.getVariables().getOrDefault(INSTANCE_ID, ""))
-                .title(cloudAutomation.getVariables().getOrDefault(TITLE, ""))
-                .architecture(cloudAutomation.getVariables().get(ARCHITECTURE))
+                .title(cloudAutomation.getVariables().getOrDefault(TITLE_NAME, ""))
+                .architecture(cloudAutomation.getVariables().get(ARCHITECTURE_NAME))
                 .state(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, ""))
                 .hostame(cloudAutomation.getVariables().getOrDefault(INSTANCE_ENDPOINT, ""))
-                .cores(cloudAutomation.getVariables().getOrDefault(CORES, ""))
-                .memory(cloudAutomation.getVariables().getOrDefault(MEMORY, ""))
-                .share(cloudAutomation.getVariables().getOrDefault(SHARE, ""))
-                .summary(cloudAutomation.getVariables().getOrDefault(SUMMARY, ""));
+                .cores(cloudAutomation.getVariables().getOrDefault(CORES_NAME, ""))
+                .memory(cloudAutomation.getVariables().getOrDefault(MEMORY_NAME, ""))
+                .share(cloudAutomation.getVariables().getOrDefault(SHARE_NAME, ""))
+                .summary(cloudAutomation.getVariables().getOrDefault(SUMMARY_NAME, ""));
 
         return this;
     }
+
+    /**
+     *  Set the builder according to the resource rendering information
+     * @param rendering is the instance of the cloud automation model for a compute
+     * @return a compute builder with the cloud automation model information mapped into the builder
+     */
+    public ComputeBuilder update(ResourceRendering rendering) {
+        this.url(rendering.getId())
+                .title((String) rendering.getAttributes().get(TITLE_NAME))
+                .architecture((Compute.Architecture) rendering.getAttributes().get(architecture))
+                .state((String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME,""))
+                .hostame((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME,""))
+                .cores((String) rendering.getAttributes().getOrDefault(CORES_NAME,""))
+                .memory((String) rendering.getAttributes().getOrDefault(MEMORY_NAME,""))
+                .share((String) rendering.getAttributes().getOrDefault(SHARE_NAME,""))
+                .summary((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
+
+        return this;
+    }
+
+
+
 
     public Compute build() {
         return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary, new ArrayList<>(), architecture,

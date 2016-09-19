@@ -110,8 +110,9 @@ public class ComputeRest {
     //-------------------Create a Compute--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ResourceRendering> createCompute(@RequestBody ComputeBuilder compute) throws InterruptedException {
-        logger.debug("Creating Compute " + compute.build().getTitle());
+    public ResponseEntity<ResourceRendering> createCompute(@RequestBody ResourceRendering computeRendering) throws InterruptedException {
+        logger.debug("Creating Compute " + computeRendering.toString());
+        ComputeBuilder compute = new ComputeBuilder().update(computeRendering);
         JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
         try {
             Model model = new Model(new CloudAutomationRequest().postRequest(pcaModel));

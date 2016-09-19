@@ -16,13 +16,11 @@ import java.util.Map;
 public class ResourceRendering extends EntityRendering {
 
     private List<LinkRendering> links;
-    private String summary;
 
     private ResourceRendering(String kind, List<String> mixins, Map<String,Object> attributes, List<String> actions,
-                              String id, String title, List<LinkRendering> links, String summary) {
-        super(kind, mixins, attributes, actions, id, title);
+                              String id, List<LinkRendering> links) {
+        super(kind, mixins, attributes, actions, id);
         this.links = links;
-        this.summary = summary;
     }
 
     public static class Builder {
@@ -32,9 +30,7 @@ public class ResourceRendering extends EntityRendering {
         private Map<String,Object> attributes;
         private List<String> actions;
         private final String id;
-        private String title;
         private List<LinkRendering> links;
-        private String summary;
 
         public Builder(String kind, String id) {
             this.kind = kind;
@@ -42,9 +38,7 @@ public class ResourceRendering extends EntityRendering {
             this.attributes = new HashMap<>();
             this.actions = new ArrayList<>();
             this.id = id;
-            this.title = "";
             this.links = new ArrayList<>();
-            this.summary = "";
         }
 
         public Builder addMixin(String mixin) {
@@ -62,23 +56,14 @@ public class ResourceRendering extends EntityRendering {
             return this;
         }
 
-        public Builder addTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
         public Builder addLink(LinkRendering link) {
             this.links.add(link);
             return this;
         }
 
-        public Builder addSummary(String summary) {
-            this.summary = summary;
-            return this;
-        }
 
         public ResourceRendering build() {
-            return new ResourceRendering(kind, mixins, attributes, actions, id, title, links, summary);
+            return new ResourceRendering(kind, mixins, attributes, actions, id, links);
         }
     }
 

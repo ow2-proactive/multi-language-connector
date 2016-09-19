@@ -39,14 +39,14 @@ import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.*;
-import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
-import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 
 import java.util.List;
 import java.util.Set;
 
-import static org.ow2.proactive.procci.model.ModelConstant.*;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.TITLE_NAME;
 
 
 /**
@@ -105,6 +105,7 @@ public class Compute extends Resource {
         this.state = state;
     }
 
+
     private static Set<Attribute> setAttributes() {
         Set<Attribute> attributes = Resource.getAttributes();
         attributes.add(Attributes.ARCHITECTURE);
@@ -126,13 +127,13 @@ public class Compute extends Resource {
     public Model toCloudAutomationModel(String actionType) {
 
         Model.Builder serviceBuilder = new Model.Builder(COMPUTE_MODEL, actionType)
-                .addVariable(TITLE, this.getTitle())
-                .addVariable(ARCHITECTURE, this.architecture)
-                .addVariable(CORES, this.cores)
-                .addVariable(MEMORY, this.memory)
-                .addVariable(HOSTNAME, this.hostname)
-                .addVariable(SUMMARY, this.getSummary())
-                .addVariable(STATE, this.state);
+                .addVariable(TITLE_NAME, this.getTitle())
+                .addVariable(ARCHITECTURE_NAME, this.architecture)
+                .addVariable(CORES_NAME, this.cores)
+                .addVariable(MEMORY_NAME, this.memory)
+                .addVariable(HOSTNAME_NAME, this.hostname)
+                .addVariable(SUMMARY_NAME, this.getSummary())
+                .addVariable(COMPUTE_STATE_NAME, this.state);
 
         return serviceBuilder.build();
     }
@@ -145,13 +146,12 @@ public class Compute extends Resource {
     public ResourceRendering getRendering() {
 
         ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(), this.getId())
-                .addTitle(this.getTitle())
-                .addAttribute(Attributes.CORES.getName(), this.cores)
-                .addAttribute(Attributes.MEMORY.getName(), this.memory)
-                .addAttribute(Attributes.COMPUTE_STATE.getName(), this.state.name())
-                .addAttribute(Attributes.HOSTNAME.getName(), this.hostname)
-                .addSummary(this.getSummary())
-                .addTitle(this.getTitle());
+                .addAttribute(TITLE_NAME,this.getTitle())
+                .addAttribute(CORES_NAME, this.cores)
+                .addAttribute(MEMORY_NAME, this.memory)
+                .addAttribute(COMPUTE_STATE_NAME, this.state.name())
+                .addAttribute(HOSTNAME_NAME, this.hostname)
+                .addAttribute(SUMMARY_NAME,this.getSummary());
 
         return resourceRendering.build();
     }

@@ -21,6 +21,4 @@ public abstract class EntityRendering {
     private Map<String,Object> attributes;
     private List<String> actions;
     private String id;
-    private String title;
-
 }

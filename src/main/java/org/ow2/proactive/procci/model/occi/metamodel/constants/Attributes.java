@@ -11,6 +11,11 @@ import org.ow2.proactive.procci.model.occi.metamodel.Type;
  * Contains all the attributes of the meta-model
  */
 public class Attributes {
+
+    //occi  core variable
+    public static final String TITLE_NAME = "occi.core.title";
+    public static final String SUMMARY_NAME = "occi.core.summary";
+
     public static final Attribute TERM = new Attribute.Builder("occi.category.term", Type.OBJECT, true,
             false).description(
             "Unique identifier of the Category instance " +

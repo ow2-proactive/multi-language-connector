@@ -19,8 +19,8 @@ public class LinkRendering extends EntityRendering {
     private LinkLocationRendering target;
 
     private LinkRendering(String kind, List<String> mixins, Map<String,Object> attributes, List<String> actions,
-                          String id, String title, LinkLocationRendering source, LinkLocationRendering target) {
-        super(kind, mixins, attributes, actions, id, title);
+                          String id, LinkLocationRendering source, LinkLocationRendering target) {
+        super(kind, mixins, attributes, actions, id);
         this.source = source;
         this.target = target;
     }
@@ -31,7 +31,6 @@ public class LinkRendering extends EntityRendering {
         private Map<String,Object> attributes;
         private List<String> actions;
         private final String id;
-        private String title;
         private final LinkLocationRendering source;
         private final LinkLocationRendering target;
 
@@ -41,7 +40,6 @@ public class LinkRendering extends EntityRendering {
             this.attributes = new HashMap<>();
             this.actions = new ArrayList<>();
             this.id = id;
-            this.title = "";
             this.source = source;
             this.target = target;
         }
@@ -61,13 +59,8 @@ public class LinkRendering extends EntityRendering {
             return this;
         }
 
-        public Builder addTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
         public LinkRendering build() {
-            return new LinkRendering(kind, mixins, attributes, actions, id, title, source, target);
+            return new LinkRendering(kind, mixins, attributes, actions, id, source, target);
         }
 
     }
