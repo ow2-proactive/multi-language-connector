@@ -16,8 +16,8 @@ import java.util.List;
 
 import static org.ow2.proactive.procci.model.ModelConstant.*;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.TITLE_NAME;
 
 /**
  * Created by mael on 02/06/16.
@@ -48,7 +48,7 @@ public class ComputeBuilder {
 
     public ComputeBuilder() {
         this.url = "";
-        title = "";
+        title = "Compute";
         summary = "";
         architecture = null;
         cores = null;
@@ -174,8 +174,8 @@ public class ComputeBuilder {
      */
     public ComputeBuilder update(Model cloudAutomation) {
         this.url(cloudAutomation.getVariables().getOrDefault(INSTANCE_ID, ""))
-                .title(cloudAutomation.getVariables().getOrDefault(TITLE_NAME, ""))
-                .architecture(cloudAutomation.getVariables().get(ARCHITECTURE_NAME))
+                .title(cloudAutomation.getVariables().getOrDefault(ENTITY_TITLE_NAME, ""))
+                .architecture(cloudAutomation.getVariables().getOrDefault(ARCHITECTURE_NAME,null))
                 .state(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, ""))
                 .hostame(cloudAutomation.getVariables().getOrDefault(INSTANCE_ENDPOINT, ""))
                 .cores(cloudAutomation.getVariables().getOrDefault(CORES_NAME, ""))
@@ -193,8 +193,8 @@ public class ComputeBuilder {
      */
     public ComputeBuilder update(ResourceRendering rendering) {
         this.url(rendering.getId())
-                .title((String) rendering.getAttributes().get(TITLE_NAME))
-                .architecture((Compute.Architecture) rendering.getAttributes().get(architecture))
+                .title((String) rendering.getAttributes().get(ENTITY_TITLE_NAME))
+                .architecture((Compute.Architecture) rendering.getAttributes().getOrDefault(architecture,null))
                 .state((String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME,""))
                 .hostame((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME,""))
                 .cores((String) rendering.getAttributes().getOrDefault(CORES_NAME,""))

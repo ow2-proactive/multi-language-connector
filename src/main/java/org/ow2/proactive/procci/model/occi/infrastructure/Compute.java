@@ -45,9 +45,8 @@ import java.util.List;
 import java.util.Set;
 
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.TITLE_NAME;
-
 
 /**
  * This class represents a generic information processing resource
@@ -127,7 +126,7 @@ public class Compute extends Resource {
     public Model toCloudAutomationModel(String actionType) {
 
         Model.Builder serviceBuilder = new Model.Builder(COMPUTE_MODEL, actionType)
-                .addVariable(TITLE_NAME, this.getTitle())
+                .addVariable(ENTITY_TITLE_NAME, this.getTitle())
                 .addVariable(ARCHITECTURE_NAME, this.architecture)
                 .addVariable(CORES_NAME, this.cores)
                 .addVariable(MEMORY_NAME, this.memory)
@@ -146,7 +145,7 @@ public class Compute extends Resource {
     public ResourceRendering getRendering() {
 
         ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(), this.getId())
-                .addAttribute(TITLE_NAME,this.getTitle())
+                .addAttribute(ENTITY_TITLE_NAME,this.getTitle())
                 .addAttribute(CORES_NAME, this.cores)
                 .addAttribute(MEMORY_NAME, this.memory)
                 .addAttribute(COMPUTE_STATE_NAME, this.state.name())

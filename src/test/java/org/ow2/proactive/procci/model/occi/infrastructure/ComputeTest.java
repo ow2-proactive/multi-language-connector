@@ -54,12 +54,12 @@ public class ComputeTest {
     public void ComputeBuilderUpdateTest(){
 
         Model model = new Model.Builder("modelTest","actionTypeTest")
-                .addVariable("occi.infrastructure.memory","2.0")
-                .addVariable("occi.infrastructure.cores","4")
+                .addVariable("occi.compute.memory","2.0")
+                .addVariable("occi.compute.cores","4")
                 .addVariable("endpoint","10.0.0.1")
                 .addVariable("status","RUNNING")
-                .addVariable("occi.infrastructure.architecture","x86")
-                .addVariable("occi.infrastructure.title","titleTest")
+                .addVariable("occi.compute.architecture","x86")
+                .addVariable("occi.entity.title","titleTest")
                 .build();
 
         computeBuilder.update(model);
@@ -68,7 +68,7 @@ public class ComputeTest {
         assertThat(computeBuilder.getCores()).isEqualTo(new Integer(4));
         assertThat(computeBuilder.getMemory()).isWithin(new Float(0.0001)).of(new Float(2));
         assertThat(computeBuilder.getHostname()).matches("10.0.0.1");
-        assertThat(computeBuilder.getTitle()).isEqualTo("titleTest");
+        assertThat(computeBuilder.getTitle()).matches("titleTest");
         assertThat(computeBuilder.getState()).isEqualTo(ComputeState.ACTIVE);
     }
 
@@ -77,9 +77,9 @@ public class ComputeTest {
         Model model = computeBuilder.build().toCloudAutomationModel("create");
         assertThat(model.getServiceModel()).isEqualTo("occi.infrastructure.compute");
         assertThat(model.getActionType()).isEqualTo("create");
-        assertThat(model.getVariables()).containsEntry("occi.infrastructure.cores","5");
-        assertThat(model.getVariables()).containsEntry("occi.infrastructure.architecture","X64");
-        assertThat(model.getVariables()).containsEntry("occi.infrastructure.memory","3.0");
-        assertThat(model.getVariables()).containsEntry("occi.infrastructure.title","title");
+        assertThat(model.getVariables()).containsEntry("occi.compute.cores","5");
+        assertThat(model.getVariables()).containsEntry("occi.compute.architecture","X64");
+        assertThat(model.getVariables()).containsEntry("occi.compute.memory","3.0");
+        assertThat(model.getVariables()).containsEntry("occi.entity.title","title");
     }
 }
