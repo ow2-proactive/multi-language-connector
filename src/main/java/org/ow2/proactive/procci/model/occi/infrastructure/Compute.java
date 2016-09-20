@@ -145,7 +145,8 @@ public class Compute extends Resource {
                 .addAttribute(MEMORY_NAME, this.memory)
                 .addAttribute(COMPUTE_STATE_NAME, this.state.name())
                 .addAttribute(HOSTNAME_NAME, this.hostname)
-                .addAttribute(SUMMARY_NAME,this.getSummary());
+                .addAttribute(SUMMARY_NAME,this.getSummary())
+                .addAttribute(ARCHITECTURE_NAME,this.architecture.name());
 
         return resourceRendering.build();
     }

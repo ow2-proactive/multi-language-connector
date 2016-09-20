@@ -1,15 +1,8 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
 
-import org.json.simple.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.RestartCompute;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.SaveCompute;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.StartCompute;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.StopCompute;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.SuspendCompute;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.junit.Test;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
@@ -28,12 +21,12 @@ public class ComputeTest {
         computeBuilder = new ComputeBuilder().url("url")
                 .architecture(Compute.Architecture.X64)
                 .cores(5)
-                .hostame("hostname")
+                .hostame("hostnameTest")
                 .memory(new Float(3))
                 .state(ComputeState.SUSPENDED)
                 .share(2)
-                .summary("summary")
-                .title("title");
+                .summary("summaryTest")
+                .title("titleTest");
     }
 
     @Test
@@ -43,12 +36,12 @@ public class ComputeTest {
 
         assertThat(compute.getArchitecture()).isEquivalentAccordingToCompareTo(Compute.Architecture.X64);
         assertThat(compute.getCores()).isEqualTo(new Integer(5));
-        assertThat(compute.getHostname()).isEqualTo("hostname");
+        assertThat(compute.getHostname()).isEqualTo("hostnameTest");
         assertThat(compute.getMemory()).isWithin(new Float(0.0001).compareTo(new Float(3)));
         assertThat(compute.getState()).isEquivalentAccordingToCompareTo(ComputeState.SUSPENDED);
-        assertThat(compute.getSummary()).isEqualTo("summary");
+        assertThat(compute.getSummary()).isEqualTo("summaryTest");
         assertThat(compute.getShare()).isEqualTo(new Integer(2));
-        assertThat(compute.getTitle()).isEqualTo("title");
+        assertThat(compute.getTitle()).isEqualTo("titleTest");
     }
 
     @Test
@@ -81,7 +74,7 @@ public class ComputeTest {
         assertThat(model.getVariables()).containsEntry("occi.compute.cores","5");
         assertThat(model.getVariables()).containsEntry("occi.compute.architecture","X64");
         assertThat(model.getVariables()).containsEntry("occi.compute.memory","3.0");
-        assertThat(model.getVariables()).containsEntry("occi.entity.title","title");
+        assertThat(model.getVariables()).containsEntry("occi.entity.title","titleTest");
     }
 
     @Test
@@ -96,6 +89,7 @@ public class ComputeTest {
                 .addAttribute("occi.entity.title","titleTest")
                 .addAttribute("occi.compute.architecture","x86")
                 .addAttribute("occi.compute.state","ACTIVE")
+                .addAttribute("occi.core.summary","summaryTest")
                 .build();
 
 
@@ -109,7 +103,30 @@ public class ComputeTest {
         assertThat(compute.getTitle()).matches("titleTest");
         assertThat(compute.getArchitecture()).isEqualTo(Compute.Architecture.X86);
         assertThat(compute.getState()).isEqualTo(ComputeState.ACTIVE);
-
+        assertThat(compute.getMixins()).isEmpty();
+        assertThat(compute.getSummary()).matches("summaryTest");
 
     }
+
+    @Test
+    public void getRenderingTest() {
+
+
+        ResourceRendering rendering = computeBuilder.build().getRendering();
+        assertThat(rendering.getId()).matches("url");
+        assertThat(rendering.getKind()).matches("http://schemas.ogf.org/occi/infrastructure#compute");
+        assertThat(rendering.getAttributes()).containsEntry("occi.compute.hostname","hostnameTest");
+        assertThat(rendering.getAttributes()).containsEntry("occi.compute.memory",new Float(3));
+        assertThat(rendering.getAttributes()).containsEntry("occi.compute.cores",new Integer(5));
+        assertThat(rendering.getAttributes()).containsEntry("occi.compute.architecture","X64");
+        assertThat(rendering.getAttributes()).containsEntry("occi.entity.title","titleTest");
+        assertThat(rendering.getAttributes()).containsEntry("occi.compute.state","SUSPENDED");
+        assertThat(rendering.getAttributes()).containsEntry("occi.core.summary","summaryTest");
+
+        assertThat(rendering.getLinks()).isEmpty();
+        assertThat(rendering.getActions()).isEmpty();
+        assertThat(rendering.getMixins()).isEmpty();
+    }
+
+
 }
