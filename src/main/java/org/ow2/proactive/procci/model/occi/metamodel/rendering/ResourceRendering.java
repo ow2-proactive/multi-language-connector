@@ -2,6 +2,7 @@ package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class ResourceRendering extends EntityRendering {
 
     private List<LinkRendering> links;

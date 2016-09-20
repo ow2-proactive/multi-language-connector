@@ -3,6 +3,7 @@ package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-@Builder
+@NoArgsConstructor
 public class ActionRendering {
 
     private String term;

@@ -127,6 +127,12 @@ public class ComputeRest {
         }
     }
 
+    /*@RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<SwaggerTest> createComputeTest(@RequestBody SwaggerTest computeRendering) throws InterruptedException, NumberFormatException {
+        logger.debug("Creating Compute " + computeRendering.toString());
+        return new ResponseEntity<>(computeRendering,HttpStatus.OK);
+    }*/
+
 
     /**
      * The following method will be added soon

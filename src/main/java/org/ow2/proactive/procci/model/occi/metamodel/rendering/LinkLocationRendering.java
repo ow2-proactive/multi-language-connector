@@ -3,6 +3,7 @@ package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 /**
@@ -10,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 @EqualsAndHashCode
-@Builder
+@NoArgsConstructor
 public class LinkLocationRendering {
 
     private String location;

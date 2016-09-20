@@ -1,9 +1,6 @@
 package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +11,7 @@ import java.util.Map;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode
+@NoArgsConstructor
 public abstract class EntityRendering {
 
     private String kind;
