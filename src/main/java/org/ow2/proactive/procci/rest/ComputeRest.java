@@ -110,7 +110,7 @@ public class ComputeRest {
     //-------------------Create a Compute--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ResourceRendering> createCompute(@RequestBody ResourceRendering computeRendering) throws InterruptedException {
+    public ResponseEntity<ResourceRendering> createCompute(@RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         ComputeBuilder compute = new ComputeBuilder().update(computeRendering);
         JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
@@ -121,6 +121,9 @@ public class ComputeRest {
         } catch (CloudAutomationException e) {
             logger.error(this.getClass(),e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (NumberFormatException e){
+            logger.error(this.getClass(),e);
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 

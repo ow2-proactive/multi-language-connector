@@ -43,6 +43,12 @@ public class Attributes {
     public static final String NETWORKINTERFACE_GATEWAY_NAME = "occi.networkinterface.gateway";
     public static final String NETWORKINTERFACE_ALLOCATION_NAME = "occi.networkinterface.allocation";
 
+    //state attributes
+    public static final String COMPUTE_STATE_ACTIVE = "ACTIVE";
+    public static final String COMPUTE_STATE_INACTIVE = "INACTIVE";
+    public static final String COMPUTE_STATE_SUSPENDED = "SUSPENDED";
+    public static final String COMPUTE_STATE_ERROR = "ERROR";
+
     public static final Attribute ARCHITECTURE = new Attribute.Builder(ARCHITECTURE_NAME,
             Type.OBJECT, true, true).description("CPU Architecture of the instance.").build();
     public static final Attribute CORES = new Attribute.Builder(CORES_NAME, Type.OBJECT, true,

@@ -54,21 +54,16 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@Getter
 public class Compute extends Resource {
 
     private static final String COMPUTE_MODEL = "occi.infrastructure.compute";
 
-    @Getter
     private Architecture architecture;
-    @Getter
     private Integer cores;
-    @Getter(AccessLevel.PROTECTED)
     private Integer share;
-    @Getter
     private String hostname;
-    @Getter
     private Float memory; // in Gigabytes
-    @Getter
     private ComputeState state;
 
     public enum Architecture {

@@ -44,15 +44,11 @@ import java.util.*;
  */
 @ToString
 @EqualsAndHashCode(of = {"id"})
+@Getter
 public abstract class Entity {
-    @Getter
     private String id;
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
     private String title;
-    @Getter(AccessLevel.PROTECTED)
     private final Kind kind;
-    @Getter(AccessLevel.PROTECTED)
     private List<Mixin> mixins;
 
     public Entity() {

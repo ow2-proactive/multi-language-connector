@@ -12,6 +12,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.action.StopCompute;
 import org.ow2.proactive.procci.model.occi.infrastructure.action.SuspendCompute;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.junit.Test;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -81,5 +82,34 @@ public class ComputeTest {
         assertThat(model.getVariables()).containsEntry("occi.compute.architecture","X64");
         assertThat(model.getVariables()).containsEntry("occi.compute.memory","3.0");
         assertThat(model.getVariables()).containsEntry("occi.entity.title","title");
+    }
+
+    @Test
+    public void updateFromRenderingTest(){
+        ResourceRendering computeRendering = new ResourceRendering
+                .Builder("http://schemas.ogf.org/occi/infrastructure#compute",
+                "urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29")
+                .addAttribute("occi.compute.speed",2)
+                .addAttribute("occi.compute.memory",4.0)
+                .addAttribute("occi.compute.cores",2)
+                .addAttribute("occi.compute.hostname","80.200.35.140")
+                .addAttribute("occi.entity.title","titleTest")
+                .addAttribute("occi.compute.architecture","x86")
+                .addAttribute("occi.compute.state","ACTIVE")
+                .build();
+
+
+        Compute compute = new ComputeBuilder().update(computeRendering).build();
+
+        assertThat(compute.getId()).matches("urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29");
+        assertThat(compute.getKind().getTitle()).matches("http://schemas.ogf.org/occi/infrastructure#compute");
+        assertThat(compute.getCores()).isEqualTo(new Integer(2));
+        assertThat(compute.getMemory()).isWithin(new Float(0.001)).of(new Float(4.0));
+        assertThat(compute.getHostname()).matches("80.200.35.140");
+        assertThat(compute.getTitle()).matches("titleTest");
+        assertThat(compute.getArchitecture()).isEqualTo(Compute.Architecture.X86);
+        assertThat(compute.getState()).isEqualTo(ComputeState.ACTIVE);
+
+
     }
 }

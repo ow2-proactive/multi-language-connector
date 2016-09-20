@@ -16,6 +16,7 @@ import java.util.List;
 
 import static org.ow2.proactive.procci.model.ModelConstant.*;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
+import static org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState.ACTIVE;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
@@ -148,19 +149,16 @@ public class ComputeBuilder {
 
     public ComputeBuilder state(String state) {
         switch (state) {
-            case RUNNING_STATE:
+            case COMPUTE_STATE_ACTIVE:
                 this.state = ComputeState.ACTIVE;
                 break;
-            case STOPPED_STATE:
+            case COMPUTE_STATE_INACTIVE:
+                this.state = ComputeState.INACTIVE;
+                break;
+            case COMPUTE_STATE_SUSPENDED:
                 this.state = ComputeState.SUSPENDED;
                 break;
-            case PENDING_STATE:
-                this.state = ComputeState.INACTIVE;
-                break;
-            case TERMINATED_STATE:
-                this.state = ComputeState.INACTIVE;
-                break;
-            case ERROR_STATE:
+            case COMPUTE_STATE_ERROR:
                 this.state = ComputeState.ERROR;
                 break;
         }
@@ -176,7 +174,7 @@ public class ComputeBuilder {
         this.url(cloudAutomation.getVariables().getOrDefault(INSTANCE_ID, ""))
                 .title(cloudAutomation.getVariables().getOrDefault(ENTITY_TITLE_NAME, ""))
                 .architecture(cloudAutomation.getVariables().getOrDefault(ARCHITECTURE_NAME,null))
-                .state(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, ""))
+                .state(getStateFromCloudAutomation(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, "")))
                 .hostame(cloudAutomation.getVariables().getOrDefault(INSTANCE_ENDPOINT, ""))
                 .cores(cloudAutomation.getVariables().getOrDefault(CORES_NAME, ""))
                 .memory(cloudAutomation.getVariables().getOrDefault(MEMORY_NAME, ""))
@@ -186,26 +184,40 @@ public class ComputeBuilder {
         return this;
     }
 
+    private ComputeState getStateFromCloudAutomation(String state) {
+        switch (state) {
+            case RUNNING_STATE:
+                return ComputeState.ACTIVE;
+            case STOPPED_STATE:
+                return ComputeState.SUSPENDED;
+            case PENDING_STATE:
+                return ComputeState.INACTIVE;
+            case TERMINATED_STATE:
+                return ComputeState.INACTIVE;
+            case ERROR_STATE:
+                return ComputeState.ERROR;
+        }
+        return null;
+    }
+
     /**
      *  Set the builder according to the resource rendering information
      * @param rendering is the instance of the cloud automation model for a compute
      * @return a compute builder with the cloud automation model information mapped into the builder
      */
-    public ComputeBuilder update(ResourceRendering rendering) {
-        this.url(rendering.getId())
-                .title((String) rendering.getAttributes().get(ENTITY_TITLE_NAME))
-                .architecture((Compute.Architecture) rendering.getAttributes().getOrDefault(architecture,null))
-                .state((String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME,""))
-                .hostame((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME,""))
-                .cores((String) rendering.getAttributes().getOrDefault(CORES_NAME,""))
-                .memory((String) rendering.getAttributes().getOrDefault(MEMORY_NAME,""))
-                .share((String) rendering.getAttributes().getOrDefault(SHARE_NAME,""))
-                .summary((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
+    public ComputeBuilder update(ResourceRendering rendering) throws NumberFormatException{
+            this.url(rendering.getId())
+                    .title((String) rendering.getAttributes().get(ENTITY_TITLE_NAME))
+                    .architecture( (String) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null))
+                    .state((String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, ComputeState.ERROR.name()))
+                    .hostame((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, ""))
+                    .cores(Integer.parseInt(String.valueOf(rendering.getAttributes().getOrDefault(CORES_NAME, 0))))
+                    .memory(Float.parseFloat(String.valueOf(rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0))))
+                    .share(Integer.parseInt(String.valueOf(rendering.getAttributes().getOrDefault(SHARE_NAME, 0))))
+                    .summary((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
 
         return this;
     }
-
-
 
 
     public Compute build() {
