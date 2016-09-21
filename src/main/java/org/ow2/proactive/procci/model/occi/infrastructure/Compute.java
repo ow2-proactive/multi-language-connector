@@ -34,7 +34,10 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
@@ -45,8 +48,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.*;
 
 /**
  * This class represents a generic information processing resource
@@ -127,7 +129,8 @@ public class Compute extends Resource {
                 .addVariable(MEMORY_NAME, this.memory)
                 .addVariable(HOSTNAME_NAME, this.hostname)
                 .addVariable(SUMMARY_NAME, this.getSummary())
-                .addVariable(COMPUTE_STATE_NAME, this.state);
+                .addVariable(COMPUTE_STATE_NAME, this.state)
+                .addVariable(ID_NAME, this.getId());
 
         return serviceBuilder.build();
     }
@@ -140,13 +143,13 @@ public class Compute extends Resource {
     public ResourceRendering getRendering() {
 
         ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(), this.getId())
-                .addAttribute(ENTITY_TITLE_NAME,this.getTitle())
+                .addAttribute(ENTITY_TITLE_NAME, this.getTitle())
                 .addAttribute(CORES_NAME, this.cores)
                 .addAttribute(MEMORY_NAME, this.memory)
                 .addAttribute(COMPUTE_STATE_NAME, this.state.name())
                 .addAttribute(HOSTNAME_NAME, this.hostname)
-                .addAttribute(SUMMARY_NAME,this.getSummary())
-                .addAttribute(ARCHITECTURE_NAME,this.architecture.name());
+                .addAttribute(SUMMARY_NAME, this.getSummary())
+                .addAttribute(ARCHITECTURE_NAME, this.architecture.name());
 
         return resourceRendering.build();
     }

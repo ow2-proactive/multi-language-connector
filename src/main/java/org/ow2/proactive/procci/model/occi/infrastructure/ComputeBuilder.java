@@ -16,9 +16,7 @@ import java.util.List;
 
 import static org.ow2.proactive.procci.model.ModelConstant.*;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
-import static org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState.ACTIVE;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.*;
 
 /**
  * Created by mael on 02/06/16.
@@ -166,14 +164,15 @@ public class ComputeBuilder {
     }
 
     /**
-     *  Set the builder according to the cloud automation model information
+     * Set the builder according to the cloud automation model information
+     *
      * @param cloudAutomation is the instance of the cloud automation model for a compute
      * @return a compute builder with the cloud automation model information mapped into the builder
      */
     public ComputeBuilder update(Model cloudAutomation) {
-        this.url(cloudAutomation.getVariables().getOrDefault(INSTANCE_ID, ""))
+        this.url(cloudAutomation.getVariables().getOrDefault(ID_NAME, ""))
                 .title(cloudAutomation.getVariables().getOrDefault(ENTITY_TITLE_NAME, ""))
-                .architecture(cloudAutomation.getVariables().getOrDefault(ARCHITECTURE_NAME,null))
+                .architecture(cloudAutomation.getVariables().getOrDefault(ARCHITECTURE_NAME, null))
                 .state(getStateFromCloudAutomation(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, "")))
                 .hostame(cloudAutomation.getVariables().getOrDefault(INSTANCE_ENDPOINT, ""))
                 .cores(cloudAutomation.getVariables().getOrDefault(CORES_NAME, ""))
@@ -201,20 +200,21 @@ public class ComputeBuilder {
     }
 
     /**
-     *  Set the builder according to the resource rendering information
+     * Set the builder according to the resource rendering information
+     *
      * @param rendering is the instance of the cloud automation model for a compute
      * @return a compute builder with the cloud automation model information mapped into the builder
      */
-    public ComputeBuilder update(ResourceRendering rendering) throws NumberFormatException{
-            this.url(rendering.getId())
-                    .title((String) rendering.getAttributes().get(ENTITY_TITLE_NAME))
-                    .architecture( (String) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null))
-                    .state((String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, ComputeState.ERROR.name()))
-                    .hostame((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, ""))
-                    .cores(Integer.parseInt(String.valueOf(rendering.getAttributes().getOrDefault(CORES_NAME, 0))))
-                    .memory(Float.parseFloat(String.valueOf(rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0))))
-                    .share(Integer.parseInt(String.valueOf(rendering.getAttributes().getOrDefault(SHARE_NAME, 0))))
-                    .summary((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
+    public ComputeBuilder update(ResourceRendering rendering) throws NumberFormatException {
+        this.url(rendering.getId())
+                .title((String) rendering.getAttributes().get(ENTITY_TITLE_NAME))
+                .architecture((String) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null))
+                .state((String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, ComputeState.ERROR.name()))
+                .hostame((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, ""))
+                .cores(Integer.parseInt(String.valueOf(rendering.getAttributes().getOrDefault(CORES_NAME, 0))))
+                .memory(Float.parseFloat(String.valueOf(rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0))))
+                .share(Integer.parseInt(String.valueOf(rendering.getAttributes().getOrDefault(SHARE_NAME, 0))))
+                .summary((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
 
         return this;
     }

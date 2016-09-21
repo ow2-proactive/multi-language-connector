@@ -19,7 +19,7 @@ public class ResourceRendering extends EntityRendering {
 
     private List<LinkRendering> links;
 
-    private ResourceRendering(String kind, List<String> mixins, Map<String,Object> attributes, List<String> actions,
+    private ResourceRendering(String kind, List<String> mixins, Map<String, Object> attributes, List<String> actions,
                               String id, List<LinkRendering> links) {
         super(kind, mixins, attributes, actions, id);
         this.links = links;
@@ -29,7 +29,7 @@ public class ResourceRendering extends EntityRendering {
 
         private final String kind;
         private List<String> mixins;
-        private Map<String,Object> attributes;
+        private Map<String, Object> attributes;
         private List<String> actions;
         private final String id;
         private List<LinkRendering> links;

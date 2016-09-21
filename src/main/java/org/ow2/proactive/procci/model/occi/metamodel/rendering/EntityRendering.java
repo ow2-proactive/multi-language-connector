@@ -16,7 +16,7 @@ public abstract class EntityRendering {
 
     private String kind;
     private List<String> mixins;
-    private Map<String,Object> attributes;
+    private Map<String, Object> attributes;
     private List<String> actions;
     private String id;
 }

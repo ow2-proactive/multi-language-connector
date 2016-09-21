@@ -34,7 +34,9 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 
 import java.util.*;
@@ -52,7 +54,7 @@ public abstract class Entity {
     private List<Mixin> mixins;
 
     public Entity() {
-        this.id = generateId();
+        this.id = formatURL(generateId());
         this.kind = new Kind.Builder("default.kind.url", "entity").build();
         this.title = "";
         this.mixins = new ArrayList<>();
@@ -68,7 +70,7 @@ public abstract class Entity {
         if (("").equals(url)) {
             this.id = generateId();
         } else {
-            this.id = url;
+            this.id = formatURL(url);
         }
 
         this.kind = kind;
@@ -88,7 +90,7 @@ public abstract class Entity {
         if (("").equals(url)) {
             url = generateId();
         }
-        this.id = url;
+        this.id = formatURL(url);
 
         this.kind = kind;
         this.title = title;
@@ -105,8 +107,12 @@ public abstract class Entity {
         return attributes;
     }
 
-    private String generateId(){
-        return "urn:uuid:"+UUID.randomUUID().toString();
+    private String generateId() {
+        return "urn:uuid:" + UUID.randomUUID().toString();
+    }
+
+    private String formatURL(String url) {
+        return url.replaceAll("−", "-");
     }
 
 }

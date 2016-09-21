@@ -45,7 +45,7 @@ import java.util.UUID;
 /**
  * Category is the basis type of identification mecanism
  **/
-@EqualsAndHashCode( of =  {"scheme", "term"})
+@EqualsAndHashCode(of = {"scheme", "term"})
 public class Category {
 
     @Getter

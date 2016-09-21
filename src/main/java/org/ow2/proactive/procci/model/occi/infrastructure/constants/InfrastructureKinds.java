@@ -59,12 +59,13 @@ public class InfrastructureKinds {
             .addParent(Kinds.LINK)
             .build();
 
-    public static Map<String,Kind> INFRASTRUCTURE_KINDS = new HashMap<>();
-    static{
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME+Identifiers.COMPUTE,COMPUTE);
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME+Identifiers.NETWORK,NETWORK);
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME+Identifiers.STORAGE,STORAGE);
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME+Identifiers.NETWORK_INTERFACE,NETWORK_INTERFACE);
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME+Identifiers.STORAGE_LINK,STORAGE_LINK);
+    public static Map<String, Kind> INFRASTRUCTURE_KINDS = new HashMap<>();
+
+    static {
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.COMPUTE, COMPUTE);
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.NETWORK, NETWORK);
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.STORAGE, STORAGE);
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.NETWORK_INTERFACE, NETWORK_INTERFACE);
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.STORAGE_LINK, STORAGE_LINK);
     }
 }

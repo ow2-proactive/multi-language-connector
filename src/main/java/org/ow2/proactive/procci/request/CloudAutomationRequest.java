@@ -12,14 +12,15 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.ow2.proactive.procci.model.ModelConstant;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -70,14 +71,29 @@ public class CloudAutomationRequest {
      * @throws CloudAutomationException is thrown if an error occur during the connection with CAS or the login
      */
     @Autowired
-    public Model getRequestById(String id) throws CloudAutomationException {
+    public Model getInstanceById(String id) throws CloudAutomationException {
         JSONObject jsonModel = (JSONObject) getRequest().get(id);
-        if(jsonModel!=null){
-            return new Model(jsonModel);
+        return Optional.of(jsonModel).map(jsonObject -> new Model(jsonObject)).orElse(null);
+    }
+
+    /**
+     * Get the instance of cloud automation service and return the first occurance with variableValue matching variableName
+     *
+     * @param variableName  a key in variables
+     * @param variableValue the value matching with the variableName key
+     * @return the first occurance which match with variablename and variableValue
+     */
+    @Autowired
+    public Model getInstanceByVariable(String variableName, String variableValue) throws CloudAutomationException {
+        JSONObject instances = getRequest();
+        for (Object key : instances.keySet()) {
+            JSONObject instanceVariables = (JSONObject) ((JSONObject) instances.get(key)).get(ModelConstant.VARIABLES);
+            if (instanceVariables.containsKey(variableName)
+                    && variableValue.equals(instanceVariables.get(variableName))) {
+                return new Model((JSONObject) instances.get(key));
+            }
         }
-        else{
-            return null;
-        }
+        return null;
     }
 
 
@@ -136,14 +152,14 @@ public class CloudAutomationRequest {
             return prop.getProperty(propertyKey);
 
         } catch (IOException ex) {
-            logger.error(this.getClass(),ex);
+            logger.error(this.getClass(), ex);
             throw new RuntimeException("Unable to get the cloud automation service url from config.properties");
         } finally {
             if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    logger.error(this.getClass(),e);
+                    logger.error(this.getClass(), e);
                 }
             }
         }
@@ -220,7 +236,7 @@ public class CloudAutomationRequest {
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
     private void raiseException(Exception ex) throws CloudAutomationException {
-        logger.error(this.getClass(),ex);
+        logger.error(this.getClass(), ex);
         JSONObject result = new JSONObject();
         result.put("exception", ex.getMessage());
         throw new CloudAutomationException(result);

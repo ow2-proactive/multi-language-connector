@@ -23,9 +23,9 @@ public class Attributes {
     public static final String LABEL_NAME = "occi.network.label";
     public static final String NETWORK_STATE_NAME = "occi.network.state";
     public static final String NETWORK_MESSAGE_NAME = "occi.network.state.message";
-    public static final String INTERFACE_NAME_NAME ="occi.networkinterface.interface";
+    public static final String INTERFACE_NAME_NAME = "occi.networkinterface.interface";
     public static final String MAC_NAME = "occi.networkinterface.mac";
-    public static final String NETWORKINTERFACE_STATE_NAME ="occi.networkinterface.state";
+    public static final String NETWORKINTERFACE_STATE_NAME = "occi.networkinterface.state";
     public static final String NETWORKINTERFACE_MESSAGE_NAME = "occi.networkinterface.state.message";
     public static final String SIZE_NAME = "occi.storage.size";
     public static final String STORAGE_STATE_NAME = "occi.storage.state";
