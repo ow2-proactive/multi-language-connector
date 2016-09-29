@@ -2,6 +2,7 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Contextualization;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
@@ -17,7 +18,7 @@ public class EntityTest {
     private class EntityImplemented extends Entity {
 
         EntityImplemented(String url, Kind k, String title, List<Mixin> mixins) {
-            super(url, k, title, mixins);
+            super(Optional.of(url), k, Optional.of(title), mixins);
         }
     }
 

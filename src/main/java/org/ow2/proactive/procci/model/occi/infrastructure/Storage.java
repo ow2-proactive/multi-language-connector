@@ -45,6 +45,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -53,7 +54,7 @@ import java.util.Set;
 public class Storage extends Resource {
 
     @Getter
-    private final Float size;
+    private final Optional<Float> size;
     @Getter
     private StorageState state;
 
@@ -70,9 +71,9 @@ public class Storage extends Resource {
      * @param size    is the storage size in GigaBytes
      * @param state   is the state aimed by the user or the current state
      */
-    private Storage(String url, Kind kind,
-                    String title, List<Mixin> mixins,
-                    String summary, List<Link> links, Float size, StorageState state) {
+    private Storage(Optional<String> url, Kind kind,
+                    Optional<String> title, List<Mixin> mixins,
+                    Optional<String> summary, List<Link> links, Optional<Float> size, StorageState state) {
 
         super(url, kind,
                 title, mixins, summary, links);
@@ -84,36 +85,42 @@ public class Storage extends Resource {
     @EqualsAndHashCode
     @ToString
     public static class Builder {
-        private final Float size;
-        private String url;
-        private String title;
-        private String summary;
+
+        private Optional<String> url;
+        private Optional<String> title;
+        private Optional<String> summary;
+        private Optional<Float> size;
         private StorageState state;
         private List<Mixin> mixins;
         private List<Link> links;
 
-        public Builder(Float size) {
-            this.size = size;
-            this.url = "";
-            this.title = "";
-            this.summary = "";
+        public Builder() {
+            this.size = Optional.empty();
+            this.url = Optional.empty();
+            this.title = Optional.empty();
+            this.summary = Optional.empty();
             this.state = null;
             this.mixins = new ArrayList<>();
             this.links = new ArrayList<>();
         }
 
         public Builder url(String url) {
-            this.url = url;
+            this.url = Optional.ofNullable(url);
             return this;
         }
 
         public Builder title(String title) {
-            this.title = title;
+            this.title = Optional.ofNullable(title);
             return this;
         }
 
         public Builder summary(String summary) {
-            this.summary = summary;
+            this.summary = Optional.ofNullable(summary);
+            return this;
+        }
+
+        public Builder size(Float size) {
+            this.size = Optional.of(size);
             return this;
         }
 
@@ -136,10 +143,6 @@ public class Storage extends Resource {
         public Storage build() {
             return new Storage(url, InfrastructureKinds.STORAGE, title, mixins, summary, links, size, state);
         }
-    }
-
-    public String getMessage() {
-        return state.getMessage();
     }
 
     private static Set<Attribute> setAttributes() {

@@ -3,6 +3,7 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
@@ -24,7 +25,7 @@ public class LinkTest {
         Resource r1 = new Compute.Builder().url("url").build();
         Kind kind = Kinds.LINK;
         List<Mixin> mixins = new ArrayList<>();
-        Link link = new Link("user", kind, "title", mixins, r1, "r2", InfrastructureKinds.COMPUTE);
+        Link link = new Link(Optional.of("user"), kind, Optional.of("title"), mixins, r1, "r2sfg", Optional.of(InfrastructureKinds.COMPUTE));
         assertThat(link.getSource()).isEqualTo(r1);
         assertThat(link.getKind()).isEqualTo(kind);
         assertThat(link.getId().toString()).startsWith("user");

@@ -46,17 +46,20 @@ import java.util.*;
  */
 @ToString
 @EqualsAndHashCode(of = {"id"})
-@Getter
+
 public abstract class Entity {
     private String id;
-    private String title;
+    @Getter
+    private Optional<String> title;
+    @Getter
     private final Kind kind;
+    @Getter
     private List<Mixin> mixins;
 
     public Entity() {
         this.id = formatURL(generateId());
         this.kind = new Kind.Builder("default.kind.url", "entity").build();
-        this.title = "";
+        this.title = Optional.empty();
         this.mixins = new ArrayList<>();
     }
 
@@ -66,15 +69,10 @@ public abstract class Entity {
      * @param url  is the user url
      * @param kind is the kind instance which uniquely identify the instance
      */
-    public Entity(String url, Kind kind) {
-        if (("").equals(url)) {
-            this.id = generateId();
-        } else {
-            this.id = formatURL(url);
-        }
-
+    public Entity(Optional<String> url, Kind kind) {
+        this.id = url.orElse(generateId());
         this.kind = kind;
-        this.title = "";
+        this.title = Optional.empty();
         this.mixins = new ArrayList<>();
     }
 
@@ -86,12 +84,8 @@ public abstract class Entity {
      * @param title  is the display name of the instance
      * @param mixins are the mixins instance associate to the instance
      */
-    public Entity(String url, Kind kind, String title, List<Mixin> mixins) {
-        if (("").equals(url)) {
-            url = generateId();
-        }
-        this.id = formatURL(url);
-
+    public Entity(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins) {
+        this.id = url.orElse(generateId());
         this.kind = kind;
         this.title = title;
         this.mixins = mixins;
@@ -113,6 +107,10 @@ public abstract class Entity {
 
     private String formatURL(String url) {
         return url.replaceAll("−", "-");
+    }
+
+    public String getId() {
+        return this.id.replaceAll("-", "−");
     }
 
 }

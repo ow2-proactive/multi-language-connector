@@ -185,8 +185,8 @@ public class Model {
         }
 
         public Builder addVariable(String variableKey, Object variableValue) {
-            if(variableValue!=null){
-                this.variables.put(variableKey,variableValue.toString());
+            if (variableValue != null) {
+                this.variables.put(variableKey, variableValue.toString());
             }
             return this;
         }

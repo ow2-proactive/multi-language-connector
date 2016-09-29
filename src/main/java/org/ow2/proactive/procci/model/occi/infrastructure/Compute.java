@@ -45,6 +45,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.*;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
@@ -61,12 +62,12 @@ public class Compute extends Resource {
 
     private static final String COMPUTE_MODEL = "occi.infrastructure.compute";
 
-    private Architecture architecture;
-    private Integer cores;
-    private Integer share;
-    private String hostname;
-    private Float memory; // in Gigabytes
-    private ComputeState state;
+    private Optional<Architecture> architecture;
+    private Optional<Integer> cores;
+    private Optional<Integer> share;
+    private Optional<String> hostname;
+    private Optional<Float> memory; // in Gigabytes
+    private Optional<ComputeState> state;
 
     public enum Architecture {
         X86, X64;
@@ -88,9 +89,9 @@ public class Compute extends Resource {
      * @param memory       is the maxmimum ram allowed for this instance
      * @param state        is the state aimed by the user or the current state
      */
-    Compute(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
-            Architecture architecture, Integer cores, Integer share, String hostname, Float memory,
-            ComputeState state) {
+    Compute(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins, Optional<String> summary, List<Link> links,
+            Optional<Architecture> architecture, Optional<Integer> cores, Optional<Integer> share, Optional<String> hostname, Optional<Float> memory,
+            Optional<ComputeState> state) {
         super(url, kind, title, mixins, summary, links);
         setAttributes();
         this.architecture = architecture;
@@ -146,10 +147,10 @@ public class Compute extends Resource {
                 .addAttribute(ENTITY_TITLE_NAME, this.getTitle())
                 .addAttribute(CORES_NAME, this.cores)
                 .addAttribute(MEMORY_NAME, this.memory)
-                .addAttribute(COMPUTE_STATE_NAME, this.state.name())
+                .addAttribute(COMPUTE_STATE_NAME, this.state.get().name())
                 .addAttribute(HOSTNAME_NAME, this.hostname)
                 .addAttribute(SUMMARY_NAME, this.getSummary())
-                .addAttribute(ARCHITECTURE_NAME, this.architecture.name());
+                .addAttribute(ARCHITECTURE_NAME, this.architecture.get().name());
 
         return resourceRendering.build();
     }

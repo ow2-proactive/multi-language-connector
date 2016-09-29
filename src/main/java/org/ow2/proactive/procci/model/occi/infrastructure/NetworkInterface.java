@@ -45,6 +45,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -73,8 +74,8 @@ public class NetworkInterface extends Link {
      * @param mac           is the mac adress associated with the link's device interface
      * @param linkInterface relates the link to the link's device interface
      */
-    public NetworkInterface(String url, Kind kind, String title, List<Mixin> mixins,
-                            Resource source, String target, Kind targetKind, String mac, String linkInterface,
+    public NetworkInterface(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
+                            Resource source, String target, Optional<Kind> targetKind, String mac, String linkInterface,
                             NetworkState state) {
 
         super(url, kind, title, mixins, source, target, targetKind);
@@ -87,13 +88,13 @@ public class NetworkInterface extends Link {
     @EqualsAndHashCode
     @ToString
     public static class Builder {
-        private String url;
+        private Optional<String> url;
         private final Resource source;
         private final String target;
         private final String linkInterface;
         private final String mac;
-        private String title;
-        private Kind targetKind;
+        private Optional<String> title;
+        private Optional<Kind> targetKind;
         private NetworkState state;
         private List<Mixin> mixins;
 
@@ -102,25 +103,25 @@ public class NetworkInterface extends Link {
             this.target = targetId;
             this.linkInterface = linkInterface;
             this.mac = mac;
-            this.url = "";
-            this.title = "";
+            this.url = Optional.empty();
+            this.title = Optional.empty();
             this.targetKind = null;
             this.state = null;
             this.mixins = new ArrayList<>();
         }
 
         public Builder url(String url) {
-            this.url = url;
+            this.url = Optional.ofNullable(url);
             return this;
         }
 
         public Builder title(String title) {
-            this.title = title;
+            this.title = Optional.ofNullable(title);
             return this;
         }
 
         public Builder targetKind(Kind targetKind) {
-            this.targetKind = targetKind;
+            this.targetKind = Optional.ofNullable(targetKind);
             return this;
         }
 

@@ -45,18 +45,17 @@ import org.ow2.proactive.procci.model.occi.metamodel.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  * The StorageLink is a link from a Resource to a target Storage instance
  */
+@Getter
 public class StorageLink extends Link {
 
-    @Getter
     private final String deviceId;
-    @Getter
     private String mountPoint;
-    @Getter
     private final NetworkState state;
 
     /**
@@ -72,8 +71,8 @@ public class StorageLink extends Link {
      * @param deviceId   is the device identifier
      * @param mountPoint point to where is mounted the guest OS
      */
-    private StorageLink(String url, Kind kind, String title, List<Mixin> mixins,
-                        Resource source, String target, String deviceId, String mountPoint, Kind targetkind,
+    private StorageLink(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
+                        Resource source, String target, String deviceId, String mountPoint, Optional<Kind> targetkind,
                         NetworkState state) {
 
         super(url, kind, title, mixins, source, target, targetkind);
@@ -86,12 +85,12 @@ public class StorageLink extends Link {
     @EqualsAndHashCode
     @ToString
     public static class Builder {
-        private String url;
-        private String title;
+        private Optional<String> url;
+        private Optional<String> title;
         private List<Mixin> mixins;
         private final Resource source;
         private final String target;
-        private Kind targetKind;
+        private Optional<Kind> targetKind;
         private final String deviceId;
         private String mountpoint;
         private NetworkState state;
@@ -100,20 +99,20 @@ public class StorageLink extends Link {
             this.source = source;
             this.target = target;
             this.deviceId = deviceId;
-            this.url = "";
-            this.title = "";
+            this.url = Optional.empty();
+            this.title = Optional.empty();
             this.mixins = new ArrayList<>();
             this.targetKind = null;
             this.mountpoint = "";
         }
 
         public Builder url(String url) {
-            this.url = url;
+            this.url = Optional.ofNullable(url);
             return this;
         }
 
         public Builder title(String title) {
-            this.title = title;
+            this.title = Optional.ofNullable(title);
             return this;
         }
 
@@ -123,7 +122,7 @@ public class StorageLink extends Link {
         }
 
         public Builder targetKind(Kind targetKind) {
-            this.targetKind = targetKind;
+            this.targetKind = Optional.ofNullable(targetKind);
             return this;
         }
 
@@ -142,10 +141,6 @@ public class StorageLink extends Link {
                     deviceId, mountpoint, targetKind, state);
         }
 
-    }
-
-    public String getMessage() {
-        return state.getMessage();
     }
 
     private Set<Attribute> setAttributes() {

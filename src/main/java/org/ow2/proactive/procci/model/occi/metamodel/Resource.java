@@ -36,12 +36,16 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -50,11 +54,10 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(callSuper = true)
+@Getter
 public class Resource extends Entity {
 
-    @Getter
-    private String summary;
-    @Getter(AccessLevel.PROTECTED)
+    private Optional<String> summary;
     private ImmutableCollection<Link> links;
 
 
@@ -68,35 +71,35 @@ public class Resource extends Entity {
      * @param summary is the summary of the resource instance
      * @param links   is a set of the Link compositions
      */
-    protected Resource(String url, Kind kind, String title, List<Mixin> mixins,
-                       String summary, List<Link> links) {
+    protected Resource(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
+                       Optional<String> summary, List<Link> links) {
         super(url, kind, title, mixins);
         this.summary = summary;
         this.links = new ImmutableList.Builder<Link>().addAll(links).build();
     }
 
     public static class Builder {
-        private String url;
-        private String title;
+        private Optional<String> url;
+        private Optional<String> title;
         private List<Mixin> mixins;
-        private String summary;
+        private Optional<String> summary;
         private List<Link> links;
 
         public Builder() {
-            this.url = "";
-            this.title = "";
+            this.url = Optional.empty();
+            this.title = Optional.empty();
             this.mixins = new ArrayList<>();
-            this.summary = "";
+            this.summary = Optional.empty();
             this.links = new ArrayList<>();
         }
 
         public Builder url(String url) {
-            this.url = url;
+            this.url = Optional.ofNullable(url);
             return this;
         }
 
         public Builder title(String title) {
-            this.title = title;
+            this.title = Optional.ofNullable(title);
             return this;
         }
 
@@ -106,7 +109,7 @@ public class Resource extends Entity {
         }
 
         public Builder summary(String summary) {
-            this.summary = summary;
+            this.summary = Optional.ofNullable(summary);
             return this;
         }
 

@@ -50,23 +50,23 @@ public class Attributes {
     public static final String COMPUTE_STATE_ERROR = "ERROR";
 
     public static final Attribute ARCHITECTURE = new Attribute.Builder(ARCHITECTURE_NAME,
-            Type.OBJECT, true, true).description("CPU Architecture of the instance.").build();
+            Type.OBJECT, true, false).description("CPU Architecture of the instance.").build();
     public static final Attribute CORES = new Attribute.Builder(CORES_NAME, Type.OBJECT, true,
-            true).description("Number of virtual CPU cores assigned to " +
+            false).description("Number of virtual CPU cores assigned to " +
             "the instance.").build();
     public static final Attribute HOSTNAME = new Attribute.Builder(HOSTNAME_NAME, Type.OBJECT, true,
-            true).description("Fully Qualified DNS hostname for the " +
+            false).description("Fully Qualified DNS hostname for the " +
             "instance.").build();
     public static final Attribute SHARE = new Attribute.Builder(SHARE_NAME, Type.OBJECT, true,
-            true).description("Relative number of CPU shares for the " +
+            false).description("Relative number of CPU shares for the " +
             "instance.").build();
     public static final Attribute MEMORY = new Attribute.Builder(MEMORY_NAME, Type.OBJECT, true,
             true).description("Maximum RAM in gigabytes allocated to" +
             "the instance.").build();
     public static final Attribute COMPUTE_STATE = new Attribute.Builder(COMPUTE_STATE_NAME, Type.OBJECT,
-            false, true).description("Current state of the instance.").build();
+            false, false).description("Current state of the instance.").build();
     public static final Attribute COMPUTE_MESSAGE = new Attribute.Builder(COMPUTE_MESSAGE_NAME,
-            Type.OBJECT, false, true).description("Human-readable explanation of the " +
+            Type.OBJECT, false, false).description("Human-readable explanation of the " +
             "current instance state.").build();
     public static final Attribute VLAN = new Attribute.Builder(VLAN_NAME, Type.OBJECT, true,
             true).description("802.1q VLAN Identifier (e.g., 343).").build();

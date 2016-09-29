@@ -3,6 +3,7 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Ignore;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
@@ -28,7 +29,7 @@ public class ResourceTest {
                 new HashSet<Attribute>(),
                 new ArrayList<Action>(), new ArrayList<Mixin>(), new ArrayList<Kind>(),
                 new ArrayList<Entity>()));
-        Resource resource = new Resource("url", kind, "titleTest", mixins, "summaryTest", links);
+        Resource resource = new Resource(Optional.of("url"), kind, Optional.of("titleTest"), mixins, Optional.of("summaryTest"), links);
 
         assertThat(resource.getSummary()).isEqualTo("summaryTest");
         assertThat(resource.getLinks()).isEqualTo(links);

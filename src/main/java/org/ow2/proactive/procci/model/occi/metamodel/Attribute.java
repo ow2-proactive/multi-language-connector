@@ -11,24 +11,15 @@ import lombok.*;
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = {"name"})
+@Getter
 public class Attribute {
 
-    @Getter
     private final String name;
-    @Getter
     private final Type type;
-    @Getter
-    private final boolean required;
-    @Getter
     private final boolean mutable;
-    @Getter
-    @Setter
+    private final boolean required;
     private Object pattern;
-    @Getter
-    @Setter
     private Object defaultValue;
-    @Getter
-    @Setter
     private String description;
 
     @RequiredArgsConstructor

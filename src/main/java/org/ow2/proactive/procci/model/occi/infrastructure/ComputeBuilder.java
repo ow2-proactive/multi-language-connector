@@ -1,18 +1,20 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
+import org.ow2.proactive.procci.model.utils.ConvertUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.ow2.proactive.procci.model.ModelConstant.*;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
@@ -23,54 +25,87 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
  */
 @EqualsAndHashCode
 @ToString
+@Getter
 public class ComputeBuilder {
-    @Getter(AccessLevel.PACKAGE)
-    private String url;
-    @Getter
-    private String title;
-    @Getter
-    private String summary;
-    @Getter
-    private Compute.Architecture architecture;
-    @Getter
-    private Integer cores;
-    @Getter(AccessLevel.PACKAGE)
-    private Integer share;
-    @Getter
-    private Float memory; // in Gigabytes
-    @Getter(AccessLevel.PACKAGE)
-    private String hostname;
-    @Getter(AccessLevel.PACKAGE)
-    private ComputeState state;
+    private Optional<String> url;
+    private Optional<String> title;
+    private Optional<String> summary;
+    private Optional<Compute.Architecture> architecture;
+    private Optional<Integer> cores;
+    private Optional<Integer> share;
+    private Optional<Float> memory; // in Gigabytes
+    private Optional<String> hostname;
+    private Optional<ComputeState> state;
     private List<Link> links;
     private List<Mixin> mixins;
 
+    /**
+     * Default Builder
+     */
     public ComputeBuilder() {
-        this.url = "";
-        title = "Compute";
-        summary = "";
-        architecture = null;
-        cores = null;
-        share = null;
-        hostname = "";
-        memory = null;
-        state = ComputeState.ERROR;
-        mixins = new ArrayList<>();
-        links = new ArrayList<>();
+        this.url = null;
+        this.title = null;
+        this.summary = null;
+        this.architecture = null;
+        this.cores = null;
+        this.share = null;
+        this.hostname = null;
+        this.memory = null;
+        this.state = null;
+        this.mixins = new ArrayList<>();
+        this.links = new ArrayList<>();
+    }
+
+    /**
+     * Set the builder according to the cloud automation model information
+     *
+     * @param cloudAutomation is the instance of the cloud automation model for a compute
+     */
+    public ComputeBuilder(Model cloudAutomation) throws SyntaxException {
+        this.url = Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(ID_NAME, null));
+        this.title = Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(ENTITY_TITLE_NAME, null));
+        this.hostname = Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(INSTANCE_ENDPOINT, null));
+        this.summary = Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(SUMMARY_NAME, null));
+        this.cores = ConvertUtils.getIntegerFromString(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(CORES_NAME, null)));
+        this.memory = ConvertUtils.getFloatFromString(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(MEMORY_NAME, null)));
+        this.share = ConvertUtils.getIntegerFromString(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(SHARE_NAME, null)));
+        this.architecture = getArchitectureFromString(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(ARCHITECTURE_NAME, null)));
+        this.state = getStateFromCloudAutomation(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, null)));
+        this.mixins = new ArrayList<>();
+        this.links = new ArrayList<>();
+    }
+
+    /**
+     * Set the builder according to the resource rendering information
+     *
+     * @param rendering is the instance of the cloud automation model for a compute
+     */
+    public ComputeBuilder(ResourceRendering rendering) throws SyntaxException {
+        this.url = Optional.ofNullable(rendering.getId());
+        this.title = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(ENTITY_TITLE_NAME, null));
+        this.architecture = Optional.ofNullable((Compute.Architecture) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null));
+        this.state = Optional.ofNullable((ComputeState) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, null));
+        this.hostname = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, ""));
+        this.cores = ConvertUtils.getIntegerFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(CORES_NAME, 0)));
+        this.memory = ConvertUtils.getFloatFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0)));
+        this.share = ConvertUtils.getIntegerFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(SHARE_NAME, 0)));
+        this.summary = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
+        this.mixins = new ArrayList<>();
+        this.links = new ArrayList<>();
     }
 
     public ComputeBuilder url(String url) {
-        this.url = url;
+        this.url = Optional.of(url);
         return this;
     }
 
     public ComputeBuilder title(String title) {
-        this.title = title;
+        this.title = Optional.of(title);
         return this;
     }
 
     public ComputeBuilder summary(String summary) {
-        this.summary = summary;
+        this.summary = Optional.of(summary);
         return this;
     }
 
@@ -86,139 +121,117 @@ public class ComputeBuilder {
     }
 
     public ComputeBuilder architecture(Compute.Architecture architecture) {
-        this.architecture = architecture;
-        return this;
-    }
-
-    public ComputeBuilder architecture(String architecture) {
-        if (Compute.Architecture.X64.toString().equalsIgnoreCase(architecture)) {
-            this.architecture = Compute.Architecture.X64;
-        } else if (Compute.Architecture.X86.toString().equalsIgnoreCase(architecture)) {
-            this.architecture = Compute.Architecture.X86;
-        }
+        this.architecture = Optional.of(architecture);
         return this;
     }
 
     public ComputeBuilder cores(Integer cores) {
-        this.cores = cores;
+        this.cores = Optional.ofNullable(cores);
         return this;
     }
 
     public ComputeBuilder cores(String cores) {
-        if (cores != null && (!cores.isEmpty())) {
-            this.cores = Integer.parseInt(cores);
-        }
+        this.cores = Optional.ofNullable(cores).map(c -> Integer.parseInt(c));
         return this;
     }
 
     public ComputeBuilder share(Integer share) {
-        this.share = share;
+        this.share = Optional.ofNullable(share);
         return this;
     }
 
     public ComputeBuilder share(String share) {
-        if (share != null && (!share.isEmpty())) {
-            this.share = Integer.parseInt(share);
-        }
+        this.share = Optional.ofNullable(share).map(s -> Integer.parseInt(s));
         return this;
     }
 
     public ComputeBuilder hostame(String hostname) {
-        this.hostname = hostname;
+        this.hostname = Optional.ofNullable(hostname);
         return this;
     }
 
     public ComputeBuilder memory(Float memory) {
-        this.memory = memory;
+        this.memory = Optional.ofNullable(memory);
         return this;
     }
 
     public ComputeBuilder memory(String memory) {
-        if ((memory != null && !memory.isEmpty())) {
-            this.memory = Float.parseFloat(memory);
-        }
+        this.memory = Optional.ofNullable(memory).map(m -> Float.parseFloat(m));
         return this;
     }
 
     public ComputeBuilder state(ComputeState state) {
-        this.state = state;
+        this.state = Optional.ofNullable(state);
         return this;
     }
 
     public ComputeBuilder state(String state) {
         switch (state) {
             case COMPUTE_STATE_ACTIVE:
-                this.state = ComputeState.ACTIVE;
+                this.state = Optional.of(ComputeState.ACTIVE);
                 break;
             case COMPUTE_STATE_INACTIVE:
-                this.state = ComputeState.INACTIVE;
+                this.state = Optional.of(ComputeState.INACTIVE);
                 break;
             case COMPUTE_STATE_SUSPENDED:
-                this.state = ComputeState.SUSPENDED;
+                this.state = Optional.of(ComputeState.SUSPENDED);
                 break;
             case COMPUTE_STATE_ERROR:
-                this.state = ComputeState.ERROR;
+                this.state = Optional.of(ComputeState.ERROR);
+                break;
+            default:
+                this.state = Optional.empty();
                 break;
         }
         return this;
     }
 
     /**
-     * Set the builder according to the cloud automation model information
+     * Parse a string architecture into the architecture object
      *
-     * @param cloudAutomation is the instance of the cloud automation model for a compute
-     * @return a compute builder with the cloud automation model information mapped into the builder
+     * @param architecture a string representing the architecture
+     * @return an optional architecture object
+     * @throws SyntaxException if the string is not null and doesn't match with any architecture
      */
-    public ComputeBuilder update(Model cloudAutomation) {
-        this.url(cloudAutomation.getVariables().getOrDefault(ID_NAME, ""))
-                .title(cloudAutomation.getVariables().getOrDefault(ENTITY_TITLE_NAME, ""))
-                .architecture(cloudAutomation.getVariables().getOrDefault(ARCHITECTURE_NAME, null))
-                .state(getStateFromCloudAutomation(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, "")))
-                .hostame(cloudAutomation.getVariables().getOrDefault(INSTANCE_ENDPOINT, ""))
-                .cores(cloudAutomation.getVariables().getOrDefault(CORES_NAME, ""))
-                .memory(cloudAutomation.getVariables().getOrDefault(MEMORY_NAME, ""))
-                .share(cloudAutomation.getVariables().getOrDefault(SHARE_NAME, ""))
-                .summary(cloudAutomation.getVariables().getOrDefault(SUMMARY_NAME, ""));
-
-        return this;
-    }
-
-    private ComputeState getStateFromCloudAutomation(String state) {
-        switch (state) {
-            case RUNNING_STATE:
-                return ComputeState.ACTIVE;
-            case STOPPED_STATE:
-                return ComputeState.SUSPENDED;
-            case PENDING_STATE:
-                return ComputeState.INACTIVE;
-            case TERMINATED_STATE:
-                return ComputeState.INACTIVE;
-            case ERROR_STATE:
-                return ComputeState.ERROR;
+    private Optional<Compute.Architecture> getArchitectureFromString(Optional<String> architecture) throws SyntaxException {
+        if (!architecture.isPresent()) {
+            return Optional.empty();
+        } else if (Compute.Architecture.X64.toString().equalsIgnoreCase(architecture.get())) {
+            return Optional.of(Compute.Architecture.X64);
+        } else if (Compute.Architecture.X86.toString().equalsIgnoreCase(architecture.get())) {
+            return Optional.of(Compute.Architecture.X86);
+        } else {
+            throw new SyntaxException(architecture.get());
         }
-        return null;
     }
 
     /**
-     * Set the builder according to the resource rendering information
+     * Parse a string cloud automation into an OCCI compute state
      *
-     * @param rendering is the instance of the cloud automation model for a compute
-     * @return a compute builder with the cloud automation model information mapped into the builder
+     * @param state is a string representing the cloud automation model
+     * @return an optional compute state
+     * @throws SyntaxException
      */
-    public ComputeBuilder update(ResourceRendering rendering) throws NumberFormatException {
-        this.url(rendering.getId())
-                .title((String) rendering.getAttributes().get(ENTITY_TITLE_NAME))
-                .architecture((String) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null))
-                .state((String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, ComputeState.ERROR.name()))
-                .hostame((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, ""))
-                .cores(Integer.parseInt(String.valueOf(rendering.getAttributes().getOrDefault(CORES_NAME, 0))))
-                .memory(Float.parseFloat(String.valueOf(rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0))))
-                .share(Integer.parseInt(String.valueOf(rendering.getAttributes().getOrDefault(SHARE_NAME, 0))))
-                .summary((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
+    private Optional<ComputeState> getStateFromCloudAutomation(Optional<String> state) throws SyntaxException {
+        if (!state.isPresent()) {
+            return Optional.empty();
+        }
 
-        return this;
+        switch (state.get()) {
+            case RUNNING_STATE:
+                return Optional.of(ComputeState.ACTIVE);
+            case STOPPED_STATE:
+                return Optional.of(ComputeState.SUSPENDED);
+            case PENDING_STATE:
+                return Optional.of(ComputeState.INACTIVE);
+            case TERMINATED_STATE:
+                return Optional.of(ComputeState.INACTIVE);
+            case ERROR_STATE:
+                return Optional.of(ComputeState.ERROR);
+            default:
+                throw new SyntaxException(state.get());
+        }
     }
-
 
     public Compute build() {
         return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary, new ArrayList<>(), architecture,
