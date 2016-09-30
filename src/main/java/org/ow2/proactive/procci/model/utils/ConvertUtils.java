@@ -1,8 +1,8 @@
 package org.ow2.proactive.procci.model.utils;
 
-import org.ow2.proactive.procci.model.exception.SyntaxException;
-
 import java.util.Optional;
+
+import org.ow2.proactive.procci.model.exception.SyntaxException;
 
 /**
  * Created by mael on 29/09/16.
@@ -16,7 +16,8 @@ public class ConvertUtils {
      * @return an containing an integer
      * @throws SyntaxException if the string is not null and doesn't match any integer
      */
-    public static Optional<Integer> getIntegerFromString(Optional<String> integerString) throws SyntaxException {
+    public static Optional<Integer> getIntegerFromString(
+            Optional<String> integerString) throws SyntaxException {
         try {
             return integerString.map(s -> Integer.parseInt(s));
         } catch (Exception e) {

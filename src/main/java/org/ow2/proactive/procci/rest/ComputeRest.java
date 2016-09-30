@@ -34,9 +34,11 @@
  */
 package org.ow2.proactive.procci.rest;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
@@ -45,15 +47,17 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.request.CloudAutomationException;
 import org.ow2.proactive.procci.request.CloudAutomationRequest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
 
@@ -103,7 +107,7 @@ public class ComputeRest {
         logger.debug("Get Compute ");
         try {
             Optional<Model> computeModel = new CloudAutomationRequest().getInstanceByVariable(ID_NAME, id);
-            if (! computeModel.isPresent()) {
+            if (!computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
                 ComputeBuilder computeBuilder = new ComputeBuilder(computeModel.get());
@@ -123,7 +127,8 @@ public class ComputeRest {
     //-------------------Create a Compute--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ResourceRendering> createCompute(@RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
+    public ResponseEntity<ResourceRendering> createCompute(
+            @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
             ComputeBuilder compute = new ComputeBuilder(computeRendering);

@@ -1,6 +1,10 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Created by mael on 2/23/16
@@ -10,7 +14,7 @@ import lombok.*;
  * Defines the name and properties of the client readable attributes
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@EqualsAndHashCode(of = {"name"})
+@EqualsAndHashCode(of = { "name" })
 @Getter
 public class Attribute {
 

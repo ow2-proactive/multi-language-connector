@@ -35,18 +35,22 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.infrastructure.state.StorageState;
-import org.ow2.proactive.procci.model.occi.metamodel.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
+import org.ow2.proactive.procci.model.occi.infrastructure.state.StorageState;
+import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
+import org.ow2.proactive.procci.model.occi.metamodel.Kind;
+import org.ow2.proactive.procci.model.occi.metamodel.Link;
+import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * The Storage represent resources that record information to a data storage device
@@ -72,14 +76,22 @@ public class Storage extends Resource {
      * @param state   is the state aimed by the user or the current state
      */
     private Storage(Optional<String> url, Kind kind,
-                    Optional<String> title, List<Mixin> mixins,
-                    Optional<String> summary, List<Link> links, Optional<Float> size, StorageState state) {
+            Optional<String> title, List<Mixin> mixins,
+            Optional<String> summary, List<Link> links, Optional<Float> size, StorageState state) {
 
         super(url, kind,
                 title, mixins, summary, links);
         setAttributes();
         this.size = size;
         this.state = state;
+    }
+
+    private static Set<Attribute> setAttributes() {
+        Set<Attribute> attributes = Resource.getAttributes();
+        attributes.add(Attributes.SIZE);
+        attributes.add(Attributes.STORAGE_STATE);
+        attributes.add(Attributes.STORAGE_MESSAGE);
+        return attributes;
     }
 
     @EqualsAndHashCode
@@ -143,14 +155,6 @@ public class Storage extends Resource {
         public Storage build() {
             return new Storage(url, InfrastructureKinds.STORAGE, title, mixins, summary, links, size, state);
         }
-    }
-
-    private static Set<Attribute> setAttributes() {
-        Set<Attribute> attributes = Resource.getAttributes();
-        attributes.add(Attributes.SIZE);
-        attributes.add(Attributes.STORAGE_STATE);
-        attributes.add(Attributes.STORAGE_MESSAGE);
-        return attributes;
     }
 
 }

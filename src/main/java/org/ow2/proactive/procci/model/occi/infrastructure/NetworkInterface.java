@@ -35,19 +35,23 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
-import org.ow2.proactive.procci.model.occi.metamodel.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import org.ow2.proactive.procci.model.exception.SyntaxException;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
+import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
+import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
+import org.ow2.proactive.procci.model.occi.metamodel.Kind;
+import org.ow2.proactive.procci.model.occi.metamodel.Link;
+import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 
 /**
@@ -76,8 +80,8 @@ public class NetworkInterface extends Link {
      * @param linkInterface relates the link to the link's device interface
      */
     public NetworkInterface(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-                            Resource source, String target, Optional<Kind> targetKind, String mac, String linkInterface,
-                            NetworkState state) throws SyntaxException{
+            Resource source, String target, Optional<Kind> targetKind, String mac, String linkInterface,
+            NetworkState state) throws SyntaxException {
 
         super(url, kind, title, mixins, source, target, targetKind);
         setAttributes();
@@ -86,14 +90,27 @@ public class NetworkInterface extends Link {
         this.state = state;
     }
 
+    private static Set<Attribute> setAttributes() {
+        Set<Attribute> attributes = Link.getAttributes();
+        attributes.add(Attributes.INTERFACE);
+        attributes.add(Attributes.MAC);
+        attributes.add(Attributes.NETWORKINTERFACE_STATE);
+        attributes.add(Attributes.NETWORKINTERFACE_MESSAGE);
+        return attributes;
+    }
+
+    public String getMessage() {
+        return state.getMessage();
+    }
+
     @EqualsAndHashCode
     @ToString
     public static class Builder {
-        private Optional<String> url;
         private final Resource source;
         private final String target;
         private final String linkInterface;
         private final String mac;
+        private Optional<String> url;
         private Optional<String> title;
         private Optional<Kind> targetKind;
         private NetworkState state;
@@ -136,24 +153,10 @@ public class NetworkInterface extends Link {
             return this;
         }
 
-        public NetworkInterface build() throws SyntaxException{
+        public NetworkInterface build() throws SyntaxException {
             return new NetworkInterface(url, InfrastructureKinds.NETWORK_INTERFACE, title,
                     mixins, source, target, targetKind, mac, linkInterface, state);
         }
 
-    }
-
-    public String getMessage() {
-        return state.getMessage();
-    }
-
-
-    private static Set<Attribute> setAttributes() {
-        Set<Attribute> attributes = Link.getAttributes();
-        attributes.add(Attributes.INTERFACE);
-        attributes.add(Attributes.MAC);
-        attributes.add(Attributes.NETWORKINTERFACE_STATE);
-        attributes.add(Attributes.NETWORKINTERFACE_MESSAGE);
-        return attributes;
     }
 }

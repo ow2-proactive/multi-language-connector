@@ -34,19 +34,19 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * Resource describes a concrete resource that can be inspected or manipulated
@@ -72,10 +72,17 @@ public class Resource extends Entity {
      * @param links   is a set of the Link compositions
      */
     protected Resource(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-                       Optional<String> summary, List<Link> links) {
+            Optional<String> summary, List<Link> links) {
         super(url, kind, title, mixins);
         this.summary = summary;
         this.links = new ImmutableList.Builder<Link>().addAll(links).build();
+    }
+
+    public static Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = Entity.getAttributes();
+        attributes.add(Attributes.LINKS);
+        attributes.add(Attributes.SUMMARY);
+        return attributes;
     }
 
     public static class Builder {
@@ -121,13 +128,6 @@ public class Resource extends Entity {
         public Resource build() {
             return new Resource(url, Kinds.RESOURCE, title, mixins, summary, links);
         }
-    }
-
-    public static Set<Attribute> getAttributes() {
-        Set<Attribute> attributes = Entity.getAttributes();
-        attributes.add(Attributes.LINKS);
-        attributes.add(Attributes.SUMMARY);
-        return attributes;
     }
 
 }

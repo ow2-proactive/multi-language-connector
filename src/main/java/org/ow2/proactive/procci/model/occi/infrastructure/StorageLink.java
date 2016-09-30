@@ -35,19 +35,23 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
-import org.ow2.proactive.procci.model.occi.metamodel.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import org.ow2.proactive.procci.model.exception.SyntaxException;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
+import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
+import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
+import org.ow2.proactive.procci.model.occi.metamodel.Kind;
+import org.ow2.proactive.procci.model.occi.metamodel.Link;
+import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * The StorageLink is a link from a Resource to a target Storage instance
@@ -56,8 +60,8 @@ import java.util.Set;
 public class StorageLink extends Link {
 
     private final String deviceId;
-    private String mountPoint;
     private final NetworkState state;
+    private String mountPoint;
 
     /**
      * Constructor with all StorageLink parameters
@@ -73,8 +77,8 @@ public class StorageLink extends Link {
      * @param mountPoint point to where is mounted the guest OS
      */
     private StorageLink(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-                        Resource source, String target, String deviceId, String mountPoint, Optional<Kind> targetkind,
-                        NetworkState state) throws SyntaxException {
+            Resource source, String target, String deviceId, String mountPoint, Optional<Kind> targetkind,
+            NetworkState state) throws SyntaxException {
 
         super(url, kind, title, mixins, source, target, targetkind);
         setAttributes();
@@ -83,16 +87,25 @@ public class StorageLink extends Link {
         this.state = state;
     }
 
+    private Set<Attribute> setAttributes() {
+        Set<Attribute> attributes = Link.getAttributes();
+        attributes.add(Attributes.DEVICEID);
+        attributes.add(Attributes.MOUNTPOINT);
+        attributes.add(Attributes.STORAGELINK_STATE);
+        attributes.add(Attributes.STORAGELINK_MESSAGE);
+        return attributes;
+    }
+
     @EqualsAndHashCode
     @ToString
     public static class Builder {
+        private final Resource source;
+        private final String target;
+        private final String deviceId;
         private Optional<String> url;
         private Optional<String> title;
         private List<Mixin> mixins;
-        private final Resource source;
-        private final String target;
         private Optional<Kind> targetKind;
-        private final String deviceId;
         private String mountpoint;
         private NetworkState state;
 
@@ -137,19 +150,10 @@ public class StorageLink extends Link {
             return this;
         }
 
-        public StorageLink build() throws SyntaxException{
+        public StorageLink build() throws SyntaxException {
             return new StorageLink(url, InfrastructureKinds.STORAGE_LINK, title, mixins, source, target,
                     deviceId, mountpoint, targetKind, state);
         }
 
-    }
-
-    private Set<Attribute> setAttributes() {
-        Set<Attribute> attributes = Link.getAttributes();
-        attributes.add(Attributes.DEVICEID);
-        attributes.add(Attributes.MOUNTPOINT);
-        attributes.add(Attributes.STORAGELINK_STATE);
-        attributes.add(Attributes.STORAGELINK_MESSAGE);
-        return attributes;
     }
 }

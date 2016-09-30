@@ -34,18 +34,22 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
-import org.ow2.proactive.procci.model.occi.metamodel.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
+import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
+import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
+import org.ow2.proactive.procci.model.occi.metamodel.Kind;
+import org.ow2.proactive.procci.model.occi.metamodel.Link;
+import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 
 /**
@@ -71,13 +75,23 @@ public class Network extends Resource {
      * @param label   is a tab based on vlan
      * @param state   is the state aimed by the user or the current state
      */
-    private Network(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins, Optional<String> summary, List<Link> links,
-                    Optional<Integer> vlan, Optional<String> label, Optional<NetworkState> state) {
+    private Network(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
+            Optional<String> summary, List<Link> links,
+            Optional<Integer> vlan, Optional<String> label, Optional<NetworkState> state) {
 
         super(url, kind, title, mixins, summary, links);
         this.state = state;
         this.vlan = vlan;
         this.label = label;
+    }
+
+    public static Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = Resource.getAttributes();
+        attributes.add(Attributes.VLAN);
+        attributes.add(Attributes.LABEL);
+        attributes.add(Attributes.NETWORK_STATE);
+        attributes.add(Attributes.NETWORK_MESSAGE);
+        return attributes;
     }
 
     @EqualsAndHashCode
@@ -147,14 +161,5 @@ public class Network extends Resource {
             return new Network(url, InfrastructureKinds.NETWORK, title, mixins, summary, links, vlan, label,
                     state);
         }
-    }
-
-    public static Set<Attribute> getAttributes() {
-        Set<Attribute> attributes = Resource.getAttributes();
-        attributes.add(Attributes.VLAN);
-        attributes.add(Attributes.LABEL);
-        attributes.add(Attributes.NETWORK_STATE);
-        attributes.add(Attributes.NETWORK_MESSAGE);
-        return attributes;
     }
 }

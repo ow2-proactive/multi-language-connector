@@ -1,13 +1,13 @@
 package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by mael on 14/09/16.
@@ -19,8 +19,9 @@ public class ResourceRendering extends EntityRendering {
 
     private List<LinkRendering> links;
 
-    private ResourceRendering(String kind, List<String> mixins, Map<String, Object> attributes, List<String> actions,
-                              String id, List<LinkRendering> links) {
+    private ResourceRendering(String kind, List<String> mixins, Map<String, Object> attributes,
+            List<String> actions,
+            String id, List<LinkRendering> links) {
         super(kind, mixins, attributes, actions, id);
         this.links = links;
     }
@@ -28,10 +29,10 @@ public class ResourceRendering extends EntityRendering {
     public static class Builder {
 
         private final String kind;
+        private final String id;
         private List<String> mixins;
         private Map<String, Object> attributes;
         private List<String> actions;
-        private final String id;
         private List<LinkRendering> links;
 
         public Builder(String kind, String id) {

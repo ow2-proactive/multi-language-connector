@@ -1,8 +1,9 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
@@ -11,14 +12,30 @@ import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.ow2.proactive.procci.model.ModelConstant.*;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.*;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.*;
+import static org.ow2.proactive.procci.model.ModelConstant.ERROR_STATE;
+import static org.ow2.proactive.procci.model.ModelConstant.INSTANCE_ENDPOINT;
+import static org.ow2.proactive.procci.model.ModelConstant.INSTANCE_STATUS;
+import static org.ow2.proactive.procci.model.ModelConstant.PENDING_STATE;
+import static org.ow2.proactive.procci.model.ModelConstant.RUNNING_STATE;
+import static org.ow2.proactive.procci.model.ModelConstant.STOPPED_STATE;
+import static org.ow2.proactive.procci.model.ModelConstant.TERMINATED_STATE;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.ARCHITECTURE_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_ACTIVE;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_ERROR;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_INACTIVE;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_SUSPENDED;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.CORES_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.HOSTNAME_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.MEMORY_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.SHARE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
 /**
  * Created by mael on 02/06/16.
@@ -63,14 +80,21 @@ public class ComputeBuilder {
      */
     public ComputeBuilder(Model cloudAutomation) throws SyntaxException {
         this.url = Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(ID_NAME, null));
-        this.title = Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(ENTITY_TITLE_NAME, null));
-        this.hostname = Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(INSTANCE_ENDPOINT, null));
+        this.title = Optional.ofNullable(
+                cloudAutomation.getVariables().getOrDefault(ENTITY_TITLE_NAME, null));
+        this.hostname = Optional.ofNullable(
+                cloudAutomation.getVariables().getOrDefault(INSTANCE_ENDPOINT, null));
         this.summary = Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(SUMMARY_NAME, null));
-        this.cores = ConvertUtils.getIntegerFromString(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(CORES_NAME, null)));
-        this.memory = ConvertUtils.getFloatFromString(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(MEMORY_NAME, null)));
-        this.share = ConvertUtils.getIntegerFromString(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(SHARE_NAME, null)));
-        this.architecture = getArchitectureFromString(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(ARCHITECTURE_NAME, null)));
-        this.state = getStateFromCloudAutomation(Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, null)));
+        this.cores = ConvertUtils.getIntegerFromString(
+                Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(CORES_NAME, null)));
+        this.memory = ConvertUtils.getFloatFromString(
+                Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(MEMORY_NAME, null)));
+        this.share = ConvertUtils.getIntegerFromString(
+                Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(SHARE_NAME, null)));
+        this.architecture = getArchitectureFromString(
+                Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(ARCHITECTURE_NAME, null)));
+        this.state = getStateFromCloudAutomation(
+                Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, null)));
         this.mixins = new ArrayList<>();
         this.links = new ArrayList<>();
     }
@@ -82,13 +106,20 @@ public class ComputeBuilder {
      */
     public ComputeBuilder(ResourceRendering rendering) throws SyntaxException {
         this.url = Optional.ofNullable(rendering.getId());
-        this.title = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(ENTITY_TITLE_NAME, null));
-        this.architecture = getArchitectureFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null)));
-        this.state = getStateFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, null)));
-        this.hostname = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, ""));
-        this.cores = ConvertUtils.getIntegerFromString(Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(CORES_NAME, 0))));
-        this.memory = ConvertUtils.getFloatFromString(Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0))));
-        this.share = ConvertUtils.getIntegerFromString(Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(SHARE_NAME, 0))));
+        this.title = Optional.ofNullable(
+                (String) rendering.getAttributes().getOrDefault(ENTITY_TITLE_NAME, null));
+        this.architecture = getArchitectureFromString(Optional.ofNullable(
+                (String) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null)));
+        this.state = getStateFromString(Optional.ofNullable(
+                (String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, null)));
+        this.hostname = Optional.ofNullable(
+                (String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, ""));
+        this.cores = ConvertUtils.getIntegerFromString(
+                Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(CORES_NAME, 0))));
+        this.memory = ConvertUtils.getFloatFromString(Optional.ofNullable(
+                String.valueOf(rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0))));
+        this.share = ConvertUtils.getIntegerFromString(
+                Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(SHARE_NAME, 0))));
         this.summary = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
         this.mixins = new ArrayList<>();
         this.links = new ArrayList<>();
@@ -173,7 +204,7 @@ public class ComputeBuilder {
      * @throws SyntaxException if the string is not null and doesn't match with any state
      */
     public Optional<ComputeState> getStateFromString(Optional<String> state) throws SyntaxException {
-        if (! state.isPresent()){
+        if (!state.isPresent()) {
             return Optional.empty();
         }
 
@@ -199,7 +230,8 @@ public class ComputeBuilder {
      * @return an optional architecture object
      * @throws SyntaxException if the string is not null and doesn't match with any architecture
      */
-    private Optional<Compute.Architecture> getArchitectureFromString(Optional<String> architecture) throws SyntaxException {
+    private Optional<Compute.Architecture> getArchitectureFromString(
+            Optional<String> architecture) throws SyntaxException {
         if (!architecture.isPresent()) {
             return Optional.empty();
         } else if (Compute.Architecture.X64.toString().equalsIgnoreCase(architecture.get())) {
@@ -218,7 +250,8 @@ public class ComputeBuilder {
      * @return an optional compute state
      * @throws SyntaxException
      */
-    private Optional<ComputeState> getStateFromCloudAutomation(Optional<String> state) throws SyntaxException {
+    private Optional<ComputeState> getStateFromCloudAutomation(
+            Optional<String> state) throws SyntaxException {
         if (!state.isPresent()) {
             return Optional.empty();
         }
@@ -234,13 +267,14 @@ public class ComputeBuilder {
             case ERROR_STATE:
                 return Optional.of(ComputeState.ERROR);
             default:
-                System.out.println("state : "+state.get());
+                System.out.println("state : " + state.get());
                 throw new SyntaxException(state.get());
         }
     }
 
     public Compute build() {
-        return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary, new ArrayList<>(), architecture,
+        return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary,
+                new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
     }
 

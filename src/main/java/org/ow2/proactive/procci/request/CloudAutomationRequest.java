@@ -1,5 +1,14 @@
 package org.ow2.proactive.procci.request;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Optional;
+import java.util.Properties;
+
+import org.ow2.proactive.procci.model.ModelConstant;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -12,16 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.ow2.proactive.procci.model.ModelConstant;
-import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Optional;
-import java.util.Properties;
 
 /**
  * Created by mael on 02/06/16.
@@ -84,7 +84,8 @@ public class CloudAutomationRequest {
      * @return the first occurance which match with variablename and variableValue
      */
     @Autowired
-    public Optional<Model> getInstanceByVariable(String variableName, String variableValue) throws CloudAutomationException {
+    public Optional<Model> getInstanceByVariable(String variableName,
+            String variableValue) throws CloudAutomationException {
         JSONObject instances = getRequest();
         /*for (Object key : instances.keySet()) {
             JSONObject instanceVariables = (JSONObject) ((JSONObject) instances.get(key)).get(ModelConstant.VARIABLES);
@@ -96,9 +97,9 @@ public class CloudAutomationRequest {
 
         return instances.keySet()
                 .stream()
-                .map( key -> ( (JSONObject) instances.get(key)).get(ModelConstant.VARIABLES))
-                .filter( vars -> ((JSONObject) vars).containsKey(variableName))
-                .filter( vars -> ((JSONObject) vars).get(variableName).equals(variableValue))
+                .map(key -> ((JSONObject) instances.get(key)).get(ModelConstant.VARIABLES))
+                .filter(vars -> ((JSONObject) vars).containsKey(variableName))
+                .filter(vars -> ((JSONObject) vars).get(variableName).equals(variableValue))
                 .findFirst();
     }
 
@@ -159,7 +160,8 @@ public class CloudAutomationRequest {
 
         } catch (IOException ex) {
             logger.error(this.getClass(), ex);
-            throw new RuntimeException("Unable to get the cloud automation service url from config.properties");
+            throw new RuntimeException(
+                    "Unable to get the cloud automation service url from config.properties");
         } finally {
             if (input != null) {
                 try {
@@ -180,7 +182,8 @@ public class CloudAutomationRequest {
      */
     String getSessionId() {
         final String SCHEDULER_LOGIN_URL = getProperty("scheduler.login.endpoint");
-        final String SCHEDULER_REQUEST = "username=" + getProperty("login.name") + "&password=" + getProperty("login.password");
+        final String SCHEDULER_REQUEST = "username=" + getProperty("login.name") + "&password=" + getProperty(
+                "login.password");
 
         StringBuffer result = new StringBuffer();
         try {

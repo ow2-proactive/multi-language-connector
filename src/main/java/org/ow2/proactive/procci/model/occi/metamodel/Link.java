@@ -34,17 +34,17 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import lombok.Getter;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import org.ow2.proactive.procci.model.exception.SyntaxException;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import lombok.Getter;
 
 /**
  * Link defines the base associaction between 2 resources
@@ -68,19 +68,35 @@ public class Link extends Entity {
      * @param targetKind is the kind of the target
      */
     protected Link(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-                   Resource source, String target, Optional<Kind> targetKind) throws SyntaxException{
+            Resource source, String target, Optional<Kind> targetKind) throws SyntaxException {
         super(url, kind, title, mixins);
         this.source = source;
         this.target = getURIFromString(target);
         this.targetKind = targetKind;
     }
 
+    public static Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = Entity.getAttributes();
+        attributes.add(Attributes.SOURCE);
+        attributes.add(Attributes.TARGET);
+        attributes.add(Attributes.TARGET_KIND);
+        return attributes;
+    }
+
+    private URI getURIFromString(String uri) throws SyntaxException {
+        try {
+            return new URI(uri);
+        } catch (URISyntaxException e) {
+            throw new SyntaxException(uri);
+        }
+    }
+
     public static class Builder {
+        private final Resource source;
+        private final String target;
         private Optional<String> url;
         private Optional<String> title;
         private List<Mixin> mixins;
-        private final Resource source;
-        private final String target;
         private Optional<Kind> targetKind;
 
         public Builder(Resource source, String target) {
@@ -112,24 +128,8 @@ public class Link extends Entity {
             return this;
         }
 
-        public Link build() throws SyntaxException{
+        public Link build() throws SyntaxException {
             return new Link(url, Kinds.LINK, title, mixins, source, target, targetKind);
-        }
-    }
-
-    public static Set<Attribute> getAttributes() {
-        Set<Attribute> attributes = Entity.getAttributes();
-        attributes.add(Attributes.SOURCE);
-        attributes.add(Attributes.TARGET);
-        attributes.add(Attributes.TARGET_KIND);
-        return attributes;
-    }
-
-    private URI getURIFromString(String uri) throws SyntaxException {
-        try {
-            return new URI(uri);
-        } catch (URISyntaxException e) {
-            throw new SyntaxException(uri);
         }
     }
 

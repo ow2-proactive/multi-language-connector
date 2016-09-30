@@ -85,8 +85,10 @@ public class Attributes {
             "device interface.").build();
     public static final Attribute NETWORKINTERFACE_STATE = new Attribute.Builder(NETWORKINTERFACE_STATE_NAME,
             Type.OBJECT, false, false).description("Current status of the instance.").build();
-    public static final Attribute NETWORKINTERFACE_MESSAGE = new Attribute.Builder(NETWORKINTERFACE_MESSAGE_NAME,
-            Type.OBJECT, false, false).description("Human-readable explanation of the current instance state.").build();
+    public static final Attribute NETWORKINTERFACE_MESSAGE = new Attribute.Builder(
+            NETWORKINTERFACE_MESSAGE_NAME,
+            Type.OBJECT, false, false).description(
+            "Human-readable explanation of the current instance state.").build();
     public static final Attribute SIZE = new Attribute.Builder(SIZE_NAME, Type.OBJECT, true,
             true).description("Storage size of the instance in gigabytes.").build();
     public static final Attribute STORAGE_STATE = new Attribute.Builder(STORAGE_STATE_NAME, Type.OBJECT,
@@ -123,15 +125,18 @@ public class Attributes {
             "e.g., uses the dynamic host configuration " +
             "protocol, static e.g., uses user supplied " +
             "static network configurations.").build();
-    public static final Attribute NETWORKINTERFACE_ADDRESS = new Attribute.Builder(NETWORKINTERFACE_ADDRESS_NAME
+    public static final Attribute NETWORKINTERFACE_ADDRESS = new Attribute.Builder(
+            NETWORKINTERFACE_ADDRESS_NAME
             , Type.OBJECT, true, true).description(
             "Internet Protocol(IP) network address " +
                     "(e.g., 192.168.0.1/24, fc00::/7) of the link").build();
-    public static final Attribute NETWORKINTERFACE_GATEWAY = new Attribute.Builder(NETWORKINTERFACE_GATEWAY_NAME
+    public static final Attribute NETWORKINTERFACE_GATEWAY = new Attribute.Builder(
+            NETWORKINTERFACE_GATEWAY_NAME
             , Type.OBJECT, true, true).description(
             "Internet Protocol(IP) network address " +
                     "(e.g.. 192.168.0.1/24, fc00::/7)").build();
-    public static final Attribute NETWORKINTERFACE_ALLOCATION = new Attribute.Builder(NETWORKINTERFACE_ALLOCATION_NAME
+    public static final Attribute NETWORKINTERFACE_ALLOCATION = new Attribute.Builder(
+            NETWORKINTERFACE_ALLOCATION_NAME
             , Type.OBJECT, true, true).description(
             "Address mechanism: dynamic e.g., uses " +
                     "the dynamic host configuration protocol static e.g., uses user supplied static network configurations.").build();

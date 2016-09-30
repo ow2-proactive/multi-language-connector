@@ -34,13 +34,27 @@
  */
 package org.ow2.proactive.procci.model.cloud.automation;
 
-import lombok.*;
-import org.json.simple.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.ow2.proactive.procci.model.ModelConstant.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+import org.json.simple.JSONObject;
+
+import static org.ow2.proactive.procci.model.ModelConstant.ACTION_DESCRIPTION;
+import static org.ow2.proactive.procci.model.ModelConstant.ACTION_ICON;
+import static org.ow2.proactive.procci.model.ModelConstant.ACTION_NAME;
+import static org.ow2.proactive.procci.model.ModelConstant.ACTION_ORIGIN_STATES;
+import static org.ow2.proactive.procci.model.ModelConstant.ACTION_TYPE;
+import static org.ow2.proactive.procci.model.ModelConstant.GENERIC_INFORMATION;
+import static org.ow2.proactive.procci.model.ModelConstant.SERVICE_DESCRIPTION;
+import static org.ow2.proactive.procci.model.ModelConstant.SERVICE_MODEL;
+import static org.ow2.proactive.procci.model.ModelConstant.SERVICE_NAME;
+import static org.ow2.proactive.procci.model.ModelConstant.SERVICE_TYPE;
+import static org.ow2.proactive.procci.model.ModelConstant.VARIABLES;
 
 /**
  * Cloud Automation serviceModel
@@ -70,7 +84,8 @@ public class Model {
     public Model(JSONObject CloudAutomationJson) {
 
         JSONObject variables = (JSONObject) CloudAutomationJson.getOrDefault(VARIABLES, new JSONObject());
-        JSONObject genericInfo = (JSONObject) CloudAutomationJson.getOrDefault(GENERIC_INFORMATION, new JSONObject());
+        JSONObject genericInfo = (JSONObject) CloudAutomationJson.getOrDefault(GENERIC_INFORMATION,
+                new JSONObject());
 
         this.serviceModel = (String) genericInfo.getOrDefault(SERVICE_MODEL, "");
         this.serviceType = (String) genericInfo.getOrDefault(SERVICE_TYPE, "");
@@ -121,10 +136,10 @@ public class Model {
     public static class Builder {
 
         private final String serviceModel;
+        private final String actionType;
         private String serviceType;
         private String serviceName;
         private String serviceDescription;
-        private final String actionType;
         private String actionName;
         private String actionDescription;
         private String actionOriginStates;
@@ -192,7 +207,8 @@ public class Model {
         }
 
         public Model build() {
-            return new Model(serviceModel, serviceType, serviceName, serviceDescription, actionType, actionName,
+            return new Model(serviceModel, serviceType, serviceName, serviceDescription, actionType,
+                    actionName,
                     actionDescription, actionOriginStates, actionIcon, variables);
         }
     }

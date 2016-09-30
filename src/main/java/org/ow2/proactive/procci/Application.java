@@ -31,6 +31,9 @@
 
 package org.ow2.proactive.procci;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.common.base.Predicate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -50,15 +53,12 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * @author ActiveEon Team
  */
 @SpringBootApplication
-@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = { MultipartAutoConfiguration.class })
 @EnableSwagger2
 @PropertySource("classpath:application.properties")
 public class Application extends WebMvcConfigurerAdapter {
@@ -99,7 +99,8 @@ public class Application extends WebMvcConfigurerAdapter {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("DSL connector")
-                .description("The purpose of procci is to offer a standard access to the cloud automation functionnalities\n")
+                .description(
+                        "The purpose of procci is to offer a standard access to the cloud automation functionnalities\n")
                 .licenseUrl("https://github.com/ow2-proactive/procci/blob/master/LICENSE")
                 .version("1.0")
                 .build();

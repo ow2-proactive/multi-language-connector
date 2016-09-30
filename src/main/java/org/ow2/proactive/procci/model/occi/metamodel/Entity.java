@@ -34,25 +34,30 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-
-import java.util.*;
 
 /**
  * Entity is the abstract type that will gather the information contained in Resource and Link
  */
 @ToString
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = { "id" })
 
 public abstract class Entity {
     private final String id;
     @Getter
-    private Optional<String> title;
-    @Getter
     private final Kind kind;
+    @Getter
+    private Optional<String> title;
     @Getter
     private List<Mixin> mixins;
 

@@ -1,10 +1,10 @@
 package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 
+import java.util.Map;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 /**
  * Model rendering for an action

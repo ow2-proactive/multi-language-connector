@@ -1,15 +1,19 @@
 package org.ow2.proactive.procci.model.occi.infrastructure.mixin;
 
-import lombok.Getter;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.metamodel.*;
-
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
+import org.ow2.proactive.procci.model.occi.metamodel.Action;
+import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
+import org.ow2.proactive.procci.model.occi.metamodel.Entity;
+import org.ow2.proactive.procci.model.occi.metamodel.Kind;
+import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import lombok.Getter;
 
 /**
  * This class enables to support L3/L4 capabilities with the NetworkInterface class
@@ -35,7 +39,7 @@ public class IPNetworkInterface extends Mixin {
      * @param entities is the set of resource instances
      */
     public IPNetworkInterface(String address, String gateway, boolean dynamic,
-                              List<Entity> entities) throws UnknownHostException {
+            List<Entity> entities) throws UnknownHostException {
 
         super(Identifiers.NETWORKINTERFACE_SCHEME, Identifiers.IPNETWORK_INTERFACE,
                 Identifiers.IPNETWORK_INTERFACE,
