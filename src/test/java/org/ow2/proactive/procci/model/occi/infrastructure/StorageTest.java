@@ -22,7 +22,7 @@ public class StorageTest {
                 .state(StorageState.ERROR)
                 .build();
         assertThat(storage.getState()).isEquivalentAccordingToCompareTo(StorageState.ERROR);
-        assertThat(storage.getSummary()).isEqualTo("summaryTest");
-        assertThat(storage.getTitle()).isEqualTo("titleTest");
+        assertThat(storage.getSummary().get()).isEqualTo("summaryTest");
+        assertThat(storage.getTitle().get()).isEqualTo("titleTest");
     }
 }

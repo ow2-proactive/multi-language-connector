@@ -25,11 +25,11 @@ public class NetworkTest {
                 .summary("summary")
                 .build();
 
-        assertThat(network.getSummary()).isEqualTo("summary");
-        assertThat(network.getTitle()).isEqualTo("title");
-        assertThat(network.getLabel()).isEqualTo("label");
-        assertThat(network.getVlan()).isEqualTo(new Integer(2));
-        Truth.assertThat(network.getState()).isEqualTo(NetworkState.ACTIVE);
+        assertThat(network.getSummary().get()).isEqualTo("summary");
+        assertThat(network.getTitle().get()).isEqualTo("title");
+        assertThat(network.getLabel().get()).isEqualTo("label");
+        assertThat(network.getVlan().get()).isEqualTo(new Integer(2));
+        Truth.assertThat(network.getState().get()).isEqualTo(NetworkState.ACTIVE);
     }
 
 }

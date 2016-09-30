@@ -33,7 +33,7 @@ public class EntityTest {
 
         assertThat(implemented.getId().toString()).startsWith("url");
         assertThat(implemented.getKind()).isEqualTo(k);
-        assertThat(implemented.getTitle()).isEqualTo("titleTest2");
+        assertThat(implemented.getTitle().get()).isEqualTo("titleTest2");
         assertThat(implemented.getMixins()).containsExactly(contextualization);
     }
 }

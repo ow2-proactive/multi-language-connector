@@ -83,12 +83,12 @@ public class ComputeBuilder {
     public ComputeBuilder(ResourceRendering rendering) throws SyntaxException {
         this.url = Optional.ofNullable(rendering.getId());
         this.title = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(ENTITY_TITLE_NAME, null));
-        this.architecture = Optional.ofNullable((Compute.Architecture) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null));
-        this.state = Optional.ofNullable((ComputeState) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, null));
+        this.architecture = getArchitectureFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null)));
+        this.state = getStateFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, null)));
         this.hostname = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, ""));
-        this.cores = ConvertUtils.getIntegerFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(CORES_NAME, 0)));
-        this.memory = ConvertUtils.getFloatFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0)));
-        this.share = ConvertUtils.getIntegerFromString(Optional.ofNullable((String) rendering.getAttributes().getOrDefault(SHARE_NAME, 0)));
+        this.cores = ConvertUtils.getIntegerFromString(Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(CORES_NAME, 0))));
+        this.memory = ConvertUtils.getFloatFromString(Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0))));
+        this.share = ConvertUtils.getIntegerFromString(Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(SHARE_NAME, 0))));
         this.summary = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
         this.mixins = new ArrayList<>();
         this.links = new ArrayList<>();
@@ -165,25 +165,31 @@ public class ComputeBuilder {
         return this;
     }
 
-    public ComputeBuilder state(String state) {
-        switch (state) {
-            case COMPUTE_STATE_ACTIVE:
-                this.state = Optional.of(ComputeState.ACTIVE);
-                break;
-            case COMPUTE_STATE_INACTIVE:
-                this.state = Optional.of(ComputeState.INACTIVE);
-                break;
-            case COMPUTE_STATE_SUSPENDED:
-                this.state = Optional.of(ComputeState.SUSPENDED);
-                break;
-            case COMPUTE_STATE_ERROR:
-                this.state = Optional.of(ComputeState.ERROR);
-                break;
-            default:
-                this.state = Optional.empty();
-                break;
+    /**
+     * Parse a string OCCI state into the state object
+     *
+     * @param state a string representing the state
+     * @return an optional state object
+     * @throws SyntaxException if the string is not null and doesn't match with any state
+     */
+    public Optional<ComputeState> getStateFromString(Optional<String> state) throws SyntaxException {
+        if (! state.isPresent()){
+            return Optional.empty();
         }
-        return this;
+
+        switch (state.get()) {
+            case COMPUTE_STATE_ACTIVE:
+                return Optional.of(ComputeState.ACTIVE);
+            case COMPUTE_STATE_INACTIVE:
+                return Optional.of(ComputeState.INACTIVE);
+            case COMPUTE_STATE_SUSPENDED:
+                return Optional.of(ComputeState.SUSPENDED);
+            case COMPUTE_STATE_ERROR:
+                return Optional.of(ComputeState.ERROR);
+            default:
+                throw new SyntaxException(state.get());
+        }
+
     }
 
     /**
@@ -216,7 +222,6 @@ public class ComputeBuilder {
         if (!state.isPresent()) {
             return Optional.empty();
         }
-
         switch (state.get()) {
             case RUNNING_STATE:
                 return Optional.of(ComputeState.ACTIVE);
@@ -229,6 +234,7 @@ public class ComputeBuilder {
             case ERROR_STATE:
                 return Optional.of(ComputeState.ERROR);
             default:
+                System.out.println("state : "+state.get());
                 throw new SyntaxException(state.get());
         }
     }

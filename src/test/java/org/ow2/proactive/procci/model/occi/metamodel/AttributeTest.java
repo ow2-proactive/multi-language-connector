@@ -14,8 +14,8 @@ public class AttributeTest {
         Attribute attribute = new Attribute.Builder("test", Type.OBJECT, true, false).build();
         assertThat(attribute.getName()).isEqualTo("test");
         assertThat(attribute.getType()).isEqualTo(Type.OBJECT);
-        assertThat(attribute.isRequired()).isTrue();
-        assertThat(attribute.isMutable()).isFalse();
+        assertThat(attribute.isRequired()).isFalse();
+        assertThat(attribute.isMutable()).isTrue();
     }
 
     @Test
@@ -25,8 +25,8 @@ public class AttributeTest {
                 1).description("testSuit").build();
         assertThat(attribute.getName()).isEqualTo("test");
         assertThat(attribute.getType()).isEqualTo(Type.OBJECT);
-        assertThat(attribute.isRequired()).isTrue();
-        assertThat(attribute.isMutable()).isFalse();
+        assertThat(attribute.isRequired()).isFalse();
+        assertThat(attribute.isMutable()).isTrue();
         assertThat(attribute.getPattern().equals(o));
         assertThat(attribute.getDefaultValue()).isEqualTo(new Integer(1));
         assertThat(attribute.getDescription()).isEqualTo("testSuit");
@@ -38,8 +38,8 @@ public class AttributeTest {
                 "testSuit").build();
         assertThat(attribute.getName()).isEqualTo("test");
         assertThat(attribute.getType()).isEqualTo(Type.OBJECT);
-        assertThat(attribute.isRequired()).isTrue();
-        assertThat(attribute.isMutable()).isFalse();
+        assertThat(attribute.isRequired()).isFalse();
+        assertThat(attribute.isMutable()).isTrue();
         assertThat(attribute.getPattern()).isNull();
         assertThat(attribute.getDefaultValue()).isNull();
         assertThat(attribute.getDescription()).isEqualTo("testSuit");

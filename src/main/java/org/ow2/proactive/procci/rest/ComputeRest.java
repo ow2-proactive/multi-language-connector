@@ -52,6 +52,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
@@ -101,11 +102,11 @@ public class ComputeRest {
     public ResponseEntity<ResourceRendering> getCompute(@PathVariable("id") String id) {
         logger.debug("Get Compute ");
         try {
-            Model computeModel = new CloudAutomationRequest().getInstanceByVariable(ID_NAME, id);
-            if (computeModel == null) {
+            Optional<Model> computeModel = new CloudAutomationRequest().getInstanceByVariable(ID_NAME, id);
+            if (! computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-                ComputeBuilder computeBuilder = new ComputeBuilder(computeModel);
+                ComputeBuilder computeBuilder = new ComputeBuilder(computeModel.get());
                 return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
             }
         } catch (CloudAutomationException e) {

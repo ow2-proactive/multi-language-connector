@@ -38,13 +38,13 @@ public class ComputeTest {
         Compute compute = computeBuilder.build();
 
         assertThat(compute.getArchitecture().get()).isEquivalentAccordingToCompareTo(Compute.Architecture.X64);
-        assertThat(compute.getCores()).isEqualTo(new Integer(5));
-        assertThat(compute.getHostname()).isEqualTo("hostnameTest");
+        assertThat(compute.getCores().get()).isEqualTo(new Integer(5));
+        assertThat(compute.getHostname().get()).isEqualTo("hostnameTest");
         assertThat(compute.getMemory().get()).isWithin(new Float(0.0001).compareTo(new Float(3)));
         assertThat(compute.getState().get()).isEquivalentAccordingToCompareTo(ComputeState.SUSPENDED);
-        assertThat(compute.getSummary()).isEqualTo("summaryTest");
-        assertThat(compute.getShare()).isEqualTo(new Integer(2));
-        assertThat(compute.getTitle()).isEqualTo("titleTest");
+        assertThat(compute.getSummary().get()).isEqualTo("summaryTest");
+        assertThat(compute.getShare().get()).isEqualTo(new Integer(2));
+        assertThat(compute.getTitle().get()).isEqualTo("titleTest");
     }
 
     @Test
@@ -60,12 +60,12 @@ public class ComputeTest {
                 .build();
         try {
             ComputeBuilder computeBuilder = new ComputeBuilder(model);
-            assertThat(computeBuilder.getArchitecture()).isEqualTo(Compute.Architecture.X86);
-            assertThat(computeBuilder.getCores()).isEqualTo(new Integer(4));
+            assertThat(computeBuilder.getArchitecture().get()).isEqualTo(Compute.Architecture.X86);
+            assertThat(computeBuilder.getCores().get()).isEqualTo(new Integer(4));
             assertThat(computeBuilder.getMemory().get()).isWithin(new Float(0.0001)).of(new Float(2));
             assertThat(computeBuilder.getHostname().get()).matches("10.0.0.1");
             assertThat(computeBuilder.getTitle().get()).matches("titleTest");
-            assertThat(computeBuilder.getState()).isEqualTo(ComputeState.ACTIVE);
+            assertThat(computeBuilder.getState().get()).isEqualTo(ComputeState.ACTIVE);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -100,14 +100,14 @@ public class ComputeTest {
         try {
             Compute compute = new ComputeBuilder(computeRendering).build();
 
-            assertThat(compute.getId()).matches("urn:uuid:996ad860-2a9a-504f-886-aeafd0b2ae29");
+            assertThat(compute.getId()).matches("urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29");
             assertThat(compute.getKind().getTitle()).matches("http://schemas.ogf.org/occi/infrastructure#compute");
-            assertThat(compute.getCores()).isEqualTo(new Integer(2));
+            assertThat(compute.getCores().get()).isEqualTo(new Integer(2));
             assertThat(compute.getMemory().get()).isWithin(new Float(0.001)).of(new Float(4.0));
             assertThat(compute.getHostname().get()).matches("80.200.35.140");
             assertThat(compute.getTitle().get()).matches("titleTest");
-            assertThat(compute.getArchitecture()).isEqualTo(Compute.Architecture.X86);
-            assertThat(compute.getState()).isEqualTo(ComputeState.ACTIVE);
+            assertThat(compute.getArchitecture().get()).isEqualTo(Compute.Architecture.X86);
+            assertThat(compute.getState().get()).isEqualTo(ComputeState.ACTIVE);
             assertThat(compute.getMixins()).isEmpty();
             assertThat(compute.getSummary().get()).matches("summaryTest");
         }catch (Exception e){

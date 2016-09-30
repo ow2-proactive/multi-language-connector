@@ -68,10 +68,10 @@ public class Link extends Entity {
      * @param targetKind is the kind of the target
      */
     protected Link(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-                   Resource source, String target, Optional<Kind> targetKind) {
+                   Resource source, String target, Optional<Kind> targetKind) throws SyntaxException{
         super(url, kind, title, mixins);
         this.source = source;
-
+        this.target = getURIFromString(target);
         this.targetKind = targetKind;
     }
 
@@ -112,7 +112,7 @@ public class Link extends Entity {
             return this;
         }
 
-        public Link build() {
+        public Link build() throws SyntaxException{
             return new Link(url, Kinds.LINK, title, mixins, source, target, targetKind);
         }
     }

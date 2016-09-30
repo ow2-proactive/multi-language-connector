@@ -38,6 +38,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
@@ -76,7 +77,7 @@ public class NetworkInterface extends Link {
      */
     public NetworkInterface(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
                             Resource source, String target, Optional<Kind> targetKind, String mac, String linkInterface,
-                            NetworkState state) {
+                            NetworkState state) throws SyntaxException{
 
         super(url, kind, title, mixins, source, target, targetKind);
         setAttributes();
@@ -135,7 +136,7 @@ public class NetworkInterface extends Link {
             return this;
         }
 
-        public NetworkInterface build() {
+        public NetworkInterface build() throws SyntaxException{
             return new NetworkInterface(url, InfrastructureKinds.NETWORK_INTERFACE, title,
                     mixins, source, target, targetKind, mac, linkInterface, state);
         }

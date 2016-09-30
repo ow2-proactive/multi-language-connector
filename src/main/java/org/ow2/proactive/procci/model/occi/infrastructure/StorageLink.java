@@ -38,6 +38,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
@@ -73,7 +74,7 @@ public class StorageLink extends Link {
      */
     private StorageLink(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
                         Resource source, String target, String deviceId, String mountPoint, Optional<Kind> targetkind,
-                        NetworkState state) {
+                        NetworkState state) throws SyntaxException {
 
         super(url, kind, title, mixins, source, target, targetkind);
         setAttributes();
@@ -136,7 +137,7 @@ public class StorageLink extends Link {
             return this;
         }
 
-        public StorageLink build() {
+        public StorageLink build() throws SyntaxException{
             return new StorageLink(url, InfrastructureKinds.STORAGE_LINK, title, mixins, source, target,
                     deviceId, mountpoint, targetKind, state);
         }

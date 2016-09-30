@@ -124,14 +124,15 @@ public class Compute extends Resource {
     public Model toCloudAutomationModel(String actionType) {
 
         Model.Builder serviceBuilder = new Model.Builder(COMPUTE_MODEL, actionType)
-                .addVariable(ENTITY_TITLE_NAME, this.getTitle())
-                .addVariable(ARCHITECTURE_NAME, this.architecture)
-                .addVariable(CORES_NAME, this.cores)
-                .addVariable(MEMORY_NAME, this.memory)
-                .addVariable(HOSTNAME_NAME, this.hostname)
-                .addVariable(SUMMARY_NAME, this.getSummary())
-                .addVariable(COMPUTE_STATE_NAME, this.state)
                 .addVariable(ID_NAME, this.getId());
+        this.getTitle().ifPresent( title -> serviceBuilder.addVariable(ENTITY_TITLE_NAME, title));
+        this.getSummary().ifPresent( summary -> serviceBuilder.addVariable(SUMMARY_NAME, summary));
+        this.architecture.ifPresent( archi -> serviceBuilder.addVariable(ARCHITECTURE_NAME, archi));
+        this.cores.ifPresent( coresNumber -> serviceBuilder.addVariable(CORES_NAME, coresNumber));
+        this.memory.ifPresent( memoryNumber -> serviceBuilder.addVariable(MEMORY_NAME, memoryNumber));
+        this.share.ifPresent( shareNumber -> serviceBuilder.addVariable(SHARE_NAME, shareNumber));
+        this.hostname.ifPresent( host -> serviceBuilder.addVariable(HOSTNAME_NAME, host));
+        this.state.ifPresent( currentState -> serviceBuilder.addVariable(COMPUTE_STATE_NAME, currentState));
 
         return serviceBuilder.build();
     }
@@ -143,14 +144,15 @@ public class Compute extends Resource {
      */
     public ResourceRendering getRendering() {
 
-        ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(), this.getId())
-                .addAttribute(ENTITY_TITLE_NAME, this.getTitle())
-                .addAttribute(CORES_NAME, this.cores)
-                .addAttribute(MEMORY_NAME, this.memory)
-                .addAttribute(COMPUTE_STATE_NAME, this.state.get().name())
-                .addAttribute(HOSTNAME_NAME, this.hostname)
-                .addAttribute(SUMMARY_NAME, this.getSummary())
-                .addAttribute(ARCHITECTURE_NAME, this.architecture.get().name());
+        ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(), this.getId());
+        this.getTitle().ifPresent( title -> resourceRendering.addAttribute(ENTITY_TITLE_NAME, title));
+        this.getSummary().ifPresent( summary -> resourceRendering.addAttribute(SUMMARY_NAME, summary));
+        this.architecture.ifPresent( archi -> resourceRendering.addAttribute(ARCHITECTURE_NAME, archi.name()));
+        this.cores.ifPresent( coresNumber -> resourceRendering.addAttribute(CORES_NAME, coresNumber));
+        this.memory.ifPresent( memoryNumber -> resourceRendering.addAttribute(MEMORY_NAME, memoryNumber));
+        this.share.ifPresent( shareNumber -> resourceRendering.addAttribute(SHARE_NAME, shareNumber));
+        this.hostname.ifPresent( host -> resourceRendering.addAttribute(HOSTNAME_NAME, host));
+        this.state.ifPresent( currentState -> resourceRendering.addAttribute(COMPUTE_STATE_NAME, currentState.name()));
 
         return resourceRendering.build();
     }
