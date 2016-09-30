@@ -1,16 +1,13 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
 
-import org.junit.Before;
-import org.junit.Test;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
-
-import java.util.Optional;
+import org.junit.Before;
+import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.apache.coyote.http11.Constants.a;
 
 /**
  * Created by mael on 2/24/16.
@@ -37,7 +34,8 @@ public class ComputeTest {
 
         Compute compute = computeBuilder.build();
 
-        assertThat(compute.getArchitecture().get()).isEquivalentAccordingToCompareTo(Compute.Architecture.X64);
+        assertThat(compute.getArchitecture().get()).isEquivalentAccordingToCompareTo(
+                Compute.Architecture.X64);
         assertThat(compute.getCores().get()).isEqualTo(new Integer(5));
         assertThat(compute.getHostname().get()).isEqualTo("hostnameTest");
         assertThat(compute.getMemory().get()).isWithin(new Float(0.0001).compareTo(new Float(3)));
@@ -66,7 +64,7 @@ public class ComputeTest {
             assertThat(computeBuilder.getHostname().get()).matches("10.0.0.1");
             assertThat(computeBuilder.getTitle().get()).matches("titleTest");
             assertThat(computeBuilder.getState().get()).isEqualTo(ComputeState.ACTIVE);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -100,8 +98,10 @@ public class ComputeTest {
         try {
             Compute compute = new ComputeBuilder(computeRendering).build();
 
-            assertThat(compute.getId()).matches("urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29");
-            assertThat(compute.getKind().getTitle()).matches("http://schemas.ogf.org/occi/infrastructure#compute");
+            assertThat(compute.getRenderingId()).matches("urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29");
+            assertThat(compute.getId()).matches("urn:uuid:996ad860-2a9a-504f-886-aeafd0b2ae29");
+            assertThat(compute.getKind().getTitle()).matches(
+                    "http://schemas.ogf.org/occi/infrastructure#compute");
             assertThat(compute.getCores().get()).isEqualTo(new Integer(2));
             assertThat(compute.getMemory().get()).isWithin(new Float(0.001)).of(new Float(4.0));
             assertThat(compute.getHostname().get()).matches("80.200.35.140");
@@ -110,7 +110,7 @@ public class ComputeTest {
             assertThat(compute.getState().get()).isEqualTo(ComputeState.ACTIVE);
             assertThat(compute.getMixins()).isEmpty();
             assertThat(compute.getSummary().get()).matches("summaryTest");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

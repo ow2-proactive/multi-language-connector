@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Ignore;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
@@ -30,7 +29,8 @@ public class ResourceTest {
                 new HashSet<Attribute>(),
                 new ArrayList<Action>(), new ArrayList<Mixin>(), new ArrayList<Kind>(),
                 new ArrayList<Entity>()));
-        Resource resource = new Resource(Optional.of("url"), kind, Optional.of("titleTest"), mixins, Optional.of("summaryTest"), links);
+        Resource resource = new Resource(Optional.of("url"), kind, Optional.of("titleTest"), mixins,
+                Optional.of("summaryTest"), links);
 
         assertThat(resource.getSummary().get()).isEqualTo("summaryTest");
         assertThat(resource.getLinks()).isEqualTo(links);
@@ -56,7 +56,7 @@ public class ResourceTest {
             assertThat(resource.getId().toString()).contains("resource");
             assertThat(resource.getLinks()).containsExactly(link);
             assertThat(resource.getMixins()).isEmpty();
-        }catch (SyntaxException e){
+        } catch (SyntaxException e) {
             e.printStackTrace();
         }
     }

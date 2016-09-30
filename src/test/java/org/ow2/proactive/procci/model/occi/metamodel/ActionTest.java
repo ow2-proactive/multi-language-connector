@@ -12,13 +12,6 @@ import static com.google.common.truth.Truth.assertThat;
  */
 public class ActionTest {
 
-    private class ActionImplemented extends Action {
-
-        ActionImplemented(String scheme, String term, String title, Set<Attribute> attributes) {
-            super(scheme, term, title, attributes);
-        }
-    }
-
     @Test
     public void maximalConstructor() {
         String uri = "http://schemas.ogf.org/occi/metamodel#actiontest";
@@ -38,5 +31,12 @@ public class ActionTest {
                 new Attribute.Builder("occi.category.scheme", Type.HASH, false, false).build(),
                 new Attribute.Builder("occi.category.term", Type.HASH, false, false).build(),
                 new Attribute.Builder("occi.category.title", Type.HASH, false, false).build());
+    }
+
+    private class ActionImplemented extends Action {
+
+        ActionImplemented(String scheme, String term, String title, Set<Attribute> attributes) {
+            super(scheme, term, title, attributes);
+        }
     }
 }

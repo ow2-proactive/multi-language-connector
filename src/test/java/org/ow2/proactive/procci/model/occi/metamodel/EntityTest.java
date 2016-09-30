@@ -15,14 +15,6 @@ import static com.google.common.truth.Truth.assertThat;
  */
 public class EntityTest {
 
-    private class EntityImplemented extends Entity {
-
-        EntityImplemented(String url, Kind k, String title, List<Mixin> mixins) {
-            super(Optional.of(url), k, Optional.of(title), mixins);
-        }
-    }
-
-
     @Test
     public void maximalConstructorTest() {
         Kind k = Kinds.ENTITY;
@@ -35,5 +27,12 @@ public class EntityTest {
         assertThat(implemented.getKind()).isEqualTo(k);
         assertThat(implemented.getTitle().get()).isEqualTo("titleTest2");
         assertThat(implemented.getMixins()).containsExactly(contextualization);
+    }
+
+    private class EntityImplemented extends Entity {
+
+        EntityImplemented(String url, Kind k, String title, List<Mixin> mixins) {
+            super(Optional.of(url), k, Optional.of(title), mixins);
+        }
     }
 }

@@ -27,13 +27,14 @@ public class LinkTest {
         Kind kind = Kinds.LINK;
         List<Mixin> mixins = new ArrayList<>();
         try {
-            Link link = new Link(Optional.of("user"), kind, Optional.of("title"), mixins, r1, "r2sfg", Optional.of(InfrastructureKinds.COMPUTE));
+            Link link = new Link(Optional.of("user"), kind, Optional.of("title"), mixins, r1, "r2sfg",
+                    Optional.of(InfrastructureKinds.COMPUTE));
             assertThat(link.getSource()).isEqualTo(r1);
             assertThat(link.getKind()).isEqualTo(kind);
             assertThat(link.getId().toString()).startsWith("user");
             assertThat(link.getTitle().equals("title"));
             assertThat(link.getTargetKind().get()).isEqualTo(InfrastructureKinds.COMPUTE);
-        }catch (SyntaxException e){
+        } catch (SyntaxException e) {
             e.printStackTrace();
         }
     }
@@ -56,7 +57,7 @@ public class LinkTest {
             assertThat(link.getTitle().get()).isEqualTo("titleTest");
             assertThat(link.getId().toString()).contains("url");
             assertThat(link.getTargetKind().get()).isEqualTo(InfrastructureKinds.COMPUTE);
-        }catch (SyntaxException e){
+        } catch (SyntaxException e) {
             e.printStackTrace();
         }
     }

@@ -1,7 +1,5 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.action.DownNetwork;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.UpNetwork;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
 import com.google.common.truth.Truth;
 import org.junit.Test;

@@ -32,7 +32,7 @@ public class StorageLinkTest {
             assertThat(storageLink.getDeviceId()).contains("deviceId");
             Truth.assertThat(storageLink.getTarget().toString()).contains("targetid");
             assertThat(storageLink.getMountPoint()).contains("mountpointTest");
-        }catch (SyntaxException e){
+        } catch (SyntaxException e) {
             e.printStackTrace();
         }
     }

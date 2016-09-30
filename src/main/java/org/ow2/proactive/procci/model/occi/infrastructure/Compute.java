@@ -153,7 +153,7 @@ public class Compute extends Resource {
     public ResourceRendering getRendering() {
 
         ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(),
-                this.getId());
+                this.getRenderingId());
         this.getTitle().ifPresent(title -> resourceRendering.addAttribute(ENTITY_TITLE_NAME, title));
         this.getSummary().ifPresent(summary -> resourceRendering.addAttribute(SUMMARY_NAME, summary));
         this.architecture.ifPresent(archi -> resourceRendering.addAttribute(ARCHITECTURE_NAME, archi.name()));

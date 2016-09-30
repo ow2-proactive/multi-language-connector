@@ -45,6 +45,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
+import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.request.CloudAutomationException;
 import org.ow2.proactive.procci.request.CloudAutomationRequest;
 import org.apache.logging.log4j.LogManager;
@@ -106,7 +107,8 @@ public class ComputeRest {
     public ResponseEntity<ResourceRendering> getCompute(@PathVariable("id") String id) {
         logger.debug("Get Compute ");
         try {
-            Optional<Model> computeModel = new CloudAutomationRequest().getInstanceByVariable(ID_NAME, id);
+            Optional<Model> computeModel = new CloudAutomationRequest().getInstanceByVariable(ID_NAME,
+                    ConvertUtils.formatURL(id));
             if (!computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {

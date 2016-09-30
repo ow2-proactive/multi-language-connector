@@ -87,20 +87,19 @@ public class CloudAutomationRequest {
     public Optional<Model> getInstanceByVariable(String variableName,
             String variableValue) throws CloudAutomationException {
         JSONObject instances = getRequest();
-        /*for (Object key : instances.keySet()) {
-            JSONObject instanceVariables = (JSONObject) ((JSONObject) instances.get(key)).get(ModelConstant.VARIABLES);
-            if (instanceVariables.containsKey(variableName)
-                    && variableValue.equals(instanceVariables.get(variableName))) {
-                return new Model((JSONObject) instances.get(key));
-            }
-        }*/
 
         return instances.keySet()
                 .stream()
                 .map(key -> ((JSONObject) instances.get(key)).get(ModelConstant.VARIABLES))
                 .filter(vars -> ((JSONObject) vars).containsKey(variableName))
                 .filter(vars -> ((JSONObject) vars).get(variableName).equals(variableValue))
-                .findFirst();
+                .findFirst()
+                .map(vars -> ((JSONObject) vars).get(ModelConstant.INSTANCE_ID))
+                .map(id -> new Model((JSONObject) instances.get(id)));
+    }
+
+    private JSONObject getVariableFromKey(JSONObject json, Object key) {
+        return (JSONObject) ((JSONObject) json.get(key)).get(ModelConstant.VARIABLES);
     }
 
 

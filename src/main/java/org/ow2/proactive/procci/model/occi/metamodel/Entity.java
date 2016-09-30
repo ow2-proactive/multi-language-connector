@@ -42,6 +42,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -51,18 +52,15 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(of = { "id" })
-
+@Getter
 public abstract class Entity {
     private final String id;
-    @Getter
     private final Kind kind;
-    @Getter
     private Optional<String> title;
-    @Getter
     private List<Mixin> mixins;
 
     public Entity() {
-        this.id = formatURL(generateId());
+        this.id = ConvertUtils.formatURL(generateId());
         this.kind = new Kind.Builder("default.kind.url", "entity").build();
         this.title = Optional.empty();
         this.mixins = new ArrayList<>();
@@ -75,7 +73,7 @@ public abstract class Entity {
      * @param kind is the kind instance which uniquely identify the instance
      */
     public Entity(Optional<String> url, Kind kind) {
-        this.id = url.orElse(generateId());
+        this.id = ConvertUtils.formatURL(url.orElse(generateId()));
         this.kind = kind;
         this.title = Optional.empty();
         this.mixins = new ArrayList<>();
@@ -90,7 +88,7 @@ public abstract class Entity {
      * @param mixins are the mixins instance associate to the instance
      */
     public Entity(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins) {
-        this.id = url.orElse(generateId());
+        this.id = ConvertUtils.formatURL(url.orElse(generateId()));
         this.kind = kind;
         this.title = title;
         this.mixins = mixins;
@@ -110,11 +108,9 @@ public abstract class Entity {
         return "urn:uuid:" + UUID.randomUUID().toString();
     }
 
-    private String formatURL(String url) {
-        return url.replaceAll("−", "-");
-    }
+    //WARNING : The Character '−' is not supported by the scheduler so it is replaced by the character '-'
 
-    public String getId() {
+    public String getRenderingId() {
         return this.id.replaceAll("-", "−");
     }
 

@@ -113,14 +113,18 @@ public class ComputeBuilder {
         this.state = getStateFromString(Optional.ofNullable(
                 (String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, null)));
         this.hostname = Optional.ofNullable(
-                (String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, ""));
+                (String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, null));
         this.cores = ConvertUtils.getIntegerFromString(
-                Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(CORES_NAME, 0))));
-        this.memory = ConvertUtils.getFloatFromString(Optional.ofNullable(
-                String.valueOf(rendering.getAttributes().getOrDefault(MEMORY_NAME, 0.0))));
+                Optional.ofNullable(rendering.getAttributes().getOrDefault(CORES_NAME, null))
+                        .map(coreNumber -> String.valueOf(coreNumber)));
+        this.memory = ConvertUtils.getFloatFromString(
+                Optional.ofNullable(rendering.getAttributes().getOrDefault(MEMORY_NAME, null))
+                        .map(memoryNumber -> String.valueOf(memoryNumber)));
         this.share = ConvertUtils.getIntegerFromString(
-                Optional.ofNullable(String.valueOf(rendering.getAttributes().getOrDefault(SHARE_NAME, 0))));
-        this.summary = Optional.ofNullable((String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, ""));
+                Optional.ofNullable(rendering.getAttributes().getOrDefault(SHARE_NAME, null))
+                        .map(shareNumber -> String.valueOf(shareNumber)));
+        this.summary = Optional.ofNullable(
+                (String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, null));
         this.mixins = new ArrayList<>();
         this.links = new ArrayList<>();
     }

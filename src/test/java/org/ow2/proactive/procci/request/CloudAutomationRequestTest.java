@@ -1,9 +1,6 @@
 package org.ow2.proactive.procci.request;
 
-import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.HashMap;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -13,7 +10,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class CloudAutomationRequestTest {
 
     @Test
-    public void getPropertyTest(){
+    public void getPropertyTest() {
         assertThat(new CloudAutomationRequest().getProperty("scheduler.login.endpoint")).isNotEmpty();
     }
 }

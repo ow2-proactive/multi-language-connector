@@ -39,4 +39,15 @@ public class ConvertUtils {
             throw new SyntaxException(floatString.get());
         }
     }
+
+    /**
+     * Convert fan UUID into a close format managed by Cloud Automation
+     *
+     * @param url and urn:uuid:(UUID) format
+     * @return an UUID with the unsupported character replaced
+     */
+    public static String formatURL(String url) {
+        return url.replaceAll("−", "-");
+    }
+
 }
