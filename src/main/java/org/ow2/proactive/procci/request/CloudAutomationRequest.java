@@ -40,7 +40,6 @@ public class CloudAutomationRequest {
      *
      * @return a json object containing the request results
      */
-    @Autowired
     public JSONObject getRequest() throws CloudAutomationException {
         final String url = getProperty("cloud-automation-service.instances.endpoint");
         JSONObject result = new JSONObject();
@@ -70,7 +69,6 @@ public class CloudAutomationRequest {
      * @return the instance information
      * @throws CloudAutomationException is thrown if an error occur during the connection with CAS or the login
      */
-    @Autowired
     public Model getInstanceById(String id) throws CloudAutomationException {
         JSONObject jsonModel = (JSONObject) getRequest().get(id);
         return Optional.of(jsonModel).map(jsonObject -> new Model(jsonObject)).orElse(null);
@@ -83,7 +81,6 @@ public class CloudAutomationRequest {
      * @param variableValue the value matching with the variableName key
      * @return the first occurance which match with variablename and variableValue
      */
-    @Autowired
     public Optional<Model> getInstanceByVariable(String variableName,
             String variableValue) throws CloudAutomationException {
         JSONObject instances = getRequest();
@@ -106,7 +103,6 @@ public class CloudAutomationRequest {
      * @return the information about gathered from cloud automation service
      * @throws CloudAutomationException is thrown if something failed during the connection
      */
-    @Autowired
     public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
