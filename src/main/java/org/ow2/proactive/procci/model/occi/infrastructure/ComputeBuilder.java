@@ -267,7 +267,6 @@ public class ComputeBuilder {
             case ERROR_STATE:
                 return Optional.of(ComputeState.ERROR);
             default:
-                System.out.println("state : " + state.get());
                 throw new SyntaxException(state.get());
         }
     }
