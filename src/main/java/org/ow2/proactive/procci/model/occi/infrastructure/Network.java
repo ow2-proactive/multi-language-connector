@@ -34,31 +34,33 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.NetworkAction;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
-import org.ow2.proactive.procci.model.occi.metamodel.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
+import org.ow2.proactive.procci.model.occi.metamodel.Kind;
+import org.ow2.proactive.procci.model.occi.metamodel.Link;
+import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 
 /**
  * This class represents a L2 networking entity
  */
+@Getter
 public class Network extends Resource {
 
-    @Getter
-    private Integer vlan;
-    @Getter
-    private String label;
-    @Getter
-    private NetworkState state;
+    private Optional<Integer> vlan;
+    private Optional<String> label;
+    private Optional<NetworkState> state;
 
     /**
      * Constructor with all parameters
@@ -73,87 +75,14 @@ public class Network extends Resource {
      * @param label   is a tab based on vlan
      * @param state   is the state aimed by the user or the current state
      */
-    private Network(String url, Kind kind, String title, List<Mixin> mixins, String summary, List<Link> links,
-                    Integer vlan, String label, NetworkState state) {
+    private Network(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
+            Optional<String> summary, List<Link> links,
+            Optional<Integer> vlan, Optional<String> label, Optional<NetworkState> state) {
 
         super(url, kind, title, mixins, summary, links);
         this.state = state;
         this.vlan = vlan;
         this.label = label;
-    }
-
-    @EqualsAndHashCode
-    @ToString
-    public static class Builder {
-        private String url;
-        private String title;
-        private List<Mixin> mixins;
-        private String summary;
-        private List<Link> links;
-        private Integer vlan;
-        private String label;
-        private NetworkState state;
-        private List<NetworkAction> actions;
-
-        public Builder() {
-            this.url = "";
-            this.title = "";
-            this.mixins = new ArrayList<>();
-            this.summary = "";
-            this.links = new ArrayList<>();
-            this.vlan = null;
-            this.label = "";
-            this.state = null;
-        }
-
-        public Builder url(String url) {
-            this.url = url;
-            return this;
-        }
-
-        public Builder title(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder addMixin(Mixin mixin) {
-            this.mixins.add(mixin);
-            return this;
-        }
-
-        public Builder summary(String summary) {
-            this.summary = summary;
-            return this;
-        }
-
-        public Builder addLink(Link link) {
-            this.links.add(link);
-            return this;
-        }
-
-        public Builder vlan(Integer vlan) {
-            this.vlan = vlan;
-            return this;
-        }
-
-        public Builder label(String label) {
-            this.label = label;
-            return this;
-        }
-
-        public Builder state(NetworkState state) {
-            this.state = state;
-            return this;
-        }
-
-        public Network build() {
-            return new Network(url, InfrastructureKinds.NETWORK, title, mixins, summary, links, vlan, label,
-                    state);
-        }
-    }
-
-    public String getMessage() {
-        return state.getMessage();
     }
 
     public static Set<Attribute> getAttributes() {
@@ -163,5 +92,74 @@ public class Network extends Resource {
         attributes.add(Attributes.NETWORK_STATE);
         attributes.add(Attributes.NETWORK_MESSAGE);
         return attributes;
+    }
+
+    @EqualsAndHashCode
+    @ToString
+    public static class Builder {
+        private Optional<String> url;
+        private Optional<String> title;
+        private List<Mixin> mixins;
+        private Optional<String> summary;
+        private List<Link> links;
+        private Optional<Integer> vlan;
+        private Optional<String> label;
+        private Optional<NetworkState> state;
+
+        public Builder() {
+            this.url = Optional.empty();
+            this.title = Optional.empty();
+            this.mixins = new ArrayList<>();
+            this.summary = Optional.empty();
+            this.links = new ArrayList<>();
+            this.vlan = Optional.empty();
+            this.label = Optional.empty();
+            this.state = Optional.empty();
+        }
+
+        public Builder url(String url) {
+            this.url = Optional.ofNullable(url);
+            return this;
+        }
+
+        public Builder title(String title) {
+            this.title = Optional.ofNullable(title);
+            return this;
+        }
+
+        public Builder addMixin(Mixin mixin) {
+            this.mixins.add(mixin);
+            return this;
+        }
+
+        public Builder summary(String summary) {
+            this.summary = Optional.ofNullable(summary);
+            return this;
+        }
+
+        public Builder addLink(Link link) {
+            this.links.add(link);
+            return this;
+        }
+
+        public Builder vlan(Integer vlan) {
+            this.vlan = Optional.ofNullable(vlan);
+            return this;
+        }
+
+        public Builder label(String label) {
+            this.label = Optional.ofNullable(label);
+            return this;
+        }
+
+        public Builder state(NetworkState state) {
+            this.state = Optional.ofNullable(state);
+            return this;
+        }
+
+        public Network build() {
+            return new Network(url, InfrastructureKinds.NETWORK, title, mixins, summary, links, vlan, label,
+                    state);
+        }
     }
 }

@@ -34,13 +34,13 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import com.google.common.collect.ImmutableList;
-import lombok.Getter;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import com.google.common.collect.ImmutableList;
+import lombok.Getter;
 
 /**
  * Mixin is an extension mecanism which enables to new resource capablilities
@@ -70,8 +70,8 @@ public class Mixin extends Category {
      * @param entities   is the set of resource instances
      */
     public Mixin(String scheme, String term, String title, Set<Attribute> attributes,
-                 List<Action> actions, List<Mixin> depends, List<Kind> applies,
-                 List<Entity> entities) {
+            List<Action> actions, List<Mixin> depends, List<Kind> applies,
+            List<Entity> entities) {
         super(scheme, term, title, setAttributes(attributes));
         this.actions = new ImmutableList.Builder<Action>().addAll(actions).build();
         this.depends = new ImmutableList.Builder<Mixin>().addAll(depends).build();

@@ -11,6 +11,12 @@ import org.ow2.proactive.procci.model.occi.metamodel.Type;
  * Contains all the attributes of the meta-model
  */
 public class Attributes {
+
+    //occi  core variable
+    public static final String ENTITY_TITLE_NAME = "occi.entity.title";
+    public static final String SUMMARY_NAME = "occi.core.summary";
+    public static final String ID_NAME = "occi.entity.id";
+
     public static final Attribute TERM = new Attribute.Builder("occi.category.term", Type.OBJECT, true,
             false).description(
             "Unique identifier of the Category instance " +
@@ -20,10 +26,10 @@ public class Attributes {
     public static final Attribute CATEGORY_TITLE = new Attribute.Builder("occi.category.title", Type.OBJECT,
             false,
             false).description("The display name of an instance.").build();
-    public static final Attribute ENTITY_TITLE = new Attribute.Builder("occi.entity.title", Type.OBJECT,
+    public static final Attribute ENTITY_TITLE = new Attribute.Builder(ENTITY_TITLE_NAME, Type.OBJECT,
             false,
             true).description("The display name of an instance.").build();
-    public static final Attribute ID = new Attribute.Builder("occi.entity.id", Type.OBJECT, true,
+    public static final Attribute ID = new Attribute.Builder(ID_NAME, Type.OBJECT, true,
             false).description(
             "A unique identifier (within the service " +
                     "provider’s name-space) of the Entity sub-type instance.").build();
@@ -73,7 +79,7 @@ public class Attributes {
             "List of Link compositions. Being a" +
                     "composite relation the removal of a Link from the set MUST also remove" +
                     "the Link instance.").build();
-    public static final Attribute SUMMARY = new Attribute.Builder("occi.resource.summary", Type.OBJECT, false,
+    public static final Attribute SUMMARY = new Attribute.Builder(SUMMARY_NAME, Type.OBJECT, false,
             true).description("A summarizing description of the Re" +
             "source instance.").build();
 }

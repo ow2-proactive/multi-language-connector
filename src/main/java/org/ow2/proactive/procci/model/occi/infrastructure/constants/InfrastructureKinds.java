@@ -1,10 +1,21 @@
 package org.ow2.proactive.procci.model.occi.infrastructure.constants;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.Network;
 import org.ow2.proactive.procci.model.occi.infrastructure.NetworkInterface;
 import org.ow2.proactive.procci.model.occi.infrastructure.StorageLink;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.*;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.DownNetwork;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.OfflineStorage;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.OnlineStorage;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.RestartCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.SaveCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.StartCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.StopCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.SuspendCompute;
+import org.ow2.proactive.procci.model.occi.infrastructure.action.UpNetwork;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 
@@ -55,4 +66,15 @@ public class InfrastructureKinds {
             .addAttribute(StorageLink.getAttributes())
             .addParent(Kinds.LINK)
             .build();
+
+    public static Map<String, Kind> INFRASTRUCTURE_KINDS = new HashMap<>();
+
+    static {
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.COMPUTE, COMPUTE);
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.NETWORK, NETWORK);
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.STORAGE, STORAGE);
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.NETWORK_INTERFACE,
+                NETWORK_INTERFACE);
+        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.STORAGE_LINK, STORAGE_LINK);
+    }
 }

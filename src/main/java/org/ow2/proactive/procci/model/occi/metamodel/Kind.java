@@ -35,11 +35,16 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-
-import java.util.*;
 
 
 /**
@@ -50,9 +55,29 @@ public class Kind extends Category {
     @Getter
     private final ImmutableMap<String, Action> actions;
     @Getter
-    private List<Entity> entities;
-    @Getter
     private final Kind parent;
+    @Getter
+    private List<Entity> entities;
+
+    /**
+     * Constructor which set all data
+     *
+     * @param scheme     categorisation scheme
+     * @param term       unique identifier
+     * @param title      the display name of the instance
+     * @param actions    are the actions defined by the kind instance
+     * @param attributes are the kind type attributes
+     * @param parent     is the set of the kind instances
+     */
+    private Kind(String scheme, String term, String title, Set<Attribute> attributes,
+            Map<String, Action> actions, Kind parent) {
+        super(scheme, term, title, attributes);
+        this.actions = new ImmutableMap.Builder<String, Action>() {
+        }.putAll(actions).build();
+        this.parent = parent;
+        this.entities = new ArrayList<>();
+
+    }
 
     public static class Builder {
         private final String scheme;
@@ -66,7 +91,7 @@ public class Kind extends Category {
         public Builder(String scheme, String term) {
             this.scheme = scheme;
             this.term = term;
-            this.title = "kind";
+            this.title = scheme + term;
             attributes = new HashSet<>();
             actions = new HashMap<>();
             parent = null;
@@ -102,25 +127,5 @@ public class Kind extends Category {
             this.attributes.add(Attributes.PARENT);
             this.attributes.add(Attributes.KIND_ENTITIES);
         }
-    }
-
-    /**
-     * Constructor which set all data
-     *
-     * @param scheme     categorisation scheme
-     * @param term       unique identifier
-     * @param title      the display name of the instance
-     * @param actions    are the actions defined by the kind instance
-     * @param attributes are the kind type attributes
-     * @param parent     is the set of the kind instances
-     */
-    private Kind(String scheme, String term, String title, Set<Attribute> attributes,
-                 Map<String, Action> actions, Kind parent) {
-        super(scheme, term, title, attributes);
-        this.actions = new ImmutableMap.Builder<String, Action>() {
-        }.putAll(actions).build();
-        this.parent = parent;
-        this.entities = new ArrayList<>();
-
     }
 }

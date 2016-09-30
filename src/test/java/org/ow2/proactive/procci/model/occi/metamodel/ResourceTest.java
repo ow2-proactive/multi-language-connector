@@ -3,8 +3,9 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
-import org.junit.Ignore;
+import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
@@ -28,9 +29,10 @@ public class ResourceTest {
                 new HashSet<Attribute>(),
                 new ArrayList<Action>(), new ArrayList<Mixin>(), new ArrayList<Kind>(),
                 new ArrayList<Entity>()));
-        Resource resource = new Resource("url", kind, "titleTest", mixins, "summaryTest", links);
+        Resource resource = new Resource(Optional.of("url"), kind, Optional.of("titleTest"), mixins,
+                Optional.of("summaryTest"), links);
 
-        assertThat(resource.getSummary()).isEqualTo("summaryTest");
+        assertThat(resource.getSummary().get()).isEqualTo("summaryTest");
         assertThat(resource.getLinks()).isEqualTo(links);
         assertThat(resource.getMixins()).isEqualTo(mixins);
         assertThat(resource.getKind()).isEqualTo(kind);
@@ -40,17 +42,22 @@ public class ResourceTest {
     @Test
     public void builderTest() {
         Compute compute = new ComputeBuilder().url("compute").build();
-        Link link = new Link.Builder(compute, "target").url("link").build();
-        Resource resource = new Resource.Builder()
-                .url("resource")
-                .summary("summary")
-                .title("title")
-                .addLink(link)
-                .build();
-        assertThat(resource.getSummary()).isEqualTo("summary");
-        assertThat(resource.getTitle()).isEqualTo("title");
-        assertThat(resource.getId().toString()).contains("resource");
-        assertThat(resource.getLinks()).containsExactly(link);
-        assertThat(resource.getMixins()).isEmpty();
+        try {
+            Link link = new Link.Builder(compute, "target").url("link").build();
+
+            Resource resource = new Resource.Builder()
+                    .url("resource")
+                    .summary("summary")
+                    .title("title")
+                    .addLink(link)
+                    .build();
+            assertThat(resource.getSummary().get()).isEqualTo("summary");
+            assertThat(resource.getTitle().get()).isEqualTo("title");
+            assertThat(resource.getId().toString()).contains("resource");
+            assertThat(resource.getLinks()).containsExactly(link);
+            assertThat(resource.getMixins()).isEmpty();
+        } catch (SyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }

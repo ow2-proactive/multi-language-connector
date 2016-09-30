@@ -34,18 +34,18 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.util.Set;
+import java.util.UUID;
+
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableSet;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * Category is the basis type of identification mecanism
  **/
-@EqualsAndHashCode( of =  {"scheme", "term"})
+@EqualsAndHashCode(of = { "scheme", "term" })
 public class Category {
 
     @Getter
@@ -53,9 +53,9 @@ public class Category {
     @Getter
     private final String term;
     @Getter
-    private String title;
-    @Getter
     private final ImmutableSet<Attribute> attributes;
+    @Getter
+    private String title;
 
     /**
      * Constructor which set all the parameters

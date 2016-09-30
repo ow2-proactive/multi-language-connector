@@ -34,22 +34,33 @@
  */
 package org.ow2.proactive.procci.rest;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.SyntaxException;
+import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
+import org.ow2.proactive.procci.model.utils.ConvertUtils;
+import org.ow2.proactive.procci.request.CloudAutomationException;
+import org.ow2.proactive.procci.request.CloudAutomationRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
-import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
-import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
-import org.ow2.proactive.procci.request.CloudAutomationException;
-import org.ow2.proactive.procci.request.CloudAutomationRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
 
 /**
  * Implement CRUD methods for REST service
@@ -63,21 +74,29 @@ public class ComputeRest {
     //-------------------Retrieve All Computes--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Compute>> listAllComputes() {
+    public ResponseEntity<EntitiesRendering> listAllComputes() {
         logger.debug("Get all Compute instances");
         try {
             JSONObject resources = new CloudAutomationRequest().getRequest();
 
-            Set<Object> keyset = resources.keySet();
-
-            List results = keyset.stream().map( key -> new Model((JSONObject) resources.get(key)))
-                    .map( model -> new ComputeBuilder().update(model).build())
+            List<Model> models = (List<Model>) resources.keySet()
+                    .stream()
+                    .map(key -> new Model((JSONObject) resources.get(key)))
                     .collect(Collectors.toList());
 
-            return new ResponseEntity<>(results, HttpStatus.OK);
+            List<EntityRendering> results = new ArrayList<>();
+            for (Model model : models) {
+                results.add(new ComputeBuilder(model).build().getRendering());
+            }
+
+            return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(results).build(),
+                    HttpStatus.OK);
         } catch (CloudAutomationException e) {
-            logger.error(this.getClass(),e);
+            logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (SyntaxException e) {
+            logger.error(this.getClass(), e);
+            return new ResponseEntity(e.getUserException(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -85,20 +104,23 @@ public class ComputeRest {
     //-------------------Retrieve Single Compute--------------------------------------------------------
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Compute> getCompute(@PathVariable("id") String id) {
+    public ResponseEntity<ResourceRendering> getCompute(@PathVariable("id") String id) {
         logger.debug("Get Compute ");
         try {
-            Model computeModel = new CloudAutomationRequest().getRequestById(id);
-            if(computeModel == null){
+            Optional<Model> computeModel = new CloudAutomationRequest().getInstanceByVariable(ID_NAME,
+                    ConvertUtils.formatURL(id));
+            if (!computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
-            }
-            else {
-                ComputeBuilder computeBuilder = new ComputeBuilder().update(computeModel);
-                return new ResponseEntity<>(computeBuilder.build(), HttpStatus.OK);
+            } else {
+                ComputeBuilder computeBuilder = new ComputeBuilder(computeModel.get());
+                return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
             }
         } catch (CloudAutomationException e) {
-            logger.error(this.getClass(),e);
+            logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (SyntaxException e) {
+            logger.error(this.getClass(), e);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -107,18 +129,30 @@ public class ComputeRest {
     //-------------------Create a Compute--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Compute> createCompute(@RequestBody ComputeBuilder compute) throws InterruptedException {
-        logger.debug("Creating Compute " + compute.build().getTitle());
-        JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
+    public ResponseEntity<ResourceRendering> createCompute(
+            @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
+        logger.debug("Creating Compute " + computeRendering.toString());
         try {
+            ComputeBuilder compute = new ComputeBuilder(computeRendering);
+            JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
             Model model = new Model(new CloudAutomationRequest().postRequest(pcaModel));
-            compute.update(model);
-            return new ResponseEntity<>(compute.build(), HttpStatus.CREATED);
+            ComputeBuilder response = new ComputeBuilder(model);
+            return new ResponseEntity<>(response.build().getRendering(), HttpStatus.CREATED);
         } catch (CloudAutomationException e) {
-            logger.error(this.getClass(),e);
+            logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (SyntaxException e) {
+            logger.error(this.getClass(), e);
+            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+
     }
+
+    /*@RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<SwaggerTest> createComputeTest(@RequestBody SwaggerTest computeRendering) throws InterruptedException, NumberFormatException {
+        logger.debug("Creating Compute " + computeRendering.toString());
+        return new ResponseEntity<>(computeRendering,HttpStatus.OK);
+    }*/
 
 
     /**

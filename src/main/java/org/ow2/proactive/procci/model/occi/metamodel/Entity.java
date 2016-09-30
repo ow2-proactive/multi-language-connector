@@ -34,31 +34,35 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import lombok.*;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
-import java.util.*;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.utils.ConvertUtils;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Entity is the abstract type that will gather the information contained in Resource and Link
  */
 @ToString
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = { "id" })
+@Getter
 public abstract class Entity {
-    @Getter
-    private String id;
-    @Getter
-    @Setter(AccessLevel.PROTECTED)
-    private String title;
-    @Getter(AccessLevel.PROTECTED)
+    private final String id;
     private final Kind kind;
-    @Getter(AccessLevel.PROTECTED)
+    private Optional<String> title;
     private List<Mixin> mixins;
 
     public Entity() {
-        this.id = UUID.randomUUID().toString();
-        this.kind = new Kind.Builder("test", "entity").build();
-        this.title = "";
+        this.id = ConvertUtils.formatURL(generateId());
+        this.kind = new Kind.Builder("default.kind.url", "entity").build();
+        this.title = Optional.empty();
         this.mixins = new ArrayList<>();
     }
 
@@ -68,15 +72,10 @@ public abstract class Entity {
      * @param url  is the user url
      * @param kind is the kind instance which uniquely identify the instance
      */
-    public Entity(String url, Kind kind) {
-        if (("").equals(url)) {
-            this.id = UUID.randomUUID().toString();
-        } else {
-            this.id = url;
-        }
-
+    public Entity(Optional<String> url, Kind kind) {
+        this.id = ConvertUtils.formatURL(url.orElse(generateId()));
         this.kind = kind;
-        this.title = "";
+        this.title = Optional.empty();
         this.mixins = new ArrayList<>();
     }
 
@@ -88,12 +87,8 @@ public abstract class Entity {
      * @param title  is the display name of the instance
      * @param mixins are the mixins instance associate to the instance
      */
-    public Entity(String url, Kind kind, String title, List<Mixin> mixins) {
-        if (("").equals(url)) {
-            url = UUID.randomUUID().toString();
-        }
-        this.id = url;
-
+    public Entity(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins) {
+        this.id = ConvertUtils.formatURL(url.orElse(generateId()));
         this.kind = kind;
         this.title = title;
         this.mixins = mixins;
@@ -107,6 +102,16 @@ public abstract class Entity {
         attributes.add(Attributes.KIND);
         attributes.add(Attributes.MIXINS);
         return attributes;
+    }
+
+    private String generateId() {
+        return "urn:uuid:" + UUID.randomUUID().toString();
+    }
+
+    //WARNING : The Character '−' is not supported by the scheduler so it is replaced by the character '-'
+
+    public String getRenderingId() {
+        return this.id.replaceAll("-", "−");
     }
 
 }

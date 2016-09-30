@@ -1,7 +1,5 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.action.OfflineStorage;
-import org.ow2.proactive.procci.model.occi.infrastructure.action.OnlineStorage;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.StorageState;
 import org.junit.Test;
 
@@ -15,14 +13,14 @@ public class StorageTest {
 
     @Test
     public void constructorTest() {
-        Storage storage = new Storage.Builder(new Float(5))
+        Storage storage = new Storage.Builder().size(new Float(5))
                 .url("url")
                 .title("titleTest")
                 .summary("summaryTest")
                 .state(StorageState.ERROR)
                 .build();
         assertThat(storage.getState()).isEquivalentAccordingToCompareTo(StorageState.ERROR);
-        assertThat(storage.getSummary()).isEqualTo("summaryTest");
-        assertThat(storage.getTitle()).isEqualTo("titleTest");
+        assertThat(storage.getSummary().get()).isEqualTo("summaryTest");
+        assertThat(storage.getTitle().get()).isEqualTo("titleTest");
     }
 }
