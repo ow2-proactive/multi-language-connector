@@ -34,26 +34,26 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import com.google.common.collect.ImmutableList;
+import lombok.Getter;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-import com.google.common.collect.ImmutableList;
-import lombok.Getter;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.OS_TEMPLATE;
 
 /**
  * Mixin is an extension mecanism which enables to new resource capablilities
  */
+@Getter
 public class Mixin extends Category {
 
-    @Getter
     private final ImmutableList<Action> actions;
-    @Getter
     private final ImmutableList<Mixin> depends;
-    @Getter
     private final ImmutableList<Kind> applies;
-    @Getter
     private List<Entity> entities;
 
 
@@ -89,6 +89,11 @@ public class Mixin extends Category {
         return attributes;
     }
 
+    public Model.Builder toCloudAutomationModel(Model.Builder cloudAutomation){
+        cloudAutomation.addVariable(OS_TEMPLATE,this.getTerm());
+        return cloudAutomation;
+    }
+
     public void addEntity(Entity entity) {
         entities.add(entity);
     }
@@ -96,5 +101,6 @@ public class Mixin extends Category {
     public void deleteEntity(Entity entity) {
         entities.remove(entity);
     }
+
 
 }

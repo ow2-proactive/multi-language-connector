@@ -10,6 +10,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Infrastructu
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import lombok.EqualsAndHashCode;
@@ -38,7 +39,7 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
 /**
- * Created by mael on 02/06/16.
+ * Compute Builder class, enable to easily construct a Compute from RenderingCompute or Cloud Automation Model
  */
 @EqualsAndHashCode
 @ToString
@@ -275,10 +276,12 @@ public class ComputeBuilder {
         }
     }
 
+
     public Compute build() {
-        return new Compute(url, InfrastructureKinds.COMPUTE, title, new ArrayList<>(), summary,
-                new ArrayList<>(), architecture,
+        Compute compute = new Compute(url, InfrastructureKinds.COMPUTE, title, mixins, summary, new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
+        mixins.forEach( mixin -> mixin.addEntity(compute));
+        return compute;
     }
 
 

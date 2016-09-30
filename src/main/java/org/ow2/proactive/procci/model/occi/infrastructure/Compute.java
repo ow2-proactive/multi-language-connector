@@ -52,6 +52,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.ARCHITECTURE_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.CORES_NAME;
@@ -79,6 +80,10 @@ public class Compute extends Resource {
     private Optional<String> hostname;
     private Optional<Float> memory; // in Gigabytes
     private Optional<ComputeState> state;
+
+    public enum Architecture {
+        X86, X64;
+    }
 
     /**
      * Constructor with the maximal arguments
@@ -142,6 +147,8 @@ public class Compute extends Resource {
         this.hostname.ifPresent(host -> serviceBuilder.addVariable(HOSTNAME_NAME, host));
         this.state.ifPresent(currentState -> serviceBuilder.addVariable(COMPUTE_STATE_NAME, currentState));
 
+        this.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
+
         return serviceBuilder.build();
     }
 
@@ -164,11 +171,9 @@ public class Compute extends Resource {
         this.state.ifPresent(
                 currentState -> resourceRendering.addAttribute(COMPUTE_STATE_NAME, currentState.name()));
 
-        return resourceRendering.build();
-    }
+        this.getMixins().forEach( mixin -> resourceRendering.addMixin(mixin.getScheme()+mixin.getTerm()));
 
-    public enum Architecture {
-        X86, X64;
+        return resourceRendering.build();
     }
 
 }

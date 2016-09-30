@@ -10,11 +10,12 @@ package org.ow2.proactive.procci.model.occi.metamodel.constants;
 public class Identifiers {
 
     //scheme
-    public final static String CORE_SCHEME = "http://schemas.ogf.org/occi/metamodel#";
+    public final static String CORE_SCHEME = "http://schemas.ogf.org/occi/core#";
 
     //term
     public final static String ENTITY_TERM = "entity";
     public static final String LINK_TERM = "link";
     public static final String RESOURCE_TERM = "resource";
+    public static final String MIXIN = "mixin";
 
 }
