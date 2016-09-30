@@ -48,7 +48,7 @@ import java.util.*;
 @EqualsAndHashCode(of = {"id"})
 
 public abstract class Entity {
-    private String id;
+    private final String id;
     @Getter
     private Optional<String> title;
     @Getter
