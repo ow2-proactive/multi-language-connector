@@ -98,10 +98,6 @@ public class CloudAutomationRequest {
                 .map(id -> new Model((JSONObject) instances.get(id)));
     }
 
-    private JSONObject getVariableFromKey(JSONObject json, Object key) {
-        return (JSONObject) ((JSONObject) json.get(key)).get(ModelConstant.VARIABLES);
-    }
-
 
     /**
      * Send a request to pca service with a header containing the session id and sending content
