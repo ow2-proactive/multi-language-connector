@@ -10,7 +10,6 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Infrastructu
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
-import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import lombok.EqualsAndHashCode;
@@ -278,9 +277,10 @@ public class ComputeBuilder {
 
 
     public Compute build() {
-        Compute compute = new Compute(url, InfrastructureKinds.COMPUTE, title, mixins, summary, new ArrayList<>(), architecture,
+        Compute compute = new Compute(url, InfrastructureKinds.COMPUTE, title, mixins, summary,
+                new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
-        mixins.forEach( mixin -> mixin.addEntity(compute));
+        mixins.forEach(mixin -> mixin.addEntity(compute));
         return compute;
     }
 

@@ -26,7 +26,7 @@ public class KindTest {
     public void maximalConstructorTest() {
         String uri = "http://schemas.ogf.org/occi/infrastructure#compute";
 
-        Attribute a = new Attribute.Builder("test", Type.LIST, false, false).build();
+        Attribute a = new Attribute.Builder("test").type(Type.LIST).mutable(false).required(false).build();
 
         Set<Attribute> attributes = new HashSet<>();
         attributes.add(a);
@@ -46,6 +46,7 @@ public class KindTest {
         assertThat(k.getEntities()).isEmpty();
         assertThat(k.getParent()).isEqualTo(parent);
         assertThat(k.getAttributes()).containsAnyOf(a,
-                new Attribute.Builder("occi.kind.actions", Type.OBJECT, true, true).build());
+                new Attribute.Builder("occi.kind.actions").type(Type.OBJECT).mutable(true).required(
+                        true).build());
     }
 }

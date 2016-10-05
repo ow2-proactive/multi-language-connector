@@ -20,6 +20,7 @@ public class ContextualizationTest {
         Contextualization contextualization = new Contextualization("userdataTest", new ArrayList<Entity>());
         assertThat(contextualization.getUserdata()).isEqualTo("userdataTest");
         assertThat(contextualization.getAttributes()).contains(
-                new Attribute.Builder("occi.compute.userdata", Type.OBJECT, false, false).build());
+                new Attribute.Builder("occi.compute.userdata").type(Type.OBJECT).mutable(false).required(
+                        false).build());
     }
 }

@@ -1,5 +1,8 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.util.Optional;
+
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -19,36 +22,57 @@ import lombok.RequiredArgsConstructor;
 public class Attribute {
 
     private final String name;
-    private final Type type;
-    private final boolean mutable;
-    private final boolean required;
-    private Object pattern;
-    private Object defaultValue;
-    private String description;
+    private Optional<Type> type;
+    private Optional<Boolean> mutable;
+    private Optional<Boolean> required;
+    private Optional<Object> pattern;
+    private Optional<Object> defaultValue;
+    private Optional<String> description;
 
     @RequiredArgsConstructor
     public static class Builder {
         private final String name;
-        private final Type type;
-        private final boolean mutable;
-        private final boolean required;
 
-        private Object pattern;
-        private Object defaultValue;
-        private String description;
+        private Optional<Type> type;
+        private Optional<Boolean> mutable;
+        private Optional<Boolean> required;
+        private Optional<Object> pattern;
+        private Optional<Object> defaultValue;
+        private Optional<String> description;
+
+        public Builder(String name, AttributeRendering attributeRendering) {
+            this.name = name;
+            this.type = Optional.ofNullable(Type.valueOf(attributeRendering.getType()));
+
+        }
+
+        public Builder type(Type type) {
+            this.type = Optional.of(type);
+            return this;
+        }
+
+        public Builder mutable(Boolean mutable) {
+            this.mutable = Optional.of(mutable);
+            return this;
+        }
+
+        public Builder required(Boolean required) {
+            this.required = Optional.of(required);
+            return this;
+        }
 
         public Builder pattern(Object pattern) {
-            this.pattern = pattern;
+            this.pattern = Optional.of(pattern);
             return this;
         }
 
         public Builder defaultValue(Object defaultValue) {
-            this.defaultValue = defaultValue;
+            this.defaultValue = Optional.of(defaultValue);
             return this;
         }
 
         public Builder description(String description) {
-            this.description = description;
+            this.description = Optional.of(description);
             return this;
         }
 

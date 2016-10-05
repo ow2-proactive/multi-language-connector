@@ -44,18 +44,25 @@ public class ResourceTest {
         Compute compute = new ComputeBuilder().url("compute").build();
         try {
             Link link = new Link.Builder(compute, "target").url("link").build();
-
+            Attribute mixinAttribute = new Attribute.Builder("attribute").type(Type.OBJECT).mutable(
+                    false).required(true).build();
+            Mixin mixin = new MixinBuilder()
+                    .setScheme("schemeTest")
+                    .setTerm("termTest")
+                    .addAttribute(mixinAttribute)
+                    .build();
             Resource resource = new Resource.Builder()
                     .url("resource")
                     .summary("summary")
                     .title("title")
                     .addLink(link)
+                    .addMixin(mixin)
                     .build();
             assertThat(resource.getSummary().get()).isEqualTo("summary");
             assertThat(resource.getTitle().get()).isEqualTo("title");
             assertThat(resource.getId().toString()).contains("resource");
             assertThat(resource.getLinks()).containsExactly(link);
-            assertThat(resource.getMixins()).isEmpty();
+            assertThat(resource.getMixins()).contains(mixin);
         } catch (SyntaxException e) {
             e.printStackTrace();
         }

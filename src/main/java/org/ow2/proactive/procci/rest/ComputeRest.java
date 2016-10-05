@@ -145,7 +145,6 @@ public class ComputeRest {
             logger.error(this.getClass(), e);
             return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
     /*@RequestMapping(method = RequestMethod.POST)

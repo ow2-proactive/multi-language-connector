@@ -1,12 +1,18 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
-import org.ow2.proactive.procci.model.occi.infrastructure.mixin.ResourceTemplate;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import java.util.*;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Identifiers.*;
-
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Identifiers.CORE_SCHEME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Identifiers.MIXIN;
 
 
 /**
@@ -23,10 +29,10 @@ public class MixinBuilder {
     private List<Kind> applies;
     private List<Entity> entities;
 
-    public MixinBuilder(){
+    public MixinBuilder() {
         this.scheme = CORE_SCHEME;
         this.term = MIXIN;
-        this.title = scheme+term;
+        this.title = term;
         this.attributes = new HashSet<>();
         this.actions = new ArrayList<>();
         this.depends = new ArrayList<>();
@@ -34,72 +40,98 @@ public class MixinBuilder {
         this.entities = new ArrayList<>();
     }
 
-    public MixinBuilder setScheme(String scheme){
+    /**
+     * Construct a mixin according to its name
+     *
+     * @param name is composed of the scheme and term of the mixin
+     */
+    public MixinBuilder(String name) {
+        final String separator = "#";
+        if (name.contains(separator)) {
+            this.scheme = name.split(separator)[0] + separator;
+            this.term = name.split(separator)[1];
+        }
+    }
+
+    /**
+     * Construct a mixin according to its rendering
+     *
+     * @param mixinRendering is the rendering mixin
+     */
+    public MixinBuilder(MixinRendering mixinRendering) {
+        this.scheme = mixinRendering.getScheme();
+        this.term = mixinRendering.getTerm();
+        this.title = Optional.ofNullable(mixinRendering.getTitle()).orElse(this.term);
+        this.attributes = Optional.ofNullable(convertAttributesMap(mixinRendering.getAttributes())).orElse(
+                new HashSet<>());
+        this.actions = new ArrayList<>();
+        this.depends = mixinRendering.getDepends()
+                .stream()
+                .map(depends -> new MixinBuilder(depends).build())
+                .collect(Collectors.toList());
+        this.applies = mixinRendering.getApplies()
+                .stream()
+                .map(apply -> Kind.getKind(apply))
+                .filter(kind -> kind.isPresent())
+                .map(kind -> kind.get())
+                .collect(Collectors.toList());
+        this.entities = new ArrayList<>();
+    }
+
+    private Set<Attribute> convertAttributesMap(Map<String, AttributeRendering> attributeMap) {
+        return attributeMap.keySet()
+                .stream()
+                .map(key -> new Attribute.Builder(key, attributeMap.get(key)).build())
+                .collect(Collectors.toSet());
+    }
+
+    public MixinBuilder setScheme(String scheme) {
         this.scheme = scheme;
         return this;
     }
 
-    public MixinBuilder setTerm(String term){
+    public MixinBuilder setTerm(String term) {
         this.term = term;
         return this;
     }
 
-    public MixinBuilder setTitle(String title){
+    public MixinBuilder setTitle(String title) {
         this.title = title;
         return this;
     }
 
-    public MixinBuilder addAttribute(Attribute attribute){
+    public MixinBuilder addAttribute(Attribute attribute) {
         this.attributes.add(attribute);
         return this;
     }
 
-    public MixinBuilder addAction(Action action){
+    public MixinBuilder addAction(Action action) {
         this.actions.add(action);
         return this;
     }
 
-    public MixinBuilder addDepend(Mixin depend){
+    public MixinBuilder addDepend(Mixin depend) {
         depends.add(depend);
         return this;
     }
 
-    public MixinBuilder addApply(Kind apply){
+    public MixinBuilder addApply(Kind apply) {
         this.applies.add(apply);
         return this;
     }
 
-    public MixinBuilder addEntity(Entity entity){
+    public MixinBuilder addEntity(Entity entity) {
         this.entities.add(entity);
         return this;
     }
 
-    /**
-     *  Update the mixin builder according to the name of the  mixin
-     * @param name is composed of the scheme and term of the mixin
-     * @return the updated Builder
-     */
-    public MixinBuilder updateFromMixinName(String name){
-        final String separator = "#";
-        if(name.contains(separator)) {
-            this.scheme = name.split(separator)[0] + separator;
-            this.term = name.split(separator)[1];
-        }
-        return this;
-    }
 
     /**
-     *  Build the instance of a mixin according to its scheme and term
+     * Build the instance of a mixin according to its scheme and term
+     *
      * @return a mixin instance
      */
-    public Mixin build(){
-        switch (this.term){
-            case Identifiers.RESOURCE_TEMPLATE :
-                return new ResourceTemplate(entities);
-            default:
-                return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
-        }
+    public Mixin build() {
+        return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
     }
-
-
 }

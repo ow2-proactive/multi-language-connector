@@ -16,7 +16,8 @@ public class MixinTest {
     @Test
     public void maximalConstructorTest() {
 
-        Attribute attribute = new Attribute.Builder("test", Type.HASH, false, false).build();
+        Attribute attribute = new Attribute.Builder("test").type(Type.HASH).mutable(false).required(
+                false).build();
         List<Entity> entities = new ArrayList<>();
         List<Action> actions = new ArrayList<>();
         List<Mixin> depends = new ArrayList<>();
