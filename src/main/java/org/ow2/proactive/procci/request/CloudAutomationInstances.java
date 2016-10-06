@@ -30,7 +30,7 @@ import org.json.simple.parser.ParseException;
  * Manage the connection and the request with Cloud Automation Microservices
  */
 
-public class CloudAutomationRequest {
+public class CloudAutomationInstances {
 
     private final Logger logger = LogManager.getRootLogger();
 
@@ -40,7 +40,7 @@ public class CloudAutomationRequest {
      * @return a json object containing the request results
      */
     public JSONObject getRequest() throws CloudAutomationException {
-        final String url = getProperty("cloud-automation-service.instances.endpoint");
+        final String url = RequestUtils.getInstance().getProperty("cloud-automation-service.instances.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -50,28 +50,14 @@ public class CloudAutomationRequest {
             String serverOutput = readHttpResponse(response);
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
-        } catch (IOException ex) {
-            raiseException(ex);
-        } catch (ParseException ex) {
-            raiseException(ex);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex){
             raiseException(ex);
         }
 
         return result;
     }
 
-    /**
-     * Give the instance information thanks to its name
-     *
-     * @param id is the instance name
-     * @return the instance information
-     * @throws CloudAutomationException is thrown if an error occur during the connection with CAS or the login
-     */
-    public Model getInstanceById(String id) throws CloudAutomationException {
-        JSONObject jsonModel = (JSONObject) getRequest().get(id);
-        return Optional.of(jsonModel).map(jsonObject -> new Model(jsonObject)).orElse(null);
-    }
 
     /**
      * Get the instance of cloud automation service and return the first occurance with variableValue matching variableName
@@ -105,12 +91,12 @@ public class CloudAutomationRequest {
     public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String url = getProperty("cloud-automation-service.instances.endpoint");
+        final String url = RequestUtils.getInstance().getProperty("cloud-automation-service.instances.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost postRequest = new HttpPost(url);
-            postRequest.addHeader(PCA_SERVICE_SESSIONID, getSessionId());
+            postRequest.addHeader(PCA_SERVICE_SESSIONID, RequestUtils.getInstance().getSessionId());
             StringEntity input = new StringEntity(content.toJSONString());
             input.setContentType("application/json");
             postRequest.setEntity(input);
@@ -120,88 +106,12 @@ public class CloudAutomationRequest {
             String serverOutput = readHttpResponse(response);
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
-        } catch (IOException ex) {
-            raiseException(ex);
-        } catch (ParseException ex) {
-            raiseException(ex);
         } catch (Exception ex) {
             raiseException(ex);
         }
         return result;
     }
 
-
-    /**
-     * Get the property from the configuration file config.properties
-     *
-     * @param propertyKey is the key of the variable
-     * @return the value of the variable
-     */
-    String getProperty(String propertyKey) {
-        Properties prop = new Properties();
-        InputStream input = null;
-
-        try {
-
-            prop.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
-
-            // return the property value
-            return prop.getProperty(propertyKey);
-
-        } catch (IOException ex) {
-            logger.error(this.getClass(), ex);
-            throw new RuntimeException(
-                    "Unable to get the cloud automation service url from config.properties");
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    logger.error(this.getClass(), e);
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Send a request to the scheduler with the name and the password from the configuration file in order to get the
-     * session id
-     *
-     * @return the session id
-     */
-    String getSessionId() {
-        final String SCHEDULER_LOGIN_URL = getProperty("scheduler.login.endpoint");
-        final String SCHEDULER_REQUEST = "username=" + getProperty("login.name") + "&password=" + getProperty(
-                "login.password");
-
-        StringBuffer result = new StringBuffer();
-        try {
-            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost postRequest = new HttpPost(SCHEDULER_LOGIN_URL);
-            StringEntity input = new StringEntity(SCHEDULER_REQUEST, ContentType.APPLICATION_FORM_URLENCODED);
-            postRequest.setEntity(input);
-
-            HttpResponse response = httpClient.execute(postRequest);
-
-            if (response.getStatusLine().getStatusCode() != 200) {
-                throw new RuntimeException("Get Session Failed: HTTP error code : "
-                        + response.getStatusLine().getStatusCode());
-            }
-
-            BufferedReader br = new BufferedReader(
-                    new InputStreamReader((response.getEntity().getContent())));
-
-            String output;
-            while ((output = br.readLine()) != null) {
-                result.append(output);
-            }
-            httpClient.close();
-        } catch (Exception ex) {
-            logger.debug(ex.getMessage());
-        }
-        return result.toString();
-    }
 
     /**
      * Read an http respond and convert it into a string
@@ -236,8 +146,6 @@ public class CloudAutomationRequest {
      */
     private void raiseException(Exception ex) throws CloudAutomationException {
         logger.error(this.getClass(), ex);
-        JSONObject result = new JSONObject();
-        result.put("exception", ex.getMessage());
-        throw new CloudAutomationException(result);
+        throw new CloudAutomationException(ex.getMessage());
     }
 }

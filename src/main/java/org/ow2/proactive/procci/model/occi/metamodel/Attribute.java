@@ -29,6 +29,17 @@ public class Attribute {
     private Optional<Object> defaultValue;
     private Optional<String> description;
 
+    public AttributeRendering getRendering(){
+        AttributeRendering.Builder attributeRendering = AttributeRendering.builder();
+        type.ifPresent(type1 -> attributeRendering.type(type1.name()));
+        mutable.ifPresent( m -> attributeRendering.mutable(m));
+        required.ifPresent( r -> attributeRendering.required(r));
+        pattern.ifPresent( p -> attributeRendering.pattern(p));
+        defaultValue.ifPresent( value -> attributeRendering.defaultValue(value));
+        description.ifPresent( d -> attributeRendering.description(d));
+        return attributeRendering.build();
+    }
+
     @RequiredArgsConstructor
     public static class Builder {
         private final String name;

@@ -3,6 +3,8 @@ package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 import java.util.List;
 import java.util.Map;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,13 +18,12 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 @ToString
+@Builder(builderClassName = "Builder")
 public class MixinRendering {
 
-    @NonNull
     private String term;
-    @NonNull
     private String scheme;
     private String title;
     private Map<String, AttributeRendering> attributes;

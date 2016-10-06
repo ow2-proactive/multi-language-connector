@@ -34,12 +34,18 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 
@@ -92,6 +98,34 @@ public class Mixin extends Category {
     public Model.Builder toCloudAutomationModel(Model.Builder cloudAutomation) {
         cloudAutomation.addVariable(OS_TEMPLATE, this.getTerm());
         return cloudAutomation;
+    }
+
+    public MixinRendering getRendering() {
+        return MixinRendering.builder()
+                .scheme(this.getScheme())
+                .term(this.getTerm())
+                .title(this.getTitle())
+                .attributes(generateAttributeMap())
+                .actions(this.actions
+                        .stream()
+                        .map(action -> action.getTitle())
+                        .collect(Collectors.toList()))
+                .depends(this.depends
+                        .stream()
+                        .map(depend -> depend.getTitle())
+                        .collect(Collectors.toList()))
+                .applies(this.applies
+                        .stream()
+                        .map(apply -> apply.getTitle())
+                        .collect(Collectors.toList()))
+                .location("/")
+                .build();
+    }
+
+    private Map<String,AttributeRendering> generateAttributeMap(){
+        Map<String,AttributeRendering> map = new HashMap();
+        this.getAttributes().forEach( attribute -> map.put(attribute.getName(),attribute.getRendering()));
+        return map;
     }
 
     public void addEntity(Entity entity) {
