@@ -17,4 +17,9 @@ import org.json.simple.JSONObject;
 @ToString
 public class CloudAutomationException extends Exception {
     private JSONObject jsonError;
+
+    public CloudAutomationException(String exception){
+        jsonError = new JSONObject();
+        jsonError.put("error",exception);
+    }
 }
