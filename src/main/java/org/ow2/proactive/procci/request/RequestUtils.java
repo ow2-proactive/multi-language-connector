@@ -20,13 +20,13 @@ import org.apache.logging.log4j.Logger;
  */
 public class RequestUtils {
 
+    private static final RequestUtils INSTANCE = new RequestUtils();
     private final Logger logger = LogManager.getRootLogger();
 
-    private static final RequestUtils INSTANCE = new RequestUtils();
+    private RequestUtils() {
+    }
 
-    private RequestUtils(){}
-
-    public static RequestUtils getInstance(){
+    public static RequestUtils getInstance() {
         return INSTANCE;
     }
 

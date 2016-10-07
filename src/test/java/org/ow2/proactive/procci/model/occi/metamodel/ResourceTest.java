@@ -47,8 +47,8 @@ public class ResourceTest {
             Attribute mixinAttribute = new Attribute.Builder("attribute").type(Type.OBJECT).mutable(
                     false).required(true).build();
             Mixin mixin = new MixinBuilder()
-                    .setScheme("schemeTest")
-                    .setTerm("termTest")
+                    .scheme("schemeTest")
+                    .term("termTest")
                     .addAttribute(mixinAttribute)
                     .build();
             Resource resource = new Resource.Builder()

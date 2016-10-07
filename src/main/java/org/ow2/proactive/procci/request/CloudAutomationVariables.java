@@ -24,9 +24,10 @@ public class CloudAutomationVariables {
     private static final Logger logger = LogManager.getRootLogger();
 
     @Getter(AccessLevel.PACKAGE)
-    private static String variablesUrl = RequestUtils.getInstance().getProperty("cloud-automation-service.variables.endpoint");
+    private static String variablesUrl = RequestUtils.getInstance().getProperty(
+            "cloud-automation-service.variables.endpoint");
 
-    public static String get(String key) throws CloudAutomationException{
+    public static String get(String key) throws CloudAutomationException {
 
         try {
             Response response = Request.Get(getResourceUrl(key))
@@ -37,16 +38,16 @@ public class CloudAutomationVariables {
 
             return response.returnContent().asString();
 
-        }catch (IOException ex){
+        } catch (IOException ex) {
             logger.error(CloudAutomationVariables.class, ex);
             throw new RuntimeException(
-                    "Unable to get on "+getResourceUrl(key)+ ", exception : "+ex);
+                    "Unable to get on " + getResourceUrl(key) + ", exception : " + ex);
         }
     }
 
-    public static void post(String key,String value) throws CloudAutomationException{
+    public static void post(String key, String value) throws CloudAutomationException {
 
-        try{
+        try {
             HttpResponse response = Request.Post(getQueryUrl(key))
                     .useExpectContinue()
                     .version(HttpVersion.HTTP_1_1)
@@ -56,15 +57,15 @@ public class CloudAutomationVariables {
 
             checkStatus(response);
 
-        }catch (IOException ex){
+        } catch (IOException ex) {
             logger.error(CloudAutomationVariables.class, ex);
             throw new RuntimeException(
-                    "Unable to post on "+getQueryUrl(key)+", exception : "+ex);
+                    "Unable to post on " + getQueryUrl(key) + ", exception : " + ex);
         }
 
     }
 
-    public static void update(String key,String value) throws CloudAutomationException {
+    public static void update(String key, String value) throws CloudAutomationException {
 
         try {
             HttpResponse response = Request.Put(getResourceUrl(key))
@@ -76,10 +77,10 @@ public class CloudAutomationVariables {
 
             checkStatus(response);
 
-        }catch (IOException ex){
+        } catch (IOException ex) {
             logger.error(CloudAutomationVariables.class, ex);
             throw new RuntimeException(
-                    "Unable to put on "+getResourceUrl(key)+" ,exception : "+ex);
+                    "Unable to put on " + getResourceUrl(key) + " ,exception : " + ex);
         }
     }
 
@@ -93,23 +94,23 @@ public class CloudAutomationVariables {
 
             checkStatus(response);
 
-        }catch (IOException ex){
+        } catch (IOException ex) {
             logger.error(CloudAutomationVariables.class, ex);
             throw new RuntimeException(
-                    "Unable to delete on "+getQueryUrl(key)+", exception : "+ex);
+                    "Unable to delete on " + getQueryUrl(key) + ", exception : " + ex);
         }
     }
 
-    private static String getResourceUrl(String key){
-        return variablesUrl+"/"+key;
+    private static String getResourceUrl(String key) {
+        return variablesUrl + "/" + key;
     }
 
-    private static String getQueryUrl(String key){
-        return variablesUrl+"?key="+key;
+    private static String getQueryUrl(String key) {
+        return variablesUrl + "?key=" + key;
     }
 
     private static void checkStatus(HttpResponse response) throws CloudAutomationException {
-        if(response.getStatusLine().getStatusCode()>=300) {
+        if (response.getStatusLine().getStatusCode() >= 300) {
             throw new CloudAutomationException(response.getStatusLine().getReasonPhrase());
         }
     }

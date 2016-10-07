@@ -31,19 +31,19 @@ public class QueryRest {
 
     //-------------------Get a Mixin--------------------------------------------------------
 
-    @RequestMapping(value = {"mixinTitle"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = { "mixinTitle" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MixinRendering> getMixin(@PathVariable("mixinTitle") String mixinTitle) {
-        logger.debug("Getting Mixin "+mixinTitle);
+        logger.debug("Getting Mixin " + mixinTitle);
 
         ObjectMapper mapper = new ObjectMapper();
 
-        try{
+        try {
             String mixinString = CloudAutomationVariables.get(mixinTitle);
-            MixinRendering mixinRendering = mapper.readValue(mixinString,MixinRendering.class);
-            return new ResponseEntity(new MixinBuilder(mixinRendering).build().getRendering(),HttpStatus.OK);
-        }catch (CloudAutomationException ex){
+            MixinRendering mixinRendering = mapper.readValue(mixinString, MixinRendering.class);
+            return new ResponseEntity(new MixinBuilder(mixinRendering).build().getRendering(), HttpStatus.OK);
+        } catch (CloudAutomationException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.NOT_FOUND);
-        }catch (IOException exception){
+        } catch (IOException exception) {
             return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -60,53 +60,52 @@ public class QueryRest {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String json = mapper.writeValueAsString(mixinRendering);
-            CloudAutomationVariables.post(mixin.getTitle(),json);
-        }catch (IOException ex){
+            CloudAutomationVariables.post(mixin.getTitle(), json);
+        } catch (IOException ex) {
             logger.error(this.getClass(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }catch (CloudAutomationException ex){
-            return new ResponseEntity(ex.getJsonError(),HttpStatus.BAD_REQUEST);
+        } catch (CloudAutomationException ex) {
+            return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
     //-------------------Update a Mixin--------------------------------------------------------
 
-    @RequestMapping(value = {"mixinTitle"}, method = RequestMethod.PUT)
+    @RequestMapping(value = { "mixinTitle" }, method = RequestMethod.PUT)
     public ResponseEntity updateMixin(
             @PathVariable("mixinTitle") String mixinTitle,
             @RequestBody MixinRendering mixinRendering) {
-        logger.debug("Updating Mixin " + mixinTitle +" with "+ mixinRendering.toString());
+        logger.debug("Updating Mixin " + mixinTitle + " with " + mixinRendering.toString());
 
         Mixin mixin = new MixinBuilder(mixinRendering).build();
         ObjectMapper mapper = new ObjectMapper();
         try {
             String json = mapper.writeValueAsString(mixinRendering);
-            CloudAutomationVariables.update(mixin.getTitle(),json);
-        }catch (IOException ex){
+            CloudAutomationVariables.update(mixin.getTitle(), json);
+        } catch (IOException ex) {
             logger.error(this.getClass(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-        }catch (CloudAutomationException ex){
-            return new ResponseEntity(ex.getJsonError(),HttpStatus.BAD_REQUEST);
+        } catch (CloudAutomationException ex) {
+            return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.OK);
     }
 
     //-------------------Delete a Mixin--------------------------------------------------------
 
-    @RequestMapping(value = {"mixinTitle"}, method = RequestMethod.DELETE)
+    @RequestMapping(value = { "mixinTitle" }, method = RequestMethod.DELETE)
     public ResponseEntity deleteMixin(
             @PathVariable("mixinTitle") String mixinTitle) {
         logger.debug("Deleting Mixin " + mixinTitle);
 
         try {
             CloudAutomationVariables.delete(mixinTitle);
-        }catch (CloudAutomationException ex){
-            return new ResponseEntity(ex.getJsonError(),HttpStatus.BAD_REQUEST);
+        } catch (CloudAutomationException ex) {
+            return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(HttpStatus.OK);
     }
-
 
 
 }

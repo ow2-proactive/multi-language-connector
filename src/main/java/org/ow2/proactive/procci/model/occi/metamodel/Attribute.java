@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Created by mael on 2/23/16
@@ -29,18 +28,17 @@ public class Attribute {
     private Optional<Object> defaultValue;
     private Optional<String> description;
 
-    public AttributeRendering getRendering(){
+    public AttributeRendering getRendering() {
         AttributeRendering.Builder attributeRendering = AttributeRendering.builder();
         type.ifPresent(type1 -> attributeRendering.type(type1.name()));
-        mutable.ifPresent( m -> attributeRendering.mutable(m));
-        required.ifPresent( r -> attributeRendering.required(r));
-        pattern.ifPresent( p -> attributeRendering.pattern(p));
-        defaultValue.ifPresent( value -> attributeRendering.defaultValue(value));
-        description.ifPresent( d -> attributeRendering.description(d));
+        mutable.ifPresent(m -> attributeRendering.mutable(m));
+        required.ifPresent(r -> attributeRendering.required(r));
+        pattern.ifPresent(p -> attributeRendering.pattern(p));
+        defaultValue.ifPresent(value -> attributeRendering.defaultValue(value));
+        description.ifPresent(d -> attributeRendering.description(d));
         return attributeRendering.build();
     }
 
-    @RequiredArgsConstructor
     public static class Builder {
         private final String name;
 
@@ -51,9 +49,24 @@ public class Attribute {
         private Optional<Object> defaultValue;
         private Optional<String> description;
 
+        public Builder(String name) {
+            this.name = name;
+            this.type = Optional.empty();
+            this.mutable = Optional.empty();
+            this.required = Optional.empty();
+            this.pattern = Optional.empty();
+            this.defaultValue = Optional.empty();
+            this.description = Optional.empty();
+        }
+
         public Builder(String name, AttributeRendering attributeRendering) {
             this.name = name;
             this.type = Optional.ofNullable(Type.valueOf(attributeRendering.getType()));
+            this.mutable = Optional.ofNullable(attributeRendering.isMutable());
+            this.required = Optional.ofNullable(attributeRendering.isRequired());
+            this.pattern = Optional.ofNullable(attributeRendering.getPattern());
+            this.defaultValue = Optional.ofNullable(attributeRendering.getDefaultValue());
+            this.description = Optional.ofNullable(attributeRendering.getDescription());
 
         }
 

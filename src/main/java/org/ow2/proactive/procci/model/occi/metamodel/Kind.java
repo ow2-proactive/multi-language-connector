@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableMap;
@@ -57,7 +58,7 @@ public class Kind extends Category {
     private static Map<String, Kind> kinds = new HashMap<>();
 
     static {
-        kinds.put(InfrastructureKinds.COMPUTE.getTitle(), InfrastructureKinds.COMPUTE);
+        kinds.put(Identifiers.COMPUTE, InfrastructureKinds.COMPUTE);
     }
 
     @Getter
@@ -103,10 +104,10 @@ public class Kind extends Category {
         public Builder(String scheme, String term) {
             this.scheme = scheme;
             this.term = term;
-            this.title = scheme + term;
-            attributes = new HashSet<>();
-            actions = new HashMap<>();
-            parent = null;
+            this.title = term;
+            this.attributes = new HashSet<>();
+            this.actions = new HashMap<>();
+            this.parent = null;
             this.setAttributes();
         }
 

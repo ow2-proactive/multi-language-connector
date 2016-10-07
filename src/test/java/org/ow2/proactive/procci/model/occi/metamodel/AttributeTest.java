@@ -1,5 +1,8 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.util.Optional;
+
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -43,8 +46,30 @@ public class AttributeTest {
         assertThat(attribute.getType().get()).isEqualTo(Type.OBJECT);
         assertThat(attribute.getRequired().get()).isFalse();
         assertThat(attribute.getMutable().get()).isTrue();
-        assertThat(attribute.getPattern()).isNull();
-        assertThat(attribute.getDefaultValue()).isNull();
+        assertThat(attribute.getPattern()).isEqualTo(Optional.empty());
+        assertThat(attribute.getDefaultValue()).isEqualTo(Optional.empty());
         assertThat(attribute.getDescription().get()).isEqualTo("testSuit");
+    }
+
+    @Test
+    public void getRenderingTest() {
+        Attribute attribute = new Attribute.Builder("nameTest")
+                .type(Type.OBJECT)
+                .mutable(false)
+                .required(true)
+                .defaultValue("defaultTest")
+                .description("descriptionTest")
+                .pattern("patternTest")
+                .build();
+
+        AttributeRendering rendering = attribute.getRendering();
+
+        assertThat(rendering.getType()).matches("OBJECT");
+        assertThat(rendering.isMutable()).isFalse();
+        assertThat(rendering.isRequired()).isTrue();
+        assertThat(rendering.getDefaultValue()).isEqualTo("defaultTest");
+        assertThat(rendering.getDescription()).matches("descriptionTest");
+        assertThat(rendering.getPattern()).isEqualTo("patternTest");
+
     }
 }

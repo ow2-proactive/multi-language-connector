@@ -2,17 +2,14 @@ package org.ow2.proactive.procci.request;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Optional;
-import java.util.Properties;
 
 import org.ow2.proactive.procci.model.ModelConstant;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -20,7 +17,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * Created by mael on 02/06/16.
@@ -40,7 +36,8 @@ public class CloudAutomationInstances {
      * @return a json object containing the request results
      */
     public JSONObject getRequest() throws CloudAutomationException {
-        final String url = RequestUtils.getInstance().getProperty("cloud-automation-service.instances.endpoint");
+        final String url = RequestUtils.getInstance().getProperty(
+                "cloud-automation-service.instances.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -50,8 +47,7 @@ public class CloudAutomationInstances {
             String serverOutput = readHttpResponse(response);
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             raiseException(ex);
         }
 
@@ -91,7 +87,8 @@ public class CloudAutomationInstances {
     public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String url = RequestUtils.getInstance().getProperty("cloud-automation-service.instances.endpoint");
+        final String url = RequestUtils.getInstance().getProperty(
+                "cloud-automation-service.instances.endpoint");
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();

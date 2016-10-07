@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -122,9 +121,9 @@ public class Mixin extends Category {
                 .build();
     }
 
-    private Map<String,AttributeRendering> generateAttributeMap(){
-        Map<String,AttributeRendering> map = new HashMap();
-        this.getAttributes().forEach( attribute -> map.put(attribute.getName(),attribute.getRendering()));
+    private Map<String, AttributeRendering> generateAttributeMap() {
+        Map<String, AttributeRendering> map = new HashMap();
+        this.getAttributes().forEach(attribute -> map.put(attribute.getName(), attribute.getRendering()));
         return map;
     }
 

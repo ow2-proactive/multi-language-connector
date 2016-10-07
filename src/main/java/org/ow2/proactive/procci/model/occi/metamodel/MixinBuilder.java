@@ -32,7 +32,7 @@ public class MixinBuilder {
     public MixinBuilder() {
         this.scheme = CORE_SCHEME;
         this.term = MIXIN;
-        this.title = term;
+        this.title = this.term;
         this.attributes = new HashSet<>();
         this.actions = new ArrayList<>();
         this.depends = new ArrayList<>();
@@ -85,17 +85,17 @@ public class MixinBuilder {
                 .collect(Collectors.toSet());
     }
 
-    public MixinBuilder setScheme(String scheme) {
+    public MixinBuilder scheme(String scheme) {
         this.scheme = scheme;
         return this;
     }
 
-    public MixinBuilder setTerm(String term) {
+    public MixinBuilder term(String term) {
         this.term = term;
         return this;
     }
 
-    public MixinBuilder setTitle(String title) {
+    public MixinBuilder title(String title) {
         this.title = title;
         return this;
     }
