@@ -28,15 +28,13 @@ public class CloudAutomationVariables {
             "cloud-automation-service.variables.endpoint");
 
     public static String get(String key) throws CloudAutomationException {
-
+        logger.debug("GET the mixin " + key);
         try {
             Response response = Request.Get(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)
                     .execute();
 
-            checkStatus(response.returnResponse());
-
-            return response.returnContent().asString();
+            return RequestUtils.readHttpResponse(response.returnResponse());
 
         } catch (IOException ex) {
             logger.error(CloudAutomationVariables.class, ex);
@@ -45,13 +43,14 @@ public class CloudAutomationVariables {
         }
     }
 
-    public static void post(String key, String value) throws CloudAutomationException {
 
+    public static void post(String key, String value) throws CloudAutomationException {
+        logger.debug("POST the mixin " + key + " and the value " + value);
         try {
             HttpResponse response = Request.Post(getQueryUrl(key))
                     .useExpectContinue()
                     .version(HttpVersion.HTTP_1_1)
-                    .bodyString(value, ContentType.DEFAULT_TEXT)
+                    .bodyString(value, ContentType.APPLICATION_JSON)
                     .execute()
                     .returnResponse();
 
@@ -66,12 +65,12 @@ public class CloudAutomationVariables {
     }
 
     public static void update(String key, String value) throws CloudAutomationException {
-
+        logger.debug("UPDATE the mixin " + key + " and the value " + value);
         try {
             HttpResponse response = Request.Put(getResourceUrl(key))
                     .useExpectContinue()
                     .version(HttpVersion.HTTP_1_1)
-                    .bodyString(value, ContentType.DEFAULT_TEXT)
+                    .bodyString(value, ContentType.APPLICATION_JSON)
                     .execute()
                     .returnResponse();
 
@@ -85,7 +84,7 @@ public class CloudAutomationVariables {
     }
 
     public static void delete(String key) throws CloudAutomationException {
-
+        logger.debug("DELETE the mixin " + key);
         try {
             HttpResponse response = Request.Delete(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)

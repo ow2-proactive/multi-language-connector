@@ -40,11 +40,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
@@ -54,12 +51,6 @@ import lombok.Getter;
  * Kind represent the identification mecanism of the OCCI model
  */
 public class Kind extends Category {
-
-    private static Map<String, Kind> kinds = new HashMap<>();
-
-    static {
-        kinds.put(Identifiers.COMPUTE, InfrastructureKinds.COMPUTE);
-    }
 
     @Getter
     private final ImmutableMap<String, Action> actions;
@@ -85,10 +76,6 @@ public class Kind extends Category {
         }.putAll(actions).build();
         this.parent = parent;
         this.entities = new ArrayList<>();
-    }
-
-    public static Optional<Kind> getKind(String title) {
-        return Optional.ofNullable(kinds.get(title));
     }
 
     public static class Builder {

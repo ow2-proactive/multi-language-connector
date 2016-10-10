@@ -1,8 +1,5 @@
 package org.ow2.proactive.procci.request;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.ModelConstant;
@@ -44,7 +41,7 @@ public class CloudAutomationInstances {
             HttpGet getRequest = new HttpGet(url);
 
             HttpResponse response = httpClient.execute(getRequest);
-            String serverOutput = readHttpResponse(response);
+            String serverOutput = RequestUtils.readHttpResponse(response);
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
         } catch (Exception ex) {
@@ -100,7 +97,7 @@ public class CloudAutomationInstances {
 
             HttpResponse response = httpClient.execute(postRequest);
 
-            String serverOutput = readHttpResponse(response);
+            String serverOutput = RequestUtils.readHttpResponse(response);
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
         } catch (Exception ex) {
@@ -109,31 +106,6 @@ public class CloudAutomationInstances {
         return result;
     }
 
-
-    /**
-     * Read an http respond and convert it into a string
-     *
-     * @param response is the http response
-     * @return a string containing the information from response
-     * @throws IOException occur if problem occur with the buffer
-     */
-    private String readHttpResponse(HttpResponse response) throws IOException {
-        StringBuffer serverOutput = new StringBuffer();
-        if (response.getStatusLine().getStatusCode() != 200) {
-
-            throw new RuntimeException("Send Request Failed: HTTP error code : "
-                    + response.getStatusLine().getStatusCode());
-        }
-
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader((response.getEntity().getContent())));
-
-        String output;
-        while ((output = br.readLine()) != null) {
-            serverOutput.append(output);
-        }
-        return serverOutput.toString();
-    }
 
     /**
      * Raise an CloudAutomation exception and log it

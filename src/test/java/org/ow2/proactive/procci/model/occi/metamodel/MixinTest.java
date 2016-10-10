@@ -18,36 +18,55 @@ public class MixinTest {
     @Test
     public void maximalConstructorTest() {
 
-        Attribute attribute = new Attribute.Builder("test").type(Type.HASH).mutable(false).required(
-                false).build();
+        //create minimal and maximal constructor
+
+
         List<Entity> entities = new ArrayList<>();
         List<Action> actions = new ArrayList<>();
         List<Mixin> depends = new ArrayList<>();
         List<Kind> applies = new ArrayList<>();
         HashSet<Attribute> attributes = new HashSet<>();
-        attributes.add(attribute);
 
-        Mixin mixin = new Mixin("http://schemas.ogf.org/occi/metamodel#mixin", "mixinTest", "mixinTest",
+
+        Mixin mixin = new Mixin("http://schemas.ogf.org/occi/metamodel#mixin", "termTest", "titleTest",
                 attributes, actions, depends, applies, entities);
 
-        assertThat(mixin.getScheme().toString()).isEqualTo("http://schemas.ogf.org/occi/metamodel#mixin");
-        assertThat(mixin.getEntities()).isEqualTo(entities);
-        assertThat(mixin.getActions()).isEqualTo(actions);
-        assertThat(mixin.getApplies()).isEqualTo(applies);
-        assertThat(mixin.getDepends()).isEqualTo(depends);
-        assertThat(mixin.getAttributes()).contains(attribute);
+        assertThat(mixin.getScheme()).matches("http://schemas.ogf.org/occi/metamodel#mixin");
+        assertThat(mixin.getTerm()).matches("termTest");
+        assertThat(mixin.getTitle()).matches("titleTest");
+        assertThat(mixin.getEntities()).isEmpty();
+        assertThat(mixin.getActions()).isEmpty();
+        assertThat(mixin.getApplies()).isEmpty();
+        assertThat(mixin.getDepends()).isEmpty();
+        assertThat(mixin.getAttributes()).isNotEmpty();
+
+
+        Attribute attribute = new Attribute.Builder("test").build();
+        Mixin depend = new MixinBuilder("dependScheme", "dependTerm").build();
+
+        attributes.add(attribute);
+        depends.add(depend);
+        applies.add(InfrastructureKinds.COMPUTE);
+
+        Mixin mixin2 = new Mixin("http://schemas.ogf.org/occi/metamodel#mixin", "mixinTest", "mixinTest",
+                attributes, actions, depends, applies, entities);
+
+        assertThat(mixin2.getEntities()).isEmpty();
+        assertThat(mixin2.getActions()).isEmpty();
+        assertThat(mixin2.getApplies()).contains(InfrastructureKinds.COMPUTE);
+        assertThat(mixin2.getDepends()).contains(depend);
+        assertThat(mixin2.getAttributes()).contains(attribute);
+
+
     }
 
     @Test
     public void mixinBuilderTest() {
         Attribute attribute = new Attribute.Builder("attributeName").build();
 
-        Mixin dependMixin = new MixinBuilder().build();
+        Mixin dependMixin = new MixinBuilder("dependScheme", "dependTerm").build();
 
-
-        Mixin mixin = new MixinBuilder()
-                .scheme("schemeTest")
-                .term("termTest")
+        Mixin mixin = new MixinBuilder("schemeTest", "termTest")
                 .title("titleTest")
                 .addAttribute(attribute)
                 .addDepend(dependMixin)
@@ -60,6 +79,17 @@ public class MixinTest {
         assertThat(mixin.getAttributes()).contains(attribute);
         assertThat(mixin.getDepends()).containsExactly(dependMixin);
         assertThat(mixin.getApplies()).containsExactly(InfrastructureKinds.COMPUTE);
+
+        Mixin mixin2 = new MixinBuilder("schemeTest", "termTest")
+                .title("titleTest")
+                .build();
+
+        assertThat(mixin2.getScheme()).matches("schemeTest");
+        assertThat(mixin2.getTerm()).matches("termTest");
+        assertThat(mixin2.getTitle()).matches("titleTest");
+        assertThat(mixin2.getAttributes()).isNotNull();
+        assertThat(mixin2.getDepends()).isEmpty();
+        assertThat(mixin2.getApplies()).isEmpty();
     }
 
     @Test
@@ -67,12 +97,10 @@ public class MixinTest {
 
         Attribute attribute = new Attribute.Builder("attributeName").build();
 
-        Mixin dependMixin = new MixinBuilder().build();
+        Mixin dependMixin = new MixinBuilder("dependScheme", "dependTerm").build();
 
 
-        Mixin mixin = new MixinBuilder()
-                .scheme("schemeTest")
-                .term("termTest")
+        Mixin mixin = new MixinBuilder("schemeTest", "termTest")
                 .title("titleTest")
                 .addAttribute(attribute)
                 .addDepend(dependMixin)
@@ -84,11 +112,10 @@ public class MixinTest {
         assertThat(rendering.getScheme()).matches("schemeTest");
         assertThat(rendering.getTerm()).matches("termTest");
         assertThat(rendering.getTitle()).matches("titleTest");
-        assertThat(rendering.getLocation()).matches("/");
+        assertThat(rendering.getLocation()).matches("/titleTest");
         assertThat(rendering.getActions()).isEmpty();
         assertThat(rendering.getAttributes()).containsEntry("attributeName", attribute.getRendering());
         assertThat(rendering.getDepends()).containsExactly(dependMixin.getTerm());
         assertThat(rendering.getApplies()).containsExactly(InfrastructureKinds.COMPUTE.getTerm());
-
     }
 }

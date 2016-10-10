@@ -30,6 +30,31 @@ public class RequestUtils {
         return INSTANCE;
     }
 
+    /**
+     * Read an http respond and convert it into a string
+     *
+     * @param response is the http response
+     * @return a string containing the information from response
+     * @throws IOException occur if problem occur with the buffer
+     */
+    public static String readHttpResponse(
+            HttpResponse response) throws IOException, CloudAutomationException {
+        StringBuffer serverOutput = new StringBuffer();
+        if (response.getStatusLine().getStatusCode() >= 300) {
+
+            throw new CloudAutomationException("Send Request Failed: HTTP error code : "
+                    + response.getStatusLine().getStatusCode());
+        }
+
+        BufferedReader br = new BufferedReader(
+                new InputStreamReader((response.getEntity().getContent())));
+
+        String output;
+        while ((output = br.readLine()) != null) {
+            serverOutput.append(output);
+        }
+        return serverOutput.toString();
+    }
 
     /**
      * Get the property from the configuration file config.properties

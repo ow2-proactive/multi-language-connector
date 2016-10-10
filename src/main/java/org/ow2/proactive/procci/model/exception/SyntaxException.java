@@ -12,6 +12,6 @@ public class SyntaxException extends Exception {
     private String stringException;
 
     public String getUserException() {
-        return "Exception : Unable to parse correctly " + stringException;
+        return "Error : Unable to parse correctly " + stringException;
     }
 }

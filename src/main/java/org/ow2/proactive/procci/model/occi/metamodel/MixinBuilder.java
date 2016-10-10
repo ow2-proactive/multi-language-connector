@@ -1,6 +1,8 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -8,11 +10,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Identifiers.CORE_SCHEME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Identifiers.MIXIN;
+import org.ow2.proactive.procci.request.CloudAutomationException;
 
 
 /**
@@ -29,9 +30,9 @@ public class MixinBuilder {
     private List<Kind> applies;
     private List<Entity> entities;
 
-    public MixinBuilder() {
-        this.scheme = CORE_SCHEME;
-        this.term = MIXIN;
+    public MixinBuilder(String scheme, String term) {
+        this.scheme = scheme;
+        this.term = term;
         this.title = this.term;
         this.attributes = new HashSet<>();
         this.actions = new ArrayList<>();
@@ -41,40 +42,27 @@ public class MixinBuilder {
     }
 
     /**
-     * Construct a mixin according to its name
-     *
-     * @param name is composed of the scheme and term of the mixin
-     */
-    public MixinBuilder(String name) {
-        final String separator = "#";
-        if (name.contains(separator)) {
-            this.scheme = name.split(separator)[0] + separator;
-            this.term = name.split(separator)[1];
-        }
-    }
-
-    /**
      * Construct a mixin according to its rendering
      *
      * @param mixinRendering is the rendering mixin
      */
-    public MixinBuilder(MixinRendering mixinRendering) {
+    public MixinBuilder(MixinRendering mixinRendering) throws CloudAutomationException, IOException {
         this.scheme = mixinRendering.getScheme();
         this.term = mixinRendering.getTerm();
         this.title = Optional.ofNullable(mixinRendering.getTitle()).orElse(this.term);
-        this.attributes = Optional.ofNullable(convertAttributesMap(mixinRendering.getAttributes())).orElse(
-                new HashSet<>());
+        this.attributes = convertAttributesMap(Optional.ofNullable(mixinRendering.getAttributes()).orElse(
+                new HashMap<>()));
         this.actions = new ArrayList<>();
-        this.depends = mixinRendering.getDepends()
-                .stream()
-                .map(depends -> new MixinBuilder(depends).build())
-                .collect(Collectors.toList());
-        this.applies = mixinRendering.getApplies()
-                .stream()
-                .map(apply -> Kind.getKind(apply))
-                .filter(kind -> kind.isPresent())
-                .map(kind -> kind.get())
-                .collect(Collectors.toList());
+        this.depends = new ArrayList<>();
+        for (String depends : Optional.ofNullable(mixinRendering.getDepends()).orElse(new ArrayList<>())) {
+            this.depends.add(Mixin.getMixinByTitle(depends));
+        }
+        this.applies = Optional.ofNullable(
+                mixinRendering.getApplies()
+                        .stream()
+                        .map(apply -> InfrastructureKinds.getKind(apply))
+                        .collect(Collectors.toList()))
+                .orElse(new ArrayList<>());
         this.entities = new ArrayList<>();
     }
 
@@ -134,4 +122,5 @@ public class MixinBuilder {
     public Mixin build() {
         return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
     }
+
 }
