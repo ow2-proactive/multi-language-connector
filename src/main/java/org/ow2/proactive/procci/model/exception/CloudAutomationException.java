@@ -1,4 +1,4 @@
-package org.ow2.proactive.procci.request;
+package org.ow2.proactive.procci.model.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,11 +15,16 @@ import org.json.simple.JSONObject;
 @Getter
 @AllArgsConstructor
 @ToString
-public class CloudAutomationException extends Exception {
+public class CloudAutomationException extends ClientException {
     private JSONObject jsonError;
 
     public CloudAutomationException(String exception) {
         jsonError = new JSONObject();
         jsonError.put("error", exception);
+    }
+
+    @Override
+    public String getJsonError(){
+        return jsonError.toJSONString();
     }
 }

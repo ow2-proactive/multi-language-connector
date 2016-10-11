@@ -2,6 +2,7 @@ package org.ow2.proactive.procci.request;
 
 import java.io.IOException;
 
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.apache.http.HttpResponse;

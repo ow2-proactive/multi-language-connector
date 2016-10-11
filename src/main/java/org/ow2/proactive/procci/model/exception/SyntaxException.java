@@ -8,10 +8,11 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public class SyntaxException extends Exception {
+public class SyntaxException extends ClientException {
     private String stringException;
 
-    public String getUserException() {
-        return "Error : Unable to parse correctly " + stringException;
+    @Override
+    public String getJsonError() {
+        return "{\"error\" : \""+stringException+" was not found\"}";
     }
 }

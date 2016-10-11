@@ -2,6 +2,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure.constants;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.Network;
@@ -72,8 +73,8 @@ public class InfrastructureKinds {
         INFRASTRUCTURE_KINDS.put(Identifiers.STORAGE_LINK, STORAGE_LINK);
     }
 
-    public static Kind getKind(String term) {
-        return INFRASTRUCTURE_KINDS.get(term);
+    public static Optional<Kind> getKind(String term) {
+        return Optional.ofNullable(INFRASTRUCTURE_KINDS.get(term));
     }
 
 }

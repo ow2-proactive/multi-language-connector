@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.ow2.proactive.procci.model.ModelConstant;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;

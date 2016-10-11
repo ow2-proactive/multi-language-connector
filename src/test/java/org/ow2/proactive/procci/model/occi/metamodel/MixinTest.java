@@ -1,11 +1,18 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
+import org.ow2.proactive.procci.model.exception.MissingAttributesException;
+import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -16,10 +23,9 @@ import static com.google.common.truth.Truth.assertThat;
 public class MixinTest {
 
     @Test
-    public void maximalConstructorTest() {
+    public void constructorTest() {
 
         //create minimal and maximal constructor
-
 
         List<Entity> entities = new ArrayList<>();
         List<Action> actions = new ArrayList<>();
@@ -89,6 +95,101 @@ public class MixinTest {
         assertThat(mixin2.getAttributes()).isNotNull();
         assertThat(mixin2.getDepends()).isEmpty();
         assertThat(mixin2.getApplies()).isEmpty();
+    }
+
+    @Test
+    public void renderingBuilderTest() throws CloudAutomationException, MissingAttributesException, IOException, SyntaxException {
+        
+        try {
+            new MixinBuilder(MixinRendering.builder().build()).build();
+        }catch (Exception ex){
+            assertThat(ex).isInstanceOf(MissingAttributesException.class);
+        }
+
+        try{
+            List<String> applies = new ArrayList<>();
+            applies.add("notAKnownTerm");
+            new MixinBuilder(
+                    MixinRendering.builder()
+                            .scheme("schemeTest")
+                            .term("termTest")
+                            .applies(applies)
+                            .build()
+            ).build();
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+            assertThat(ex).isInstanceOf(SyntaxException.class);
+        }
+
+        Mixin minRendering = new MixinBuilder(
+                MixinRendering.builder()
+                        .scheme("schemeTest")
+                        .term("termTest")
+                        .build()
+        ).build();
+
+        Mixin allAttributesRendering = new MixinBuilder(
+                MixinRendering.builder()
+                        .scheme("schemeTest")
+                        .term("termTest")
+                        .title("titleTest")
+                        .actions(new ArrayList<>())
+                        .applies(new ArrayList<>())
+                        .attributes(new HashMap<>())
+                        .depends(new ArrayList<>())
+                        .location("locationTest")
+                        .build()
+        ).build();
+
+        List actions = new ArrayList();
+        actions.add("actionTest");
+        List applies = new ArrayList();
+        applies.add("compute");
+        Map attributes = new HashMap();
+        AttributeRendering attributeRendering = new AttributeRendering();
+        attributes.put("attributesName",attributeRendering);
+        List depend = new ArrayList();
+        //cannot fill depend because it will send request to cloud-automation-service
+
+        Mixin allAttributesFilledRendering = new MixinBuilder(
+                MixinRendering.builder()
+                        .scheme("schemeTest")
+                        .term("termTest")
+                        .title("titleTest")
+                        .actions(actions)
+                        .applies(applies)
+                        .attributes(attributes)
+                        .depends(depend)
+                        .location("locationTest")
+                        .build()
+        ).build();
+
+        assertThat(minRendering.getScheme()).matches("schemeTest");
+        assertThat(minRendering.getTerm()).matches("termTest");
+        assertThat(minRendering.getTitle()).matches("termTest");
+        assertThat(minRendering.getAttributes()).isNotNull();
+        assertThat(minRendering.getActions()).isEmpty();
+        assertThat(minRendering.getDepends()).isEmpty();
+        assertThat(minRendering.getApplies()).isEmpty();
+
+        assertThat(allAttributesRendering.getScheme()).matches("schemeTest");
+        assertThat(allAttributesRendering.getTerm()).matches("termTest");
+        assertThat(allAttributesRendering.getTitle()).matches("titleTest");
+        assertThat(allAttributesRendering.getAttributes()).isNotNull();
+        assertThat(allAttributesRendering.getDepends().isEmpty());
+        assertThat(allAttributesRendering.getActions().isEmpty());
+        assertThat(allAttributesRendering.getApplies().isEmpty());
+
+        assertThat(allAttributesFilledRendering.getScheme()).matches("schemeTest");
+        assertThat(allAttributesFilledRendering.getTerm()).matches("termTest");
+        assertThat(allAttributesFilledRendering.getTitle()).matches("titleTest");
+        assertThat(allAttributesFilledRendering.getAttributes()).hasSize(allAttributesRendering.getAttributes().size()+1);
+        assertThat(allAttributesFilledRendering.getDepends().isEmpty());
+        assertThat(allAttributesFilledRendering.getActions().isEmpty());
+        assertThat(allAttributesFilledRendering.getApplies().contains(InfrastructureKinds.COMPUTE));
+
+
+
     }
 
     @Test

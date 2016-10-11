@@ -40,13 +40,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.request.CloudAutomationInstances;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,9 +95,9 @@ public class ComputeRest {
         } catch (CloudAutomationException e) {
             logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (SyntaxException e) {
+        } catch (ClientException e) {
             logger.error(this.getClass(), e);
-            return new ResponseEntity(e.getUserException(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -115,12 +116,9 @@ public class ComputeRest {
                 ComputeBuilder computeBuilder = new ComputeBuilder(computeModel.get());
                 return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
             }
-        } catch (CloudAutomationException e) {
+        } catch (ClientException e) {
             logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (SyntaxException e) {
-            logger.error(this.getClass(), e);
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -138,12 +136,9 @@ public class ComputeRest {
             Model model = new Model(new CloudAutomationInstances().postRequest(pcaModel));
             ComputeBuilder response = new ComputeBuilder(model);
             return new ResponseEntity<>(response.build().getRendering(), HttpStatus.CREATED);
-        } catch (CloudAutomationException e) {
+        } catch (ClientException e) {
             logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (SyntaxException e) {
-            logger.error(this.getClass(), e);
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

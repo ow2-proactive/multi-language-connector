@@ -61,7 +61,7 @@ public class Attribute {
 
         public Builder(String name, AttributeRendering attributeRendering) {
             this.name = name;
-            this.type = Optional.ofNullable(Type.valueOf(attributeRendering.getType()));
+            this.type = Optional.ofNullable(attributeRendering.getType()).map(type -> Type.valueOf(type));
             this.mutable = Optional.ofNullable(attributeRendering.isMutable());
             this.required = Optional.ofNullable(attributeRendering.isRequired());
             this.pattern = Optional.ofNullable(attributeRendering.getPattern());
