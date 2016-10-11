@@ -14,7 +14,8 @@ public class Identifiers {
     public static final String NETWORK_SCHEME = "http://schemas.ogf.org/occi/infrastructure/network#";
     public static final String NETWORKINTERFACE_SCHEME = "http://schemas.ogf.org/occi/infrastructure/networkinterface#";
     public static final String CREDENTIALS_SCHEME = "http://schemas.ogf.org/occi/infrastructure/credentials#";
-    public static final String ACTIVEEON_SCHEME = "http://org.ow2.proactive/occi/infrastructure#";
+    public static final String ACTIVEEON_SCHEME = "http://ow2.proactive.org/occi/infrastructure#";
+    public static final String OCCIWARE_SCHEME = "http://occiware.org/occi/infrastructure/crtp/backend#";
 
     //action schemes
     public static final String COMPUTE_ACTION_SCHEME = "http://schemas.ogf.org/occi/infrastructure/compute/action#";
@@ -49,7 +50,7 @@ public class Identifiers {
     public static final String IPNETWORK_INTERFACE = "ipnetworkinterface";
     public static final String CREDENTIALS = "ssh_key";
     public static final String CONTEXTUALIZATION = "user_data";
-    public static final String RESOURCE_TEMPLATE = "resource_template";
+    public static final String VM_IMAGE = "vmimage";
 
     //entity terms
     public static final String COMPUTE_MODEL = "occi.infrastructure.compute";
