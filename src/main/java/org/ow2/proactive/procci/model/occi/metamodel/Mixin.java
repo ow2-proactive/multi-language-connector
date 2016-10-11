@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
@@ -97,7 +98,7 @@ public class Mixin extends Category {
         return attributes;
     }
 
-    public static Mixin getMixinByTitle(String title) throws CloudAutomationException, IOException {
+    public static Mixin getMixinByTitle(String title) throws CloudAutomationException, IOException, MissingAttributesException {
         String mixinString = CloudAutomationVariables.get(title);
         MixinRendering mixinRendering = MixinRendering.convertMixinFromString(mixinString);
         return new MixinBuilder(mixinRendering).build();

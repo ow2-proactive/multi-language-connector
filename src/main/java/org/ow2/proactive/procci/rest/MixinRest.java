@@ -4,6 +4,7 @@ package org.ow2.proactive.procci.rest;
 import java.io.IOException;
 import java.net.URI;
 
+import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
@@ -43,6 +44,8 @@ public class MixinRest {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.NOT_FOUND);
         } catch (IOException exception) {
             return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (MissingAttributesException ex) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -53,7 +56,6 @@ public class MixinRest {
     public ResponseEntity<MixinRendering> createMixin(
             @RequestBody MixinRendering mixinRendering) {
         logger.debug("Creating Mixin " + mixinRendering.toString());
-
         try {
             Mixin mixin = new MixinBuilder(mixinRendering).build();
             String json = MixinRendering.convertStringFromMixin(mixin.getRendering());
@@ -64,6 +66,8 @@ public class MixinRest {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (CloudAutomationException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
+        } catch (MissingAttributesException ex) {
+            return new ResponseEntity(ex.getJsonMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -92,6 +96,8 @@ public class MixinRest {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (CloudAutomationException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
+        }catch (MissingAttributesException ex) {
+            return new ResponseEntity(ex.getJsonMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
     }

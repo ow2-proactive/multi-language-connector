@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class EntityRendering {
 
-    @ApiModelProperty(required = true)
     private String kind;
     private List<String> mixins;
     private Map<String, Object> attributes;
