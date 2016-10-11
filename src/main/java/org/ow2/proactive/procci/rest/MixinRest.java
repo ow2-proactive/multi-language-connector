@@ -50,7 +50,7 @@ public class MixinRest {
     //-------------------Create a Mixin--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<URI> createMixin(
+    public ResponseEntity<MixinRendering> createMixin(
             @RequestBody MixinRendering mixinRendering) {
         logger.debug("Creating Mixin " + mixinRendering.toString());
 
@@ -70,7 +70,7 @@ public class MixinRest {
     //-------------------Update a Mixin--------------------------------------------------------
 
     @RequestMapping(value = "{mixinTitle}", method = RequestMethod.PUT)
-    public ResponseEntity updateMixin(
+    public ResponseEntity<MixinRendering> updateMixin(
             @PathVariable("mixinTitle") String mixinTitle,
             @RequestBody MixinRendering mixinRendering) {
         logger.debug("Updating Mixin " + mixinTitle + " with " + mixinRendering.toString());

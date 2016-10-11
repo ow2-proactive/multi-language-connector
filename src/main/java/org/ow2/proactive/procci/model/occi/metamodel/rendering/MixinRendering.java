@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +25,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 @Builder(builderClassName = "Builder")
 public class MixinRendering {
 
-    @ApiModelProperty(required = true)
+
     private String term;
-    @ApiModelProperty(required = true)
     private String scheme;
     private String title;
     private Map<String, AttributeRendering> attributes;
