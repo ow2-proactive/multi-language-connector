@@ -75,17 +75,25 @@ public class MixinRest {
             @RequestBody MixinRendering mixinRendering) {
         logger.debug("Updating Mixin " + mixinTitle + " with " + mixinRendering.toString());
 
+        Mixin mixin = null;
         try {
-            Mixin mixin = new MixinBuilder(mixinRendering).build();
+            mixin = new MixinBuilder(mixinRendering).build();
             String json = MixinRendering.convertStringFromMixin(mixin.getRendering());
-            CloudAutomationVariables.update(mixin.getTitle(), json);
+
+            if(mixin.getTitle().matches(mixinTitle)) {
+                CloudAutomationVariables.update(mixin.getTitle(), json);
+            }
+            else {
+                CloudAutomationVariables.delete(mixinTitle);
+                CloudAutomationVariables.post(mixin.getTitle(),json);
+            }
         } catch (IOException ex) {
             logger.error(this.getClass(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (CloudAutomationException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
     }
 
     //-------------------Delete a Mixin--------------------------------------------------------
