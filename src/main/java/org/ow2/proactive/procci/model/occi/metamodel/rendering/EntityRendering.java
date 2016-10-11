@@ -3,6 +3,7 @@ package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class EntityRendering {
 
+    @ApiModelProperty(required = true)
     private String kind;
     private List<String> mixins;
     private Map<String, Object> attributes;

@@ -103,7 +103,7 @@ public class Application extends WebMvcConfigurerAdapter {
         return new ApiInfoBuilder()
                 .title("Multi-language connector")
                 .description(
-                        "The purpose of procci is to offer a standard access to the cloud automation functionnalities\n")
+                        "The purpose of Multi-language connector is to offer a standard access to the cloud automation functionnalities\n")
                 .licenseUrl("https://github.com/ow2-proactive/procci/blob/master/LICENSE")
                 .version("1.0")
                 .build();

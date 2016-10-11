@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -23,16 +24,19 @@ import org.codehaus.jackson.map.ObjectMapper;
 @AllArgsConstructor
 @ToString
 @Builder(builderClassName = "Builder")
+@Api(description = "Mixin is an extension mecanism which enables to new resource capablilities")
 public class MixinRendering {
 
-
+    @ApiModelProperty(required = true)
     private String term;
+    @ApiModelProperty(required = true)
     private String scheme;
     private String title;
     private Map<String, AttributeRendering> attributes;
     private List<String> actions;
     private List<String> depends;
     private List<String> applies;
+    @ApiModelProperty(readOnly = true)
     private String location;
 
     public static MixinRendering convertMixinFromString(String mixinRendering) throws IOException {
