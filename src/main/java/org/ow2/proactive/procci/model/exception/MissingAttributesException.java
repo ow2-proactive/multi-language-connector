@@ -6,12 +6,12 @@ import lombok.AllArgsConstructor;
  * Created by mael on 11/10/16.
  */
 @AllArgsConstructor
-public class MissingAttributesException extends ClientException{
+public class MissingAttributesException extends ClientException {
     private String attributeMissing;
     private String objectRepresentation;
 
     @Override
-    public String getJsonError(){
-        return "{\"error\" : \""+attributeMissing+" is missing for the "+objectRepresentation+" construction.\"}";
+    public String getJsonError() {
+        return "{\"error\" : \"" + attributeMissing + " is missing for the " + objectRepresentation + " construction.\"}";
     }
 }

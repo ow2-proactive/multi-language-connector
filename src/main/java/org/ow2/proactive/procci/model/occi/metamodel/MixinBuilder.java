@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 
 
 /**
@@ -48,9 +48,12 @@ public class MixinBuilder {
      *
      * @param mixinRendering is the rendering mixin
      */
-    public MixinBuilder(MixinRendering mixinRendering) throws CloudAutomationException, IOException, MissingAttributesException, SyntaxException {
-        this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(() -> new MissingAttributesException("scheme","mixin"));
-        this.term = Optional.ofNullable(mixinRendering.getTerm()).orElseThrow( ()-> new MissingAttributesException("term","mixin"));
+    public MixinBuilder(
+            MixinRendering mixinRendering) throws CloudAutomationException, IOException, MissingAttributesException, SyntaxException {
+        this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(
+                () -> new MissingAttributesException("scheme", "mixin"));
+        this.term = Optional.ofNullable(mixinRendering.getTerm()).orElseThrow(
+                () -> new MissingAttributesException("term", "mixin"));
         this.title = Optional.ofNullable(mixinRendering.getTitle()).orElse(this.term);
         this.attributes = convertAttributesMap(Optional.ofNullable(mixinRendering.getAttributes()).orElse(
                 new HashMap()));
@@ -61,8 +64,9 @@ public class MixinBuilder {
             this.depends.add(Mixin.getMixinByTitle(depends));
         }
         this.applies = new ArrayList<>();
-        for(String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())){
-            this.applies.add(InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply)));
+        for (String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())) {
+            this.applies.add(
+                    InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply)));
         }
         this.entities = new ArrayList<>();
     }

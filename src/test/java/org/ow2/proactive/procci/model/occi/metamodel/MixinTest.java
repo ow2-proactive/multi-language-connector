@@ -7,12 +7,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -99,14 +99,14 @@ public class MixinTest {
 
     @Test
     public void renderingBuilderTest() throws CloudAutomationException, MissingAttributesException, IOException, SyntaxException {
-        
+
         try {
             new MixinBuilder(MixinRendering.builder().build()).build();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             assertThat(ex).isInstanceOf(MissingAttributesException.class);
         }
 
-        try{
+        try {
             List<String> applies = new ArrayList<>();
             applies.add("notAKnownTerm");
             new MixinBuilder(
@@ -116,7 +116,7 @@ public class MixinTest {
                             .applies(applies)
                             .build()
             ).build();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             assertThat(ex).isInstanceOf(SyntaxException.class);
         }
@@ -147,9 +147,9 @@ public class MixinTest {
         applies.add("compute");
         Map attributes = new HashMap();
         AttributeRendering attributeRendering = new AttributeRendering();
-        attributes.put("attributesName",attributeRendering);
+        attributes.put("attributesName", attributeRendering);
         List depend = new ArrayList();
-        //cannot fill depend because it will send request to cloud-automation-service
+        //cannot test depend because it will send request to cloud-automation-service
 
         Mixin allAttributesFilledRendering = new MixinBuilder(
                 MixinRendering.builder()
@@ -183,11 +183,11 @@ public class MixinTest {
         assertThat(allAttributesFilledRendering.getScheme()).matches("schemeTest");
         assertThat(allAttributesFilledRendering.getTerm()).matches("termTest");
         assertThat(allAttributesFilledRendering.getTitle()).matches("titleTest");
-        assertThat(allAttributesFilledRendering.getAttributes()).hasSize(allAttributesRendering.getAttributes().size()+1);
+        assertThat(allAttributesFilledRendering.getAttributes()).hasSize(
+                allAttributesRendering.getAttributes().size() + 1);
         assertThat(allAttributesFilledRendering.getDepends().isEmpty());
         assertThat(allAttributesFilledRendering.getActions().isEmpty());
         assertThat(allAttributesFilledRendering.getApplies().contains(InfrastructureKinds.COMPUTE));
-
 
 
     }

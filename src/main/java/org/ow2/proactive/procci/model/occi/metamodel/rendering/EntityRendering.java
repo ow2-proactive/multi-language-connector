@@ -3,7 +3,6 @@ package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 import java.util.List;
 import java.util.Map;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

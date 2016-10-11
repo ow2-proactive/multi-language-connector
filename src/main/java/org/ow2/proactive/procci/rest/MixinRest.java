@@ -4,11 +4,10 @@ package org.ow2.proactive.procci.rest;
 import java.io.IOException;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.MissingAttributesException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -80,12 +79,11 @@ public class MixinRest {
             mixin = new MixinBuilder(mixinRendering).build();
             String json = MixinRendering.convertStringFromMixin(mixin.getRendering());
 
-            if(mixin.getTitle().matches(mixinTitle)) {
+            if (mixin.getTitle().matches(mixinTitle)) {
                 CloudAutomationVariables.update(mixin.getTitle(), json);
-            }
-            else {
+            } else {
                 CloudAutomationVariables.delete(mixinTitle);
-                CloudAutomationVariables.post(mixin.getTitle(),json);
+                CloudAutomationVariables.post(mixin.getTitle(), json);
             }
         } catch (IOException ex) {
             logger.error(this.getClass(), ex);

@@ -24,7 +24,7 @@ public class CloudAutomationException extends ClientException {
     }
 
     @Override
-    public String getJsonError(){
+    public String getJsonError() {
         return jsonError.toJSONString();
     }
 }

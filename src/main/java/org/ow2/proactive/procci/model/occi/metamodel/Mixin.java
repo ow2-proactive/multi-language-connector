@@ -43,12 +43,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
@@ -99,11 +99,12 @@ public class Mixin extends Category {
         return attributes;
     }
 
-    public static Mixin getMixinByTitle(String title) throws CloudAutomationException, IOException, MissingAttributesException, SyntaxException {
+    public static Mixin getMixinByTitle(
+            String title) throws CloudAutomationException, IOException, MissingAttributesException, SyntaxException {
         String mixinString = null;
         try {
             mixinString = CloudAutomationVariables.get(title);
-        }catch (CloudAutomationException ex){
+        } catch (CloudAutomationException ex) {
             throw new SyntaxException(title);
         }
 
