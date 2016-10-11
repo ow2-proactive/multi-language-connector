@@ -81,12 +81,11 @@ public class MixinTest {
         assertThat(mixin.getApplies()).containsExactly(InfrastructureKinds.COMPUTE);
 
         Mixin mixin2 = new MixinBuilder("schemeTest", "termTest")
-                .title("titleTest")
                 .build();
 
         assertThat(mixin2.getScheme()).matches("schemeTest");
         assertThat(mixin2.getTerm()).matches("termTest");
-        assertThat(mixin2.getTitle()).matches("titleTest");
+        assertThat(mixin2.getTitle()).matches("termTest");
         assertThat(mixin2.getAttributes()).isNotNull();
         assertThat(mixin2.getDepends()).isEmpty();
         assertThat(mixin2.getApplies()).isEmpty();

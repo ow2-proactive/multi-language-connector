@@ -59,12 +59,12 @@ public class MixinBuilder {
         for (String depends : Optional.ofNullable(mixinRendering.getDepends()).orElse(new ArrayList<>())) {
             this.depends.add(Mixin.getMixinByTitle(depends));
         }
-        this.applies = Optional.ofNullable(
-                mixinRendering.getApplies()
-                        .stream()
-                        .map(apply -> InfrastructureKinds.getKind(apply))
-                        .collect(Collectors.toList()))
-                .orElse(new ArrayList<>());
+        this.applies = Optional.ofNullable(mixinRendering.getApplies())
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(apply -> InfrastructureKinds.getKind(apply))
+                .collect(Collectors.toList());
+
         this.entities = new ArrayList<>();
     }
 
