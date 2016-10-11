@@ -100,7 +100,13 @@ public class Mixin extends Category {
     }
 
     public static Mixin getMixinByTitle(String title) throws CloudAutomationException, IOException, MissingAttributesException, SyntaxException {
-        String mixinString = CloudAutomationVariables.get(title);
+        String mixinString = null;
+        try {
+            mixinString = CloudAutomationVariables.get(title);
+        }catch (CloudAutomationException ex){
+            throw new SyntaxException(title);
+        }
+
         MixinRendering mixinRendering = MixinRendering.convertMixinFromString(mixinString);
         return new MixinBuilder(mixinRendering).build();
     }
