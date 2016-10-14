@@ -10,12 +10,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
+import lombok.AccessLevel;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -23,13 +27,24 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
  */
 public class MixinBuilder {
 
+    @Autowired
+    private ProviderMixin providerMixin;
+
+    @Getter(value = AccessLevel.PROTECTED)
     private String scheme;
+    @Getter(value = AccessLevel.PROTECTED)
     private String term;
+    @Getter(value = AccessLevel.PROTECTED)
     private String title;
+    @Getter(value = AccessLevel.PROTECTED)
     private Set<Attribute> attributes;
+    @Getter(value = AccessLevel.PROTECTED)
     private List<Action> actions;
+    @Getter(value = AccessLevel.PROTECTED)
     private List<Mixin> depends;
+    @Getter(value = AccessLevel.PROTECTED)
     private List<Kind> applies;
+    @Getter(value = AccessLevel.PROTECTED)
     private List<Entity> entities;
 
     public MixinBuilder(String scheme, String term) {
@@ -49,7 +64,7 @@ public class MixinBuilder {
      * @param mixinRendering is the rendering mixin
      */
     public MixinBuilder(
-            MixinRendering mixinRendering) throws CloudAutomationException, IOException, MissingAttributesException, SyntaxException {
+            MixinRendering mixinRendering) throws ClientException, IOException{
         this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(
                 () -> new MissingAttributesException("scheme", "mixin"));
         this.term = Optional.ofNullable(mixinRendering.getTerm()).orElseThrow(
@@ -61,7 +76,7 @@ public class MixinBuilder {
         this.actions = new ArrayList<>();
         this.depends = new ArrayList<>();
         for (String depends : Optional.ofNullable(mixinRendering.getDepends()).orElse(new ArrayList<>())) {
-            this.depends.add(Mixin.getMixinByTitle(depends));
+            this.depends.add(providerMixin.getMixinByTitle(depends));
         }
         this.applies = new ArrayList<>();
         for (String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())) {
@@ -125,6 +140,10 @@ public class MixinBuilder {
      * @return a mixin instance
      */
     public Mixin build() {
+        return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
+    }
+
+    public Mixin build(Map attributesMap) throws ClientException {
         return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
     }
 

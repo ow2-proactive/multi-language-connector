@@ -1,20 +1,27 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import static org.ow2.proactive.procci.model.ModelConstant.ERROR_STATE;
 import static org.ow2.proactive.procci.model.ModelConstant.INSTANCE_ENDPOINT;
@@ -43,7 +50,12 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 @EqualsAndHashCode
 @ToString
 @Getter
+@Component
 public class ComputeBuilder {
+
+    @Autowired
+    private ProviderMixin providerMixin;
+
     private Optional<String> url;
     private Optional<String> title;
     private Optional<String> summary;
@@ -60,15 +72,15 @@ public class ComputeBuilder {
      * Default Builder
      */
     public ComputeBuilder() {
-        this.url = null;
-        this.title = null;
-        this.summary = null;
-        this.architecture = null;
-        this.cores = null;
-        this.share = null;
-        this.hostname = null;
-        this.memory = null;
-        this.state = null;
+        this.url = Optional.empty();
+        this.title = Optional.empty();
+        this.summary = Optional.empty();
+        this.architecture = Optional.empty();
+        this.cores = Optional.empty();
+        this.share = Optional.empty();
+        this.hostname = Optional.empty();
+        this.memory = Optional.empty();
+        this.state = Optional.empty();
         this.mixins = new ArrayList<>();
         this.links = new ArrayList<>();
     }
@@ -78,7 +90,7 @@ public class ComputeBuilder {
      *
      * @param cloudAutomation is the instance of the cloud automation model for a compute
      */
-    public ComputeBuilder(Model cloudAutomation) throws SyntaxException {
+    public ComputeBuilder cloudAutomationModel(Model cloudAutomation) throws SyntaxException {
         this.url = Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(ID_NAME, null));
         this.title = Optional.ofNullable(
                 cloudAutomation.getVariables().getOrDefault(ENTITY_TITLE_NAME, null));
@@ -97,6 +109,7 @@ public class ComputeBuilder {
                 Optional.ofNullable(cloudAutomation.getVariables().getOrDefault(INSTANCE_STATUS, null)));
         this.mixins = new ArrayList<>();
         this.links = new ArrayList<>();
+        return this;
     }
 
     /**
@@ -104,7 +117,7 @@ public class ComputeBuilder {
      *
      * @param rendering is the instance of the cloud automation model for a compute
      */
-    public ComputeBuilder(ResourceRendering rendering) throws SyntaxException {
+    public ComputeBuilder rendering(ResourceRendering rendering) throws ClientException, IOException {
         this.url = Optional.ofNullable(rendering.getId());
         this.title = Optional.ofNullable(
                 (String) rendering.getAttributes().getOrDefault(ENTITY_TITLE_NAME, null));
@@ -126,8 +139,29 @@ public class ComputeBuilder {
         this.summary = Optional.ofNullable(
                 (String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, null));
         this.mixins = new ArrayList<>();
+        for(String mixin : rendering.getMixins()){
+            this.mixins.add(providerMixin.getMixinByTitle(mixin));
+        }
+        associateProviderMixin(rendering.getAttributes());
+
         this.links = new ArrayList<>();
+
+        return this;
     }
+
+    void associateProviderMixin(Map<String, Object> attributes) throws ClientException{
+        for(String mixinName : attributes.keySet()){
+            if( providerMixin.getInstance(mixinName).isPresent()){
+                try {
+                    providerMixin.getInstance(mixinName).get().build((Map) attributes.get(mixinName));
+                }catch(ClassCastException e){
+                    throw new SyntaxException(mixinName);
+                }
+            }
+
+        }
+    }
+
 
     public ComputeBuilder url(String url) {
         this.url = Optional.of(url);
@@ -275,12 +309,20 @@ public class ComputeBuilder {
         }
     }
 
-
-    public Compute build() {
+    /**
+     *  Build the compute and update the mixin entities
+     * @return a compute
+     * @throws IOException if cloud-automation-service response is not readable
+     * @throws CloudAutomationException if cloud-automation-service response is an error
+     */
+    public Compute build() throws IOException, CloudAutomationException{
         Compute compute = new Compute(url, InfrastructureKinds.COMPUTE, title, mixins, summary,
                 new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
-        mixins.forEach(mixin -> mixin.addEntity(compute));
+        for(Mixin mixin : mixins){
+            mixin.addEntity(compute);
+        }
+
         return compute;
     }
 

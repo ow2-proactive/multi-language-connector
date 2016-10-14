@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
@@ -98,7 +99,7 @@ public class MixinTest {
     }
 
     @Test
-    public void renderingBuilderTest() throws CloudAutomationException, MissingAttributesException, IOException, SyntaxException {
+    public void renderingBuilderTest() throws ClientException, IOException{
 
         try {
             new MixinBuilder(MixinRendering.builder().build()).build();

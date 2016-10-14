@@ -44,22 +44,23 @@ import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
-import org.ow2.proactive.procci.model.exception.MissingAttributesException;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.OS_TEMPLATE;
 
 /**
  * Mixin is an extension mecanism which enables to new resource capablilities
  */
 @Getter
 public class Mixin extends Category {
+
+    @Autowired
+    private CloudAutomationVariables cloudAutomationVariables;
 
     private final ImmutableList<Action> actions;
     private final ImmutableList<Mixin> depends;
@@ -99,21 +100,7 @@ public class Mixin extends Category {
         return attributes;
     }
 
-    public static Mixin getMixinByTitle(
-            String title) throws CloudAutomationException, IOException, MissingAttributesException, SyntaxException {
-        String mixinString = null;
-        try {
-            mixinString = CloudAutomationVariables.get(title);
-        } catch (CloudAutomationException ex) {
-            throw new SyntaxException(title);
-        }
-
-        MixinRendering mixinRendering = MixinRendering.convertMixinFromString(mixinString);
-        return new MixinBuilder(mixinRendering).build();
-    }
-
     public Model.Builder toCloudAutomationModel(Model.Builder cloudAutomation) {
-        cloudAutomation.addVariable(OS_TEMPLATE, this.getTerm());
         return cloudAutomation;
     }
 
@@ -145,8 +132,15 @@ public class Mixin extends Category {
         return map;
     }
 
-    public void addEntity(Entity entity) {
+    /**
+     *  Add to the mixin, the entities which apply and update the mixin database
+     * @param entity is an entity which is related to the mixin
+     * @throws IOException occurs if the response of cloud-automation-service in not readable
+     * @throws CloudAutomationException occurs if the request is not acceptable for cloud-automation-service
+     */
+    public void addEntity(Entity entity) throws IOException, CloudAutomationException{
         entities.add(entity);
+        cloudAutomationVariables.update(this.getTitle(), MixinRendering.convertStringFromMixin(this.getRendering()));
     }
 
     public void deleteEntity(Entity entity) {

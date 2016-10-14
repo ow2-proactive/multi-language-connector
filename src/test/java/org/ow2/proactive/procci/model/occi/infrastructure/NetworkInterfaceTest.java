@@ -1,5 +1,8 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
+import java.io.IOException;
+
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
@@ -15,7 +18,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class NetworkInterfaceTest {
 
     @Test
-    public void maximalConstructorTest() {
+    public void maximalConstructorTest() throws IOException, CloudAutomationException{
         Compute compute = new ComputeBuilder().url("url:compute").build();
         try {
             NetworkInterface networkInterface = new NetworkInterface.Builder(compute, "url:target", "mac",

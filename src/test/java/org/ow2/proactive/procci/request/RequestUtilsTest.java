@@ -11,6 +11,6 @@ public class RequestUtilsTest {
 
     @Test
     public void getPropertyTest() {
-        assertThat(RequestUtils.getInstance().getProperty("scheduler.login.endpoint")).isNotEmpty();
+        assertThat(new RequestUtils().getProperty("scheduler.login.endpoint")).isNotEmpty();
     }
 }

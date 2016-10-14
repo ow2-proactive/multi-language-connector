@@ -12,6 +12,8 @@ import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by mael on 06/10/16.
@@ -20,21 +22,21 @@ import org.apache.logging.log4j.Logger;
 /**
  * Send crud request on cloud-automation-service/variables
  */
+@Component
 public class CloudAutomationVariables {
 
     private static final Logger logger = LogManager.getRootLogger();
 
-    @Getter(AccessLevel.PACKAGE)
-    private static String variablesUrl = RequestUtils.getInstance().getProperty(
-            "cloud-automation-service.variables.endpoint");
+    @Autowired
+    private RequestUtils requestUtils;
 
-    public static String get(String key) throws CloudAutomationException {
+    public String get(String key) throws CloudAutomationException {
         try {
             Response response = Request.Get(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)
                     .execute();
 
-            return RequestUtils.readHttpResponse(response.returnResponse());
+            return requestUtils.readHttpResponse(response.returnResponse());
 
         } catch (IOException ex) {
             logger.error(CloudAutomationVariables.class, ex);
@@ -44,7 +46,7 @@ public class CloudAutomationVariables {
     }
 
 
-    public static void post(String key, String value) throws CloudAutomationException {
+    public void post(String key, String value) throws CloudAutomationException {
         try {
             HttpResponse response = Request.Post(getQueryUrl(key))
                     .useExpectContinue()
@@ -63,7 +65,7 @@ public class CloudAutomationVariables {
 
     }
 
-    public static void update(String key, String value) throws CloudAutomationException {
+    public void update(String key, String value) throws CloudAutomationException {
         try {
             HttpResponse response = Request.Put(getResourceUrl(key))
                     .useExpectContinue()
@@ -81,7 +83,7 @@ public class CloudAutomationVariables {
         }
     }
 
-    public static void delete(String key) throws CloudAutomationException {
+    public void delete(String key) throws CloudAutomationException {
         try {
             HttpResponse response = Request.Delete(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)
@@ -97,15 +99,19 @@ public class CloudAutomationVariables {
         }
     }
 
-    private static String getResourceUrl(String key) {
-        return variablesUrl + "/" + key;
+    private String getVariablesUrl() {
+        return requestUtils.getProperty("cloud-automation-service.variables.endpoint");
     }
 
-    private static String getQueryUrl(String key) {
-        return variablesUrl + "?key=" + key;
+    private String getResourceUrl(String key) {
+        return getVariablesUrl() + "/" + key;
     }
 
-    private static void checkStatus(HttpResponse response) throws CloudAutomationException {
+    private String getQueryUrl(String key) {
+        return getVariablesUrl() + "?key=" + key;
+    }
+
+    private void checkStatus(HttpResponse response) throws CloudAutomationException {
         if (response.getStatusLine().getStatusCode() >= 300) {
             throw new CloudAutomationException(response.getStatusLine().getReasonPhrase());
         }

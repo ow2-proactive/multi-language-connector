@@ -34,6 +34,7 @@
  */
 package org.ow2.proactive.procci.rest;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +52,7 @@ import org.ow2.proactive.procci.request.CloudAutomationInstances;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -71,13 +73,17 @@ public class ComputeRest {
 
     private final Logger logger = LogManager.getRootLogger();
 
+    @Autowired
+    private CloudAutomationInstances cloudAutomationInstances;
+    
+
     //-------------------Retrieve All Computes--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<EntitiesRendering> listAllComputes() {
         logger.debug("Get all Compute instances");
         try {
-            JSONObject resources = new CloudAutomationInstances().getRequest();
+            JSONObject resources = cloudAutomationInstances.getRequest();
 
             List<Model> models = (List<Model>) resources.keySet()
                     .stream()
@@ -86,17 +92,17 @@ public class ComputeRest {
 
             List<EntityRendering> results = new ArrayList<>();
             for (Model model : models) {
-                results.add(new ComputeBuilder(model).build().getRendering());
+                results.add(new ComputeBuilder().cloudAutomationModel(model).build().getRendering());
             }
 
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(results).build(),
                     HttpStatus.OK);
-        } catch (CloudAutomationException e) {
-            logger.error(this.getClass(), e);
-            return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ClientException e) {
             logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            logger.error(this.getClass(), e);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -107,17 +113,20 @@ public class ComputeRest {
     public ResponseEntity<ResourceRendering> getCompute(@PathVariable("id") String id) {
         logger.debug("Get Compute ");
         try {
-            Optional<Model> computeModel = new CloudAutomationInstances().getInstanceByVariable(ID_NAME,
+            Optional<Model> computeModel = cloudAutomationInstances.getInstanceByVariable(ID_NAME,
                     ConvertUtils.formatURL(id));
             if (!computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-                ComputeBuilder computeBuilder = new ComputeBuilder(computeModel.get());
+                ComputeBuilder computeBuilder = new ComputeBuilder().cloudAutomationModel(computeModel.get());
                 return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
             logger.error(this.getClass(), e);
-            return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            logger.error(this.getClass(), e);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -130,14 +139,17 @@ public class ComputeRest {
             @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            ComputeBuilder compute = new ComputeBuilder(computeRendering);
+            ComputeBuilder compute = new ComputeBuilder().rendering(computeRendering);
             JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
-            Model model = new Model(new CloudAutomationInstances().postRequest(pcaModel));
-            ComputeBuilder response = new ComputeBuilder(model);
+            Model model = new Model(cloudAutomationInstances.postRequest(pcaModel));
+            ComputeBuilder response = new ComputeBuilder().cloudAutomationModel(model);
             return new ResponseEntity<>(response.build().getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass(), e);
-            return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
+        } catch (IOException e) {
+            logger.error(this.getClass(), e);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

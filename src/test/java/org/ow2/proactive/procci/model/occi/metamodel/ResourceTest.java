@@ -1,10 +1,12 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
@@ -40,7 +42,7 @@ public class ResourceTest {
     }
 
     @Test
-    public void builderTest() {
+    public void builderTest() throws IOException, CloudAutomationException{
         Compute compute = new ComputeBuilder().url("compute").build();
         try {
             Link link = new Link.Builder(compute, "target").url("link").build();

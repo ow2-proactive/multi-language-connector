@@ -15,21 +15,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by mael on 06/10/16.
  */
+@Component
 public class RequestUtils {
 
-    private static final RequestUtils INSTANCE = new RequestUtils();
     private final Logger logger = LogManager.getRootLogger();
-
-    private RequestUtils() {
-    }
-
-    public static RequestUtils getInstance() {
-        return INSTANCE;
-    }
 
     /**
      * Read an http respond and convert it into a string
@@ -38,7 +32,7 @@ public class RequestUtils {
      * @return a string containing the information from response
      * @throws IOException occur if problem occur with the buffer
      */
-    public static String readHttpResponse(
+    public String readHttpResponse(
             HttpResponse response) throws IOException, CloudAutomationException {
         StringBuffer serverOutput = new StringBuffer();
         if (response.getStatusLine().getStatusCode() >= 300) {
