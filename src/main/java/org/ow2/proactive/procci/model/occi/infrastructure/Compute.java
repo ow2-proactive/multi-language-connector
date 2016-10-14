@@ -142,6 +142,8 @@ public class Compute extends Resource {
         this.hostname.ifPresent(host -> serviceBuilder.addVariable(HOSTNAME_NAME, host));
         this.state.ifPresent(currentState -> serviceBuilder.addVariable(COMPUTE_STATE_NAME, currentState));
 
+        this.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
+
         return serviceBuilder.build();
     }
 
@@ -163,6 +165,8 @@ public class Compute extends Resource {
         this.hostname.ifPresent(host -> resourceRendering.addAttribute(HOSTNAME_NAME, host));
         this.state.ifPresent(
                 currentState -> resourceRendering.addAttribute(COMPUTE_STATE_NAME, currentState.name()));
+
+        this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getScheme() + mixin.getTerm()));
 
         return resourceRendering.build();
     }

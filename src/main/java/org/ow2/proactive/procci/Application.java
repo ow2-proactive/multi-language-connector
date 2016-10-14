@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -48,6 +49,7 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -90,17 +92,18 @@ public class Application extends WebMvcConfigurerAdapter {
     public Docket procciApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
-                .groupName("procci")
+                .groupName("proactive")
                 .select()
+                .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
                 .paths(allowedPaths())
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("DSL connector")
+                .title("Multi-language connector")
                 .description(
-                        "The purpose of procci is to offer a standard access to the cloud automation functionnalities\n")
+                        "The purpose of Multi-language connector is to offer a standard access to the cloud automation functionnalities\n")
                 .licenseUrl("https://github.com/ow2-proactive/procci/blob/master/LICENSE")
                 .version("1.0")
                 .build();
@@ -108,7 +111,8 @@ public class Application extends WebMvcConfigurerAdapter {
 
     private Predicate<String> allowedPaths() {
         List<String> pathList = new ArrayList<String>();
-        pathList.add("/compute.*");
+        pathList.add("/occi/compute.*");
+        pathList.add("/occi/.*");
         String pathRegex = "(" + pathList.get(0) + ")";
         for (int i = 1; i < pathList.size(); i++) {
             pathRegex += "|(" + pathList.get(i) + ")";

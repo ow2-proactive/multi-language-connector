@@ -8,6 +8,8 @@ import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 
 /**
  * Created by mael on 14/09/16.
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@ToString
 public class ResourceRendering extends EntityRendering {
 
     private List<LinkRendering> links;

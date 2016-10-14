@@ -2,6 +2,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure.constants;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.Network;
@@ -38,7 +39,6 @@ public class InfrastructureKinds {
             .addAction(SuspendCompute.getInstance())
             .addAction(StopCompute.getInstance())
             .build();
-
     public static final Kind NETWORK = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
             Identifiers.NETWORK)
             .addAttribute(Network.getAttributes())
@@ -46,7 +46,6 @@ public class InfrastructureKinds {
             .addAction(UpNetwork.getInstance())
             .addAction(DownNetwork.getInstance())
             .build();
-
     public static final Kind STORAGE = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
             Identifiers.STORAGE)
             .addAttribute(Network.getAttributes())
@@ -54,27 +53,28 @@ public class InfrastructureKinds {
             .addAction(OfflineStorage.getInstance())
             .addAction(OnlineStorage.getInstance())
             .build();
-
     public static final Kind NETWORK_INTERFACE = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
             Identifiers.NETWORK_INTERFACE)
             .addAttribute(NetworkInterface.getAttributes())
             .addParent(Kinds.LINK)
             .build();
-
     public static final Kind STORAGE_LINK = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
             Identifiers.STORAGE_LINK)
             .addAttribute(StorageLink.getAttributes())
             .addParent(Kinds.LINK)
             .build();
-
-    public static Map<String, Kind> INFRASTRUCTURE_KINDS = new HashMap<>();
+    private static Map<String, Kind> INFRASTRUCTURE_KINDS = new HashMap<>();
 
     static {
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.COMPUTE, COMPUTE);
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.NETWORK, NETWORK);
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.STORAGE, STORAGE);
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.NETWORK_INTERFACE,
-                NETWORK_INTERFACE);
-        INFRASTRUCTURE_KINDS.put(Identifiers.INFRASTRUCTURE_SCHEME + Identifiers.STORAGE_LINK, STORAGE_LINK);
+        INFRASTRUCTURE_KINDS.put(Identifiers.COMPUTE, COMPUTE);
+        INFRASTRUCTURE_KINDS.put(Identifiers.NETWORK, NETWORK);
+        INFRASTRUCTURE_KINDS.put(Identifiers.STORAGE, STORAGE);
+        INFRASTRUCTURE_KINDS.put(Identifiers.NETWORK_INTERFACE, NETWORK_INTERFACE);
+        INFRASTRUCTURE_KINDS.put(Identifiers.STORAGE_LINK, STORAGE_LINK);
     }
+
+    public static Optional<Kind> getKind(String term) {
+        return Optional.ofNullable(INFRASTRUCTURE_KINDS.get(term));
+    }
+
 }

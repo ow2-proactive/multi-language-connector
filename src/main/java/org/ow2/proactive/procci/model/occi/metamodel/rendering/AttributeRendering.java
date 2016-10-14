@@ -1,5 +1,7 @@
 package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder(builderClassName = "Builder")
 public class AttributeRendering {
 
     private boolean mutable;

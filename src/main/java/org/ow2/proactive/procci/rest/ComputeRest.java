@@ -40,14 +40,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
+import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.CloudAutomationException;
-import org.ow2.proactive.procci.request.CloudAutomationRequest;
+import org.ow2.proactive.procci.request.CloudAutomationInstances;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -66,7 +66,7 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
  * Implement CRUD methods for REST service
  */
 @RestController
-@RequestMapping(value = Constant.COMPUTE_PATH)
+@RequestMapping(value = PathConstant.COMPUTE_PATH)
 public class ComputeRest {
 
     private final Logger logger = LogManager.getRootLogger();
@@ -77,7 +77,7 @@ public class ComputeRest {
     public ResponseEntity<EntitiesRendering> listAllComputes() {
         logger.debug("Get all Compute instances");
         try {
-            JSONObject resources = new CloudAutomationRequest().getRequest();
+            JSONObject resources = new CloudAutomationInstances().getRequest();
 
             List<Model> models = (List<Model>) resources.keySet()
                     .stream()
@@ -94,9 +94,9 @@ public class ComputeRest {
         } catch (CloudAutomationException e) {
             logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (SyntaxException e) {
+        } catch (ClientException e) {
             logger.error(this.getClass(), e);
-            return new ResponseEntity(e.getUserException(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -107,7 +107,7 @@ public class ComputeRest {
     public ResponseEntity<ResourceRendering> getCompute(@PathVariable("id") String id) {
         logger.debug("Get Compute ");
         try {
-            Optional<Model> computeModel = new CloudAutomationRequest().getInstanceByVariable(ID_NAME,
+            Optional<Model> computeModel = new CloudAutomationInstances().getInstanceByVariable(ID_NAME,
                     ConvertUtils.formatURL(id));
             if (!computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -115,12 +115,9 @@ public class ComputeRest {
                 ComputeBuilder computeBuilder = new ComputeBuilder(computeModel.get());
                 return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
             }
-        } catch (CloudAutomationException e) {
+        } catch (ClientException e) {
             logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (SyntaxException e) {
-            logger.error(this.getClass(), e);
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -135,70 +132,12 @@ public class ComputeRest {
         try {
             ComputeBuilder compute = new ComputeBuilder(computeRendering);
             JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
-            Model model = new Model(new CloudAutomationRequest().postRequest(pcaModel));
+            Model model = new Model(new CloudAutomationInstances().postRequest(pcaModel));
             ComputeBuilder response = new ComputeBuilder(model);
             return new ResponseEntity<>(response.build().getRendering(), HttpStatus.CREATED);
-        } catch (CloudAutomationException e) {
+        } catch (ClientException e) {
             logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (SyntaxException e) {
-            logger.error(this.getClass(), e);
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
-
-    /*@RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<SwaggerTest> createComputeTest(@RequestBody SwaggerTest computeRendering) throws InterruptedException, NumberFormatException {
-        logger.debug("Creating Compute " + computeRendering.toString());
-        return new ResponseEntity<>(computeRendering,HttpStatus.OK);
-    }*/
-
-
-    /**
-     * The following method will be added soon
-     */
-
-    //------------------- Apply an action on a Compute --------------------------------------------------------
-    /*
-        @RequestMapping(value = "{action}", method = RequestMethod.POST)
-        public ResponseEntity<Compute> actionOnCompute(@PathVariable("action") String action, @RequestBody Compute compute) {
-            logger.debug("Action "+ action+" on the Compute " + compute.getTitle());
-            JSONObject pcaModel = compute.toPCAModel(action).getCloudAutomationServiceRequest();
-            try {
-                new CloudAutomationRequest().sendRequest(pcaModel);
-            }catch (CloudAutomationException e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>(compute,HttpStatus.OK);
-        }
-
-        //------------------- Update a Compute --------------------------------------------------------
-
-        @RequestMapping(value = "{id}", method = RequestMethod.PUT)
-        public ResponseEntity<Compute> updateCompute(@RequestBody Compute compute) {
-            logger.debug("Updating Compute " + compute.getTitle());
-            JSONObject pcaModel = compute.toPCAModel("update").getCloudAutomationServiceRequest();
-            try {
-                String result = new CloudAutomationRequest().sendRequest(pcaModel);
-            }catch (CloudAutomationException e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>(compute,HttpStatus.OK);
-        }
-
-        //------------------- Delete a Compute --------------------------------------------------------
-
-        @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
-        public ResponseEntity<Compute> deleteCompute(@PathVariable("id") String id, @PathVariable String sessionid) {
-            logger.debug("Fetching & Deleting Compute with name " + id);
-            JSONObject pcaModel = new ComputeBuilder(id,sessionid).build().toPCAModel("delete").getCloudAutomationModel();
-            try{
-                new CloudAutomationRequest().sendRequest(pcaModel);
-            }catch (CloudAutomationException e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-*/
 }

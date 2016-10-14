@@ -76,10 +76,10 @@ public class Kind extends Category {
         }.putAll(actions).build();
         this.parent = parent;
         this.entities = new ArrayList<>();
-
     }
 
     public static class Builder {
+
         private final String scheme;
         private final String term;
 
@@ -91,10 +91,10 @@ public class Kind extends Category {
         public Builder(String scheme, String term) {
             this.scheme = scheme;
             this.term = term;
-            this.title = scheme + term;
-            attributes = new HashSet<>();
-            actions = new HashMap<>();
-            parent = null;
+            this.title = term;
+            this.attributes = new HashSet<>();
+            this.actions = new HashMap<>();
+            this.parent = null;
             this.setAttributes();
         }
 

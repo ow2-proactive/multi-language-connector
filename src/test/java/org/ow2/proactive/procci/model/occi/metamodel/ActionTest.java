@@ -7,16 +7,17 @@ import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 
+
 /**
  * Created by mael on 2/25/16.
  */
 public class ActionTest {
 
     @Test
-    public void maximalConstructor() {
+    public void constructor() {
         String uri = "http://schemas.ogf.org/occi/metamodel#actiontest";
         Set<Attribute> attributes = new HashSet<>();
-        Attribute a = new Attribute.Builder("none", Type.HASH, false, false).build();
+        Attribute a = new Attribute.Builder("none").type(Type.HASH).mutable(false).required(false).build();
         attributes.add(a);
         ActionImplemented actionImplemented = new ActionImplemented(uri, "actiontest", "actiontest",
                 attributes);
@@ -28,9 +29,12 @@ public class ActionTest {
 
         //integration test
         assertThat(actionImplemented.getAttributes()).containsAnyOf(
-                new Attribute.Builder("occi.category.scheme", Type.HASH, false, false).build(),
-                new Attribute.Builder("occi.category.term", Type.HASH, false, false).build(),
-                new Attribute.Builder("occi.category.title", Type.HASH, false, false).build());
+                new Attribute.Builder("occi.category.scheme").type(Type.HASH).mutable(false).required(
+                        false).build(),
+                new Attribute.Builder("occi.category.term").type(Type.HASH).mutable(false).required(
+                        false).build(),
+                new Attribute.Builder("occi.category.title").type(Type.HASH).mutable(false).required(
+                        false).build());
     }
 
     private class ActionImplemented extends Action {

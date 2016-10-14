@@ -15,7 +15,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class NetworkInterfaceTest {
 
     @Test
-    public void maximalConstructorTest() {
+    public void constructorTest() {
         Compute compute = new ComputeBuilder().url("url:compute").build();
         try {
             NetworkInterface networkInterface = new NetworkInterface.Builder(compute, "url:target", "mac",

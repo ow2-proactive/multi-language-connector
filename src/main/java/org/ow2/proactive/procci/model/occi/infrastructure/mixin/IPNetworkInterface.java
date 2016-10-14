@@ -18,16 +18,13 @@ import lombok.Getter;
 /**
  * This class enables to support L3/L4 capabilities with the NetworkInterface class
  */
-
+@Getter
 public class IPNetworkInterface extends Mixin {
 
-    @Getter
     private String address;
-    @Getter
     private String gateway;
     //if dynamic allocation is true then the allocation is dynamic otherwise it is static
     //default is false
-    @Getter
     private boolean dynamic;
 
     /**
@@ -45,11 +42,8 @@ public class IPNetworkInterface extends Mixin {
                 Identifiers.IPNETWORK_INTERFACE,
                 setAttributes(), new ArrayList<Action>(), new ArrayList<Mixin>(), initApplies(), entities);
 
-        setAttributes();
-
         this.address = address;
         this.gateway = gateway;
-
         this.dynamic = dynamic;
     }
 

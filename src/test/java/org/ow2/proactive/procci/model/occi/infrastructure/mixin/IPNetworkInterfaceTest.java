@@ -28,6 +28,7 @@ public class IPNetworkInterfaceTest {
         assertThat(ipNetworkInterface.getGateway()).isEqualTo("openstack.com");
         assertThat(ipNetworkInterface.isDynamic()).isTrue();
         assertThat(ipNetworkInterface.getAttributes()).contains(
-                new Attribute.Builder("occi.networkinterface.address", Type.OBJECT, false, false).build());
+                new Attribute.Builder("occi.networkinterface.address").type(Type.OBJECT).mutable(
+                        false).required(false).build());
     }
 }

@@ -15,7 +15,7 @@ public class CategoryTest {
 
 
     @Test
-    public void maximalConstructorTest() {
+    public void constructorTest() {
 
         String uri = "http://schemas.ogf.org/occi/infrastructure#compute";
         Category c = new Category(uri, "compute", "compute", new HashSet<Attribute>());
@@ -29,8 +29,10 @@ public class CategoryTest {
         String uri = "http://schemas.ogf.org/occi/infrastructure#compute";
         Category c = new Category(uri, "compute", "test", new HashSet<Attribute>());
 
-        Attribute a = new Attribute.Builder("occi.category.term", Type.OBJECT, false, false).build();
-        Attribute a1 = new Attribute.Builder("term2", Type.OBJECT, false, false).build();
+        Attribute a = new Attribute.Builder("occi.category.term").type(Type.OBJECT).mutable(false).required(
+                false).build();
+        Attribute a1 = new Attribute.Builder("term2").type(Type.OBJECT).mutable(false).required(
+                false).build();
         assertThat(c.getAttributes()).containsAnyOf(a, a1);
     }
 

@@ -1,5 +1,8 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.util.Optional;
+
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -11,37 +14,62 @@ public class AttributeTest {
 
     @Test
     public void minimalConstructorTest() {
-        Attribute attribute = new Attribute.Builder("test", Type.OBJECT, true, false).build();
+        Attribute attribute = new Attribute.Builder("test").type(Type.OBJECT).mutable(true).required(
+                false).build();
         assertThat(attribute.getName()).isEqualTo("test");
-        assertThat(attribute.getType()).isEqualTo(Type.OBJECT);
-        assertThat(attribute.isRequired()).isFalse();
-        assertThat(attribute.isMutable()).isTrue();
+        assertThat(attribute.getType().get()).isEqualTo(Type.OBJECT);
+        assertThat(attribute.getRequired().get()).isFalse();
+        assertThat(attribute.getMutable().get()).isTrue();
     }
 
     @Test
     public void maximalConstructorTest() {
         Object o = new Object();
-        Attribute attribute = new Attribute.Builder("test", Type.OBJECT, true, false).pattern(o).defaultValue(
+        Attribute attribute = new Attribute.Builder("test").type(Type.OBJECT).mutable(true).required(
+                false).pattern(o).defaultValue(
                 1).description("testSuit").build();
         assertThat(attribute.getName()).isEqualTo("test");
-        assertThat(attribute.getType()).isEqualTo(Type.OBJECT);
-        assertThat(attribute.isRequired()).isFalse();
-        assertThat(attribute.isMutable()).isTrue();
+        assertThat(attribute.getType().get()).isEqualTo(Type.OBJECT);
+        assertThat(attribute.getRequired().get()).isFalse();
+        assertThat(attribute.getMutable().get()).isTrue();
         assertThat(attribute.getPattern().equals(o));
-        assertThat(attribute.getDefaultValue()).isEqualTo(new Integer(1));
-        assertThat(attribute.getDescription()).isEqualTo("testSuit");
+        assertThat(attribute.getDefaultValue().get()).isEqualTo(new Integer(1));
+        assertThat(attribute.getDescription().get()).isEqualTo("testSuit");
     }
 
     @Test
-    public void maximalConstructorDescritpionTest() {
-        Attribute attribute = new Attribute.Builder("test", Type.OBJECT, true, false).description(
+    public void maximalConstructorDescriptionTest() {
+        Attribute attribute = new Attribute.Builder("test").type(Type.OBJECT).mutable(true).required(
+                false).description(
                 "testSuit").build();
         assertThat(attribute.getName()).isEqualTo("test");
-        assertThat(attribute.getType()).isEqualTo(Type.OBJECT);
-        assertThat(attribute.isRequired()).isFalse();
-        assertThat(attribute.isMutable()).isTrue();
-        assertThat(attribute.getPattern()).isNull();
-        assertThat(attribute.getDefaultValue()).isNull();
-        assertThat(attribute.getDescription()).isEqualTo("testSuit");
+        assertThat(attribute.getType().get()).isEqualTo(Type.OBJECT);
+        assertThat(attribute.getRequired().get()).isFalse();
+        assertThat(attribute.getMutable().get()).isTrue();
+        assertThat(attribute.getPattern()).isEqualTo(Optional.empty());
+        assertThat(attribute.getDefaultValue()).isEqualTo(Optional.empty());
+        assertThat(attribute.getDescription().get()).isEqualTo("testSuit");
+    }
+
+    @Test
+    public void getRenderingTest() {
+        Attribute attribute = new Attribute.Builder("nameTest")
+                .type(Type.OBJECT)
+                .mutable(false)
+                .required(true)
+                .defaultValue("defaultTest")
+                .description("descriptionTest")
+                .pattern("patternTest")
+                .build();
+
+        AttributeRendering rendering = attribute.getRendering();
+
+        assertThat(rendering.getType()).matches("OBJECT");
+        assertThat(rendering.isMutable()).isFalse();
+        assertThat(rendering.isRequired()).isTrue();
+        assertThat(rendering.getDefaultValue()).isEqualTo("defaultTest");
+        assertThat(rendering.getDescription()).matches("descriptionTest");
+        assertThat(rendering.getPattern()).isEqualTo("patternTest");
+
     }
 }

@@ -1,4 +1,4 @@
-# Domain Specific Language connectors
+# Multi-Language connector
 
 ## Purpose
 
@@ -20,7 +20,7 @@ $ gradlew clean build war
 Then, you can directly deploy the service with embedded Tomcat:
 
 ```
-$ java -jar build/libs/microservice-template-X.Y.Z-SNAPSHOT.war
+$ java -jar build/libs/multi-language-connector-0.0.0-SNAPSHOT.war
 ```
 
 The WAR file produced by Gradle can also be deployed in the embedded Jetty container started by an instance of [ProActive Server](https://github.com/ow2-proactive/scheduling).
@@ -41,6 +41,6 @@ To access Swagger API:
 
 ## Integration with the scheduler
 
-One solution is to run this portal using the scheduler (copy the dsl-connector.war into scheduling/dist/war/).
+One solution is to run this portal using the scheduler (copy the multi-language-connector.war into scheduling/dist/war/).
 
 If you don't deploy locally, don't forget to update src/main/resource/config.properties

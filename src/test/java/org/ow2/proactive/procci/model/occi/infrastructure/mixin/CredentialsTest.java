@@ -22,6 +22,7 @@ public class CredentialsTest {
         assertThat(credentials.getPublickey()).isEqualTo("publickeyTest");
         assertThat(credentials.getApplies().contains(InfrastructureKinds.COMPUTE));
         assertThat(credentials.getAttributes().contains(
-                new Attribute.Builder("occi.credentials.ssh.publickey", Type.OBJECT, false, false).build()));
+                new Attribute.Builder("occi.credentials.ssh.publickey").type(Type.OBJECT).mutable(
+                        false).required(false).build()));
     }
 }
