@@ -66,7 +66,7 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
  * Implement CRUD methods for REST service
  */
 @RestController
-@RequestMapping(value = Constant.COMPUTE_PATH)
+@RequestMapping(value = PathConstant.COMPUTE_PATH)
 public class ComputeRest {
 
     private final Logger logger = LogManager.getRootLogger();

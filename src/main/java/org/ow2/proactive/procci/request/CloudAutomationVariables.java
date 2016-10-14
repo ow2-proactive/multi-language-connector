@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class CloudAutomationVariables {
 
-    private static final Logger logger = LogManager.getRootLogger();
+    private static final Logger logger = LogManager.getLogger(CloudAutomationVariables.class);
 
     @Getter(AccessLevel.PACKAGE)
     private static String variablesUrl = RequestUtils.getInstance().getProperty(

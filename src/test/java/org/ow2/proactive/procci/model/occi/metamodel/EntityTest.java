@@ -16,7 +16,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class EntityTest {
 
     @Test
-    public void maximalConstructorTest() {
+    public void constructorTest() {
         Kind k = Kinds.ENTITY;
         List<Mixin> mixins = new ArrayList<>();
         Contextualization contextualization = new Contextualization("userDataTest", null);

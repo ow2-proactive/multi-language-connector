@@ -38,7 +38,7 @@ public class AttributeTest {
     }
 
     @Test
-    public void maximalConstructorDescritpionTest() {
+    public void maximalConstructorDescriptionTest() {
         Attribute attribute = new Attribute.Builder("test").type(Type.OBJECT).mutable(true).required(
                 false).description(
                 "testSuit").build();

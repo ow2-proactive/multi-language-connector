@@ -15,7 +15,7 @@ public class CategoryTest {
 
 
     @Test
-    public void maximalConstructorTest() {
+    public void constructorTest() {
 
         String uri = "http://schemas.ogf.org/occi/infrastructure#compute";
         Category c = new Category(uri, "compute", "compute", new HashSet<Attribute>());

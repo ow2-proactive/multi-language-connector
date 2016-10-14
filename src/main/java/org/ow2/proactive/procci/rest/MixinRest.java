@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Created by mael on 05/10/16.
  */
 @RestController
-@RequestMapping(value = Constant.QUERY_PATH)
+@RequestMapping(value = PathConstant.QUERY_PATH)
 public class MixinRest {
 
     private final Logger logger = LogManager.getRootLogger();

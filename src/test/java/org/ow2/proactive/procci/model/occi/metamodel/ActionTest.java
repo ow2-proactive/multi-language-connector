@@ -14,7 +14,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class ActionTest {
 
     @Test
-    public void maximalConstructor() {
+    public void constructor() {
         String uri = "http://schemas.ogf.org/occi/metamodel#actiontest";
         Set<Attribute> attributes = new HashSet<>();
         Attribute a = new Attribute.Builder("none").type(Type.HASH).mutable(false).required(false).build();
