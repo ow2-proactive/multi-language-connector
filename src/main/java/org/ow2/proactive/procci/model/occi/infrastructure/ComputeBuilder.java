@@ -119,27 +119,32 @@ public class ComputeBuilder {
      */
     public ComputeBuilder rendering(ResourceRendering rendering) throws ClientException, IOException {
         this.url = Optional.ofNullable(rendering.getId());
-        this.title = Optional.ofNullable(
-                (String) rendering.getAttributes().getOrDefault(ENTITY_TITLE_NAME, null));
-        this.architecture = getArchitectureFromString(Optional.ofNullable(
-                (String) rendering.getAttributes().getOrDefault(ARCHITECTURE_NAME, null)));
-        this.state = getStateFromString(Optional.ofNullable(
-                (String) rendering.getAttributes().getOrDefault(COMPUTE_STATE_NAME, null)));
-        this.hostname = Optional.ofNullable(
-                (String) rendering.getAttributes().getOrDefault(HOSTNAME_NAME, null));
+        this.title = ConvertUtils.getStringFromObject(Optional.ofNullable(rendering.getAttributes())
+                .map(attributes -> attributes.getOrDefault(ENTITY_TITLE_NAME, null)));
+        this.architecture = getArchitectureFromString(ConvertUtils.getStringFromObject(Optional.ofNullable(
+                rendering.getAttributes()).map(
+                attributes -> attributes.getOrDefault(ARCHITECTURE_NAME, null))));
+        this.state = getStateFromString(ConvertUtils.getStringFromObject(Optional.ofNullable(
+                rendering.getAttributes()).map(
+                attributes -> attributes.getOrDefault(COMPUTE_STATE_NAME, null))));
+        this.hostname = ConvertUtils.getStringFromObject(Optional.ofNullable(
+                rendering.getAttributes()).map(attributes -> attributes.getOrDefault(HOSTNAME_NAME, null)));
         this.cores = ConvertUtils.getIntegerFromString(
-                Optional.ofNullable(rendering.getAttributes().getOrDefault(CORES_NAME, null))
+                Optional.ofNullable(rendering.getAttributes())
+                        .map(attributes -> attributes.getOrDefault(CORES_NAME, null))
                         .map(coreNumber -> String.valueOf(coreNumber)));
         this.memory = ConvertUtils.getFloatFromString(
-                Optional.ofNullable(rendering.getAttributes().getOrDefault(MEMORY_NAME, null))
+                Optional.ofNullable(rendering.getAttributes())
+                        .map(attributes -> attributes.getOrDefault(MEMORY_NAME, null))
                         .map(memoryNumber -> String.valueOf(memoryNumber)));
         this.share = ConvertUtils.getIntegerFromString(
-                Optional.ofNullable(rendering.getAttributes().getOrDefault(SHARE_NAME, null))
+                Optional.ofNullable(rendering.getAttributes())
+                        .map(attributes -> attributes.getOrDefault(SHARE_NAME, null))
                         .map(shareNumber -> String.valueOf(shareNumber)));
-        this.summary = Optional.ofNullable(
-                (String) rendering.getAttributes().getOrDefault(SUMMARY_NAME, null));
+        this.summary = ConvertUtils.getStringFromObject(Optional.ofNullable(
+                rendering.getAttributes()).map(attributes -> attributes.getOrDefault(SUMMARY_NAME, null)));
         this.mixins = new ArrayList<>();
-        for(String mixin : rendering.getMixins()){
+        for (String mixin : Optional.ofNullable(rendering.getMixins()).orElse(new ArrayList<>())) {
             this.mixins.add(providerMixin.getMixinByTitle(mixin));
         }
         associateProviderMixin(rendering.getAttributes());
@@ -149,12 +154,15 @@ public class ComputeBuilder {
         return this;
     }
 
-    void associateProviderMixin(Map<String, Object> attributes) throws ClientException{
-        for(String mixinName : attributes.keySet()){
-            if( providerMixin.getInstance(mixinName).isPresent()){
+    void associateProviderMixin(Map<String, Object> attributes) throws ClientException {
+        if (attributes == null) {
+            return;
+        }
+        for (String mixinName : attributes.keySet()) {
+            if (providerMixin.getInstance(mixinName).isPresent()) {
                 try {
                     providerMixin.getInstance(mixinName).get().build((Map) attributes.get(mixinName));
-                }catch(ClassCastException e){
+                } catch (ClassCastException e) {
                     throw new SyntaxException(mixinName);
                 }
             }
@@ -310,16 +318,17 @@ public class ComputeBuilder {
     }
 
     /**
-     *  Build the compute and update the mixin entities
+     * Build the compute and update the mixin entities
+     *
      * @return a compute
-     * @throws IOException if cloud-automation-service response is not readable
+     * @throws IOException              if cloud-automation-service response is not readable
      * @throws CloudAutomationException if cloud-automation-service response is an error
      */
-    public Compute build() throws IOException, CloudAutomationException{
+    public Compute build() throws IOException, CloudAutomationException {
         Compute compute = new Compute(url, InfrastructureKinds.COMPUTE, title, mixins, summary,
                 new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
-        for(Mixin mixin : mixins){
+        for (Mixin mixin : mixins) {
             mixin.addEntity(compute);
         }
 

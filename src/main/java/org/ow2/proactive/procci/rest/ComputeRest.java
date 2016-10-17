@@ -42,7 +42,6 @@ import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
@@ -75,7 +74,7 @@ public class ComputeRest {
 
     @Autowired
     private CloudAutomationInstances cloudAutomationInstances;
-    
+
 
     //-------------------Retrieve All Computes--------------------------------------------------------
 

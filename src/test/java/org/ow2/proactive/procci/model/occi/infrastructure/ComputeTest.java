@@ -50,7 +50,7 @@ public class ComputeTest {
     }
 
     @Test
-    public void computeConstructorTest() throws IOException, CloudAutomationException{
+    public void computeConstructorTest() throws IOException, CloudAutomationException {
 
         Compute compute = computeBuilder.build();
 
@@ -90,7 +90,7 @@ public class ComputeTest {
     }
 
     @Test
-    public void toCloudAutomationModelTest() throws IOException, CloudAutomationException{
+    public void toCloudAutomationModelTest() throws IOException, CloudAutomationException {
         Model model = computeBuilder.build().toCloudAutomationModel("create");
         assertThat(model.getServiceModel()).isEqualTo("occi.infrastructure.compute");
         assertThat(model.getActionType()).isEqualTo("create");
@@ -101,7 +101,7 @@ public class ComputeTest {
     }
 
     @Test
-    public void constructFromRenderingTest() throws ClientException, IOException{
+    public void constructFromRenderingTest() throws ClientException, IOException {
 
         when(providerMixin.getInstance("occi.compute.speed")).thenReturn(Optional.empty());
         when(providerMixin.getInstance("occi.compute.memory")).thenReturn(Optional.empty());
@@ -141,12 +141,26 @@ public class ComputeTest {
         assertThat(compute.getMixins()).isEmpty();
         assertThat(compute.getSummary().get()).matches("summaryTest");
 
+        ResourceRendering noArgsRendering = new ResourceRendering();
+        Compute defaultCompute = new ComputeBuilder().rendering(noArgsRendering).build();
+
+        assertThat(defaultCompute.getShare().isPresent()).isFalse();
+        assertThat(defaultCompute.getSummary().isPresent()).isFalse();
+        assertThat(defaultCompute.getMemory().isPresent()).isFalse();
+        assertThat(defaultCompute.getCores().isPresent()).isFalse();
+        assertThat(defaultCompute.getArchitecture().isPresent()).isFalse();
+        assertThat(defaultCompute.getState().isPresent()).isFalse();
+        assertThat(defaultCompute.getTitle().isPresent()).isFalse();
+        assertThat(defaultCompute.getId()).startsWith("urn:uuid:");
+        assertThat(defaultCompute.getKind()).isNotNull();
+
     }
 
     @Test
-    public void getRenderingTest() throws IOException, CloudAutomationException{
+    public void getRenderingTest() throws IOException, CloudAutomationException {
 
-        when(providerMixin.getInstance("titleTest")).thenReturn(Optional.of(new MixinBuilder("schemeMixinTest","termMixinTest")));
+        when(providerMixin.getInstance("titleTest")).thenReturn(
+                Optional.of(new MixinBuilder("schemeMixinTest", "termMixinTest")));
         ResourceRendering rendering = computeBuilder.build().getRendering();
         assertThat(rendering.getId()).matches("url");
         assertThat(rendering.getKind()).matches("compute");
@@ -166,14 +180,14 @@ public class ComputeTest {
     @Test
     public void associateProviderMixin() throws IOException, ClientException {
         when(providerMixin.getInstance("title")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("title2")).thenReturn(Optional.of(new MixinBuilder("scheme","term")));
-        Map<String,Object> attributes = new HashMap<>();
-        Map<String,String> attribute1 = new HashMap<>();
-        Map<String,String> attribute2 = new HashMap<>();
-        attribute1.put("key","value");
-        attribute2.put("key2","value2");
-        attributes.put("title",attribute1);
-        attributes.put("title2",attribute2);
+        when(providerMixin.getInstance("title2")).thenReturn(Optional.of(new MixinBuilder("scheme", "term")));
+        Map<String, Object> attributes = new HashMap<>();
+        Map<String, String> attribute1 = new HashMap<>();
+        Map<String, String> attribute2 = new HashMap<>();
+        attribute1.put("key", "value");
+        attribute2.put("key2", "value2");
+        attributes.put("title", attribute1);
+        attributes.put("title2", attribute2);
 
         computeBuilder.associateProviderMixin(attributes);
     }
