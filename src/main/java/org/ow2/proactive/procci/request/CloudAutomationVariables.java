@@ -3,8 +3,6 @@ package org.ow2.proactive.procci.request;
 import java.io.IOException;
 
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
-import lombok.AccessLevel;
-import lombok.Getter;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.fluent.Request;
@@ -13,7 +11,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by mael on 06/10/16.
@@ -22,7 +20,7 @@ import org.springframework.stereotype.Component;
 /**
  * Send crud request on cloud-automation-service/variables
  */
-@Component
+@Service
 public class CloudAutomationVariables {
 
     private static final Logger logger = LogManager.getRootLogger();

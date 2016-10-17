@@ -21,6 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import static org.ow2.proactive.procci.model.ModelConstant.ERROR_STATE;
@@ -51,6 +52,7 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 @ToString
 @Getter
 @Component
+@Scope("prototype")
 public class ComputeBuilder {
 
     @Autowired
@@ -159,6 +161,7 @@ public class ComputeBuilder {
             return;
         }
         for (String mixinName : attributes.keySet()) {
+            System.out.println("providerMixin"+providerMixin);
             if (providerMixin.getInstance(mixinName).isPresent()) {
                 try {
                     providerMixin.getInstance(mixinName).get().build((Map) attributes.get(mixinName));

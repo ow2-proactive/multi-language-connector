@@ -26,14 +26,14 @@ public class ProviderMixin {
 
     private final ImmutableMap<String, Supplier<MixinBuilder>> providerMixin;
 
-    private ProviderMixin(){
+    public ProviderMixin(){
         providerMixin = new ImmutableMap.Builder<String,Supplier<MixinBuilder>>()
                 .put(Identifiers.VM_IMAGE,( () -> new VMImage.Builder()))
                 .build();
     }
 
     public Optional<MixinBuilder> getInstance(String mixinName){
-        return Optional.ofNullable(providerMixin.get(mixinName).get());
+        return Optional.ofNullable(providerMixin.get(mixinName)).map(supplier -> supplier.get());
     }
 
     public Mixin getMixinByTitle(String title) throws IOException, ClientException {

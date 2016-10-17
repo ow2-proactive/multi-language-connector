@@ -51,7 +51,10 @@ import org.ow2.proactive.procci.request.CloudAutomationInstances;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -68,9 +71,11 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
  */
 @RestController
 @RequestMapping(value = Constant.COMPUTE_PATH)
-public class ComputeRest {
+public class ComputeRest implements ApplicationContextAware{
 
     private final Logger logger = LogManager.getRootLogger();
+
+    private ApplicationContext applicationContext;
 
     @Autowired
     private CloudAutomationInstances cloudAutomationInstances;
@@ -138,7 +143,7 @@ public class ComputeRest {
             @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            ComputeBuilder compute = new ComputeBuilder().rendering(computeRendering);
+            ComputeBuilder compute = ((ComputeBuilder) applicationContext.getBean("computeBuilder")).rendering(computeRendering);
             JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
             Model model = new Model(cloudAutomationInstances.postRequest(pcaModel));
             ComputeBuilder response = new ComputeBuilder().cloudAutomationModel(model);
@@ -150,5 +155,10 @@ public class ComputeRest {
             logger.error(this.getClass(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

@@ -17,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by mael on 02/06/16.
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Component;
 /**
  * Manage the connection and the request with Cloud Automation Microservices
  */
-@Component
+@Service
 public class CloudAutomationInstances {
 
     private final Logger logger = LogManager.getRootLogger();

@@ -15,12 +15,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by mael on 06/10/16.
  */
-@Component
+@Service
 public class RequestUtils {
 
     private final Logger logger = LogManager.getRootLogger();
