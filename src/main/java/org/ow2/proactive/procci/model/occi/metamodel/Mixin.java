@@ -50,7 +50,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -130,20 +129,23 @@ public class Mixin extends Category {
     }
 
     /**
-     *  Add to the mixin, the entities which apply and update the mixin database
-     *  if the mixin is defined through an entity then it is created
+     * Add to the mixin, the entities which apply and update the mixin database
+     * if the mixin is defined through an entity then it is created
+     *
      * @param entity is an entity which is related to the mixin
-     * @throws IOException occurs if the response of cloud-automation-service in not readable
+     * @throws IOException              occurs if the response of cloud-automation-service in not readable
      * @throws CloudAutomationException occurs if the request is not acceptable for cloud-automation-service
      */
-    public void addEntity(Entity entity, CloudAutomationVariables cloudAutomationVariables) throws IOException, CloudAutomationException{
+    public void addEntity(Entity entity,
+            CloudAutomationVariables cloudAutomationVariables) throws IOException, CloudAutomationException {
         entities.add(entity);
         try {
             cloudAutomationVariables.update(this.getTitle(),
                     MixinRendering.convertStringFromMixin(this.getRendering()));
-        }catch (CloudAutomationException exception){
-            this.setTitle(entity.getTitle().get()+this.getTerm());
-            cloudAutomationVariables.post(this.getTitle(),MixinRendering.convertStringFromMixin(this.getRendering()));
+        } catch (CloudAutomationException exception) {
+            this.setTitle(entity.getTitle().get() + this.getTerm());
+            cloudAutomationVariables.post(this.getTitle(),
+                    MixinRendering.convertStringFromMixin(this.getRendering()));
         }
     }
 

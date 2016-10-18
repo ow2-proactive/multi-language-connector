@@ -23,20 +23,20 @@ import static com.google.common.truth.Truth.assertThat;
 public class NetworkInterfaceTest {
 
     @Mock
+    CloudAutomationVariables cloudAutomationVariables;
+    @Mock
     private ProviderMixin providerMixin;
 
-    @Mock
-    CloudAutomationVariables cloudAutomationVariables;
-
     @Before
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
 
     @Test
-    public void maximalConstructorTest() throws IOException, CloudAutomationException{
-        Compute compute = new ComputeBuilder(providerMixin,cloudAutomationVariables).url("url:compute").build();
+    public void maximalConstructorTest() throws IOException, CloudAutomationException {
+        Compute compute = new ComputeBuilder(providerMixin, cloudAutomationVariables).url(
+                "url:compute").build();
         try {
             NetworkInterface networkInterface = new NetworkInterface.Builder(compute, "url:target", "mac",
                     "linktarget")

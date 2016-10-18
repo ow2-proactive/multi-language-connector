@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
@@ -19,7 +18,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRenderin
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import lombok.AccessLevel;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -64,7 +62,7 @@ public class MixinBuilder {
      * @param mixinRendering is the rendering mixin
      */
     public MixinBuilder(
-            MixinRendering mixinRendering) throws ClientException, IOException{
+            MixinRendering mixinRendering) throws ClientException, IOException {
         this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(
                 () -> new MissingAttributesException("scheme", "mixin"));
         this.term = Optional.ofNullable(mixinRendering.getTerm()).orElseThrow(

@@ -39,7 +39,7 @@ public class ComputeTest {
 
     @Before
     public void setUp() {
-        computeBuilder = new ComputeBuilder(providerMixin,cloudAutomationVariables).url("url")
+        computeBuilder = new ComputeBuilder(providerMixin, cloudAutomationVariables).url("url")
                 .architecture(Compute.Architecture.X64)
                 .cores(5)
                 .hostame("hostnameTest")
@@ -81,7 +81,8 @@ public class ComputeTest {
                 .addVariable("occi.entity.title", "titleTest")
                 .build();
         try {
-            ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,cloudAutomationVariables).cloudAutomationModel(model);
+            ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,
+                    cloudAutomationVariables).cloudAutomationModel(model);
             assertThat(computeBuilder.getArchitecture().get()).isEqualTo(Compute.Architecture.X86);
             assertThat(computeBuilder.getCores().get()).isEqualTo(new Integer(4));
             assertThat(computeBuilder.getMemory().get()).isWithin(new Float(0.0001)).of(new Float(2));
@@ -146,7 +147,8 @@ public class ComputeTest {
         assertThat(compute.getSummary().get()).matches("summaryTest");
 
         ResourceRendering noArgsRendering = new ResourceRendering();
-        Compute defaultCompute = new ComputeBuilder(providerMixin, cloudAutomationVariables).rendering(noArgsRendering).build();
+        Compute defaultCompute = new ComputeBuilder(providerMixin, cloudAutomationVariables).rendering(
+                noArgsRendering).build();
 
         assertThat(defaultCompute.getShare().isPresent()).isFalse();
         assertThat(defaultCompute.getSummary().isPresent()).isFalse();
@@ -184,7 +186,8 @@ public class ComputeTest {
     @Test
     public void associateProviderMixin() throws IOException, ClientException {
         when(providerMixin.getInstance("title")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("title2")).thenReturn(Optional.of(new MixinBuilder(providerMixin, "scheme", "term")));
+        when(providerMixin.getInstance("title2")).thenReturn(
+                Optional.of(new MixinBuilder(providerMixin, "scheme", "term")));
         Map<String, Object> attributes = new HashMap<>();
         Map<String, String> attribute1 = new HashMap<>();
         Map<String, String> attribute2 = new HashMap<>();

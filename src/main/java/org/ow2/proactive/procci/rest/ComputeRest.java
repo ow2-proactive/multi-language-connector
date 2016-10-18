@@ -99,7 +99,8 @@ public class ComputeRest {
 
             List<EntityRendering> results = new ArrayList<>();
             for (Model model : models) {
-                results.add(new ComputeBuilder(providerMixin,cloudAutomationVariables).cloudAutomationModel(model).build().getRendering());
+                results.add(new ComputeBuilder(providerMixin, cloudAutomationVariables).cloudAutomationModel(
+                        model).build().getRendering());
             }
 
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(results).build(),
@@ -125,7 +126,8 @@ public class ComputeRest {
             if (!computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-                ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,cloudAutomationVariables).cloudAutomationModel(computeModel.get());
+                ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,
+                        cloudAutomationVariables).cloudAutomationModel(computeModel.get());
                 return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
@@ -146,10 +148,12 @@ public class ComputeRest {
             @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            ComputeBuilder compute = new ComputeBuilder(providerMixin,cloudAutomationVariables).rendering(computeRendering);
+            ComputeBuilder compute = new ComputeBuilder(providerMixin, cloudAutomationVariables).rendering(
+                    computeRendering);
             JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
             Model model = new Model(cloudAutomationInstances.postRequest(pcaModel));
-            ComputeBuilder response = new ComputeBuilder(providerMixin,cloudAutomationVariables).cloudAutomationModel(model);
+            ComputeBuilder response = new ComputeBuilder(providerMixin,
+                    cloudAutomationVariables).cloudAutomationModel(model);
             return new ResponseEntity<>(response.build().getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass(), e);

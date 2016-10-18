@@ -21,60 +21,61 @@ import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import lombok.Getter;
-import org.json.simple.parser.ParseException;
 
 /**
  * Created by mael on 11/10/16.
  */
 @Getter
-public class VMImage extends Mixin{
+public class VMImage extends Mixin {
 
     private String image;
 
-    public VMImage(String title, List<Mixin> depends, List<Entity> entities, String image){
-        super(Identifiers.OCCIWARE_SCHEME,Identifiers.VM_IMAGE,title,setAttributes(),new ArrayList<>(),depends,initApplies(),entities);
+    public VMImage(String title, List<Mixin> depends, List<Entity> entities, String image) {
+        super(Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE, title, setAttributes(), new ArrayList<>(),
+                depends, initApplies(), entities);
         this.image = image;
     }
 
-    @Override
-    public Model.Builder toCloudAutomationModel(Model.Builder cloudAutomation) {
-        cloudAutomation.addVariable(Attributes.COMPUTE_IMAGE_NAME,image);
-        return cloudAutomation;
-    }
-
-    private static List<Kind> initApplies(){
+    private static List<Kind> initApplies() {
         List<Kind> applies = new ArrayList<>();
         applies.add(InfrastructureKinds.COMPUTE);
         return applies;
     }
 
-    private static Set<Attribute> setAttributes(){
+    private static Set<Attribute> setAttributes() {
         Set<Attribute> attributes = new HashSet<>();
         attributes.add(Attributes.COMPUTE_IMAGE);
         return attributes;
     }
 
-    public static class Builder extends MixinBuilder{
+    @Override
+    public Model.Builder toCloudAutomationModel(Model.Builder cloudAutomation) {
+        cloudAutomation.addVariable(Attributes.COMPUTE_IMAGE_NAME, image);
+        return cloudAutomation;
+    }
 
-        public Builder(ProviderMixin providerMixin){
-            super(providerMixin,Identifiers.OCCIWARE_SCHEME,Identifiers.VM_IMAGE);
+    public static class Builder extends MixinBuilder {
+
+        public Builder(ProviderMixin providerMixin) {
+            super(providerMixin, Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE);
         }
 
         @Override
-        public Mixin build(Map attributesMap) throws ClientException{
-            return new VMImage(this.getTitle(),this.getDepends(),this.getEntities(),
-                    Optional.ofNullable( convertAttributeInString(attributesMap.get(Attributes.COMPUTE_IMAGE_NAME)))
-                            .orElseThrow(() -> new MissingAttributesException(Attributes.COMPUTE_IMAGE_NAME,Attributes.COMPUTE_IMAGE.getName())));
+        public Mixin build(Map attributesMap) throws ClientException {
+            return new VMImage(this.getTitle(), this.getDepends(), this.getEntities(),
+                    Optional.ofNullable(
+                            convertAttributeInString(attributesMap.get(Attributes.COMPUTE_IMAGE_NAME)))
+                            .orElseThrow(() -> new MissingAttributesException(Attributes.COMPUTE_IMAGE_NAME,
+                                    Attributes.COMPUTE_IMAGE.getName())));
         }
 
-        private String convertAttributeInString(Object attribute) throws SyntaxException{
-            try{
+        private String convertAttributeInString(Object attribute) throws SyntaxException {
+            try {
                 return (String) attribute;
-            }catch (ClassCastException e){
+            } catch (ClassCastException e) {
                 throw new SyntaxException(attribute.toString());
             }
         }
-
 
 
     }

@@ -32,10 +32,9 @@ public class LinkTest {
     private CloudAutomationVariables cloudAutomationVariables;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
-
 
 
     @Test
@@ -58,8 +57,8 @@ public class LinkTest {
     }
 
     @Test
-    public void builderTest() throws IOException, CloudAutomationException{
-        Compute compute = new ComputeBuilder(providerMixin,cloudAutomationVariables).url("compute").build();
+    public void builderTest() throws IOException, CloudAutomationException {
+        Compute compute = new ComputeBuilder(providerMixin, cloudAutomationVariables).url("compute").build();
 
         try {
             Link link = new Link.Builder(compute, "target")

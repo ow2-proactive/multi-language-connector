@@ -10,8 +10,8 @@ import static com.google.common.truth.Truth.assertThat;
 public class ProviderMixinTest {
 
     @Test
-    public void getInstanceTest(){
-        ProviderMixin providerMixin= new ProviderMixin();
+    public void getInstanceTest() {
+        ProviderMixin providerMixin = new ProviderMixin();
 
         assertThat(providerMixin.getInstance("notAMixin").isPresent()).isFalse();
         assertThat(providerMixin.getInstance("vmimage").isPresent()).isTrue();

@@ -8,13 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -104,7 +102,7 @@ public class MixinTest {
     }
 
     @Test
-    public void renderingBuilderTest() throws ClientException, IOException{
+    public void renderingBuilderTest() throws ClientException, IOException {
 
         try {
             new MixinBuilder(MixinRendering.builder().build()).build();

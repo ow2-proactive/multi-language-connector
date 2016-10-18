@@ -21,18 +21,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProviderMixin {
 
+    private final ImmutableMap<String, Supplier<MixinBuilder>> providerMixin;
     @Autowired
     private CloudAutomationVariables cloudAutomationVariables;
 
-    private final ImmutableMap<String, Supplier<MixinBuilder>> providerMixin;
-
-    public ProviderMixin(){
-        providerMixin = new ImmutableMap.Builder<String,Supplier<MixinBuilder>>()
-                .put(Identifiers.VM_IMAGE,( () -> new VMImage.Builder(this)))
+    public ProviderMixin() {
+        providerMixin = new ImmutableMap.Builder<String, Supplier<MixinBuilder>>()
+                .put(Identifiers.VM_IMAGE, (() -> new VMImage.Builder(this)))
                 .build();
     }
 
-    public Optional<MixinBuilder> getInstance(String mixinName){
+    public Optional<MixinBuilder> getInstance(String mixinName) {
         return Optional.ofNullable(providerMixin.get(mixinName)).map(supplier -> supplier.get());
     }
 

@@ -45,7 +45,7 @@ public class CloudAutomationVariables {
 
 
     public void post(String key, String value) throws CloudAutomationException {
-        System.out.println("key : "+key+", value : "+value);
+        System.out.println("key : " + key + ", value : " + value);
         try {
             HttpResponse response = Request.Post(getQueryUrl(key))
                     .useExpectContinue()

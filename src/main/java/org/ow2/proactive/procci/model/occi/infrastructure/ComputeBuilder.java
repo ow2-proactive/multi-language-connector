@@ -331,7 +331,7 @@ public class ComputeBuilder {
                 new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
         for (Mixin mixin : mixins) {
-            mixin.addEntity(compute,cloudAutomationVariables);
+            mixin.addEntity(compute, cloudAutomationVariables);
         }
 
         return compute;
