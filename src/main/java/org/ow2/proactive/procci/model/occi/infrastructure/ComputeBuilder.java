@@ -17,12 +17,10 @@ import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
+import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import static org.ow2.proactive.procci.model.ModelConstant.ERROR_STATE;
 import static org.ow2.proactive.procci.model.ModelConstant.INSTANCE_ENDPOINT;
@@ -51,12 +49,11 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 @EqualsAndHashCode
 @ToString
 @Getter
-@Component
-@Scope("prototype")
 public class ComputeBuilder {
 
-    @Autowired
     private ProviderMixin providerMixin;
+
+    private CloudAutomationVariables cloudAutomationVariables;
 
     private Optional<String> url;
     private Optional<String> title;
@@ -73,7 +70,9 @@ public class ComputeBuilder {
     /**
      * Default Builder
      */
-    public ComputeBuilder() {
+    public ComputeBuilder(ProviderMixin providerMixin, CloudAutomationVariables cloudAutomationVariables) {
+        this.providerMixin = providerMixin;
+        this.cloudAutomationVariables = cloudAutomationVariables;
         this.url = Optional.empty();
         this.title = Optional.empty();
         this.summary = Optional.empty();
@@ -161,10 +160,10 @@ public class ComputeBuilder {
             return;
         }
         for (String mixinName : attributes.keySet()) {
-            System.out.println("providerMixin"+providerMixin);
             if (providerMixin.getInstance(mixinName).isPresent()) {
                 try {
-                    providerMixin.getInstance(mixinName).get().build((Map) attributes.get(mixinName));
+                    this.mixins.add(providerMixin.getInstance(mixinName).get().build(
+                            (Map) attributes.get(mixinName)));
                 } catch (ClassCastException e) {
                     throw new SyntaxException(mixinName);
                 }
@@ -332,11 +331,10 @@ public class ComputeBuilder {
                 new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
         for (Mixin mixin : mixins) {
-            mixin.addEntity(compute);
+            mixin.addEntity(compute,cloudAutomationVariables);
         }
 
         return compute;
     }
-
 
 }

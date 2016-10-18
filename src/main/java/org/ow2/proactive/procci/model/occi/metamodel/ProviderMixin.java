@@ -28,7 +28,7 @@ public class ProviderMixin {
 
     public ProviderMixin(){
         providerMixin = new ImmutableMap.Builder<String,Supplier<MixinBuilder>>()
-                .put(Identifiers.VM_IMAGE,( () -> new VMImage.Builder()))
+                .put(Identifiers.VM_IMAGE,( () -> new VMImage.Builder(this)))
                 .build();
     }
 

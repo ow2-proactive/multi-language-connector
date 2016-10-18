@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class MixinBuilder {
 
-    @Autowired
     private ProviderMixin providerMixin;
 
     @Getter(value = AccessLevel.PROTECTED)
@@ -47,7 +46,8 @@ public class MixinBuilder {
     @Getter(value = AccessLevel.PROTECTED)
     private List<Entity> entities;
 
-    public MixinBuilder(String scheme, String term) {
+    public MixinBuilder(ProviderMixin providerMixin, String scheme, String term) {
+        this.providerMixin = providerMixin;
         this.scheme = scheme;
         this.term = term;
         this.title = this.term;

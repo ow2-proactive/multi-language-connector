@@ -15,7 +15,7 @@ public class ProviderMixinTest {
 
         assertThat(providerMixin.getInstance("notAMixin").isPresent()).isFalse();
         assertThat(providerMixin.getInstance("vmimage").isPresent()).isTrue();
-
+        assertThat(providerMixin.getInstance("vmimage").get().build().getTerm()).matches("vmimage");
     }
 
 }

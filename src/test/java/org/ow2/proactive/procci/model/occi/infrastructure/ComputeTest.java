@@ -13,6 +13,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
+import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -33,9 +34,12 @@ public class ComputeTest {
     @Mock
     private ProviderMixin providerMixin;
 
+    @Mock
+    private CloudAutomationVariables cloudAutomationVariables;
+
     @Before
     public void setUp() {
-        computeBuilder = new ComputeBuilder().url("url")
+        computeBuilder = new ComputeBuilder(providerMixin,cloudAutomationVariables).url("url")
                 .architecture(Compute.Architecture.X64)
                 .cores(5)
                 .hostame("hostnameTest")
@@ -77,7 +81,7 @@ public class ComputeTest {
                 .addVariable("occi.entity.title", "titleTest")
                 .build();
         try {
-            ComputeBuilder computeBuilder = new ComputeBuilder().cloudAutomationModel(model);
+            ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,cloudAutomationVariables).cloudAutomationModel(model);
             assertThat(computeBuilder.getArchitecture().get()).isEqualTo(Compute.Architecture.X86);
             assertThat(computeBuilder.getCores().get()).isEqualTo(new Integer(4));
             assertThat(computeBuilder.getMemory().get()).isWithin(new Float(0.0001)).of(new Float(2));
@@ -142,7 +146,7 @@ public class ComputeTest {
         assertThat(compute.getSummary().get()).matches("summaryTest");
 
         ResourceRendering noArgsRendering = new ResourceRendering();
-        Compute defaultCompute = new ComputeBuilder().rendering(noArgsRendering).build();
+        Compute defaultCompute = new ComputeBuilder(providerMixin, cloudAutomationVariables).rendering(noArgsRendering).build();
 
         assertThat(defaultCompute.getShare().isPresent()).isFalse();
         assertThat(defaultCompute.getSummary().isPresent()).isFalse();
@@ -160,7 +164,7 @@ public class ComputeTest {
     public void getRenderingTest() throws IOException, CloudAutomationException {
 
         when(providerMixin.getInstance("titleTest")).thenReturn(
-                Optional.of(new MixinBuilder("schemeMixinTest", "termMixinTest")));
+                Optional.of(new MixinBuilder(providerMixin, "schemeMixinTest", "termMixinTest")));
         ResourceRendering rendering = computeBuilder.build().getRendering();
         assertThat(rendering.getId()).matches("url");
         assertThat(rendering.getKind()).matches("compute");
@@ -180,7 +184,7 @@ public class ComputeTest {
     @Test
     public void associateProviderMixin() throws IOException, ClientException {
         when(providerMixin.getInstance("title")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("title2")).thenReturn(Optional.of(new MixinBuilder("scheme", "term")));
+        when(providerMixin.getInstance("title2")).thenReturn(Optional.of(new MixinBuilder(providerMixin, "scheme", "term")));
         Map<String, Object> attributes = new HashMap<>();
         Map<String, String> attribute1 = new HashMap<>();
         Map<String, String> attribute2 = new HashMap<>();

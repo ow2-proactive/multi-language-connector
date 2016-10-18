@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
+import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import org.junit.Before;
@@ -28,6 +29,9 @@ public class MixinRestTest {
     @Mock
     private CloudAutomationVariables cloudAutomationVariables;
 
+    @Mock
+    private ProviderMixin providerMixin;
+
     @Before
     public void initMocks(){
         MockitoAnnotations.initMocks(this);
@@ -35,7 +39,7 @@ public class MixinRestTest {
 
     @Test
     public void getMixinTest() throws CloudAutomationException, IOException{
-        String mixin = MixinRendering.convertStringFromMixin(new MixinBuilder("schemeTest","termTest").build().getRendering());
+        String mixin = MixinRendering.convertStringFromMixin(new MixinBuilder(providerMixin,"schemeTest","termTest").build().getRendering());
         when(cloudAutomationVariables.get("titleTest")).thenReturn(mixin);
         ResponseEntity<MixinRendering> response = mixinRest.getMixin("titleTest");
         assertThat(response.getBody().getScheme()).matches("schemeTest");
@@ -53,7 +57,7 @@ public class MixinRestTest {
 
     @Test
     public void postMixinTest() throws ClientException, IOException {
-        MixinRendering mixinRendering = new MixinBuilder("schemeTest","termTest").build().getRendering();
+        MixinRendering mixinRendering = new MixinBuilder(providerMixin,"schemeTest","termTest").build().getRendering();
         ResponseEntity<MixinRendering> response = mixinRest.createMixin(mixinRendering);
         assertThat(response.getBody().getScheme()).matches("schemeTest");
         assertThat(response.getBody().getTerm()).matches("termTest");
@@ -62,7 +66,7 @@ public class MixinRestTest {
 
     @Test
     public void updateMixinTest() throws ClientException, IOException {
-        MixinRendering mixinRendering = new MixinBuilder("schemeTest","termTest").build().getRendering();
+        MixinRendering mixinRendering = new MixinBuilder(providerMixin,"schemeTest","termTest").build().getRendering();
         ResponseEntity<MixinRendering> response = mixinRest.updateMixin("termTest",mixinRendering);
         assertThat(response.getBody().getScheme()).matches("schemeTest");
         assertThat(response.getBody().getTerm()).matches("termTest");

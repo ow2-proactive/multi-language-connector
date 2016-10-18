@@ -11,7 +11,12 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -20,6 +25,16 @@ import static com.google.common.truth.Truth.assertThat;
  */
 public class ResourceTest {
 
+    @Mock
+    private ProviderMixin providerMixin;
+
+    @Mock
+    CloudAutomationVariables cloudAutomationVariables;
+
+    @Before
+    public void setUp(){
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void constructorTest() {
@@ -43,12 +58,12 @@ public class ResourceTest {
 
     @Test
     public void builderTest() throws IOException, CloudAutomationException{
-        Compute compute = new ComputeBuilder().url("compute").build();
+        Compute compute = new ComputeBuilder(providerMixin,cloudAutomationVariables).url("compute").build();
         try {
             Link link = new Link.Builder(compute, "target").url("link").build();
             Attribute mixinAttribute = new Attribute.Builder("attribute").type(Type.OBJECT).mutable(
                     false).required(true).build();
-            Mixin mixin = new MixinBuilder("schemeTest", "termTest")
+            Mixin mixin = new MixinBuilder(providerMixin,"schemeTest", "termTest")
                     .addAttribute(mixinAttribute)
                     .build();
             Resource resource = new Resource.Builder()

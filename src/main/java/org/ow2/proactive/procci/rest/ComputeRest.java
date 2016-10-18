@@ -43,18 +43,17 @@ import java.util.stream.Collectors;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.request.CloudAutomationInstances;
+import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -71,14 +70,18 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
  */
 @RestController
 @RequestMapping(value = Constant.COMPUTE_PATH)
-public class ComputeRest implements ApplicationContextAware{
+public class ComputeRest {
 
     private final Logger logger = LogManager.getRootLogger();
 
-    private ApplicationContext applicationContext;
-
     @Autowired
     private CloudAutomationInstances cloudAutomationInstances;
+
+    @Autowired
+    private ProviderMixin providerMixin;
+
+    @Autowired
+    private CloudAutomationVariables cloudAutomationVariables;
 
 
     //-------------------Retrieve All Computes--------------------------------------------------------
@@ -96,7 +99,7 @@ public class ComputeRest implements ApplicationContextAware{
 
             List<EntityRendering> results = new ArrayList<>();
             for (Model model : models) {
-                results.add(new ComputeBuilder().cloudAutomationModel(model).build().getRendering());
+                results.add(new ComputeBuilder(providerMixin,cloudAutomationVariables).cloudAutomationModel(model).build().getRendering());
             }
 
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(results).build(),
@@ -122,7 +125,7 @@ public class ComputeRest implements ApplicationContextAware{
             if (!computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-                ComputeBuilder computeBuilder = new ComputeBuilder().cloudAutomationModel(computeModel.get());
+                ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,cloudAutomationVariables).cloudAutomationModel(computeModel.get());
                 return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
@@ -143,10 +146,10 @@ public class ComputeRest implements ApplicationContextAware{
             @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            ComputeBuilder compute = ((ComputeBuilder) applicationContext.getBean("computeBuilder")).rendering(computeRendering);
+            ComputeBuilder compute = new ComputeBuilder(providerMixin,cloudAutomationVariables).rendering(computeRendering);
             JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
             Model model = new Model(cloudAutomationInstances.postRequest(pcaModel));
-            ComputeBuilder response = new ComputeBuilder().cloudAutomationModel(model);
+            ComputeBuilder response = new ComputeBuilder(providerMixin,cloudAutomationVariables).cloudAutomationModel(model);
             return new ResponseEntity<>(response.build().getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass(), e);
@@ -157,8 +160,4 @@ public class ComputeRest implements ApplicationContextAware{
         }
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 }

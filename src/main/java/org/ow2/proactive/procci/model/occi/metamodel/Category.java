@@ -41,20 +41,19 @@ import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableSet;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Category is the basis type of identification mecanism
  **/
 @EqualsAndHashCode(of = { "scheme", "term" })
+@Getter
 public class Category {
 
-    @Getter
     private final String scheme;
-    @Getter
     private final String term;
-    @Getter
     private final ImmutableSet<Attribute> attributes;
-    @Getter
+    @Setter
     private String title;
 
     /**

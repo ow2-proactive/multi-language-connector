@@ -59,9 +59,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Getter
 public class Mixin extends Category {
 
-    @Autowired
-    private CloudAutomationVariables cloudAutomationVariables;
-
     private final ImmutableList<Action> actions;
     private final ImmutableList<Mixin> depends;
     private final ImmutableList<Kind> applies;
@@ -134,13 +131,20 @@ public class Mixin extends Category {
 
     /**
      *  Add to the mixin, the entities which apply and update the mixin database
+     *  if the mixin is defined through an entity then it is created
      * @param entity is an entity which is related to the mixin
      * @throws IOException occurs if the response of cloud-automation-service in not readable
      * @throws CloudAutomationException occurs if the request is not acceptable for cloud-automation-service
      */
-    public void addEntity(Entity entity) throws IOException, CloudAutomationException{
+    public void addEntity(Entity entity, CloudAutomationVariables cloudAutomationVariables) throws IOException, CloudAutomationException{
         entities.add(entity);
-        cloudAutomationVariables.update(this.getTitle(), MixinRendering.convertStringFromMixin(this.getRendering()));
+        try {
+            cloudAutomationVariables.update(this.getTitle(),
+                    MixinRendering.convertStringFromMixin(this.getRendering()));
+        }catch (CloudAutomationException exception){
+            this.setTitle(entity.getTitle().get()+this.getTerm());
+            cloudAutomationVariables.post(this.getTitle(),MixinRendering.convertStringFromMixin(this.getRendering()));
+        }
     }
 
     public void deleteEntity(Entity entity) {
