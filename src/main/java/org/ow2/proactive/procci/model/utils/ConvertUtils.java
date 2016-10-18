@@ -40,6 +40,17 @@ public class ConvertUtils {
         }
     }
 
+    public static Optional<String> getStringFromObject(Optional<Object> stringObject) throws SyntaxException {
+        if (!stringObject.isPresent()) {
+            return Optional.empty();
+        }
+        try {
+            return stringObject.map(obj -> (String) obj);
+        } catch (Exception e) {
+            throw new SyntaxException(stringObject.toString());
+        }
+    }
+
     /**
      * Convert fan UUID into a close format managed by Cloud Automation
      *

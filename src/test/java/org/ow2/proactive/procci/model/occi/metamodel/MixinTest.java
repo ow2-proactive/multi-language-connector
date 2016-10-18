@@ -7,13 +7,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.junit.Test;
+import org.mockito.Mock;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -21,6 +22,9 @@ import static com.google.common.truth.Truth.assertThat;
  * Created by mael on 2/25/16.
  */
 public class MixinTest {
+
+    @Mock
+    private ProviderMixin providerMixin;
 
     @Test
     public void constructorTest() {
@@ -48,7 +52,7 @@ public class MixinTest {
 
 
         Attribute attribute = new Attribute.Builder("test").build();
-        Mixin depend = new MixinBuilder("dependScheme", "dependTerm").build();
+        Mixin depend = new MixinBuilder(providerMixin, "dependScheme", "dependTerm").build();
 
         attributes.add(attribute);
         depends.add(depend);
@@ -70,9 +74,9 @@ public class MixinTest {
     public void mixinBuilderTest() {
         Attribute attribute = new Attribute.Builder("attributeName").build();
 
-        Mixin dependMixin = new MixinBuilder("dependScheme", "dependTerm").build();
+        Mixin dependMixin = new MixinBuilder(providerMixin, "dependScheme", "dependTerm").build();
 
-        Mixin mixin = new MixinBuilder("schemeTest", "termTest")
+        Mixin mixin = new MixinBuilder(providerMixin, "schemeTest", "termTest")
                 .title("titleTest")
                 .addAttribute(attribute)
                 .addDepend(dependMixin)
@@ -86,7 +90,7 @@ public class MixinTest {
         assertThat(mixin.getDepends()).containsExactly(dependMixin);
         assertThat(mixin.getApplies()).containsExactly(InfrastructureKinds.COMPUTE);
 
-        Mixin mixin2 = new MixinBuilder("schemeTest", "termTest")
+        Mixin mixin2 = new MixinBuilder(providerMixin, "schemeTest", "termTest")
                 .build();
 
         assertThat(mixin2.getScheme()).matches("schemeTest");
@@ -98,7 +102,7 @@ public class MixinTest {
     }
 
     @Test
-    public void renderingBuilderTest() throws CloudAutomationException, MissingAttributesException, IOException, SyntaxException {
+    public void renderingBuilderTest() throws ClientException, IOException {
 
         try {
             new MixinBuilder(MixinRendering.builder().build()).build();
@@ -197,10 +201,10 @@ public class MixinTest {
 
         Attribute attribute = new Attribute.Builder("attributeName").build();
 
-        Mixin dependMixin = new MixinBuilder("dependScheme", "dependTerm").build();
+        Mixin dependMixin = new MixinBuilder(providerMixin, "dependScheme", "dependTerm").build();
 
 
-        Mixin mixin = new MixinBuilder("schemeTest", "termTest")
+        Mixin mixin = new MixinBuilder(providerMixin, "schemeTest", "termTest")
                 .title("titleTest")
                 .addAttribute(attribute)
                 .addDepend(dependMixin)
