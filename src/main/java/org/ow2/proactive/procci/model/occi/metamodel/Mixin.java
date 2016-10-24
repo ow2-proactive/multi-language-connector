@@ -115,6 +115,10 @@ public class Mixin extends Category {
                         .stream()
                         .map(apply -> apply.getTitle())
                         .collect(Collectors.toList()))
+                .entities(this.entities
+                        .stream()
+                        .map(entity -> entity.getId())
+                        .collect(Collectors.toSet()))
                 .location("/" + this.getTitle())
                 .build();
     }
