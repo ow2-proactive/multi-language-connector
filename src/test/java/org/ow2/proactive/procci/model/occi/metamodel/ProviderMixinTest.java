@@ -1,5 +1,6 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import org.ow2.proactive.procci.request.ProviderMixin;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -13,9 +14,9 @@ public class ProviderMixinTest {
     public void getInstanceTest() {
         ProviderMixin providerMixin = new ProviderMixin();
 
-        assertThat(providerMixin.getInstance("notAMixin").isPresent()).isFalse();
-        assertThat(providerMixin.getInstance("vmimage").isPresent()).isTrue();
-        assertThat(providerMixin.getInstance("vmimage").get().build().getTerm()).matches("vmimage");
+        assertThat(providerMixin.getMixinBuilder("notAMixin").isPresent()).isFalse();
+        assertThat(providerMixin.getMixinBuilder("vmimage").isPresent()).isTrue();
+        assertThat(providerMixin.getMixinBuilder("vmimage").get().build().getTerm()).matches("vmimage");
     }
 
 }

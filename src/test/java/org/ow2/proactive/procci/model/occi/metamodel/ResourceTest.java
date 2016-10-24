@@ -6,12 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.ProviderMixin;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -55,8 +56,8 @@ public class ResourceTest {
     }
 
     @Test
-    public void builderTest() throws IOException, CloudAutomationException {
-        Compute compute = new ComputeBuilder(providerMixin, cloudAutomationVariables).url("compute").build();
+    public void builderTest() throws IOException, ClientException {
+        Compute compute = new ComputeBuilder().url("compute").build();
         try {
             Link link = new Link.Builder(compute, "target").url("link").build();
             Attribute mixinAttribute = new Attribute.Builder("attribute").type(Type.OBJECT).mutable(

@@ -19,11 +19,11 @@ import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
-import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
+import org.ow2.proactive.procci.request.ProviderMixin;
 import lombok.Getter;
 
 /**
- * Created by mael on 11/10/16.
+ * Created by the Activeeon Team on 11/10/16.
  */
 @Getter
 public class VMImage extends Mixin {

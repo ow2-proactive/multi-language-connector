@@ -1,7 +1,7 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
 /**
- * Created by mael on 2/23/16.
+ * Created by the Activeeon Team on 2/23/16.
  */
 
 /**

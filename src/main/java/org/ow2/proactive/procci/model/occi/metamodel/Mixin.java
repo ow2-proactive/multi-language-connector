@@ -34,7 +34,6 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,11 +42,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 
@@ -129,23 +126,13 @@ public class Mixin extends Category {
     }
 
     /**
-     * Add to the mixin, the entities which apply and update the mixin database
-     * if the mixin is defined through an entity then it is created
+     * Add to the mixin the related entity
      *
      * @param entity is an entity which is related to the mixin
-     * @throws IOException              occurs if the response of cloud-automation-service in not readable
-     * @throws CloudAutomationException occurs if the request is not acceptable for cloud-automation-service
      */
-    public void addEntity(Entity entity,
-            CloudAutomationVariables cloudAutomationVariables) throws IOException, CloudAutomationException {
-        entities.add(entity);
-        try {
-            cloudAutomationVariables.update(this.getTitle(),
-                    MixinRendering.convertStringFromMixin(this.getRendering()));
-        } catch (CloudAutomationException exception) {
-            this.setTitle(entity.getTitle().get() + this.getTerm());
-            cloudAutomationVariables.post(this.getTitle(),
-                    MixinRendering.convertStringFromMixin(this.getRendering()));
+    public void addEntity(Entity entity) {
+        if (!entities.contains(entity)) {
+            entities.add(entity);
         }
     }
 

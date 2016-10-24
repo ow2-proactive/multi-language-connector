@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by mael on 06/10/16.
+ * Created by the Activeeon Team on 06/10/16.
  */
 @Service
 public class RequestUtils {

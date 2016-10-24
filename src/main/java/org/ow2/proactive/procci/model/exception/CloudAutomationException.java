@@ -6,7 +6,7 @@ import lombok.ToString;
 import org.json.simple.JSONObject;
 
 /**
- * Created by mael on 21/06/16.
+ * Created by the Activeeon Team on 21/06/16.
  */
 
 /**

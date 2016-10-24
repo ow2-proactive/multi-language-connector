@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by mael on 06/10/16.
+ * Created by the Activeeon Team on 06/10/16.
  */
 
 /**
@@ -29,6 +29,7 @@ public class CloudAutomationVariables {
     private RequestUtils requestUtils;
 
     public String get(String key) throws CloudAutomationException {
+        logger.debug("get " + key + " on cloud-automation-service/variables");
         try {
             Response response = Request.Get(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)
@@ -45,7 +46,7 @@ public class CloudAutomationVariables {
 
 
     public void post(String key, String value) throws CloudAutomationException {
-        System.out.println("key : " + key + ", value : " + value);
+        logger.debug("post " + key + " on cloud-automation-service/variables");
         try {
             HttpResponse response = Request.Post(getQueryUrl(key))
                     .useExpectContinue()
@@ -65,6 +66,7 @@ public class CloudAutomationVariables {
     }
 
     public void update(String key, String value) throws CloudAutomationException {
+        logger.debug("update " + key + " on cloud-automation-service/variables");
         try {
             HttpResponse response = Request.Put(getResourceUrl(key))
                     .useExpectContinue()
@@ -83,6 +85,7 @@ public class CloudAutomationVariables {
     }
 
     public void delete(String key) throws CloudAutomationException {
+        logger.debug("delete " + key + " on cloud-automation-service/variables");
         try {
             HttpResponse response = Request.Delete(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)

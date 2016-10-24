@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Created by mael on 29/09/16.
+ * Created by the Activeeon Team on 29/09/16.
  */
 @Getter
 @AllArgsConstructor

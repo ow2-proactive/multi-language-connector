@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 
 /**
- * Created by mael on 29/09/16.
+ * Created by the Activeeon Team on 29/09/16.
  */
 public class ConvertUtils {
 

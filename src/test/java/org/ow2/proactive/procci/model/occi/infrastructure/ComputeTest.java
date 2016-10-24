@@ -11,12 +11,11 @@ import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
-import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.ProviderMixin;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -28,8 +27,6 @@ import static org.mockito.Mockito.when;
  */
 public class ComputeTest {
 
-    @InjectMocks
-    private ComputeBuilder computeBuilder;
 
     @Mock
     private ProviderMixin providerMixin;
@@ -39,7 +36,16 @@ public class ComputeTest {
 
     @Before
     public void setUp() {
-        computeBuilder = new ComputeBuilder(providerMixin, cloudAutomationVariables).url("url")
+
+
+        MockitoAnnotations.initMocks(this);
+
+    }
+
+    @Test
+    public void computeConstructorTest() throws IOException, CloudAutomationException {
+
+        ComputeBuilder computeBuilder = new ComputeBuilder().url("url")
                 .architecture(Compute.Architecture.X64)
                 .cores(5)
                 .hostame("hostnameTest")
@@ -48,13 +54,6 @@ public class ComputeTest {
                 .share(2)
                 .summary("summaryTest")
                 .title("titleTest");
-
-        MockitoAnnotations.initMocks(this);
-
-    }
-
-    @Test
-    public void computeConstructorTest() throws IOException, CloudAutomationException {
 
         Compute compute = computeBuilder.build();
 
@@ -70,7 +69,9 @@ public class ComputeTest {
     }
 
     @Test
-    public void ComputeBuilderUpdateTest() {
+    public void constructFromModelTest() {
+
+        ComputeBuilder computeBuilder;
 
         Model model = new Model.Builder("modelTest", "actionTypeTest")
                 .addVariable("occi.compute.memory", "2.0")
@@ -81,8 +82,7 @@ public class ComputeTest {
                 .addVariable("occi.entity.title", "titleTest")
                 .build();
         try {
-            ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,
-                    cloudAutomationVariables).cloudAutomationModel(model);
+            computeBuilder = new ComputeBuilder(providerMixin, model);
             assertThat(computeBuilder.getArchitecture().get()).isEqualTo(Compute.Architecture.X86);
             assertThat(computeBuilder.getCores().get()).isEqualTo(new Integer(4));
             assertThat(computeBuilder.getMemory().get()).isWithin(new Float(0.0001)).of(new Float(2));
@@ -95,27 +95,16 @@ public class ComputeTest {
     }
 
     @Test
-    public void toCloudAutomationModelTest() throws IOException, CloudAutomationException {
-        Model model = computeBuilder.build().toCloudAutomationModel("create");
-        assertThat(model.getServiceModel()).isEqualTo("occi.infrastructure.compute");
-        assertThat(model.getActionType()).isEqualTo("create");
-        assertThat(model.getVariables()).containsEntry("occi.compute.cores", "5");
-        assertThat(model.getVariables()).containsEntry("occi.compute.architecture", "X64");
-        assertThat(model.getVariables()).containsEntry("occi.compute.memory", "3.0");
-        assertThat(model.getVariables()).containsEntry("occi.entity.title", "titleTest");
-    }
-
-    @Test
     public void constructFromRenderingTest() throws ClientException, IOException {
 
-        when(providerMixin.getInstance("occi.compute.speed")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("occi.compute.memory")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("occi.compute.cores")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("occi.compute.hostname")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("occi.entity.title")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("occi.compute.architecture")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("occi.compute.state")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("occi.core.summary")).thenReturn(Optional.empty());
+        when(providerMixin.getMixinBuilder("occi.compute.speed")).thenReturn(Optional.empty());
+        when(providerMixin.getMixinBuilder("occi.compute.memory")).thenReturn(Optional.empty());
+        when(providerMixin.getMixinBuilder("occi.compute.cores")).thenReturn(Optional.empty());
+        when(providerMixin.getMixinBuilder("occi.compute.hostname")).thenReturn(Optional.empty());
+        when(providerMixin.getMixinBuilder("occi.entity.title")).thenReturn(Optional.empty());
+        when(providerMixin.getMixinBuilder("occi.compute.architecture")).thenReturn(Optional.empty());
+        when(providerMixin.getMixinBuilder("occi.compute.state")).thenReturn(Optional.empty());
+        when(providerMixin.getMixinBuilder("occi.core.summary")).thenReturn(Optional.empty());
 
         ResourceRendering computeRendering = new ResourceRendering
                 .Builder("http://schemas.ogf.org/occi/infrastructure#compute",
@@ -131,7 +120,7 @@ public class ComputeTest {
                 .build();
 
 
-        Compute compute = computeBuilder.rendering(computeRendering).build();
+        Compute compute = new ComputeBuilder(providerMixin, computeRendering).build();
 
         assertThat(compute.getRenderingId()).matches("urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29");
         assertThat(compute.getId()).matches("urn:uuid:996ad860-2a9a-504f-886-aeafd0b2ae29");
@@ -147,7 +136,7 @@ public class ComputeTest {
         assertThat(compute.getSummary().get()).matches("summaryTest");
 
         ResourceRendering noArgsRendering = new ResourceRendering();
-        Compute defaultCompute = new ComputeBuilder(providerMixin, cloudAutomationVariables).rendering(
+        Compute defaultCompute = new ComputeBuilder(providerMixin,
                 noArgsRendering).build();
 
         assertThat(defaultCompute.getShare().isPresent()).isFalse();
@@ -163,9 +152,41 @@ public class ComputeTest {
     }
 
     @Test
+    public void toCloudAutomationModelTest() throws IOException, CloudAutomationException {
+        ComputeBuilder computeBuilder = new ComputeBuilder().url("url")
+                .architecture(Compute.Architecture.X64)
+                .cores(5)
+                .hostame("hostnameTest")
+                .memory(new Float(3))
+                .state(ComputeState.SUSPENDED)
+                .share(2)
+                .summary("summaryTest")
+                .title("titleTest");
+
+        Model model = computeBuilder.build().toCloudAutomationModel("create");
+        assertThat(model.getServiceModel()).isEqualTo("occi.infrastructure.compute");
+        assertThat(model.getActionType()).isEqualTo("create");
+        assertThat(model.getVariables()).containsEntry("occi.compute.cores", "5");
+        assertThat(model.getVariables()).containsEntry("occi.compute.architecture", "X64");
+        assertThat(model.getVariables()).containsEntry("occi.compute.memory", "3.0");
+        assertThat(model.getVariables()).containsEntry("occi.entity.title", "titleTest");
+    }
+
+
+    @Test
     public void getRenderingTest() throws IOException, CloudAutomationException {
 
-        when(providerMixin.getInstance("titleTest")).thenReturn(
+        ComputeBuilder computeBuilder = new ComputeBuilder().url("url")
+                .architecture(Compute.Architecture.X64)
+                .cores(5)
+                .hostame("hostnameTest")
+                .memory(new Float(3))
+                .state(ComputeState.SUSPENDED)
+                .share(2)
+                .summary("summaryTest")
+                .title("titleTest");
+
+        when(providerMixin.getMixinBuilder("titleTest")).thenReturn(
                 Optional.of(new MixinBuilder(providerMixin, "schemeMixinTest", "termMixinTest")));
         ResourceRendering rendering = computeBuilder.build().getRendering();
         assertThat(rendering.getId()).matches("url");
@@ -185,8 +206,19 @@ public class ComputeTest {
 
     @Test
     public void associateProviderMixin() throws IOException, ClientException {
-        when(providerMixin.getInstance("title")).thenReturn(Optional.empty());
-        when(providerMixin.getInstance("title2")).thenReturn(
+
+        ComputeBuilder computeBuilder = new ComputeBuilder().url("url")
+                .architecture(Compute.Architecture.X64)
+                .cores(5)
+                .hostame("hostnameTest")
+                .memory(new Float(3))
+                .state(ComputeState.SUSPENDED)
+                .share(2)
+                .summary("summaryTest")
+                .title("titleTest");
+
+        when(providerMixin.getMixinBuilder("title")).thenReturn(Optional.empty());
+        when(providerMixin.getMixinBuilder("title2")).thenReturn(
                 Optional.of(new MixinBuilder(providerMixin, "scheme", "term")));
         Map<String, Object> attributes = new HashMap<>();
         Map<String, String> attribute1 = new HashMap<>();
@@ -196,7 +228,6 @@ public class ComputeTest {
         attributes.put("title", attribute1);
         attributes.put("title2", attribute2);
 
-        computeBuilder.associateProviderMixin(attributes);
+        computeBuilder.associateProviderMixin(providerMixin, attributes);
     }
-
 }

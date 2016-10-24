@@ -13,6 +13,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.ProviderMixin;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -58,7 +59,7 @@ public class LinkTest {
 
     @Test
     public void builderTest() throws IOException, CloudAutomationException {
-        Compute compute = new ComputeBuilder(providerMixin, cloudAutomationVariables).url("compute").build();
+        Compute compute = new ComputeBuilder().url("compute").build();
 
         try {
             Link link = new Link.Builder(compute, "target")

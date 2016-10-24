@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by mael on 05/10/16.
+ * Created by the Activeeon Team on 05/10/16.
  */
 @RestController
 @RequestMapping(value = PathConstant.QUERY_PATH)

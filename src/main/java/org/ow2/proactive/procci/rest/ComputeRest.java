@@ -42,14 +42,14 @@ import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
-import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.request.CloudAutomationInstances;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.ProviderMixin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -80,9 +80,6 @@ public class ComputeRest {
     @Autowired
     private ProviderMixin providerMixin;
 
-    @Autowired
-    private CloudAutomationVariables cloudAutomationVariables;
-
 
     //-------------------Retrieve All Computes--------------------------------------------------------
 
@@ -99,8 +96,7 @@ public class ComputeRest {
 
             List<EntityRendering> results = new ArrayList<>();
             for (Model model : models) {
-                results.add(new ComputeBuilder(providerMixin, cloudAutomationVariables).cloudAutomationModel(
-                        model).build().getRendering());
+                results.add(new ComputeBuilder(providerMixin, model).build().getRendering());
             }
 
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(results).build(),
@@ -126,9 +122,8 @@ public class ComputeRest {
             if (!computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-                ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,
-                        cloudAutomationVariables).cloudAutomationModel(computeModel.get());
-                return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
+                Compute compute = new ComputeBuilder(providerMixin, computeModel.get()).build();
+                return new ResponseEntity<>(compute.getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
             logger.error(this.getClass(), e);
@@ -148,13 +143,9 @@ public class ComputeRest {
             @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            ComputeBuilder compute = new ComputeBuilder(providerMixin, cloudAutomationVariables).rendering(
-                    computeRendering);
-            JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
-            Model model = new Model(cloudAutomationInstances.postRequest(pcaModel));
-            ComputeBuilder response = new ComputeBuilder(providerMixin,
-                    cloudAutomationVariables).cloudAutomationModel(model);
-            return new ResponseEntity<>(response.build().getRendering(), HttpStatus.CREATED);
+            ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin, computeRendering);
+            Compute response = computeBuilder.build().create(providerMixin, cloudAutomationInstances);
+            return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);

@@ -6,7 +6,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 
 /**
- * Created by mael on 3/4/16.
+ * Created by the Activeeon Team on 3/4/16.
  */
 
 /**

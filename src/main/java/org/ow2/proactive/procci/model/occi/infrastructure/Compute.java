@@ -34,11 +34,13 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
@@ -47,6 +49,8 @@ import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
+import org.ow2.proactive.procci.request.CloudAutomationInstances;
+import org.ow2.proactive.procci.request.ProviderMixin;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -129,7 +133,7 @@ public class Compute extends Resource {
      * @param actionType is the action to apply on the compute
      * @return the proactive cloud automation model for the compute
      */
-    public Model toCloudAutomationModel(String actionType) {
+    Model toCloudAutomationModel(String actionType) {
 
         Model.Builder serviceBuilder = new Model.Builder(COMPUTE_MODEL, actionType)
                 .addVariable(ID_NAME, this.getId());
@@ -166,9 +170,36 @@ public class Compute extends Resource {
         this.state.ifPresent(
                 currentState -> resourceRendering.addAttribute(COMPUTE_STATE_NAME, currentState.name()));
 
-        this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getScheme() + mixin.getTerm()));
+        this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getTitle()));
 
         return resourceRendering.build();
+    }
+
+
+    /**
+     * Send the request to cloud automation in order to create the instance and update the data
+     *
+     * @param providerMixin            is the service which enables to manage the mixins
+     * @param cloudAutomationInstances is the service which enables to manage instances
+     * @return a compute created from the server response
+     * @throws IOException     if the response was not parsable
+     * @throws ClientException if there is an error in the request sent to the server
+     */
+    public Compute create(ProviderMixin providerMixin, CloudAutomationInstances cloudAutomationInstances)
+            throws IOException, ClientException {
+
+        //add the compute reference in all his mixins
+        this.getMixins().stream().forEach(mixin -> mixin.addEntity(this));
+
+        //update the references between mixin and compute
+        providerMixin.addEntity(this);
+
+        //create a new compute from the response to the compute creation request sent to cloud-automation-service
+        Compute compute = new ComputeBuilder(providerMixin, new Model(cloudAutomationInstances.postRequest(
+                this.toCloudAutomationModel("create").getJson()))).build();
+
+        return compute;
+
     }
 
     public enum Architecture {

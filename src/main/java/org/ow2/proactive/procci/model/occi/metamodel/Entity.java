@@ -108,10 +108,12 @@ public abstract class Entity {
         return "urn:uuid:" + UUID.randomUUID().toString();
     }
 
+
     //WARNING : The Character '−' is not supported by the scheduler so it is replaced by the character '-'
 
     public String getRenderingId() {
         return this.id.replaceAll("-", "−");
     }
+
 
 }

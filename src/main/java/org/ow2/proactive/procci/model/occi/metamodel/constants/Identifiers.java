@@ -1,7 +1,7 @@
 package org.ow2.proactive.procci.model.occi.metamodel.constants;
 
 /**
- * Created by mael on 3/3/16.
+ * Created by the Activeeon Team on 3/3/16.
  */
 
 /**

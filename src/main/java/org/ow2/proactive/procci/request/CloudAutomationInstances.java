@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by mael on 02/06/16.
+ * Created by the Activeeon Team on 02/06/16.
  */
 
 /**

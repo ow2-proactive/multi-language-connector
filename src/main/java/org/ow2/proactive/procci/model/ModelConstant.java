@@ -1,7 +1,7 @@
 package org.ow2.proactive.procci.model;
 
 /**
- * Created by mael on 20/07/16.
+ * Created by the Activeeon Team on 20/07/16.
  */
 public class ModelConstant {
 

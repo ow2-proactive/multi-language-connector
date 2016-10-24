@@ -16,12 +16,13 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
+import org.ow2.proactive.procci.request.ProviderMixin;
 import lombok.AccessLevel;
 import lombok.Getter;
 
 
 /**
- * Created by mael on 22/09/16.
+ * Created by the Activeeon Team on 22/09/16.
  */
 public class MixinBuilder {
 
@@ -141,6 +142,13 @@ public class MixinBuilder {
         return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
     }
 
+    /**
+     * Construct a mixin
+     *
+     * @param attributesMap should be empty becase a default mixin has no attributes
+     * @return
+     * @throws ClientException
+     */
     public Mixin build(Map attributesMap) throws ClientException {
         return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
     }

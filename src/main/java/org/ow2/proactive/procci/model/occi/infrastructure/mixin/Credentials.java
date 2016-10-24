@@ -15,7 +15,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 
 /**
- * Created by mael on 2/25/16.
+ * Created by the Activeeon Team on 2/25/16.
  */
 
 /**
