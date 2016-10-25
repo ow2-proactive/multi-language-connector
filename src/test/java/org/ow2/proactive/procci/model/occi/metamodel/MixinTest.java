@@ -56,7 +56,7 @@ public class MixinTest {
 
 
         Attribute attribute = new Attribute.Builder("test").build();
-        Mixin depend = new MixinBuilder(providerMixin, "dependScheme", "dependTerm").build();
+        Mixin depend = new MixinBuilder("dependScheme", "dependTerm").build();
 
         attributes.add(attribute);
         depends.add(depend);
@@ -78,9 +78,9 @@ public class MixinTest {
     public void mixinBuilderTest() {
         Attribute attribute = new Attribute.Builder("attributeName").build();
 
-        Mixin dependMixin = new MixinBuilder(providerMixin, "dependScheme", "dependTerm").build();
+        Mixin dependMixin = new MixinBuilder("dependScheme", "dependTerm").build();
 
-        Mixin mixin = new MixinBuilder(providerMixin, "schemeTest", "termTest")
+        Mixin mixin = new MixinBuilder("schemeTest", "termTest")
                 .title("titleTest")
                 .addAttribute(attribute)
                 .addDepend(dependMixin)
@@ -94,7 +94,7 @@ public class MixinTest {
         assertThat(mixin.getDepends()).containsExactly(dependMixin);
         assertThat(mixin.getApplies()).containsExactly(InfrastructureKinds.COMPUTE);
 
-        Mixin mixin2 = new MixinBuilder(providerMixin, "schemeTest", "termTest")
+        Mixin mixin2 = new MixinBuilder("schemeTest", "termTest")
                 .build();
 
         assertThat(mixin2.getScheme()).matches("schemeTest");
@@ -109,7 +109,7 @@ public class MixinTest {
     public void renderingBuilderTest() throws ClientException, IOException {
 
         try {
-            new MixinBuilder(providerInstances, MixinRendering.builder().build()).build();
+            new MixinBuilder(providerMixin, providerInstances, MixinRendering.builder().build()).build();
         } catch (Exception ex) {
             assertThat(ex).isInstanceOf(MissingAttributesException.class);
         }
@@ -117,7 +117,7 @@ public class MixinTest {
         try {
             List<String> applies = new ArrayList<>();
             applies.add("notAKnownTerm");
-            new MixinBuilder(providerInstances,
+            new MixinBuilder(providerMixin, providerInstances,
                     MixinRendering.builder()
                             .scheme("schemeTest")
                             .term("termTest")
@@ -129,7 +129,7 @@ public class MixinTest {
             assertThat(ex).isInstanceOf(SyntaxException.class);
         }
 
-        Mixin minRendering = new MixinBuilder(providerInstances,
+        Mixin minRendering = new MixinBuilder(providerMixin, providerInstances,
 
                 MixinRendering.builder()
                         .scheme("schemeTest")
@@ -137,7 +137,7 @@ public class MixinTest {
                         .build()
         ).build();
 
-        Mixin allAttributesRendering = new MixinBuilder(providerInstances,
+        Mixin allAttributesRendering = new MixinBuilder(providerMixin, providerInstances,
                 MixinRendering.builder()
                         .scheme("schemeTest")
                         .term("termTest")
@@ -160,7 +160,7 @@ public class MixinTest {
         List depend = new ArrayList();
         //cannot test depend because it will send request to cloud-automation-service
 
-        Mixin allAttributesFilledRendering = new MixinBuilder(providerInstances,
+        Mixin allAttributesFilledRendering = new MixinBuilder(providerMixin, providerInstances,
                 MixinRendering.builder()
                         .scheme("schemeTest")
                         .term("termTest")
@@ -206,10 +206,10 @@ public class MixinTest {
 
         Attribute attribute = new Attribute.Builder("attributeName").build();
 
-        Mixin dependMixin = new MixinBuilder(providerMixin, "dependScheme", "dependTerm").build();
+        Mixin dependMixin = new MixinBuilder("dependScheme", "dependTerm").build();
 
 
-        Mixin mixin = new MixinBuilder(providerMixin, "schemeTest", "termTest")
+        Mixin mixin = new MixinBuilder("schemeTest", "termTest")
                 .title("titleTest")
                 .addAttribute(attribute)
                 .addDepend(dependMixin)

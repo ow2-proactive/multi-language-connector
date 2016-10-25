@@ -82,7 +82,7 @@ public class ComputeTest {
                 .addVariable("occi.entity.title", "titleTest")
                 .build();
         try {
-            computeBuilder = new ComputeBuilder(providerMixin, model);
+            computeBuilder = new ComputeBuilder(model);
             assertThat(computeBuilder.getArchitecture().get()).isEqualTo(Compute.Architecture.X86);
             assertThat(computeBuilder.getCores().get()).isEqualTo(new Integer(4));
             assertThat(computeBuilder.getMemory().get()).isWithin(new Float(0.0001)).of(new Float(2));
@@ -187,7 +187,7 @@ public class ComputeTest {
                 .title("titleTest");
 
         when(providerMixin.getMixinBuilder("titleTest")).thenReturn(
-                Optional.of(new MixinBuilder(providerMixin, "schemeMixinTest", "termMixinTest")));
+                Optional.of(new MixinBuilder("schemeMixinTest", "termMixinTest")));
         ResourceRendering rendering = computeBuilder.build().getRendering();
         assertThat(rendering.getId()).matches("url");
         assertThat(rendering.getKind()).matches("compute");
@@ -219,7 +219,7 @@ public class ComputeTest {
 
         when(providerMixin.getMixinBuilder("title")).thenReturn(Optional.empty());
         when(providerMixin.getMixinBuilder("title2")).thenReturn(
-                Optional.of(new MixinBuilder(providerMixin, "scheme", "term")));
+                Optional.of(new MixinBuilder("scheme", "term")));
         Map<String, Object> attributes = new HashMap<>();
         Map<String, String> attribute1 = new HashMap<>();
         Map<String, String> attribute2 = new HashMap<>();

@@ -24,10 +24,12 @@ import lombok.Getter;
 
 /**
  * Created by the Activeeon Team on 22/09/16.
+ * <p>
+ * Mixin Builder enables to easily create a mixin
+ * <p>
+ * In order to avoid infinite loop construction the entities and depends are mock during construction and doesn't have mixins references
  */
 public class MixinBuilder {
-
-    private ProviderMixin providerMixin;
 
     @Getter(value = AccessLevel.PROTECTED)
     private String scheme;
@@ -46,8 +48,7 @@ public class MixinBuilder {
     @Getter(value = AccessLevel.PROTECTED)
     private List<Entity> entities;
 
-    public MixinBuilder(ProviderMixin providerMixin, String scheme, String term) {
-        this.providerMixin = providerMixin;
+    public MixinBuilder(String scheme, String term) {
         this.scheme = scheme;
         this.term = term;
         this.title = this.term;
@@ -64,7 +65,7 @@ public class MixinBuilder {
      * @param providerInstances is the instances manager
      * @param mixinRendering    is the rendering mixin
      */
-    public MixinBuilder(ProviderInstances providerInstances,
+    public MixinBuilder(ProviderMixin providerMixin, ProviderInstances providerInstances,
             MixinRendering mixinRendering) throws ClientException, IOException {
         this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(
                 () -> new MissingAttributesException("scheme", "mixin"));
@@ -77,7 +78,7 @@ public class MixinBuilder {
         this.actions = new ArrayList<>();
         this.depends = new ArrayList<>();
         for (String depends : Optional.ofNullable(mixinRendering.getDepends()).orElse(new ArrayList<>())) {
-            this.depends.add(providerMixin.getMixinByTitle(depends));
+            this.depends.add(providerMixin.getMixinMockByTitle(depends));
         }
         this.applies = new ArrayList<>();
         for (String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())) {
@@ -88,7 +89,7 @@ public class MixinBuilder {
         for (String entityId : Optional.ofNullable(mixinRendering.getEntities())
                 .map(entitiesId -> new ArrayList<>(entitiesId))
                 .orElse(new ArrayList<>())) {
-            providerInstances.getEntity(entityId).ifPresent(entity -> this.entities.add(entity));
+            providerInstances.getMockedEntity(entityId).ifPresent(entity -> this.entities.add(entity));
         }
     }
 

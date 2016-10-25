@@ -19,7 +19,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
-import org.ow2.proactive.procci.request.ProviderMixin;
 import lombok.Getter;
 
 /**
@@ -56,8 +55,8 @@ public class VMImage extends Mixin {
 
     public static class Builder extends MixinBuilder {
 
-        public Builder(ProviderMixin providerMixin) {
-            super(providerMixin, Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE);
+        public Builder() {
+            super(Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE);
         }
 
         @Override

@@ -11,6 +11,7 @@ import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
+import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.apache.logging.log4j.LogManager;
@@ -32,26 +33,50 @@ public class ProviderInstances {
     @Autowired
     private ProviderMixin providerMixin;
 
+    /**
+     * Give a compute from the data stored in Cloud-automation-service
+     *
+     * @param id is the id of compute
+     * @return a compute
+     * @throws IOException
+     * @throws ClientException
+     */
     public Optional<Entity> getEntity(String id) throws IOException, ClientException {
         Optional<Model> computeModel = cloudAutomationInstances.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
         if (!computeModel.isPresent()) {
             return Optional.empty();
         } else {
-            return Optional.of(new ComputeBuilder(providerMixin, computeModel.get()).build());
+            return Optional.of(new ComputeBuilder(computeModel.get()).addMixins(
+                    pullMixinFromCloudAutomation(id)).build());
         }
     }
 
+    /**
+     * Give a compute without mixins in order to avoid infinite loop
+     *
+     * @param id is the id of the compute
+     * @return a compute without the object references set
+     * @throws IOException
+     * @throws ClientException
+     */
     public Optional<Entity> getMockedEntity(String id) throws IOException, ClientException {
         Optional<Model> computeModel = cloudAutomationInstances.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
         if (!computeModel.isPresent()) {
             return Optional.empty();
         } else {
-            return Optional.of(new ComputeBuilder(providerMixin, computeModel.get()).buildMock());
+            return Optional.of(new ComputeBuilder(computeModel.get()).build());
         }
     }
 
+    /**
+     * Create a list of entity rendering  containing the rendering of all entity created
+     *
+     * @return a list of entity rendering
+     * @throws IOException
+     * @throws ClientException
+     */
     public List<EntityRendering> getInstancesRendering() throws IOException, ClientException {
         JSONObject resources = cloudAutomationInstances.getRequest();
 
@@ -62,7 +87,9 @@ public class ProviderInstances {
 
         List<EntityRendering> results = new ArrayList<>();
         for (Model model : models) {
-            results.add(new ComputeBuilder(providerMixin, model).build().getRendering());
+            ComputeBuilder computeBuilder = new ComputeBuilder(model);
+            computeBuilder.addMixins(pullMixinFromCloudAutomation(computeBuilder.getUrl().get()));
+            results.add(computeBuilder.build().getRendering());
         }
 
         return results;
@@ -86,10 +113,28 @@ public class ProviderInstances {
         providerMixin.addEntity(compute);
 
         //create a new compute from the response to the compute creation request sent to cloud-automation-service
-        Compute computeResult = new ComputeBuilder(providerMixin,
+        Compute computeResult = new ComputeBuilder(
                 new Model(cloudAutomationInstances.postRequest(
-                        compute.toCloudAutomationModel("create").getJson()))).build();
+                        compute.toCloudAutomationModel("create").getJson())))
+                .addMixins(pullMixinFromCloudAutomation(compute.getId()))
+                .build();
 
         return compute;
+    }
+
+    /**
+     * Give the mixins of a compute
+     *
+     * @param computeId the id of the compute
+     * @return a list of mixin realated to the compute
+     * @throws IOException
+     * @throws ClientException
+     */
+    private List<Mixin> pullMixinFromCloudAutomation(String computeId) throws IOException, ClientException {
+        List<Mixin> mixins = new ArrayList<>();
+        for (String mixin : providerMixin.getEntityMixinNames(computeId)) {
+            mixins.add(providerMixin.getMixinMockByTitle(mixin));
+        }
+        return mixins;
     }
 }

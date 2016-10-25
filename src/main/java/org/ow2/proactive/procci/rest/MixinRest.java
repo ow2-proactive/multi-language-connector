@@ -4,12 +4,11 @@ package org.ow2.proactive.procci.rest;
 import java.io.IOException;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import org.ow2.proactive.procci.request.ProviderInstances;
+import org.ow2.proactive.procci.request.ProviderMixin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +31,10 @@ public class MixinRest {
     private final Logger logger = LogManager.getRootLogger();
 
     @Autowired
-    private CloudAutomationVariables cloudAutomationVariables;
+    private ProviderInstances providerInstances;
 
     @Autowired
-    private ProviderInstances providerInstances;
+    private ProviderMixin providerMixin;
 
     //-------------------Get a Mixin--------------------------------------------------------
 
@@ -44,10 +43,8 @@ public class MixinRest {
         logger.debug("Getting Mixin " + mixinTitle);
 
         try {
-            String mixinString = cloudAutomationVariables.get(mixinTitle);
-            MixinRendering mixinRendering = MixinRendering.convertMixinFromString(mixinString);
             return new ResponseEntity(
-                    new MixinBuilder(providerInstances, mixinRendering).build().getRendering(),
+                    providerMixin.getMixinByTitle(mixinTitle).getRendering(),
                     HttpStatus.OK);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
@@ -64,9 +61,8 @@ public class MixinRest {
             @RequestBody MixinRendering mixinRendering) {
         logger.debug("Creating Mixin " + mixinRendering.toString());
         try {
-            Mixin mixin = new MixinBuilder(providerInstances, mixinRendering).build();
-            String json = MixinRendering.convertStringFromMixin(mixin.getRendering());
-            cloudAutomationVariables.post(mixin.getTitle(), json);
+            Mixin mixin = new MixinBuilder(providerMixin, providerInstances, mixinRendering).build();
+            providerMixin.addMixin(mixin);
             return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
         } catch (IOException ex) {
             logger.error(this.getClass(), ex);
@@ -86,15 +82,8 @@ public class MixinRest {
 
         Mixin mixin = null;
         try {
-            mixin = new MixinBuilder(providerInstances, mixinRendering).build();
-            String json = MixinRendering.convertStringFromMixin(mixin.getRendering());
-
-            if (mixin.getTitle().matches(mixinTitle)) {
-                cloudAutomationVariables.update(mixin.getTitle(), json);
-            } else {
-                cloudAutomationVariables.delete(mixinTitle);
-                cloudAutomationVariables.post(mixin.getTitle(), json);
-            }
+            mixin = new MixinBuilder(providerMixin, providerInstances, mixinRendering).build();
+            providerMixin.addMixin(mixin);
         } catch (IOException ex) {
             logger.error(this.getClass(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -103,21 +92,5 @@ public class MixinRest {
         }
         return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
     }
-
-    //-------------------Delete a Mixin--------------------------------------------------------
-
-    @RequestMapping(value = "{mixinTitle}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteMixin(
-            @PathVariable("mixinTitle") String mixinTitle) {
-        logger.debug("Deleting Mixin " + mixinTitle);
-
-        try {
-            cloudAutomationVariables.delete(mixinTitle);
-        } catch (CloudAutomationException ex) {
-            return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
 
 }

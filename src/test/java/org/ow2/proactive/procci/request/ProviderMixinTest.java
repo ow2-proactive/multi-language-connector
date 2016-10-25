@@ -74,19 +74,25 @@ public class ProviderMixinTest {
 
         //test update object and update mixin
 
-        Set<String> mixinId = new HashSet<>();
-        mixinId.add("mixinTest");
+        Set<String> mixinsId = new HashSet<>();
+        mixinsId.add("mixinTest");
 
-        Mixin mixin = new MixinBuilder(providerMixin, "schemeTest", "mixinTest").build();
+        Mixin mixin = new MixinBuilder("schemeTest", "mixinTest").build();
 
         Compute compute = new ComputeBuilder()
                 .url("idTest")
                 .addMixin(mixin)
                 .build();
 
+        when(cloudAutomationVariables.get("mixinTest")).thenReturn(
+                mapper.writeValueAsString(mixin.getRendering()));
+
         providerMixin.addEntity(compute);
 
-        verify(cloudAutomationVariables).update("idTest", mapper.writeValueAsString(mixinId));
+        mixin.addEntity(compute);
+
+        verify(cloudAutomationVariables).post("idTest", mapper.writeValueAsString(mixinsId));
+        verify(cloudAutomationVariables).get("mixinTest");
         verify(cloudAutomationVariables).update("mixinTest", mapper.writeValueAsString(mixin.getRendering()));
 
 
@@ -96,25 +102,30 @@ public class ProviderMixinTest {
         Set<String> mixinId2 = new HashSet<>();
         mixinId2.add("mixinTest2");
 
-        Mixin mixin2 = new MixinBuilder(providerMixin, "schemeTest2", "mixinTest2").build();
+        Mixin mixin2 = new MixinBuilder("schemeTest2", "mixinTest2").build();
+
 
         Compute compute2 = new ComputeBuilder()
                 .url("idTest2")
                 .addMixin(mixin2)
                 .build();
 
-        Mockito.doThrow(new CloudAutomationException("idTest2")).when(cloudAutomationVariables).update(
-                "idTest2", mapper.writeValueAsString(mixinId2));
-        Mockito.doThrow(new CloudAutomationException("mixinTest2")).when(cloudAutomationVariables).update(
-                "mixinTest2", mapper.writeValueAsString(mixin2.getRendering()));
+        mixin2.addEntity(compute2);
+
+        when(cloudAutomationVariables.get("idTest2")).thenReturn(
+                mapper.writeValueAsString(mixin.getRendering()));
+
+        Mockito.doThrow(new CloudAutomationException("mixinTest2")).when(cloudAutomationVariables).get(
+                "mixinTest2");
+
 
         providerMixin.addEntity(compute2);
 
-        verify(cloudAutomationVariables).update("idTest2", mapper.writeValueAsString(mixinId2));
-        verify(cloudAutomationVariables).update("mixinTest2",
-                mapper.writeValueAsString(mixin2.getRendering()));
-        verify(cloudAutomationVariables).post("idTest2", mapper.writeValueAsString(mixinId2));
+        verify(cloudAutomationVariables).post("idTest2",
+                mapper.writeValueAsString(mixinId2));
+        verify(cloudAutomationVariables).get("mixinTest2");
         verify(cloudAutomationVariables).post("mixinTest2", mapper.writeValueAsString(mixin2.getRendering()));
+
 
     }
 

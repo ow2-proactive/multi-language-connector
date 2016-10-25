@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
@@ -44,6 +43,8 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 
 /**
  * Compute Builder class, enable to easily construct a Compute from RenderingCompute or Cloud Automation Model
+ * <p>
+ * In order to avoid infinite loop building the mixins are mock without references
  */
 @EqualsAndHashCode
 @ToString
@@ -84,7 +85,7 @@ public class ComputeBuilder {
      *
      * @param cloudAutomation is the instance of the cloud automation model for a compute
      */
-    public ComputeBuilder(ProviderMixin providerMixin, Model cloudAutomation)
+    public ComputeBuilder(Model cloudAutomation)
             throws IOException, ClientException {
         this.url = Optional.ofNullable(cloudAutomation.getVariables().get(ID_NAME));
         this.title = Optional.ofNullable(cloudAutomation.getVariables().get(ENTITY_TITLE_NAME));
@@ -101,7 +102,7 @@ public class ComputeBuilder {
         this.state = getStateFromCloudAutomation(
                 Optional.ofNullable(cloudAutomation.getVariables().get(INSTANCE_STATUS)));
 
-        this.mixins = pullMixinFromCloudAutomation(providerMixin);
+        this.mixins = new ArrayList<>();
 
         this.links = new ArrayList<>();
     }
@@ -147,21 +148,6 @@ public class ComputeBuilder {
         this.links = new ArrayList<>();
     }
 
-    private List<Mixin> pullMixinFromCloudAutomation(
-            ProviderMixin providerMixin) throws IOException, ClientException {
-        List<Mixin> mixins = new ArrayList<>();
-        if (this.url.isPresent()) {
-            try {
-                for (String mixin : providerMixin.getEntityMixinNames(this.url.get())) {
-                    mixins.add(providerMixin.getMixinByTitle(mixin));
-                }
-            } catch (CloudAutomationException ex) {
-                // if this is a creation request the server response is 404 not found because the compute doesn't exist yet
-            }
-        }
-        return mixins;
-    }
-
     /**
      * Check all attributes and add in the mixin collection the attributes from mixin
      *
@@ -205,6 +191,11 @@ public class ComputeBuilder {
 
     public ComputeBuilder addMixin(Mixin mixin) {
         this.mixins.add(mixin);
+        return this;
+    }
+
+    public ComputeBuilder addMixins(List<Mixin> mixins) {
+        this.mixins.addAll(mixins);
         return this;
     }
 
@@ -345,15 +336,5 @@ public class ComputeBuilder {
         mixins.stream().forEach(mixin -> mixin.addEntity(compute));
 
         return compute;
-    }
-
-    /**
-     * Build a compute without references in order to avoir cycle loop
-     *
-     * @return a compute without mixins and links
-     */
-    public Compute buildMock() {
-        this.mixins = new ArrayList<>();
-        return this.build();
     }
 }

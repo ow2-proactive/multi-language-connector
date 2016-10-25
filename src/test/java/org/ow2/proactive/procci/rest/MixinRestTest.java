@@ -6,7 +6,6 @@ import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
 import org.ow2.proactive.procci.request.ProviderMixin;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,9 +26,6 @@ public class MixinRestTest {
     private MixinRest mixinRest;
 
     @Mock
-    private CloudAutomationVariables cloudAutomationVariables;
-
-    @Mock
     private ProviderMixin providerMixin;
 
     @Before
@@ -38,28 +34,27 @@ public class MixinRestTest {
     }
 
     @Test
-    public void getMixinTest() throws CloudAutomationException, IOException {
-        String mixin = MixinRendering.convertStringFromMixin(
-                new MixinBuilder(providerMixin, "schemeTest", "termTest").build().getRendering());
-        when(cloudAutomationVariables.get("titleTest")).thenReturn(mixin);
+    public void getMixinTest() throws ClientException, IOException {
+        when(providerMixin.getMixinByTitle("titleTest")).thenReturn(
+                new MixinBuilder("schemeTest", "termTest").title("titleTest").build());
         ResponseEntity<MixinRendering> response = mixinRest.getMixin("titleTest");
         assertThat(response.getBody().getScheme()).matches("schemeTest");
         assertThat(response.getBody().getTerm()).matches("termTest");
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 
-        when(cloudAutomationVariables.get("titleTest2")).thenThrow(
+        when(providerMixin.getMixinByTitle("titleTest2")).thenThrow(
                 new CloudAutomationException("titleTest2"));
         ResponseEntity<MixinRendering> responseClientError = mixinRest.getMixin("titleTest2");
         assertThat(responseClientError.getStatusCode().is4xxClientError()).isTrue();
 
-        when(cloudAutomationVariables.get("titleTest3")).thenThrow(IOException.class);
+        when(providerMixin.getMixinByTitle("titleTest3")).thenThrow(IOException.class);
         ResponseEntity<MixinRendering> responseServerError = mixinRest.getMixin("titleTest3");
         assertThat(responseServerError.getStatusCode().is5xxServerError()).isTrue();
     }
 
     @Test
     public void postMixinTest() throws ClientException, IOException {
-        MixinRendering mixinRendering = new MixinBuilder(providerMixin, "schemeTest",
+        MixinRendering mixinRendering = new MixinBuilder("schemeTest",
                 "termTest").build().getRendering();
         ResponseEntity<MixinRendering> response = mixinRest.createMixin(mixinRendering);
         assertThat(response.getBody().getScheme()).matches("schemeTest");
@@ -69,7 +64,7 @@ public class MixinRestTest {
 
     @Test
     public void updateMixinTest() throws ClientException, IOException {
-        MixinRendering mixinRendering = new MixinBuilder(providerMixin, "schemeTest",
+        MixinRendering mixinRendering = new MixinBuilder("schemeTest",
                 "termTest").build().getRendering();
         ResponseEntity<MixinRendering> response = mixinRest.updateMixin("termTest", mixinRendering);
         assertThat(response.getBody().getScheme()).matches("schemeTest");
@@ -82,9 +77,4 @@ public class MixinRestTest {
         assertThat(response2.getStatusCode().is2xxSuccessful()).isTrue();
     }
 
-    @Test
-    public void deleteMixinTest() throws ClientException, IOException {
-        ResponseEntity<MixinRendering> response = mixinRest.deleteMixin("termTest");
-        assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
-    }
 }

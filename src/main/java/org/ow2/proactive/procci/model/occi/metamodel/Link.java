@@ -44,6 +44,8 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.LinkLocationRendering;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.LinkRendering;
 import lombok.Getter;
 
 /**
@@ -81,6 +83,12 @@ public class Link extends Entity {
         attributes.add(Attributes.TARGET);
         attributes.add(Attributes.TARGET_KIND);
         return attributes;
+    }
+
+    @Override
+    public LinkRendering getRendering() {
+        return new LinkRendering.Builder(this.getKind().getTitle(), this.getId(),
+                new LinkLocationRendering(), new LinkLocationRendering()).build();
     }
 
     private URI getURIFromString(String uri) throws SyntaxException {

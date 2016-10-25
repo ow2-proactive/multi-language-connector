@@ -62,7 +62,7 @@ public class ResourceTest {
             Link link = new Link.Builder(compute, "target").url("link").build();
             Attribute mixinAttribute = new Attribute.Builder("attribute").type(Type.OBJECT).mutable(
                     false).required(true).build();
-            Mixin mixin = new MixinBuilder(providerMixin, "schemeTest", "termTest")
+            Mixin mixin = new MixinBuilder("schemeTest", "termTest")
                     .addAttribute(mixinAttribute)
                     .build();
             Resource resource = new Resource.Builder()

@@ -42,6 +42,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -115,5 +116,7 @@ public abstract class Entity {
         return this.id.replaceAll("-", "−");
     }
 
+
+    public abstract EntityRendering getRendering();
 
 }
