@@ -7,7 +7,7 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
 import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.DataServices;
 import com.google.common.truth.Truth;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class NetworkInterfaceTest {
 
     @Mock
-    CloudAutomationVariables cloudAutomationVariables;
+    private DataServices dataServices;
     @Mock
     private ProviderMixin providerMixin;
 
@@ -35,7 +35,7 @@ public class NetworkInterfaceTest {
 
     @Test
     public void ConstructorTest() throws IOException, CloudAutomationException {
-        Compute compute = new ComputeBuilder(providerMixin, cloudAutomationVariables).url(
+        Compute compute = new ComputeBuilder(providerMixin, dataServices).url(
                 "url:compute").build();
         try {
             NetworkInterface networkInterface = new NetworkInterface.Builder(compute, "url:target", "mac",

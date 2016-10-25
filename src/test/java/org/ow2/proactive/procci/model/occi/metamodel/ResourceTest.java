@@ -11,7 +11,7 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.DataServices;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,7 +25,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class ResourceTest {
 
     @Mock
-    CloudAutomationVariables cloudAutomationVariables;
+    DataServices dataServices;
     @Mock
     private ProviderMixin providerMixin;
 
@@ -56,7 +56,7 @@ public class ResourceTest {
 
     @Test
     public void builderTest() throws IOException, CloudAutomationException {
-        Compute compute = new ComputeBuilder(providerMixin, cloudAutomationVariables).url("compute").build();
+        Compute compute = new ComputeBuilder(providerMixin, dataServices).url("compute").build();
         try {
             Link link = new Link.Builder(compute, "target").url("link").build();
             Attribute mixinAttribute = new Attribute.Builder("attribute").type(Type.OBJECT).mutable(

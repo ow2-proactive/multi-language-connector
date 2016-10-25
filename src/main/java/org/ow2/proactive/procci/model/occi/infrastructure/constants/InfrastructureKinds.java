@@ -31,7 +31,7 @@ public class InfrastructureKinds {
 
     public static final Kind COMPUTE = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
             Identifiers.COMPUTE)
-            .addAttribute(Compute.getAttributes())
+            .addAttribute(Compute.createAttributeSet())
             .addParent(Kinds.RESOURCE)
             .addAction(RestartCompute.getInstance())
             .addAction(SaveCompute.getInstance())
@@ -41,14 +41,14 @@ public class InfrastructureKinds {
             .build();
     public static final Kind NETWORK = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
             Identifiers.NETWORK)
-            .addAttribute(Network.getAttributes())
+            .addAttribute(Network.createAttributeSet())
             .addParent(Kinds.RESOURCE)
             .addAction(UpNetwork.getInstance())
             .addAction(DownNetwork.getInstance())
             .build();
     public static final Kind STORAGE = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
             Identifiers.STORAGE)
-            .addAttribute(Network.getAttributes())
+            .addAttribute(Network.createAttributeSet())
             .addParent(Kinds.RESOURCE)
             .addAction(OfflineStorage.getInstance())
             .addAction(OnlineStorage.getInstance())

@@ -75,7 +75,7 @@ public class IPNetwork extends Mixin {
     public IPNetwork(String address, String gateway, boolean dynamic,
             List<Entity> entities) throws UnknownHostException {
         super(Identifiers.NETWORK_SCHEME, Identifiers.IPNETWORK, Identifiers.IPNETWORK,
-                setAttributes(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(), entities);
+                createAttributesSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(), entities);
         this.address = address;
         this.gateway = gateway;
         this.dynamicAllocation = dynamic;
@@ -87,7 +87,7 @@ public class IPNetwork extends Mixin {
         return applies;
     }
 
-    private static Set<Attribute> setAttributes() {
+    private static Set<Attribute> createAttributesSet() {
         HashSet<Attribute> attributes = new HashSet<>();
         attributes.add(Attributes.NETWORK_ADDRESS);
         attributes.add(Attributes.NETWORK_ALLOCATION);

@@ -21,9 +21,9 @@ import org.springframework.stereotype.Service;
  * Send crud request on cloud-automation-service/variables
  */
 @Service
-public class CloudAutomationVariables {
+public class DataServices {
 
-    private static final Logger logger = LogManager.getLogger(CloudAutomationVariables.class);
+    private static final Logger logger = LogManager.getLogger(DataServices.class);
 
     @Autowired
     private RequestUtils requestUtils;
@@ -37,7 +37,7 @@ public class CloudAutomationVariables {
             return requestUtils.readHttpResponse(response.returnResponse());
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariables.class, ex);
+            logger.error(DataServices.class, ex);
             throw new RuntimeException(
                     "Unable to get on " + getResourceUrl(key) + ", exception : " + ex);
         }
@@ -57,7 +57,7 @@ public class CloudAutomationVariables {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariables.class, ex);
+            logger.error(DataServices.class, ex);
             throw new RuntimeException(
                     "Unable to post on " + getQueryUrl(key) + ", exception : " + ex);
         }
@@ -76,7 +76,7 @@ public class CloudAutomationVariables {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariables.class, ex);
+            logger.error(DataServices.class, ex);
             throw new RuntimeException(
                     "Unable to put on " + getResourceUrl(key) + " ,exception : " + ex);
         }
@@ -92,7 +92,7 @@ public class CloudAutomationVariables {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariables.class, ex);
+            logger.error(DataServices.class, ex);
             throw new RuntimeException(
                     "Unable to delete on " + getQueryUrl(key) + ", exception : " + ex);
         }

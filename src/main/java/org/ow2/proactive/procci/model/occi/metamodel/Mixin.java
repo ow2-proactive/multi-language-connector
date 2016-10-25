@@ -47,7 +47,7 @@ import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.DataServices;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 
@@ -79,14 +79,14 @@ public class Mixin extends Category {
     public Mixin(String scheme, String term, String title, Set<Attribute> attributes,
             List<Action> actions, List<Mixin> depends, List<Kind> applies,
             List<Entity> entities) {
-        super(scheme, term, title, setAttributes(attributes));
+        super(scheme, term, title, createAttributeSet(attributes));
         this.actions = new ImmutableList.Builder<Action>().addAll(actions).build();
         this.depends = new ImmutableList.Builder<Mixin>().addAll(depends).build();
         this.applies = new ImmutableList.Builder<Kind>().addAll(applies).build();
         this.entities = entities;
     }
 
-    private static Set<Attribute> setAttributes(Set<Attribute> paramAttributes) {
+    private static Set<Attribute> createAttributeSet(Set<Attribute> paramAttributes) {
         Set<Attribute> attributes = new HashSet<>();
         attributes.addAll(paramAttributes);
         attributes.add(Attributes.DEPENDS);
@@ -137,14 +137,14 @@ public class Mixin extends Category {
      * @throws CloudAutomationException occurs if the request is not acceptable for cloud-automation-service
      */
     public void addEntity(Entity entity,
-            CloudAutomationVariables cloudAutomationVariables) throws IOException, CloudAutomationException {
+            DataServices dataServices) throws IOException, CloudAutomationException {
         entities.add(entity);
         try {
-            cloudAutomationVariables.update(this.getTitle(),
+            dataServices.update(this.getTitle(),
                     MixinRendering.convertStringFromMixin(this.getRendering()));
         } catch (CloudAutomationException exception) {
             this.setTitle(entity.getTitle().get() + this.getTerm());
-            cloudAutomationVariables.post(this.getTitle(),
+            dataServices.post(this.getTitle(),
                     MixinRendering.convertStringFromMixin(this.getRendering()));
         }
     }

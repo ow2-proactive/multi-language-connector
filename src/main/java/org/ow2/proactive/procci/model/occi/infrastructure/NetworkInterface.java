@@ -84,13 +84,13 @@ public class NetworkInterface extends Link {
             NetworkState state) throws SyntaxException {
 
         super(url, kind, title, mixins, source, target, targetKind);
-        setAttributes();
+        createAttributesSet();
         this.linkInterface = linkInterface;
         this.mac = mac;
         this.state = state;
     }
 
-    private static Set<Attribute> setAttributes() {
+    private static Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = Link.getAttributes();
         attributes.add(Attributes.INTERFACE);
         attributes.add(Attributes.MAC);

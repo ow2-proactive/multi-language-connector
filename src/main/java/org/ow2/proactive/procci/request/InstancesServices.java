@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
  * Manage the connection and the request with Cloud Automation Microservices
  */
 @Service
-public class CloudAutomationInstances {
+public class InstancesServices {
 
     private final Logger logger = LogManager.getRootLogger();
 

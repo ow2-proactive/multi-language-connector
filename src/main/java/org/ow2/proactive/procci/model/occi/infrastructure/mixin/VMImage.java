@@ -31,7 +31,7 @@ public class VMImage extends Mixin {
     private String image;
 
     public VMImage(String title, List<Mixin> depends, List<Entity> entities, String image) {
-        super(Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE, title, setAttributes(), new ArrayList<>(),
+        super(Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE, title, createAttributesSet(), new ArrayList<>(),
                 depends, initApplies(), entities);
         this.image = image;
     }
@@ -42,7 +42,7 @@ public class VMImage extends Mixin {
         return applies;
     }
 
-    private static Set<Attribute> setAttributes() {
+    private static Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = new HashSet<>();
         attributes.add(Attributes.COMPUTE_IMAGE);
         return attributes;

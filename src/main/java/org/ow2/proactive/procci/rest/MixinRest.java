@@ -8,7 +8,7 @@ import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.DataServices;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class MixinRest {
     private final Logger logger = LogManager.getRootLogger();
 
     @Autowired
-    private CloudAutomationVariables cloudAutomationVariables;
+    private DataServices dataServices;
 
     //-------------------Get a Mixin--------------------------------------------------------
 
@@ -40,7 +40,7 @@ public class MixinRest {
         logger.debug("Getting Mixin " + mixinTitle);
 
         try {
-            String mixinString = cloudAutomationVariables.get(mixinTitle);
+            String mixinString = dataServices.get(mixinTitle);
             MixinRendering mixinRendering = MixinRendering.convertMixinFromString(mixinString);
             return new ResponseEntity(new MixinBuilder(mixinRendering).build().getRendering(), HttpStatus.OK);
         } catch (ClientException ex) {
@@ -60,7 +60,7 @@ public class MixinRest {
         try {
             Mixin mixin = new MixinBuilder(mixinRendering).build();
             String json = MixinRendering.convertStringFromMixin(mixin.getRendering());
-            cloudAutomationVariables.post(mixin.getTitle(), json);
+            dataServices.post(mixin.getTitle(), json);
             return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
         } catch (IOException ex) {
             logger.error(this.getClass(), ex);
@@ -84,10 +84,10 @@ public class MixinRest {
             String json = MixinRendering.convertStringFromMixin(mixin.getRendering());
 
             if (mixin.getTitle().matches(mixinTitle)) {
-                cloudAutomationVariables.update(mixin.getTitle(), json);
+                dataServices.update(mixin.getTitle(), json);
             } else {
-                cloudAutomationVariables.delete(mixinTitle);
-                cloudAutomationVariables.post(mixin.getTitle(), json);
+                dataServices.delete(mixinTitle);
+                dataServices.post(mixin.getTitle(), json);
             }
         } catch (IOException ex) {
             logger.error(this.getClass(), ex);
@@ -106,7 +106,7 @@ public class MixinRest {
         logger.debug("Deleting Mixin " + mixinTitle);
 
         try {
-            cloudAutomationVariables.delete(mixinTitle);
+            dataServices.delete(mixinTitle);
         } catch (CloudAutomationException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
         }

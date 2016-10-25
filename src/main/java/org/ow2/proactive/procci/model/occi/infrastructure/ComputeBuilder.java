@@ -17,7 +17,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.DataServices;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -53,7 +53,7 @@ public class ComputeBuilder {
 
     private ProviderMixin providerMixin;
 
-    private CloudAutomationVariables cloudAutomationVariables;
+    private DataServices dataServices;
 
     private Optional<String> url;
     private Optional<String> title;
@@ -70,9 +70,9 @@ public class ComputeBuilder {
     /**
      * Default Builder
      */
-    public ComputeBuilder(ProviderMixin providerMixin, CloudAutomationVariables cloudAutomationVariables) {
+    public ComputeBuilder(ProviderMixin providerMixin, DataServices dataServices) {
         this.providerMixin = providerMixin;
-        this.cloudAutomationVariables = cloudAutomationVariables;
+        this.dataServices = dataServices;
         this.url = Optional.empty();
         this.title = Optional.empty();
         this.summary = Optional.empty();
@@ -331,7 +331,7 @@ public class ComputeBuilder {
                 new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
         for (Mixin mixin : mixins) {
-            mixin.addEntity(compute, cloudAutomationVariables);
+            mixin.addEntity(compute, dataServices);
         }
 
         return compute;

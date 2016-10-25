@@ -48,8 +48,8 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.CloudAutomationInstances;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.InstancesServices;
+import org.ow2.proactive.procci.request.DataServices;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -75,13 +75,13 @@ public class ComputeRest {
     private final Logger logger = LogManager.getRootLogger();
 
     @Autowired
-    private CloudAutomationInstances cloudAutomationInstances;
+    private InstancesServices instancesServices;
 
     @Autowired
     private ProviderMixin providerMixin;
 
     @Autowired
-    private CloudAutomationVariables cloudAutomationVariables;
+    private DataServices dataServices;
 
 
     //-------------------Retrieve All Computes--------------------------------------------------------
@@ -90,7 +90,7 @@ public class ComputeRest {
     public ResponseEntity<EntitiesRendering> listAllComputes() {
         logger.debug("Get all Compute instances");
         try {
-            JSONObject resources = cloudAutomationInstances.getRequest();
+            JSONObject resources = instancesServices.getRequest();
 
             List<Model> models = (List<Model>) resources.keySet()
                     .stream()
@@ -99,7 +99,7 @@ public class ComputeRest {
 
             List<EntityRendering> results = new ArrayList<>();
             for (Model model : models) {
-                results.add(new ComputeBuilder(providerMixin, cloudAutomationVariables).cloudAutomationModel(
+                results.add(new ComputeBuilder(providerMixin, dataServices).cloudAutomationModel(
                         model).build().getRendering());
             }
 
@@ -121,13 +121,13 @@ public class ComputeRest {
     public ResponseEntity<ResourceRendering> getCompute(@PathVariable("id") String id) {
         logger.debug("Get Compute ");
         try {
-            Optional<Model> computeModel = cloudAutomationInstances.getInstanceByVariable(ID_NAME,
+            Optional<Model> computeModel = instancesServices.getInstanceByVariable(ID_NAME,
                     ConvertUtils.formatURL(id));
             if (!computeModel.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
                 ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,
-                        cloudAutomationVariables).cloudAutomationModel(computeModel.get());
+                        dataServices).cloudAutomationModel(computeModel.get());
                 return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
@@ -148,12 +148,12 @@ public class ComputeRest {
             @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            ComputeBuilder compute = new ComputeBuilder(providerMixin, cloudAutomationVariables).rendering(
+            ComputeBuilder compute = new ComputeBuilder(providerMixin, dataServices).rendering(
                     computeRendering);
             JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
-            Model model = new Model(cloudAutomationInstances.postRequest(pcaModel));
+            Model model = new Model(instancesServices.postRequest(pcaModel));
             ComputeBuilder response = new ComputeBuilder(providerMixin,
-                    cloudAutomationVariables).cloudAutomationModel(model);
+                    dataServices).cloudAutomationModel(model);
             return new ResponseEntity<>(response.build().getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass(), e);

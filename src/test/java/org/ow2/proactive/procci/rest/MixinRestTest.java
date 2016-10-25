@@ -7,7 +7,7 @@ import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.DataServices;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -27,7 +27,7 @@ public class MixinRestTest {
     private MixinRest mixinRest;
 
     @Mock
-    private CloudAutomationVariables cloudAutomationVariables;
+    private DataServices cloudAutomationVariables;
 
     @Mock
     private ProviderMixin providerMixin;

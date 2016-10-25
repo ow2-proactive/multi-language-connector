@@ -13,7 +13,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
-import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.DataServices;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -35,11 +35,11 @@ public class ComputeTest {
     private ProviderMixin providerMixin;
 
     @Mock
-    private CloudAutomationVariables cloudAutomationVariables;
+    private DataServices dataServices;
 
     @Before
     public void setUp() {
-        computeBuilder = new ComputeBuilder(providerMixin, cloudAutomationVariables).url("url")
+        computeBuilder = new ComputeBuilder(providerMixin, dataServices).url("url")
                 .architecture(Compute.Architecture.X64)
                 .cores(5)
                 .hostame("hostnameTest")
@@ -82,7 +82,7 @@ public class ComputeTest {
                 .build();
         try {
             ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,
-                    cloudAutomationVariables).cloudAutomationModel(model);
+                    dataServices).cloudAutomationModel(model);
             assertThat(computeBuilder.getArchitecture().get()).isEqualTo(Compute.Architecture.X86);
             assertThat(computeBuilder.getCores().get()).isEqualTo(new Integer(4));
             assertThat(computeBuilder.getMemory().get()).isWithin(new Float(0.0001)).of(new Float(2));
@@ -147,7 +147,7 @@ public class ComputeTest {
         assertThat(compute.getSummary().get()).matches("summaryTest");
 
         ResourceRendering noArgsRendering = new ResourceRendering();
-        Compute defaultCompute = new ComputeBuilder(providerMixin, cloudAutomationVariables).rendering(
+        Compute defaultCompute = new ComputeBuilder(providerMixin, dataServices).rendering(
                 noArgsRendering).build();
 
         assertThat(defaultCompute.getShare().isPresent()).isFalse();
