@@ -9,6 +9,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.request.CloudAutomationVariables;
+import org.ow2.proactive.procci.request.ProviderInstances;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class MixinRest {
     @Autowired
     private CloudAutomationVariables cloudAutomationVariables;
 
+    @Autowired
+    private ProviderInstances providerInstances;
+
     //-------------------Get a Mixin--------------------------------------------------------
 
     @RequestMapping(value = "{mixinTitle}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +46,9 @@ public class MixinRest {
         try {
             String mixinString = cloudAutomationVariables.get(mixinTitle);
             MixinRendering mixinRendering = MixinRendering.convertMixinFromString(mixinString);
-            return new ResponseEntity(new MixinBuilder(mixinRendering).build().getRendering(), HttpStatus.OK);
+            return new ResponseEntity(
+                    new MixinBuilder(providerInstances, mixinRendering).build().getRendering(),
+                    HttpStatus.OK);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException exception) {
@@ -58,7 +64,7 @@ public class MixinRest {
             @RequestBody MixinRendering mixinRendering) {
         logger.debug("Creating Mixin " + mixinRendering.toString());
         try {
-            Mixin mixin = new MixinBuilder(mixinRendering).build();
+            Mixin mixin = new MixinBuilder(providerInstances, mixinRendering).build();
             String json = MixinRendering.convertStringFromMixin(mixin.getRendering());
             cloudAutomationVariables.post(mixin.getTitle(), json);
             return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
@@ -80,7 +86,7 @@ public class MixinRest {
 
         Mixin mixin = null;
         try {
-            mixin = new MixinBuilder(mixinRendering).build();
+            mixin = new MixinBuilder(providerInstances, mixinRendering).build();
             String json = MixinRendering.convertStringFromMixin(mixin.getRendering());
 
             if (mixin.getTitle().matches(mixinTitle)) {

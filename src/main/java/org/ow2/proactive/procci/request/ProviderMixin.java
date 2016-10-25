@@ -34,7 +34,8 @@ public class ProviderMixin {
     private final Logger logger = LogManager.getLogger(this);
 
     private final ImmutableMap<String, Supplier<MixinBuilder>> providerMixin;
-
+    @Autowired
+    ProviderInstances providerInstances;
     @Autowired
     private CloudAutomationVariables cloudAutomationVariables;
 
@@ -72,7 +73,28 @@ public class ProviderMixin {
         }
 
         MixinRendering mixinRendering = MixinRendering.convertMixinFromString(mixinString);
-        return new MixinBuilder(mixinRendering).build();
+        return new MixinBuilder(providerInstances, mixinRendering).build();
+    }
+
+    /**
+     * Give a mixin without entities from his title
+     *
+     * @param title is the mixin title
+     * @return a mixin without entities
+     * @throws IOException     if the response cannot be read
+     * @throws ClientException if there is an error in the cloud automation service response
+     */
+    public Mixin getMixinMockByTitle(String title) throws IOException, ClientException {
+
+        String mixinString = null;
+        try {
+            mixinString = cloudAutomationVariables.get(title);
+        } catch (CloudAutomationException ex) {
+            throw new SyntaxException(title);
+        }
+
+        MixinRendering mixinRendering = MixinRendering.convertMixinFromString(mixinString);
+        return new MixinBuilder(providerInstances, mixinRendering).buildMock();
     }
 
     /**
@@ -101,7 +123,6 @@ public class ProviderMixin {
      */
     public Set<String> getEntityMixinNames(String entityId) throws CloudAutomationException, IOException {
         String references = cloudAutomationVariables.get(entityId);
-        System.out.println("objectid : " + entityId + " references : " + references);
         TypeReference<Set<String>> mapType = new TypeReference<Set<String>>() {
         };
         ObjectMapper objectMapper = new ObjectMapper();
@@ -132,11 +153,11 @@ public class ProviderMixin {
         for (Mixin mixin : entity.getMixins()) {
             mixin.addEntity(entity);
             try {
-                logger.debug("update " + entity.getTitle().orElse(entity.getId()) + " references");
+                logger.debug("update " + mixin.getTitle() + " references");
                 cloudAutomationVariables.update(mixin.getTitle(),
                         new ObjectMapper().writeValueAsString(mixin.getRendering()));
             } catch (CloudAutomationException ex) {
-                logger.debug("post " + entity.getTitle().orElse(entity.getId()) + " references");
+                logger.debug("post " + mixin.getTitle() + " references");
                 cloudAutomationVariables.post(mixin.getTitle(),
                         new ObjectMapper().writeValueAsString(mixin.getRendering()));
             }

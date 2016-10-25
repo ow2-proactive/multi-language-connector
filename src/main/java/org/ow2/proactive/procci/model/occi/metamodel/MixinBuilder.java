@@ -16,6 +16,7 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
+import org.ow2.proactive.procci.request.ProviderInstances;
 import org.ow2.proactive.procci.request.ProviderMixin;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -60,9 +61,10 @@ public class MixinBuilder {
     /**
      * Construct a mixin according to its rendering
      *
-     * @param mixinRendering is the rendering mixin
+     * @param providerInstances is the instances manager
+     * @param mixinRendering    is the rendering mixin
      */
-    public MixinBuilder(
+    public MixinBuilder(ProviderInstances providerInstances,
             MixinRendering mixinRendering) throws ClientException, IOException {
         this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(
                 () -> new MissingAttributesException("scheme", "mixin"));
@@ -83,6 +85,11 @@ public class MixinBuilder {
                     InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply)));
         }
         this.entities = new ArrayList<>();
+        for (String entityId : Optional.ofNullable(mixinRendering.getEntities())
+                .map(entitiesId -> new ArrayList<>(entitiesId))
+                .orElse(new ArrayList<>())) {
+            providerInstances.getEntity(entityId).ifPresent(entity -> this.entities.add(entity));
+        }
     }
 
     private Set<Attribute> convertAttributesMap(Map<String, AttributeRendering> attributeMap) {
@@ -151,6 +158,17 @@ public class MixinBuilder {
      */
     public Mixin build(Map attributesMap) throws ClientException {
         return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
+    }
+
+    /**
+     * Construct a mixin without entities in order to avoid cycle loop
+     *
+     * @return a mixin witout entities
+     * @throws ClientException
+     */
+    public Mixin buildMock() {
+        this.entities = new ArrayList<>();
+        return build();
     }
 
 }

@@ -98,6 +98,7 @@ public class Mixin extends Category {
     }
 
     public MixinRendering getRendering() {
+
         return MixinRendering.builder()
                 .scheme(this.getScheme())
                 .term(this.getTerm())
@@ -135,9 +136,7 @@ public class Mixin extends Category {
      * @param entity is an entity which is related to the mixin
      */
     public void addEntity(Entity entity) {
-        if (!entities.contains(entity)) {
-            entities.add(entity);
-        }
+        entities.add(entity);
     }
 
     public void deleteEntity(Entity entity) {

@@ -347,4 +347,13 @@ public class ComputeBuilder {
         return compute;
     }
 
+    /**
+     * Build a compute without references in order to avoir cycle loop
+     *
+     * @return a compute without mixins and links
+     */
+    public Compute buildMock() {
+        this.mixins = new ArrayList<>();
+        return this.build();
+    }
 }
