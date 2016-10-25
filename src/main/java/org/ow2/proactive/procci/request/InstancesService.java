@@ -23,15 +23,15 @@ import org.springframework.stereotype.Component;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
 
 @Component
-public class ProviderInstances {
+public class InstancesService {
 
     private final Logger logger = LogManager.getLogger(this);
 
     @Autowired
-    private CloudAutomationInstances cloudAutomationInstances;
+    private CloudAutomationInstancesClient cloudAutomationInstancesClient;
 
     @Autowired
-    private ProviderMixin providerMixin;
+    private MixinsService mixinsService;
 
     /**
      * Give a compute from the data stored in Cloud-automation-service
@@ -42,7 +42,7 @@ public class ProviderInstances {
      * @throws ClientException
      */
     public Optional<Entity> getEntity(String id) throws IOException, ClientException {
-        Optional<Model> computeModel = cloudAutomationInstances.getInstanceByVariable(ID_NAME,
+        Optional<Model> computeModel = cloudAutomationInstancesClient.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
         if (!computeModel.isPresent()) {
             return Optional.empty();
@@ -61,7 +61,7 @@ public class ProviderInstances {
      * @throws ClientException
      */
     public Optional<Entity> getMockedEntity(String id) throws IOException, ClientException {
-        Optional<Model> computeModel = cloudAutomationInstances.getInstanceByVariable(ID_NAME,
+        Optional<Model> computeModel = cloudAutomationInstancesClient.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
         if (!computeModel.isPresent()) {
             return Optional.empty();
@@ -78,7 +78,7 @@ public class ProviderInstances {
      * @throws ClientException
      */
     public List<EntityRendering> getInstancesRendering() throws IOException, ClientException {
-        JSONObject resources = cloudAutomationInstances.getRequest();
+        JSONObject resources = cloudAutomationInstancesClient.getRequest();
 
         List<Model> models = (List<Model>) resources.keySet()
                 .stream()
@@ -110,11 +110,11 @@ public class ProviderInstances {
         compute.getMixins().stream().forEach(mixin -> mixin.addEntity(compute));
 
         //update the references between mixin and compute
-        providerMixin.addEntity(compute);
+        mixinsService.addEntity(compute);
 
         //create a new compute from the response to the compute creation request sent to cloud-automation-service
         Compute computeResult = new ComputeBuilder(
-                new Model(cloudAutomationInstances.postRequest(
+                new Model(cloudAutomationInstancesClient.postRequest(
                         compute.toCloudAutomationModel("create").getJson())))
                 .addMixins(pullMixinFromCloudAutomation(compute.getId()))
                 .build();
@@ -132,8 +132,8 @@ public class ProviderInstances {
      */
     private List<Mixin> pullMixinFromCloudAutomation(String computeId) throws IOException, ClientException {
         List<Mixin> mixins = new ArrayList<>();
-        for (String mixin : providerMixin.getEntityMixinNames(computeId)) {
-            mixins.add(providerMixin.getMixinMockByTitle(mixin));
+        for (String mixin : mixinsService.getEntityMixinNames(computeId)) {
+            mixins.add(mixinsService.getMixinMockByTitle(mixin));
         }
         return mixins;
     }

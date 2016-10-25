@@ -95,7 +95,7 @@ public class Kind extends Category {
             this.attributes = new HashSet<>();
             this.actions = new HashMap<>();
             this.parent = null;
-            this.setAttributes();
+            this.createAttributesSet();
         }
 
         public Builder addTitle(String title) {
@@ -122,7 +122,7 @@ public class Kind extends Category {
             return new Kind(scheme, term, title, attributes, actions, parent);
         }
 
-        private void setAttributes() {
+        private void createAttributesSet() {
             this.attributes.add(Attributes.KIND_ACTIONS);
             this.attributes.add(Attributes.PARENT);
             this.attributes.add(Attributes.KIND_ENTITIES);

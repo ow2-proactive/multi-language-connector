@@ -82,7 +82,7 @@ public class Resource extends Entity {
         this.links = new ImmutableList.Builder<Link>().addAll(links).build();
     }
 
-    public static Set<Attribute> getAttributes() {
+    public static Set<Attribute> createAttributeSet() {
         Set<Attribute> attributes = Entity.getAttributes();
         attributes.add(Attributes.LINKS);
         attributes.add(Attributes.SUMMARY);

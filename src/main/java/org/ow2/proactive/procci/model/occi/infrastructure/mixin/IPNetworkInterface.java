@@ -41,7 +41,8 @@ public class IPNetworkInterface extends Mixin {
 
         super(Identifiers.NETWORKINTERFACE_SCHEME, Identifiers.IPNETWORK_INTERFACE,
                 Identifiers.IPNETWORK_INTERFACE,
-                setAttributes(), new ArrayList<Action>(), new ArrayList<Mixin>(), initApplies(), entities);
+                createAttributesSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), initApplies(),
+                entities);
 
         this.address = address;
         this.gateway = gateway;
@@ -54,7 +55,7 @@ public class IPNetworkInterface extends Mixin {
         return applies;
     }
 
-    private static Set<Attribute> setAttributes() {
+    private static Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = new HashSet<>();
         attributes.add(Attributes.NETWORKINTERFACE_ADDRESS);
         attributes.add(Attributes.NETWORKINTERFACE_ALLOCATION);

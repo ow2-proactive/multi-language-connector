@@ -46,9 +46,8 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.CloudAutomationInstances;
-import org.ow2.proactive.procci.request.ProviderInstances;
-import org.ow2.proactive.procci.request.ProviderMixin;
+import org.ow2.proactive.procci.request.InstancesService;
+import org.ow2.proactive.procci.request.MixinsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,13 +70,10 @@ public class ComputeRest {
     private final Logger logger = LogManager.getRootLogger();
 
     @Autowired
-    private CloudAutomationInstances cloudAutomationInstances;
+    private MixinsService mixinsService;
 
     @Autowired
-    private ProviderMixin providerMixin;
-
-    @Autowired
-    private ProviderInstances providerInstances;
+    private InstancesService instancesService;
 
 
     //-------------------Retrieve All Computes--------------------------------------------------------
@@ -86,7 +82,8 @@ public class ComputeRest {
     public ResponseEntity<EntitiesRendering> listAllComputes() {
         logger.debug("Get all Compute instances");
         try {
-            List<EntityRendering> entityRenderings = providerInstances.getInstancesRendering();
+
+            List<EntityRendering> entityRenderings = instancesService.getInstancesRendering();
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(entityRenderings).build(),
                     HttpStatus.OK);
         } catch (ClientException e) {
@@ -105,7 +102,8 @@ public class ComputeRest {
     public ResponseEntity<ResourceRendering> getCompute(@PathVariable("id") String id) {
         logger.debug("Get Compute ");
         try {
-            Optional<Entity> compute = providerInstances.getEntity(ConvertUtils.formatURL(id));
+
+            Optional<Entity> compute = instancesService.getEntity(ConvertUtils.formatURL(id));
             if (!compute.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
@@ -129,8 +127,8 @@ public class ComputeRest {
             @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin, computeRendering);
-            Compute response = providerInstances.create(computeBuilder.build());
+            ComputeBuilder computeBuilder = new ComputeBuilder(mixinsService, computeRendering);
+            Compute response = instancesService.create(computeBuilder.build());
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass(), e);

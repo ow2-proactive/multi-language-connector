@@ -15,7 +15,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.ProviderMixin;
+import org.ow2.proactive.procci.request.MixinsService;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -67,6 +67,7 @@ public class ComputeBuilder {
      * Default Builder
      */
     public ComputeBuilder() {
+
         this.url = Optional.empty();
         this.title = Optional.empty();
         this.summary = Optional.empty();
@@ -112,7 +113,7 @@ public class ComputeBuilder {
      *
      * @param rendering is the instance of the cloud automation model for a compute
      */
-    public ComputeBuilder(ProviderMixin providerMixin,
+    public ComputeBuilder(MixinsService mixinsService,
             ResourceRendering rendering) throws ClientException, IOException {
         this.url = Optional.ofNullable(rendering.getId());
         this.title = ConvertUtils.getStringFromObject(Optional.ofNullable(rendering.getAttributes())
@@ -141,9 +142,9 @@ public class ComputeBuilder {
                 rendering.getAttributes()).map(attributes -> attributes.getOrDefault(SUMMARY_NAME, null)));
         this.mixins = new ArrayList<>();
         for (String mixin : Optional.ofNullable(rendering.getMixins()).orElse(new ArrayList<>())) {
-            this.mixins.add(providerMixin.getMixinByTitle(mixin));
+            this.mixins.add(mixinsService.getMixinByTitle(mixin));
         }
-        associateProviderMixin(providerMixin, rendering.getAttributes());
+        associateProviderMixin(mixinsService, rendering.getAttributes());
 
         this.links = new ArrayList<>();
     }
@@ -154,15 +155,15 @@ public class ComputeBuilder {
      * @param attributes is the attriutes list of the compute
      * @throws ClientException is thrown if there is an error during the mixin reading
      */
-    void associateProviderMixin(ProviderMixin providerMixin,
+    void associateProviderMixin(MixinsService mixinsService,
             Map<String, Object> attributes) throws ClientException {
         if (attributes == null) {
             return;
         }
         for (String mixinName : attributes.keySet()) {
-            if (providerMixin.getMixinBuilder(mixinName).isPresent()) {
+            if (mixinsService.getMixinBuilder(mixinName).isPresent()) {
                 try {
-                    this.mixins.add(providerMixin.getMixinBuilder(mixinName).get().build(
+                    this.mixins.add(mixinsService.getMixinBuilder(mixinName).get().build(
                             (Map) attributes.get(mixinName)));
                 } catch (ClassCastException e) {
                     throw new SyntaxException(mixinName);
@@ -334,6 +335,7 @@ public class ComputeBuilder {
                 new ArrayList<>(), architecture,
                 cores, share, hostname, memory, state);
         mixins.stream().forEach(mixin -> mixin.addEntity(compute));
+
 
         return compute;
     }

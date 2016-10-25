@@ -34,7 +34,8 @@ public class Contextualization extends Mixin {
      */
     public Contextualization(String userdata, List<Entity> entities) {
         super(Identifiers.INFRASTRUCTURE_SCHEME, Identifiers.CONTEXTUALIZATION, Identifiers.CONTEXTUALIZATION,
-                setAttributes(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(), entities);
+                createAttributeSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(),
+                entities);
         this.userdata = userdata;
     }
 
@@ -44,7 +45,7 @@ public class Contextualization extends Mixin {
         return applies;
     }
 
-    private static Set<Attribute> setAttributes() {
+    private static Set<Attribute> createAttributeSet() {
         Set<Attribute> attributes = new HashSet<>();
         attributes.add(Attributes.USERDATA);
         return attributes;

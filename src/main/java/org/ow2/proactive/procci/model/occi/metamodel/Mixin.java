@@ -76,14 +76,14 @@ public class Mixin extends Category {
     public Mixin(String scheme, String term, String title, Set<Attribute> attributes,
             List<Action> actions, List<Mixin> depends, List<Kind> applies,
             List<Entity> entities) {
-        super(scheme, term, title, setAttributes(attributes));
+        super(scheme, term, title, createAttributeSet(attributes));
         this.actions = new ImmutableList.Builder<Action>().addAll(actions).build();
         this.depends = new ImmutableList.Builder<Mixin>().addAll(depends).build();
         this.applies = new ImmutableList.Builder<Kind>().addAll(applies).build();
         this.entities = entities;
     }
 
-    private static Set<Attribute> setAttributes(Set<Attribute> paramAttributes) {
+    private static Set<Attribute> createAttributeSet(Set<Attribute> paramAttributes) {
         Set<Attribute> attributes = new HashSet<>();
         attributes.addAll(paramAttributes);
         attributes.add(Attributes.DEPENDS);

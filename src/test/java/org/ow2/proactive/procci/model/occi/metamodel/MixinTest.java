@@ -13,8 +13,8 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.ProviderInstances;
-import org.ow2.proactive.procci.request.ProviderMixin;
+import org.ow2.proactive.procci.request.InstancesService;
+import org.ow2.proactive.procci.request.MixinsService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -26,9 +26,9 @@ import static com.google.common.truth.Truth.assertThat;
 public class MixinTest {
 
     @Mock
-    ProviderInstances providerInstances;
+    InstancesService instancesService;
     @Mock
-    private ProviderMixin providerMixin;
+    private MixinsService mixinsService;
 
     @Test
     public void constructorTest() {
@@ -109,7 +109,7 @@ public class MixinTest {
     public void renderingBuilderTest() throws ClientException, IOException {
 
         try {
-            new MixinBuilder(providerMixin, providerInstances, MixinRendering.builder().build()).build();
+            new MixinBuilder(mixinsService, instancesService, MixinRendering.builder().build()).build();
         } catch (Exception ex) {
             assertThat(ex).isInstanceOf(MissingAttributesException.class);
         }
@@ -117,7 +117,7 @@ public class MixinTest {
         try {
             List<String> applies = new ArrayList<>();
             applies.add("notAKnownTerm");
-            new MixinBuilder(providerMixin, providerInstances,
+            new MixinBuilder(mixinsService, instancesService,
                     MixinRendering.builder()
                             .scheme("schemeTest")
                             .term("termTest")
@@ -129,7 +129,7 @@ public class MixinTest {
             assertThat(ex).isInstanceOf(SyntaxException.class);
         }
 
-        Mixin minRendering = new MixinBuilder(providerMixin, providerInstances,
+        Mixin minRendering = new MixinBuilder(mixinsService, instancesService,
 
                 MixinRendering.builder()
                         .scheme("schemeTest")
@@ -137,7 +137,7 @@ public class MixinTest {
                         .build()
         ).build();
 
-        Mixin allAttributesRendering = new MixinBuilder(providerMixin, providerInstances,
+        Mixin allAttributesRendering = new MixinBuilder(mixinsService, instancesService,
                 MixinRendering.builder()
                         .scheme("schemeTest")
                         .term("termTest")
@@ -160,7 +160,7 @@ public class MixinTest {
         List depend = new ArrayList();
         //cannot test depend because it will send request to cloud-automation-service
 
-        Mixin allAttributesFilledRendering = new MixinBuilder(providerMixin, providerInstances,
+        Mixin allAttributesFilledRendering = new MixinBuilder(mixinsService, instancesService,
                 MixinRendering.builder()
                         .scheme("schemeTest")
                         .term("termTest")

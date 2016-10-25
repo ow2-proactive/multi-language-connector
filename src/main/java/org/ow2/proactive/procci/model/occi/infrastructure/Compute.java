@@ -102,7 +102,7 @@ public class Compute extends Resource {
             Optional<String> hostname, Optional<Float> memory,
             Optional<ComputeState> state) {
         super(url, kind, title, mixins, summary, links);
-        setAttributes();
+        createAttributesSet();
         this.architecture = architecture;
         this.cores = cores;
         this.share = share;
@@ -111,8 +111,8 @@ public class Compute extends Resource {
         this.state = state;
     }
 
-    private static Set<Attribute> setAttributes() {
-        Set<Attribute> attributes = Resource.getAttributes();
+    private static Set<Attribute> createAttributesSet() {
+        Set<Attribute> attributes = Resource.createAttributeSet();
         attributes.add(Attributes.ARCHITECTURE);
         attributes.add(Attributes.CORES);
         attributes.add(Attributes.HOSTNAME);

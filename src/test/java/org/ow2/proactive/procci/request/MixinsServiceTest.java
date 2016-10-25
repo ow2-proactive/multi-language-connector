@@ -26,13 +26,13 @@ import static org.mockito.Mockito.when;
 /**
  * Created by the Activeeon team on 20/10/16.
  */
-public class ProviderMixinTest {
+public class MixinsServiceTest {
 
     @InjectMocks
-    private ProviderMixin providerMixin;
+    private MixinsService mixinsService;
 
     @Mock
-    private CloudAutomationVariables cloudAutomationVariables;
+    private CloudAutomationVariablesClient cloudAutomationVariablesClient;
 
     @Before
     public void setUp() {
@@ -44,20 +44,21 @@ public class ProviderMixinTest {
         Set<String> references = new HashSet<>();
         references.add("ref1Test");
         references.add("ref2Test");
-        when(cloudAutomationVariables.get("idTest")).thenReturn(
+        when(cloudAutomationVariablesClient.get("idTest")).thenReturn(
                 new ObjectMapper().writeValueAsString(references));
-        Set<String> result = providerMixin.getEntityMixinNames("idTest");
+        Set<String> result = mixinsService.getEntityMixinNames("idTest");
         assertThat(result).contains("ref1Test");
         assertThat(result).contains("ref2Test");
 
-        when(cloudAutomationVariables.get("idTest2")).thenReturn("[]");
-        references = providerMixin.getEntityMixinNames("idTest2");
+        when(cloudAutomationVariablesClient.get("idTest2")).thenReturn("[]");
+        references = mixinsService.getEntityMixinNames("idTest2");
         assertThat(references).isEmpty();
 
-        when(cloudAutomationVariables.get("idTest3")).thenThrow(new CloudAutomationException("idTest3"));
+        when(cloudAutomationVariablesClient.get("idTest3")).thenThrow(
+                new CloudAutomationException("idTest3"));
         Exception ex = null;
         try {
-            providerMixin.getEntityMixinNames("idTest3");
+            mixinsService.getEntityMixinNames("idTest3");
         } catch (Exception e) {
             ex = e;
         }
@@ -84,16 +85,17 @@ public class ProviderMixinTest {
                 .addMixin(mixin)
                 .build();
 
-        when(cloudAutomationVariables.get("mixinTest")).thenReturn(
+        when(cloudAutomationVariablesClient.get("mixinTest")).thenReturn(
                 mapper.writeValueAsString(mixin.getRendering()));
 
-        providerMixin.addEntity(compute);
+        mixinsService.addEntity(compute);
 
         mixin.addEntity(compute);
 
-        verify(cloudAutomationVariables).post("idTest", mapper.writeValueAsString(mixinsId));
-        verify(cloudAutomationVariables).get("mixinTest");
-        verify(cloudAutomationVariables).update("mixinTest", mapper.writeValueAsString(mixin.getRendering()));
+        verify(cloudAutomationVariablesClient).post("idTest", mapper.writeValueAsString(mixinsId));
+        verify(cloudAutomationVariablesClient).get("mixinTest");
+        verify(cloudAutomationVariablesClient).update("mixinTest",
+                mapper.writeValueAsString(mixin.getRendering()));
 
 
         //test add new object with new mixin
@@ -112,19 +114,20 @@ public class ProviderMixinTest {
 
         mixin2.addEntity(compute2);
 
-        when(cloudAutomationVariables.get("idTest2")).thenReturn(
+        when(cloudAutomationVariablesClient.get("idTest2")).thenReturn(
                 mapper.writeValueAsString(mixin.getRendering()));
 
-        Mockito.doThrow(new CloudAutomationException("mixinTest2")).when(cloudAutomationVariables).get(
+        Mockito.doThrow(new CloudAutomationException("mixinTest2")).when(cloudAutomationVariablesClient).get(
                 "mixinTest2");
 
 
-        providerMixin.addEntity(compute2);
+        mixinsService.addEntity(compute2);
 
-        verify(cloudAutomationVariables).post("idTest2",
+        verify(cloudAutomationVariablesClient).post("idTest2",
                 mapper.writeValueAsString(mixinId2));
-        verify(cloudAutomationVariables).get("mixinTest2");
-        verify(cloudAutomationVariables).post("mixinTest2", mapper.writeValueAsString(mixin2.getRendering()));
+        verify(cloudAutomationVariablesClient).get("mixinTest2");
+        verify(cloudAutomationVariablesClient).post("mixinTest2",
+                mapper.writeValueAsString(mixin2.getRendering()));
 
 
     }

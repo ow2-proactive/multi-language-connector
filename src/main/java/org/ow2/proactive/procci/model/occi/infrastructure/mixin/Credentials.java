@@ -33,7 +33,8 @@ public class Credentials extends Mixin {
      */
     public Credentials(String publickey, List<Entity> entities) {
         super(Identifiers.CREDENTIALS_SCHEME, Identifiers.CREDENTIALS, Identifiers.CREDENTIALS,
-                setAttributes(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(), entities);
+                createAttributesSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(),
+                entities);
         this.publickey = publickey;
     }
 
@@ -43,7 +44,7 @@ public class Credentials extends Mixin {
         return applies;
     }
 
-    private static Set<Attribute> setAttributes() {
+    private static Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = new HashSet<>();
         attributes.add(Attributes.SSH_PUBLICKEY);
         return attributes;
