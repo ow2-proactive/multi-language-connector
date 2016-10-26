@@ -9,7 +9,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 
 /**
- * Created by mael on 2/25/16.
+ * Created by the Activeeon team  on 2/25/16.
  */
 public class ActionTest {
 

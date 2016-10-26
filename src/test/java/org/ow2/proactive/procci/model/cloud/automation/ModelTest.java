@@ -7,7 +7,7 @@ import org.junit.Test;
 import static com.google.common.truth.Truth.assertThat;
 
 /**
- * Created by mael on 03/06/16.
+ * Created by the Activeeon team on 03/06/16.
  */
 public class ModelTest {
 

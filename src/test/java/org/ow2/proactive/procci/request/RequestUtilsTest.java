@@ -5,7 +5,7 @@ import org.junit.Test;
 import static com.google.common.truth.Truth.assertThat;
 
 /**
- * Created by mael on 23/06/16.
+ * Created by the Activeeon team  on 23/06/16.
  */
 public class RequestUtilsTest {
 

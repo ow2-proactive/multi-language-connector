@@ -5,7 +5,7 @@ import org.junit.Test;
 import static com.google.common.truth.Truth.assertThat;
 
 /**
- * Created by mael on 17/10/16.
+ * Created by the Activeeon team  on 17/10/16.
  */
 public class ProviderMixinTest {
 
