@@ -44,3 +44,11 @@ To access Swagger API:
 One solution is to run this portal using the scheduler (copy the multi-language-connector.war into scheduling/dist/war/).
 
 If you don't deploy locally, don't forget to update src/main/resource/config.properties
+
+## Author
+
+Mael Audren
+
+## Reviewers
+
+The Activeeon Team
