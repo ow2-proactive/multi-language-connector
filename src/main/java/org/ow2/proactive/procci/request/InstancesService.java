@@ -22,6 +22,9 @@ import org.springframework.stereotype.Component;
 
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
 
+/**
+ * This class enable the user to get and create instances
+ */
 @Component
 public class InstancesService {
 

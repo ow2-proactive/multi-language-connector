@@ -17,7 +17,7 @@ public class ContextualizationTest {
 
     @Test
     public void maximalConstructorTest() {
-        Contextualization contextualization = new Contextualization("userdataTest", new ArrayList<Entity>());
+        Contextualization contextualization = new Contextualization("contextualizationTest",new ArrayList<>(), new ArrayList<>(), "userdataTest");
         assertThat(contextualization.getUserdata()).isEqualTo("userdataTest");
         assertThat(contextualization.getAttributes()).contains(
                 new Attribute.Builder("occi.compute.userdata").type(Type.OBJECT).mutable(false).required(
