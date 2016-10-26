@@ -23,7 +23,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by mael on 2/24/16.
+ * Created by the Activeeon team on 2/24/16.
  */
 public class ComputeTest {
 

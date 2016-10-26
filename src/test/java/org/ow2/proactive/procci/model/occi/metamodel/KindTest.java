@@ -10,7 +10,7 @@ import org.junit.Test;
 import static com.google.common.truth.Truth.assertThat;
 
 /**
- * Created by mael on 2/24/16.
+ * Created by the Activeeon team  on 2/24/16.
  */
 public class KindTest {
 
