@@ -40,8 +40,8 @@ public class Contextualization extends Mixin {
      * @param entities is the set of resource instances
      */
     public Contextualization(String title, List<Mixin> depends, List<Entity> entities, String userdata) {
-        super(Identifiers.INFRASTRUCTURE_SCHEME, Identifiers.CONTEXTUALIZATION, Identifiers.CONTEXTUALIZATION,
-                createAttributeSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(),
+        super(Identifiers.COMPUTE_SCHEME, Identifiers.CONTEXTUALIZATION, title,
+                createAttributeSet(), new ArrayList<Action>(), depends, setApplies(),
                 entities);
         this.userdata = userdata;
     }
@@ -62,9 +62,6 @@ public class Contextualization extends Mixin {
         return userdata;
     }
 
-    public void setUserdata(String userdata) {
-        this.userdata = userdata;
-    }
 
     @Override
     public Model.Builder toCloudAutomationModel(Model.Builder cloudAutomation) {
@@ -75,11 +72,11 @@ public class Contextualization extends Mixin {
     public static class Builder extends MixinBuilder {
 
         public Builder() {
-            super(Identifiers.OCCIWARE_SCHEME, Identifiers.CONTEXTUALIZATION);
+            super(Identifiers.COMPUTE_SCHEME, Identifiers.CONTEXTUALIZATION);
         }
 
         @Override
-        public Mixin build(Map attributesMap) throws ClientException {
+        public Contextualization build(Map attributesMap) throws ClientException {
             return new Contextualization(this.getTitle(), this.getDepends(), this.getEntities(),
                     Optional.ofNullable(
                             convertAttributeInString(attributesMap.get(Attributes.USERDATA_NAME)))
