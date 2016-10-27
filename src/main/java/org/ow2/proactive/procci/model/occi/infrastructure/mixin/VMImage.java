@@ -56,27 +56,25 @@ public class VMImage extends Mixin {
 
     public static class Builder extends MixinBuilder {
 
+        private String VMImage;
+
         public Builder() {
             super(Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE);
         }
 
         @Override
-        public Mixin build(Map attributesMap) throws ClientException {
-            return new VMImage(this.getTitle(), this.getDepends(), this.getEntities(),
-                    Optional.ofNullable(
-                            convertAttributeInString(attributesMap.get(Attributes.COMPUTE_IMAGE_NAME)))
-                            .orElseThrow(() -> new MissingAttributesException(Attributes.COMPUTE_IMAGE_NAME,
-                                    Attributes.COMPUTE_IMAGE.getName())));
+        public MixinBuilder attributes(Map attributes) throws ClientException {
+            this.VMImage = Optional.ofNullable(
+                    convertAttributeInString(attributes.get(Attributes.COMPUTE_IMAGE_NAME)))
+                    .orElseThrow(() -> new MissingAttributesException(Attributes.COMPUTE_IMAGE_NAME,
+                            Attributes.COMPUTE_IMAGE.getName()));
+            return this;
         }
 
-        private String convertAttributeInString(Object attribute) throws SyntaxException {
-            try {
-                return (String) attribute;
-            } catch (ClassCastException e) {
-                throw new SyntaxException(attribute.toString());
-            }
+        @Override
+        public VMImage build(){
+            return new VMImage(this.getTitle(), this.getDepends(), this.getEntities(),this.VMImage);
         }
-
 
     }
 }

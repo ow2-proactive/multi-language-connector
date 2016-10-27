@@ -163,8 +163,9 @@ public class ComputeBuilder {
         for (String mixinName : attributes.keySet()) {
             if (mixinsService.getMixinBuilder(mixinName).isPresent()) {
                 try {
-                    this.mixins.add(mixinsService.getMixinBuilder(mixinName).get().build(
-                            (Map) attributes.get(mixinName)));
+                    this.mixins.add(mixinsService.getMixinBuilder(mixinName).get()
+                            .attributes((Map) attributes.get(mixinName))
+                            .build());
                 } catch (ClassCastException e) {
                     throw new SyntaxException(mixinName);
                 }

@@ -14,6 +14,7 @@ import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.request.InstancesService;
@@ -140,6 +141,13 @@ public class MixinBuilder {
         return this;
     }
 
+    public MixinBuilder attributes(Map attributes) throws ClientException {
+        this.title = convertAttributeInString(Optional.ofNullable(attributes
+                .get(Attributes.CATEGORY_TITLE_NAME))
+                .orElse(this.title));
+        return this;
+    }
+
 
     /**
      * Build the instance of a mixin according to its scheme and term
@@ -147,17 +155,6 @@ public class MixinBuilder {
      * @return a mixin instance
      */
     public Mixin build() {
-        return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
-    }
-
-    /**
-     * Construct a mixin
-     *
-     * @param attributesMap should be empty becase a default mixin has no attributes
-     * @return
-     * @throws ClientException
-     */
-    public Mixin build(Map attributesMap) throws ClientException {
         return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
     }
 
@@ -170,6 +167,14 @@ public class MixinBuilder {
     public Mixin buildMock() {
         this.entities = new ArrayList<>();
         return build();
+    }
+
+    protected String convertAttributeInString(Object attribute) throws SyntaxException {
+        try {
+            return (String) attribute;
+        } catch (ClassCastException e) {
+            throw new SyntaxException(attribute.toString());
+        }
     }
 
 }
