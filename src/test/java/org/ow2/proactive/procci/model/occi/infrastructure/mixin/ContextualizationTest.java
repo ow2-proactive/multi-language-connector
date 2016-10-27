@@ -1,9 +1,12 @@
 package org.ow2.proactive.procci.model.occi.infrastructure.mixin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
-import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Type;
 import org.junit.Test;
 
@@ -16,11 +19,40 @@ public class ContextualizationTest {
 
 
     @Test
-    public void maximalConstructorTest() {
-        Contextualization contextualization = new Contextualization("userdataTest", new ArrayList<Entity>());
+    public void constructorTest() {
+        Contextualization contextualization = new Contextualization("contextualizationTest",
+                new ArrayList<>(), new ArrayList<>(), "userdataTest");
         assertThat(contextualization.getUserdata()).isEqualTo("userdataTest");
         assertThat(contextualization.getAttributes()).contains(
                 new Attribute.Builder("occi.compute.userdata").type(Type.OBJECT).mutable(false).required(
                         false).build());
     }
+
+    @Test
+    public void buildTest() throws ClientException {
+        Exception exception = null;
+        try {
+            new Contextualization.Builder().build(new HashMap());
+        } catch (MissingAttributesException e) {
+            exception = e;
+        }
+
+        assertThat(exception).isInstanceOf(MissingAttributesException.class);
+
+        Map attributes = new HashMap();
+        attributes.put("occi.compute.userdata", "userdataTest");
+        attributes.put("occi.entity.title", "titleTest");
+
+        Contextualization contextualization = new Contextualization.Builder().build(attributes);
+
+
+        assertThat(contextualization.getUserdata()).matches("userdataTest");
+        assertThat(contextualization.getTerm()).matches("user_data");
+        assertThat(contextualization.getScheme()).matches(
+                "http://schemas.ogf.org/occi/infrastructure/compute#");
+        assertThat(contextualization.getTitle()).matches(contextualization.getTerm());
+
+    }
+
+
 }

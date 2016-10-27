@@ -33,9 +33,9 @@ import lombok.Getter;
 public class MixinBuilder {
 
     @Getter(value = AccessLevel.PROTECTED)
-    private String scheme;
+    private final String scheme;
     @Getter(value = AccessLevel.PROTECTED)
-    private String term;
+    private final String term;
     @Getter(value = AccessLevel.PROTECTED)
     private String title;
     @Getter(value = AccessLevel.PROTECTED)
@@ -99,16 +99,6 @@ public class MixinBuilder {
                 .stream()
                 .map(key -> new Attribute.Builder(key, attributeMap.get(key)).build())
                 .collect(Collectors.toSet());
-    }
-
-    public MixinBuilder scheme(String scheme) {
-        this.scheme = scheme;
-        return this;
-    }
-
-    public MixinBuilder term(String term) {
-        this.term = term;
-        return this;
     }
 
     public MixinBuilder title(String title) {
