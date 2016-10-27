@@ -64,6 +64,7 @@ public class VMImage extends Mixin {
 
         @Override
         public MixinBuilder attributes(Map attributes) throws ClientException {
+            super.attributes(attributes);
             this.VMImage = Optional.ofNullable(
                     convertAttributeInString(attributes.get(Attributes.COMPUTE_IMAGE_NAME)))
                     .orElseThrow(() -> new MissingAttributesException(Attributes.COMPUTE_IMAGE_NAME,
