@@ -32,7 +32,7 @@ public class ContextualizationTest {
     public void buildTest() throws ClientException {
         Exception exception = null;
         try {
-            new Contextualization.Builder().build(new HashMap());
+            new Contextualization.Builder().attributes(new HashMap()).build();
         } catch (MissingAttributesException e) {
             exception = e;
         }
@@ -43,7 +43,7 @@ public class ContextualizationTest {
         attributes.put("occi.compute.userdata", "userdataTest");
         attributes.put("occi.entity.title", "titleTest");
 
-        Contextualization contextualization = new Contextualization.Builder().build(attributes);
+        Contextualization contextualization = new Contextualization.Builder().attributes(attributes).build();
 
 
         assertThat(contextualization.getUserdata()).matches("userdataTest");
