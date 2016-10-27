@@ -132,9 +132,8 @@ public class MixinBuilder {
     }
 
     public MixinBuilder attributes(Map attributes) throws ClientException {
-        this.title = convertAttributeInString(Optional.ofNullable(attributes
-                .get(Attributes.CATEGORY_TITLE_NAME))
-                .orElse(this.title));
+        this.title = readAttributeAsString(attributes, Attributes.CATEGORY_TITLE_NAME)
+                .orElse(this.title);
         return this;
     }
 
@@ -159,11 +158,16 @@ public class MixinBuilder {
         return build();
     }
 
-    protected String convertAttributeInString(Object attribute) throws SyntaxException {
-        try {
-            return (String) attribute;
-        } catch (ClassCastException e) {
-            throw new SyntaxException(attribute.toString());
+    protected Optional<String> readAttributeAsString(Map attributes, String key) throws SyntaxException {
+        Optional<Object> value = Optional.ofNullable(attributes.get(key));
+        if (value.isPresent()) {
+            if (value.get() instanceof String) {
+                return Optional.of((String) value.get());
+            } else {
+                throw new SyntaxException(key);
+            }
+        } else {
+            return Optional.empty();
         }
     }
 

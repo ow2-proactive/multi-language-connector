@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
@@ -65,16 +63,15 @@ public class VMImage extends Mixin {
         @Override
         public MixinBuilder attributes(Map attributes) throws ClientException {
             super.attributes(attributes);
-            this.VMImage = Optional.ofNullable(
-                    convertAttributeInString(attributes.get(Attributes.COMPUTE_IMAGE_NAME)))
+            this.VMImage = readAttributeAsString(attributes, Attributes.COMPUTE_IMAGE_NAME)
                     .orElseThrow(() -> new MissingAttributesException(Attributes.COMPUTE_IMAGE_NAME,
                             Attributes.COMPUTE_IMAGE.getName()));
             return this;
         }
 
         @Override
-        public VMImage build(){
-            return new VMImage(this.getTitle(), this.getDepends(), this.getEntities(),this.VMImage);
+        public VMImage build() {
+            return new VMImage(this.getTitle(), this.getDepends(), this.getEntities(), this.VMImage);
         }
 
     }

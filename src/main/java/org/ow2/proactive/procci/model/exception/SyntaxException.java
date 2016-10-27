@@ -13,6 +13,6 @@ public class SyntaxException extends ClientException {
 
     @Override
     public String getJsonError() {
-        return "{\"error\" : \"" + stringException + " was not found\"}";
+        return "{\"error\" : \"" + stringException + " is ill formed\"}";
     }
 }
