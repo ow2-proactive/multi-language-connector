@@ -10,9 +10,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SyntaxException extends ClientException {
     private String stringException;
+    private String expected;
 
     @Override
     public String getJsonError() {
-        return "{\"error\" : \"" + stringException + " is ill formed\"}";
+        return "{\"error\" : \" Invalid content type received '"  + stringException + "', expected "+expected+" \"}";
     }
 }

@@ -84,7 +84,7 @@ public class MixinBuilder {
         this.applies = new ArrayList<>();
         for (String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())) {
             this.applies.add(
-                    InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply)));
+                    InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply,"Kind")));
         }
         this.entities = new ArrayList<>();
         for (String entityId : Optional.ofNullable(mixinRendering.getEntities())
@@ -164,7 +164,7 @@ public class MixinBuilder {
             if (value.get() instanceof String) {
                 return Optional.of((String) value.get());
             } else {
-                throw new SyntaxException(key);
+                throw new SyntaxException(key,"String");
             }
         } else {
             return Optional.empty();

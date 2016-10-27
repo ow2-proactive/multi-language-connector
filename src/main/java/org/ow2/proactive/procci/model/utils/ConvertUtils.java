@@ -21,7 +21,7 @@ public class ConvertUtils {
         try {
             return integerString.map(s -> Integer.parseInt(s));
         } catch (Exception e) {
-            throw new SyntaxException(integerString.get());
+            throw new SyntaxException(integerString.get(),"Integer");
         }
     }
 
@@ -36,7 +36,7 @@ public class ConvertUtils {
         try {
             return floatString.map(s -> Float.parseFloat(s));
         } catch (Exception e) {
-            throw new SyntaxException(floatString.get());
+            throw new SyntaxException(floatString.get(),"Float");
         }
     }
 
@@ -47,7 +47,7 @@ public class ConvertUtils {
         try {
             return stringObject.map(obj -> (String) obj);
         } catch (Exception e) {
-            throw new SyntaxException(stringObject.toString());
+            throw new SyntaxException(stringObject.toString(),"String");
         }
     }
 
