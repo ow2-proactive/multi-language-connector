@@ -32,7 +32,7 @@ public class ContextualizationTest {
     public void buildTest() throws ClientException {
         Exception exception = null;
         try {
-            new Contextualization.Builder().build(new HashMap());
+            new Contextualization.Builder().attributes(new HashMap()).build();
         } catch (MissingAttributesException e) {
             exception = e;
         }
@@ -41,16 +41,16 @@ public class ContextualizationTest {
 
         Map attributes = new HashMap();
         attributes.put("occi.compute.userdata", "userdataTest");
-        attributes.put("occi.entity.title", "titleTest");
+        attributes.put("occi.category.title", "titleTest");
 
-        Contextualization contextualization = new Contextualization.Builder().build(attributes);
+        Contextualization contextualization = new Contextualization.Builder().attributes(attributes).build();
 
 
         assertThat(contextualization.getUserdata()).matches("userdataTest");
         assertThat(contextualization.getTerm()).matches("user_data");
         assertThat(contextualization.getScheme()).matches(
                 "http://schemas.ogf.org/occi/infrastructure/compute#");
-        assertThat(contextualization.getTitle()).matches(contextualization.getTerm());
+        assertThat(contextualization.getTitle()).matches("titleTest");
 
     }
 

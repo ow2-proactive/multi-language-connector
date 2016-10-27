@@ -10,7 +10,6 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
@@ -71,27 +70,26 @@ public class Contextualization extends Mixin {
 
     public static class Builder extends MixinBuilder {
 
+        private String userdata;
+
         public Builder() {
             super(Identifiers.COMPUTE_SCHEME, Identifiers.CONTEXTUALIZATION);
         }
 
         @Override
-        public Contextualization build(Map attributesMap) throws ClientException {
-            return new Contextualization(this.getTitle(), this.getDepends(), this.getEntities(),
-                    Optional.ofNullable(
+        public Contextualization.Builder attributes(Map attributesMap) throws ClientException {
+            super.attributes(attributesMap);
+            this.userdata = Optional.ofNullable(
                             convertAttributeInString(attributesMap.get(Attributes.USERDATA_NAME)))
                             .orElseThrow(() -> new MissingAttributesException(Attributes.USERDATA_NAME,
-                                    Attributes.USERDATA.getName())));
+                                    Attributes.USERDATA.getName()));
+            return this;
         }
 
-        private String convertAttributeInString(Object attribute) throws SyntaxException {
-            try {
-                return (String) attribute;
-            } catch (ClassCastException e) {
-                throw new SyntaxException(attribute.toString());
-            }
+        @Override
+        public Contextualization build(){
+            return new Contextualization(this.getTitle(), this.getDepends(), this.getEntities(),this.userdata);
         }
-
 
     }
 }
