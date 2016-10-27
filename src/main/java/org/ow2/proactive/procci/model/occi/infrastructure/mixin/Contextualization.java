@@ -32,11 +32,15 @@ public class Contextualization extends Mixin {
     private String userdata;
 
 
+
+
     /**
-     * Constructor with all parameters
+     * Create a Contextualization mixin
      *
-     * @param userdata Contextualization data(e.g., script executable) that the client supplies once and only once. It cannot be updated
-     * @param entities is the set of resource instances
+     * @param title is the mixin name
+     * @param depends is a list of mixin related to this instance
+     * @param entities entities is the set of resource instances
+     * @param userdata userdata Contextualization data(e.g., script executable) that the client supplies once and only once. It cannot be updated
      */
     public Contextualization(String title, List<Mixin> depends, List<Entity> entities, String userdata) {
         super(Identifiers.COMPUTE_SCHEME, Identifiers.CONTEXTUALIZATION, title,
