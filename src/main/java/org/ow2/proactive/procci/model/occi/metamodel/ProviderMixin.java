@@ -1,6 +1,7 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProviderMixin {
 
-    private final ImmutableMap<String, Supplier<MixinBuilder>> providerMixin;
+    private final Map<String, Supplier<MixinBuilder>> providerMixin;
     @Autowired
     private DataServices dataServices;
 
