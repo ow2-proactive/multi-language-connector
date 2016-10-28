@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.Network;
 import org.ow2.proactive.procci.model.occi.infrastructure.NetworkInterface;
+import org.ow2.proactive.procci.model.occi.infrastructure.Storage;
 import org.ow2.proactive.procci.model.occi.infrastructure.StorageLink;
 import org.ow2.proactive.procci.model.occi.infrastructure.action.DownNetwork;
 import org.ow2.proactive.procci.model.occi.infrastructure.action.OfflineStorage;
@@ -48,7 +49,7 @@ public class InfrastructureKinds {
             .build();
     public static final Kind STORAGE = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
             Identifiers.STORAGE)
-            .addAttribute(Network.createAttributeSet())
+            .addAttribute(Storage.createAttributeSet())
             .addParent(Kinds.RESOURCE)
             .addAction(OfflineStorage.getInstance())
             .addAction(OnlineStorage.getInstance())
