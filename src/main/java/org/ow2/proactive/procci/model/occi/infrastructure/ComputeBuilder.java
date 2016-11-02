@@ -92,12 +92,13 @@ public class ComputeBuilder {
         this.title = Optional.ofNullable(cloudAutomation.getVariables().get(ENTITY_TITLE_NAME));
         this.hostname = Optional.ofNullable(cloudAutomation.getVariables().get(INSTANCE_ENDPOINT));
         this.summary = Optional.ofNullable(cloudAutomation.getVariables().get(SUMMARY_NAME));
-        this.cores = ConvertUtils.getIntegerFromString(
+        this.cores = ConvertUtils.convertIntegerFromString(
                 Optional.ofNullable(cloudAutomation.getVariables().get(CORES_NAME)));
-        this.memory = ConvertUtils.getFloatFromString(
+        this.memory = ConvertUtils.convertFloatFromString(
                 Optional.ofNullable(cloudAutomation.getVariables().get(MEMORY_NAME)));
-        this.share = ConvertUtils.getIntegerFromString(
+        this.share = ConvertUtils.convertIntegerFromString(
                 Optional.ofNullable(cloudAutomation.getVariables().get(SHARE_NAME)));
+
         this.architecture = getArchitectureFromString(
                 Optional.ofNullable(cloudAutomation.getVariables().get(ARCHITECTURE_NAME)));
         this.state = getStateFromCloudAutomation(
@@ -116,29 +117,29 @@ public class ComputeBuilder {
     public ComputeBuilder(MixinsService mixinsService,
             ResourceRendering rendering) throws ClientException, IOException {
         this.url = Optional.ofNullable(rendering.getId());
-        this.title = ConvertUtils.getStringFromObject(Optional.ofNullable(rendering.getAttributes())
+        this.title = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
                 .map(attributes -> attributes.getOrDefault(ENTITY_TITLE_NAME, null)));
-        this.architecture = getArchitectureFromString(ConvertUtils.getStringFromObject(Optional.ofNullable(
+        this.architecture = getArchitectureFromString(ConvertUtils.convertStringFromObject(Optional.ofNullable(
                 rendering.getAttributes()).map(
                 attributes -> attributes.getOrDefault(ARCHITECTURE_NAME, null))));
-        this.state = getStateFromString(ConvertUtils.getStringFromObject(Optional.ofNullable(
+        this.state = getStateFromString(ConvertUtils.convertStringFromObject(Optional.ofNullable(
                 rendering.getAttributes()).map(
                 attributes -> attributes.getOrDefault(COMPUTE_STATE_NAME, null))));
-        this.hostname = ConvertUtils.getStringFromObject(Optional.ofNullable(
+        this.hostname = ConvertUtils.convertStringFromObject(Optional.ofNullable(
                 rendering.getAttributes()).map(attributes -> attributes.getOrDefault(HOSTNAME_NAME, null)));
-        this.cores = ConvertUtils.getIntegerFromString(
+        this.cores = ConvertUtils.convertIntegerFromString(
                 Optional.ofNullable(rendering.getAttributes())
                         .map(attributes -> attributes.getOrDefault(CORES_NAME, null))
                         .map(coreNumber -> String.valueOf(coreNumber)));
-        this.memory = ConvertUtils.getFloatFromString(
+        this.memory = ConvertUtils.convertFloatFromString(
                 Optional.ofNullable(rendering.getAttributes())
                         .map(attributes -> attributes.getOrDefault(MEMORY_NAME, null))
                         .map(memoryNumber -> String.valueOf(memoryNumber)));
-        this.share = ConvertUtils.getIntegerFromString(
+        this.share = ConvertUtils.convertIntegerFromString(
                 Optional.ofNullable(rendering.getAttributes())
                         .map(attributes -> attributes.getOrDefault(SHARE_NAME, null))
                         .map(shareNumber -> String.valueOf(shareNumber)));
-        this.summary = ConvertUtils.getStringFromObject(Optional.ofNullable(
+        this.summary = ConvertUtils.convertStringFromObject(Optional.ofNullable(
                 rendering.getAttributes()).map(attributes -> attributes.getOrDefault(SUMMARY_NAME, null)));
         this.mixins = new ArrayList<>();
         for (String mixin : Optional.ofNullable(rendering.getMixins()).orElse(new ArrayList<>())) {
