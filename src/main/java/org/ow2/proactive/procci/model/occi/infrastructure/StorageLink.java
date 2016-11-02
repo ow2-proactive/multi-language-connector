@@ -81,13 +81,13 @@ public class StorageLink extends Link {
             NetworkState state) throws SyntaxException {
 
         super(url, kind, title, mixins, source, target, targetkind);
-        setAttributes();
+        createAttributesSet();
         this.deviceId = deviceId;
         this.mountPoint = mountPoint;
         this.state = state;
     }
 
-    private Set<Attribute> setAttributes() {
+    private Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = Link.getAttributes();
         attributes.add(Attributes.DEVICEID);
         attributes.add(Attributes.MOUNTPOINT);

@@ -5,12 +5,12 @@ import org.junit.Test;
 import static com.google.common.truth.Truth.assertThat;
 
 /**
- * Created by mael on 23/06/16.
+ * Created by the Activeeon team  on 23/06/16.
  */
 public class RequestUtilsTest {
 
     @Test
     public void getPropertyTest() {
-        assertThat(RequestUtils.getInstance().getProperty("scheduler.login.endpoint")).isNotEmpty();
+        assertThat(new RequestUtils().getProperty("scheduler.login.endpoint")).isNotEmpty();
     }
 }

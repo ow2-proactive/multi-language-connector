@@ -15,6 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by mael on 02/06/16.
@@ -23,10 +25,15 @@ import org.json.simple.parser.JSONParser;
 /**
  * Manage the connection and the request with Cloud Automation Microservices
  */
-
-public class CloudAutomationInstances {
+@Service
+public class InstancesServices {
 
     private final Logger logger = LogManager.getRootLogger();
+
+    private static final String INSTANCE_ENDPOINT = "cloud-automation-service.instances.endpoint";
+
+    @Autowired
+    private RequestUtils requestUtils;
 
     /**
      * Get the deployed instances from Cloud Automation Model
@@ -34,15 +41,14 @@ public class CloudAutomationInstances {
      * @return a json object containing the request results
      */
     public JSONObject getRequest() throws CloudAutomationException {
-        final String url = RequestUtils.getInstance().getProperty(
-                "cloud-automation-service.instances.endpoint");
+        final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet getRequest = new HttpGet(url);
 
             HttpResponse response = httpClient.execute(getRequest);
-            String serverOutput = RequestUtils.readHttpResponse(response);
+            String serverOutput = requestUtils.readHttpResponse(response);
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
         } catch (Exception ex) {
@@ -85,20 +91,19 @@ public class CloudAutomationInstances {
     public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String url = RequestUtils.getInstance().getProperty(
-                "cloud-automation-service.instances.endpoint");
+        final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost postRequest = new HttpPost(url);
-            postRequest.addHeader(PCA_SERVICE_SESSIONID, RequestUtils.getInstance().getSessionId());
+            postRequest.addHeader(PCA_SERVICE_SESSIONID, requestUtils.getSessionId());
             StringEntity input = new StringEntity(content.toJSONString());
             input.setContentType("application/json");
             postRequest.setEntity(input);
 
             HttpResponse response = httpClient.execute(postRequest);
 
-            String serverOutput = RequestUtils.readHttpResponse(response);
+            String serverOutput = requestUtils.readHttpResponse(response);
             httpClient.close();
             result = (JSONObject) new JSONParser().parse(serverOutput);
         } catch (Exception ex) {

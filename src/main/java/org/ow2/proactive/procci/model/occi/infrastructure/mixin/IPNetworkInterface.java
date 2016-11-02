@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
@@ -40,7 +41,7 @@ public class IPNetworkInterface extends Mixin {
 
         super(Identifiers.NETWORKINTERFACE_SCHEME, Identifiers.IPNETWORK_INTERFACE,
                 Identifiers.IPNETWORK_INTERFACE,
-                setAttributes(), new ArrayList<Action>(), new ArrayList<Mixin>(), initApplies(), entities);
+                createAttributesSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), initApplies(), entities);
 
         this.address = address;
         this.gateway = gateway;
@@ -53,8 +54,8 @@ public class IPNetworkInterface extends Mixin {
         return applies;
     }
 
-    private static HashSet<Attribute> setAttributes() {
-        HashSet<Attribute> attributes = new HashSet<>();
+    private static Set<Attribute> createAttributesSet() {
+        Set<Attribute> attributes = new HashSet<>();
         attributes.add(Attributes.NETWORKINTERFACE_ADDRESS);
         attributes.add(Attributes.NETWORKINTERFACE_ALLOCATION);
         attributes.add(Attributes.NETWORKINTERFACE_GATEWAY);

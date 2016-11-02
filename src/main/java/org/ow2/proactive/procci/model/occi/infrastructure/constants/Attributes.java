@@ -42,7 +42,7 @@ public class Attributes {
     public static final String NETWORKINTERFACE_ADDRESS_NAME = "occi.networkinterface.address";
     public static final String NETWORKINTERFACE_GATEWAY_NAME = "occi.networkinterface.gateway";
     public static final String NETWORKINTERFACE_ALLOCATION_NAME = "occi.networkinterface.allocation";
-    public static final String COMPUTE_IMAGE_NAME = "activeeon.compute.template";
+    public static final String COMPUTE_IMAGE_NAME = "imagename";
 
 
     //state attributes
@@ -143,10 +143,8 @@ public class Attributes {
             "Address mechanism: dynamic e.g., uses " +
                     "the dynamic host configuration protocol static e.g., uses user supplied static network configurations.").build();
     public static final Attribute COMPUTE_IMAGE = new Attribute.Builder(COMPUTE_IMAGE_NAME).type(
-            Type.OBJECT).mutable(true).required(true).description(
+            Type.OBJECT).mutable(false).required(true).description(
             "Accessible provider image that can be deployed on an instance").build();
 
-    //OCCI infrastructure mixin
-    public static final String OS_TEMPLATE = "os_template";
 
 }

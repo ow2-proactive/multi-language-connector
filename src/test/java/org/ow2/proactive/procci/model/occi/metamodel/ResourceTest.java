@@ -1,23 +1,38 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.request.DataServices;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static com.google.common.truth.Truth.assertThat;
 
 /**
- * Created by mael on 2/25/16.
+ * Created by the Activeeon team  on 2/25/16.
  */
 public class ResourceTest {
 
+    @Mock
+    DataServices dataServices;
+    @Mock
+    private ProviderMixin providerMixin;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void constructorTest() {
@@ -40,13 +55,13 @@ public class ResourceTest {
     }
 
     @Test
-    public void builderTest() {
-        Compute compute = new ComputeBuilder().url("compute").build();
+    public void builderTest() throws IOException, CloudAutomationException {
+        Compute compute = new ComputeBuilder(providerMixin, dataServices).url("compute").build();
         try {
             Link link = new Link.Builder(compute, "target").url("link").build();
             Attribute mixinAttribute = new Attribute.Builder("attribute").type(Type.OBJECT).mutable(
                     false).required(true).build();
-            Mixin mixin = new MixinBuilder("schemeTest", "termTest")
+            Mixin mixin = new MixinBuilder(providerMixin, "schemeTest", "termTest")
                     .addAttribute(mixinAttribute)
                     .build();
             Resource resource = new Resource.Builder()
