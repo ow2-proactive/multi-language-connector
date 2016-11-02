@@ -16,7 +16,7 @@ public class ConvertUtils {
      * @return an containing an integer
      * @throws SyntaxException if the string is not null and doesn't match any integer
      */
-    public static Optional<Integer> getIntegerFromString(
+    public static Optional<Integer> convertIntegerFromString(
             Optional<String> integerString) throws SyntaxException {
         try {
             return integerString.map(s -> Integer.parseInt(s));
@@ -32,7 +32,7 @@ public class ConvertUtils {
      * @return an optional a float
      * @throws SyntaxException if the string is not null and doesn't match any float
      */
-    public static Optional<Float> getFloatFromString(Optional<String> floatString) throws SyntaxException {
+    public static Optional<Float> convertFloatFromString(Optional<String> floatString) throws SyntaxException {
         try {
             return floatString.map(s -> Float.parseFloat(s));
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class ConvertUtils {
         }
     }
 
-    public static Optional<String> getStringFromObject(Optional<Object> stringObject) throws SyntaxException {
+    public static Optional<String> convertStringFromObject(Optional<Object> stringObject) throws SyntaxException {
         if (!stringObject.isPresent()) {
             return Optional.empty();
         }

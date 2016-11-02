@@ -25,6 +25,8 @@ public class DataServices {
 
     private static final Logger logger = LogManager.getLogger(DataServices.class);
 
+    private static final String VARIABLES_ENDPOINT= "cloud-automation-service.variables.endpoint";
+
     @Autowired
     private RequestUtils requestUtils;
 
@@ -99,7 +101,7 @@ public class DataServices {
     }
 
     private String getVariablesUrl() {
-        return requestUtils.getProperty("cloud-automation-service.variables.endpoint");
+        return requestUtils.getProperty(VARIABLES_ENDPOINT);
     }
 
     private String getResourceUrl(String key) {
