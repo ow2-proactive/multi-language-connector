@@ -39,6 +39,7 @@ import java.util.UUID;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableSet;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,13 +48,12 @@ import lombok.Setter;
  * Category is the basis type of identification mecanism
  **/
 @EqualsAndHashCode(of = { "scheme", "term" })
-@Getter
+@Data
 public class Category {
 
     private final String scheme;
     private final String term;
     private final ImmutableSet<Attribute> attributes;
-    @Setter
     private String title;
 
     /**

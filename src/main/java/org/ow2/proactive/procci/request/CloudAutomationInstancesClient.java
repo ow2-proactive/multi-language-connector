@@ -30,6 +30,8 @@ public class CloudAutomationInstancesClient {
 
     private final Logger logger = LogManager.getRootLogger();
 
+    private static final String INSTANCE_ENDPOINT = "cloud-automation-service.instances.endpoint";
+
     @Autowired
     private RequestUtils requestUtils;
 
@@ -39,8 +41,7 @@ public class CloudAutomationInstancesClient {
      * @return a json object containing the request results
      */
     public JSONObject getRequest() throws CloudAutomationException {
-        final String url = requestUtils.getProperty(
-                "cloud-automation-service.instances.endpoint");
+        final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
@@ -90,8 +91,7 @@ public class CloudAutomationInstancesClient {
     public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String url = requestUtils.getProperty(
-                "cloud-automation-service.instances.endpoint");
+        final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
         JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
