@@ -3,6 +3,7 @@ package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,7 +16,7 @@ import lombok.ToString;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
- * Created by mael on 22/09/16.
+ * Created by the Activeeon Team on 22/09/16.
  */
 @Getter
 @EqualsAndHashCode
@@ -35,8 +36,10 @@ public class MixinRendering {
     private List<String> actions;
     private List<String> depends;
     private List<String> applies;
-    @ApiModelProperty(readOnly = true)
+    @ApiModelProperty(hidden = true)
     private String location;
+    @ApiModelProperty(hidden = true)
+    private Set<String> entities;
 
     public static MixinRendering convertMixinFromString(String mixinRendering) throws IOException {
         ObjectMapper mapper = new ObjectMapper();

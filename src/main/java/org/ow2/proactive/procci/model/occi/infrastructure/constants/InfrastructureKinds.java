@@ -22,7 +22,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 
 /**
- * Created by mael on 3/2/16.
+ * Created by the Activeeon Team on 3/2/16.
  */
 
 /**

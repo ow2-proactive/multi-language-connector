@@ -12,7 +12,7 @@ import lombok.ToString;
 
 
 /**
- * Created by mael on 14/09/16.
+ * Created by the Activeeon Team on 14/09/16.
  */
 @Getter
 @EqualsAndHashCode(callSuper = true)

@@ -34,7 +34,6 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -43,11 +42,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.DataServices;
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;
 
@@ -101,25 +98,27 @@ public class Mixin extends Category {
     }
 
     public MixinRendering getRendering() {
+
         return MixinRendering.builder()
                 .scheme(this.getScheme())
                 .term(this.getTerm())
                 .title(this.getTitle())
                 .attributes(generateAttributeMap())
-                .actions(this.actions
+                .actions(mapTitle(this.actions))
+                .depends(mapTitle(this.depends))
+                .applies(mapTitle(this.applies))
+                .entities(this.entities
                         .stream()
-                        .map(action -> action.getTitle())
-                        .collect(Collectors.toList()))
-                .depends(this.depends
-                        .stream()
-                        .map(depend -> depend.getTitle())
-                        .collect(Collectors.toList()))
-                .applies(this.applies
-                        .stream()
-                        .map(apply -> apply.getTitle())
-                        .collect(Collectors.toList()))
+                        .map(entity -> entity.getId())
+                        .collect(Collectors.toSet()))
                 .location("/" + this.getTitle())
                 .build();
+    }
+
+    private List<String> mapTitle(List<? extends Category> input) {
+        return input.stream()
+                .map(action -> action.getTitle())
+                .collect(Collectors.toList());
     }
 
     private Map<String, AttributeRendering> generateAttributeMap() {
@@ -129,24 +128,12 @@ public class Mixin extends Category {
     }
 
     /**
-     * Add to the mixin, the entities which apply and update the mixin database
-     * if the mixin is defined through an entity then it is created
+     * Add to the mixin the related entity
      *
      * @param entity is an entity which is related to the mixin
-     * @throws IOException              occurs if the response of cloud-automation-service in not readable
-     * @throws CloudAutomationException occurs if the request is not acceptable for cloud-automation-service
      */
-    public void addEntity(Entity entity,
-            DataServices dataServices) throws IOException, CloudAutomationException {
+    public void addEntity(Entity entity) {
         entities.add(entity);
-        try {
-            dataServices.update(this.getTitle(),
-                    MixinRendering.convertStringFromMixin(this.getRendering()));
-        } catch (CloudAutomationException exception) {
-            this.setTitle(entity.getTitle().get() + this.getTerm());
-            dataServices.post(this.getTitle(),
-                    MixinRendering.convertStringFromMixin(this.getRendering()));
-        }
     }
 
     public void deleteEntity(Entity entity) {

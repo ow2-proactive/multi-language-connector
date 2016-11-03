@@ -35,24 +35,21 @@
 package org.ow2.proactive.procci.rest;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
-import org.ow2.proactive.procci.model.occi.metamodel.ProviderMixin;
+import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.InstancesServices;
-import org.ow2.proactive.procci.request.DataServices;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
+import org.ow2.proactive.procci.request.InstanceService;
+import org.ow2.proactive.procci.request.MixinService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -63,8 +60,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
-
 /**
  * Implement CRUD methods for REST service
  */
@@ -72,16 +67,13 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 @RequestMapping(value = PathConstant.COMPUTE_PATH)
 public class ComputeRest {
 
-    private final Logger logger = LogManager.getRootLogger();
+    private final Logger logger = LoggerFactory.getLogger(ComputeRest.class);
 
     @Autowired
-    private InstancesServices instancesServices;
+    private MixinService mixinService;
 
     @Autowired
-    private ProviderMixin providerMixin;
-
-    @Autowired
-    private DataServices dataServices;
+    private InstanceService instanceService;
 
 
     //-------------------Retrieve All Computes--------------------------------------------------------
@@ -90,26 +82,15 @@ public class ComputeRest {
     public ResponseEntity<EntitiesRendering> listAllComputes() {
         logger.debug("Get all Compute instances");
         try {
-            JSONObject resources = instancesServices.getRequest();
 
-            List<Model> models = (List<Model>) resources.keySet()
-                    .stream()
-                    .map(key -> new Model((JSONObject) resources.get(key)))
-                    .collect(Collectors.toList());
-
-            List<EntityRendering> results = new ArrayList<>();
-            for (Model model : models) {
-                results.add(new ComputeBuilder(providerMixin, dataServices).cloudAutomationModel(
-                        model).build().getRendering());
-            }
-
-            return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(results).build(),
+            List<EntityRendering> entityRenderings = instanceService.getInstancesRendering();
+            return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(entityRenderings).build(),
                     HttpStatus.OK);
         } catch (ClientException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -121,20 +102,18 @@ public class ComputeRest {
     public ResponseEntity<ResourceRendering> getCompute(@PathVariable("id") String id) {
         logger.debug("Get Compute ");
         try {
-            Optional<Model> computeModel = instancesServices.getInstanceByVariable(ID_NAME,
-                    ConvertUtils.formatURL(id));
-            if (!computeModel.isPresent()) {
+
+            Optional<Entity> compute = instanceService.getEntity(ConvertUtils.formatURL(id));
+            if (!compute.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-                ComputeBuilder computeBuilder = new ComputeBuilder(providerMixin,
-                        dataServices).cloudAutomationModel(computeModel.get());
-                return new ResponseEntity<>(computeBuilder.build().getRendering(), HttpStatus.OK);
+                return new ResponseEntity<>(((Compute) compute.get()).getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -148,18 +127,14 @@ public class ComputeRest {
             @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            ComputeBuilder compute = new ComputeBuilder(providerMixin, dataServices).rendering(
-                    computeRendering);
-            JSONObject pcaModel = compute.build().toCloudAutomationModel("create").getJson();
-            Model model = new Model(instancesServices.postRequest(pcaModel));
-            ComputeBuilder response = new ComputeBuilder(providerMixin,
-                    dataServices).cloudAutomationModel(model);
-            return new ResponseEntity<>(response.build().getRendering(), HttpStatus.CREATED);
+            ComputeBuilder computeBuilder = new ComputeBuilder(mixinService, computeRendering);
+            Compute response = instanceService.create(computeBuilder.build());
+            return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

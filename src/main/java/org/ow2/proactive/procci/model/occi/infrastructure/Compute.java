@@ -166,10 +166,11 @@ public class Compute extends Resource {
         this.state.ifPresent(
                 currentState -> resourceRendering.addAttribute(COMPUTE_STATE_NAME, currentState.name()));
 
-        this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getScheme() + mixin.getTerm()));
+        this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getTitle()));
 
         return resourceRendering.build();
     }
+
 
     public enum Architecture {
         X86, X64;

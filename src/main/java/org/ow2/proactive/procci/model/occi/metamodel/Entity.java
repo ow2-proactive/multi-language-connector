@@ -42,6 +42,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -108,10 +109,14 @@ public abstract class Entity {
         return "urn:uuid:" + UUID.randomUUID().toString();
     }
 
+
     //WARNING : The Character '−' is not supported by the scheduler so it is replaced by the character '-'
 
     public String getRenderingId() {
         return this.id.replaceAll("-", "−");
     }
+
+
+    public abstract EntityRendering getRendering();
 
 }

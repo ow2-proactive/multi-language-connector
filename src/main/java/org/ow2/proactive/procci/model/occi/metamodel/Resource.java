@@ -41,12 +41,16 @@ import java.util.Set;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
 /**
  * Resource describes a concrete resource that can be inspected or manipulated
@@ -83,6 +87,16 @@ public class Resource extends Entity {
         attributes.add(Attributes.LINKS);
         attributes.add(Attributes.SUMMARY);
         return attributes;
+    }
+
+    @Override
+    public ResourceRendering getRendering() {
+        ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(),
+                this.getRenderingId());
+        this.getTitle().ifPresent(title -> resourceRendering.addAttribute(ENTITY_TITLE_NAME, title));
+        this.getSummary().ifPresent(summary -> resourceRendering.addAttribute(SUMMARY_NAME, summary));
+        this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getTitle()));
+        return resourceRendering.build();
     }
 
     public static class Builder {

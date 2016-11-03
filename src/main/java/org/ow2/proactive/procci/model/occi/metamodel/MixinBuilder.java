@@ -16,16 +16,20 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
+import org.ow2.proactive.procci.request.InstanceService;
+import org.ow2.proactive.procci.request.MixinService;
 import lombok.AccessLevel;
 import lombok.Getter;
 
 
 /**
- * Created by mael on 22/09/16.
+ * Created by the Activeeon Team on 22/09/16.
+ * <p>
+ * Mixin Builder enables to easily create a mixin
+ * <p>
+ * In order to avoid infinite loop construction the entities and depends are mock during construction and doesn't have mixins references
  */
 public class MixinBuilder {
-
-    private ProviderMixin providerMixin;
 
     @Getter(value = AccessLevel.PROTECTED)
     private String scheme;
@@ -44,8 +48,7 @@ public class MixinBuilder {
     @Getter(value = AccessLevel.PROTECTED)
     private List<Entity> entities;
 
-    public MixinBuilder(ProviderMixin providerMixin, String scheme, String term) {
-        this.providerMixin = providerMixin;
+    public MixinBuilder(String scheme, String term) {
         this.scheme = scheme;
         this.term = term;
         this.title = this.term;
@@ -59,9 +62,10 @@ public class MixinBuilder {
     /**
      * Construct a mixin according to its rendering
      *
-     * @param mixinRendering is the rendering mixin
+     * @param instanceService is the instances manager
+     * @param mixinRendering  is the rendering mixin
      */
-    public MixinBuilder(
+    public MixinBuilder(MixinService mixinService, InstanceService instanceService,
             MixinRendering mixinRendering) throws ClientException, IOException {
         this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(
                 () -> new MissingAttributesException("scheme", "mixin"));
@@ -74,7 +78,7 @@ public class MixinBuilder {
         this.actions = new ArrayList<>();
         this.depends = new ArrayList<>();
         for (String depends : Optional.ofNullable(mixinRendering.getDepends()).orElse(new ArrayList<>())) {
-            this.depends.add(providerMixin.getMixinByTitle(depends));
+            this.depends.add(mixinService.getMixinMockByTitle(depends));
         }
         this.applies = new ArrayList<>();
         for (String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())) {
@@ -82,6 +86,11 @@ public class MixinBuilder {
                     InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply)));
         }
         this.entities = new ArrayList<>();
+        for (String entityId : Optional.ofNullable(mixinRendering.getEntities())
+                .map(entitiesId -> new ArrayList<>(entitiesId))
+                .orElse(new ArrayList<>())) {
+            instanceService.getMockedEntity(entityId).ifPresent(entity -> this.entities.add(entity));
+        }
     }
 
     private Set<Attribute> convertAttributesMap(Map<String, AttributeRendering> attributeMap) {
@@ -141,8 +150,26 @@ public class MixinBuilder {
         return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
     }
 
+    /**
+     * Construct a mixin
+     *
+     * @param attributesMap should be empty becase a default mixin has no attributes
+     * @return
+     * @throws ClientException
+     */
     public Mixin build(Map attributesMap) throws ClientException {
         return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
+    }
+
+    /**
+     * Construct a mixin without entities in order to avoid cycle loop
+     *
+     * @return a mixin witout entities
+     * @throws ClientException
+     */
+    public Mixin buildMock() {
+        this.entities = new ArrayList<>();
+        return build();
     }
 
 }

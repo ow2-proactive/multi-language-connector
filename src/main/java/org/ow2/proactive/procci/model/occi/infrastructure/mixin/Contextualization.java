@@ -8,19 +8,20 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.metamodel.Action;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import lombok.Getter;
 
 /**
- * Created by mael on 2/25/16.
+ * Created by the Activeeon Team on 2/25/16.
  */
 
 /**
  * Indicated the data that will be supplied to the compute
  */
+@Getter
 public class Contextualization extends Mixin {
 
     private String userdata;
@@ -34,7 +35,8 @@ public class Contextualization extends Mixin {
      */
     public Contextualization(String userdata, List<Entity> entities) {
         super(Identifiers.INFRASTRUCTURE_SCHEME, Identifiers.CONTEXTUALIZATION, Identifiers.CONTEXTUALIZATION,
-                createAttributeSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(), entities);
+                createAttributeSet(), new ArrayList<>(), new ArrayList<>(), setApplies(),
+                entities);
         this.userdata = userdata;
     }
 
@@ -48,13 +50,5 @@ public class Contextualization extends Mixin {
         Set<Attribute> attributes = new HashSet<>();
         attributes.add(Attributes.USERDATA);
         return attributes;
-    }
-
-    public String getUserdata() {
-        return userdata;
-    }
-
-    public void setUserdata(String userdata) {
-        this.userdata = userdata;
     }
 }

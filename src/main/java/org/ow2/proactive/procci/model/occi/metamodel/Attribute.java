@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
- * Created by mael on 2/23/16
+ * Created by the Activeeon Team on 2/23/16
  */
 
 /**
