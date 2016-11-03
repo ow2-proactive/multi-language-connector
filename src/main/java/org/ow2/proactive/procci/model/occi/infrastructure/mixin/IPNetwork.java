@@ -54,14 +54,12 @@ import lombok.Getter;
 /**
  * This class supports L3/L4 capabilities with the Network class
  */
+@Getter
 public class IPNetwork extends Mixin {
 
-    @Getter
     private String address;
-    @Getter
     private String gateway;
     //if dynamic allocation is true then the allocation is dynamic otherwise it is static
-    @Getter
     private boolean dynamicAllocation;
 
     /**
@@ -75,7 +73,7 @@ public class IPNetwork extends Mixin {
     public IPNetwork(String address, String gateway, boolean dynamic,
             List<Entity> entities) throws UnknownHostException {
         super(Identifiers.NETWORK_SCHEME, Identifiers.IPNETWORK, Identifiers.IPNETWORK,
-                createAttributesSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), setApplies(),
+                createAttributesSet(), new ArrayList<>(), new ArrayList<>(), setApplies(),
                 entities);
         this.address = address;
         this.gateway = gateway;

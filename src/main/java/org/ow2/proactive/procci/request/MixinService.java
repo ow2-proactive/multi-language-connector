@@ -30,17 +30,17 @@ import org.springframework.stereotype.Component;
  * Created by the Activeeon Team on 12/10/16.
  */
 @Component
-public class MixinsService {
+public class MixinService {
 
     private final Logger logger = LogManager.getLogger(this);
 
     private final Map<String, Supplier<MixinBuilder>> providerMixin;
     @Autowired
-    InstancesService instancesService;
+    private InstanceService instanceService;
     @Autowired
     private CloudAutomationVariablesClient cloudAutomationVariablesClient;
 
-    public MixinsService() {
+    public MixinService() {
         providerMixin = new ImmutableMap.Builder<String, Supplier<MixinBuilder>>()
                 .put(Identifiers.VM_IMAGE, (() -> new VMImage.Builder()))
                 .build();
@@ -67,7 +67,7 @@ public class MixinsService {
     public Mixin getMixinByTitle(String title) throws IOException, ClientException {
 
         MixinRendering mixinRendering = getMixinRenderingByTitle(title);
-        return new MixinBuilder(this, instancesService, mixinRendering).build();
+        return new MixinBuilder(this, instanceService, mixinRendering).build();
     }
 
     /**
@@ -81,7 +81,7 @@ public class MixinsService {
     public Mixin getMixinMockByTitle(String title) throws IOException, ClientException {
 
         MixinRendering mixinRendering = getMixinRenderingByTitle(title);
-        return new MixinBuilder(this, instancesService, mixinRendering).buildMock();
+        return new MixinBuilder(this, instanceService, mixinRendering).buildMock();
     }
 
     /**

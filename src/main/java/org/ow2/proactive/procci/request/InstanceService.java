@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
@@ -23,15 +24,15 @@ import org.springframework.stereotype.Component;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
 
 @Component
-public class InstancesService {
+public class InstanceService {
 
     private final Logger logger = LogManager.getLogger(this);
 
     @Autowired
-    private CloudAutomationInstancesClient cloudAutomationInstancesClient;
+    private CloudAutomationInstanceClient cloudAutomationInstanceClient;
 
     @Autowired
-    private MixinsService mixinsService;
+    private MixinService mixinService;
 
     /**
      * Give a compute from the data stored in Cloud-automation-service
@@ -42,7 +43,7 @@ public class InstancesService {
      * @throws ClientException
      */
     public Optional<Entity> getEntity(String id) throws IOException, ClientException {
-        Optional<Model> computeModel = cloudAutomationInstancesClient.getInstanceByVariable(ID_NAME,
+        Optional<Model> computeModel = cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
         if (!computeModel.isPresent()) {
             return Optional.empty();
@@ -61,7 +62,7 @@ public class InstancesService {
      * @throws ClientException
      */
     public Optional<Entity> getMockedEntity(String id) throws IOException, ClientException {
-        Optional<Model> computeModel = cloudAutomationInstancesClient.getInstanceByVariable(ID_NAME,
+        Optional<Model> computeModel = cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
         if (!computeModel.isPresent()) {
             return Optional.empty();
@@ -78,14 +79,14 @@ public class InstancesService {
      * @throws ClientException
      */
     public List<EntityRendering> getInstancesRendering() throws IOException, ClientException {
-        JSONObject resources = cloudAutomationInstancesClient.getRequest();
+        JSONObject resources = cloudAutomationInstanceClient.getRequest();
 
         List<Model> models = (List<Model>) resources.keySet()
                 .stream()
                 .map(key -> new Model((JSONObject) resources.get(key)))
                 .collect(Collectors.toList());
 
-        List<EntityRendering> results = new ArrayList<>();
+        List<EntityRendering> results = new ArrayList<>(models.size());
         for (Model model : models) {
             ComputeBuilder computeBuilder = new ComputeBuilder(model);
             computeBuilder.addMixins(pullMixinFromCloudAutomation(computeBuilder.getUrl().get()));
@@ -110,11 +111,11 @@ public class InstancesService {
         compute.getMixins().stream().forEach(mixin -> mixin.addEntity(compute));
 
         //update the references between mixin and compute
-        mixinsService.addEntity(compute);
+        mixinService.addEntity(compute);
 
         //create a new compute from the response to the compute creation request sent to cloud-automation-service
         Compute computeResult = new ComputeBuilder(
-                new Model(cloudAutomationInstancesClient.postRequest(
+                new Model(cloudAutomationInstanceClient.postRequest(
                         compute.toCloudAutomationModel("create").getJson())))
                 .addMixins(pullMixinFromCloudAutomation(compute.getId()))
                 .build();
@@ -131,9 +132,11 @@ public class InstancesService {
      * @throws ClientException
      */
     private List<Mixin> pullMixinFromCloudAutomation(String computeId) throws IOException, ClientException {
-        List<Mixin> mixins = new ArrayList<>();
-        for (String mixin : mixinsService.getEntityMixinNames(computeId)) {
-            mixins.add(mixinsService.getMixinMockByTitle(mixin));
+
+        Set<String> mixinsName =  mixinService.getEntityMixinNames(computeId);
+        List<Mixin> mixins = new ArrayList<>(mixinsName.size());
+        for (String mixin : mixinsName) {
+            mixins.add(mixinService.getMixinMockByTitle(mixin));
         }
         return mixins;
     }

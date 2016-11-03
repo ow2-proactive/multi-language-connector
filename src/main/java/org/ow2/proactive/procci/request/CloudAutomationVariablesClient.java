@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  */
 
 /**
- * Send crud request on cloud-automation-service/variables
+ * Send CRUD request on cloud-automation-service/variables
  */
 @Service
 public class CloudAutomationVariablesClient {
@@ -31,7 +31,7 @@ public class CloudAutomationVariablesClient {
     private RequestUtils requestUtils;
 
     public String get(String key) throws CloudAutomationException {
-        logger.debug("get " + key + " on cloud-automation-service/variables");
+        logger.debug("get " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         try {
             Response response = Request.Get(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)
@@ -48,7 +48,7 @@ public class CloudAutomationVariablesClient {
 
 
     public void post(String key, String value) throws CloudAutomationException {
-        logger.debug("post " + key + " on cloud-automation-service/variables");
+        logger.debug("post " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         try {
             HttpResponse response = Request.Post(getQueryUrl(key))
                     .useExpectContinue()
@@ -68,7 +68,7 @@ public class CloudAutomationVariablesClient {
     }
 
     public void update(String key, String value) throws CloudAutomationException {
-        logger.debug("update " + key + " on cloud-automation-service/variables");
+        logger.debug("update " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         try {
             HttpResponse response = Request.Put(getResourceUrl(key))
                     .useExpectContinue()
@@ -87,7 +87,7 @@ public class CloudAutomationVariablesClient {
     }
 
     public void delete(String key) throws CloudAutomationException {
-        logger.debug("delete " + key + " on cloud-automation-service/variables");
+        logger.debug("delete " + key + " on " +requestUtils.getProperty(VARIABLES_ENDPOINT));
         try {
             HttpResponse response = Request.Delete(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)

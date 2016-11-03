@@ -41,7 +41,7 @@ public class IPNetworkInterface extends Mixin {
 
         super(Identifiers.NETWORKINTERFACE_SCHEME, Identifiers.IPNETWORK_INTERFACE,
                 Identifiers.IPNETWORK_INTERFACE,
-                createAttributesSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), initApplies(),
+                createAttributesSet(), new ArrayList<>(), new ArrayList<>(), initApplies(),
                 entities);
 
         this.address = address;

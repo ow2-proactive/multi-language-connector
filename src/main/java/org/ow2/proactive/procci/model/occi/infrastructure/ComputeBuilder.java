@@ -15,7 +15,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.MixinsService;
+import org.ow2.proactive.procci.request.MixinService;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -43,8 +43,6 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 
 /**
  * Compute Builder class, enable to easily construct a Compute from RenderingCompute or Cloud Automation Model
- * <p>
- * In order to avoid infinite loop building the mixins are mock without references
  */
 @EqualsAndHashCode
 @ToString
@@ -88,21 +86,24 @@ public class ComputeBuilder {
      */
     public ComputeBuilder(Model cloudAutomation)
             throws IOException, ClientException {
-        this.url = Optional.ofNullable(cloudAutomation.getVariables().get(ID_NAME));
-        this.title = Optional.ofNullable(cloudAutomation.getVariables().get(ENTITY_TITLE_NAME));
-        this.hostname = Optional.ofNullable(cloudAutomation.getVariables().get(INSTANCE_ENDPOINT));
-        this.summary = Optional.ofNullable(cloudAutomation.getVariables().get(SUMMARY_NAME));
+
+        Map<String,String> attributes = cloudAutomation.getVariables();
+
+        this.url = Optional.ofNullable(attributes.get(ID_NAME));
+        this.title = Optional.ofNullable(attributes.get(ENTITY_TITLE_NAME));
+        this.hostname = Optional.ofNullable(attributes.get(INSTANCE_ENDPOINT));
+        this.summary = Optional.ofNullable(attributes.get(SUMMARY_NAME));
         this.cores = ConvertUtils.convertIntegerFromString(
-                Optional.ofNullable(cloudAutomation.getVariables().get(CORES_NAME)));
+                Optional.ofNullable(attributes.get(CORES_NAME)));
         this.memory = ConvertUtils.convertFloatFromString(
-                Optional.ofNullable(cloudAutomation.getVariables().get(MEMORY_NAME)));
+                Optional.ofNullable(attributes.get(MEMORY_NAME)));
         this.share = ConvertUtils.convertIntegerFromString(
-                Optional.ofNullable(cloudAutomation.getVariables().get(SHARE_NAME)));
+                Optional.ofNullable(attributes.get(SHARE_NAME)));
 
         this.architecture = getArchitectureFromString(
-                Optional.ofNullable(cloudAutomation.getVariables().get(ARCHITECTURE_NAME)));
+                Optional.ofNullable(attributes.get(ARCHITECTURE_NAME)));
         this.state = getStateFromCloudAutomation(
-                Optional.ofNullable(cloudAutomation.getVariables().get(INSTANCE_STATUS)));
+                Optional.ofNullable(attributes.get(INSTANCE_STATUS)));
 
         this.mixins = new ArrayList<>();
 
@@ -114,7 +115,7 @@ public class ComputeBuilder {
      *
      * @param rendering is the instance of the cloud automation model for a compute
      */
-    public ComputeBuilder(MixinsService mixinsService,
+    public ComputeBuilder(MixinService mixinService,
             ResourceRendering rendering) throws ClientException, IOException {
         this.url = Optional.ofNullable(rendering.getId());
         this.title = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
@@ -143,9 +144,9 @@ public class ComputeBuilder {
                 rendering.getAttributes()).map(attributes -> attributes.getOrDefault(SUMMARY_NAME, null)));
         this.mixins = new ArrayList<>();
         for (String mixin : Optional.ofNullable(rendering.getMixins()).orElse(new ArrayList<>())) {
-            this.mixins.add(mixinsService.getMixinByTitle(mixin));
+            this.mixins.add(mixinService.getMixinByTitle(mixin));
         }
-        associateProviderMixin(mixinsService, rendering.getAttributes());
+        associateProviderMixin(mixinService, rendering.getAttributes());
 
         this.links = new ArrayList<>();
     }
@@ -156,15 +157,15 @@ public class ComputeBuilder {
      * @param attributes is the attriutes list of the compute
      * @throws ClientException is thrown if there is an error during the mixin reading
      */
-    void associateProviderMixin(MixinsService mixinsService,
+    void associateProviderMixin(MixinService mixinService,
             Map<String, Object> attributes) throws ClientException {
         if (attributes == null) {
             return;
         }
         for (String mixinName : attributes.keySet()) {
-            if (mixinsService.getMixinBuilder(mixinName).isPresent()) {
+            if (mixinService.getMixinBuilder(mixinName).isPresent()) {
                 try {
-                    this.mixins.add(mixinsService.getMixinBuilder(mixinName).get().build(
+                    this.mixins.add(mixinService.getMixinBuilder(mixinName).get().build(
                             (Map) attributes.get(mixinName)));
                 } catch (ClassCastException e) {
                     throw new SyntaxException(mixinName);

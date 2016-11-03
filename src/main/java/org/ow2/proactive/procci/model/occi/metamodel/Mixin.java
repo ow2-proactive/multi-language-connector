@@ -104,24 +104,21 @@ public class Mixin extends Category {
                 .term(this.getTerm())
                 .title(this.getTitle())
                 .attributes(generateAttributeMap())
-                .actions(this.actions
-                        .stream()
-                        .map(action -> action.getTitle())
-                        .collect(Collectors.toList()))
-                .depends(this.depends
-                        .stream()
-                        .map(depend -> depend.getTitle())
-                        .collect(Collectors.toList()))
-                .applies(this.applies
-                        .stream()
-                        .map(apply -> apply.getTitle())
-                        .collect(Collectors.toList()))
+                .actions(mapTitle(this.actions))
+                .depends(mapTitle(this.depends))
+                .applies(mapTitle(this.applies))
                 .entities(this.entities
                         .stream()
                         .map(entity -> entity.getId())
                         .collect(Collectors.toSet()))
                 .location("/" + this.getTitle())
                 .build();
+    }
+
+    private List<String> mapTitle(List<? extends Category> input){
+        return input.stream()
+                .map(action -> action.getTitle())
+                .collect(Collectors.toList());
     }
 
     private Map<String, AttributeRendering> generateAttributeMap() {

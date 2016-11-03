@@ -16,8 +16,8 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.InstancesService;
-import org.ow2.proactive.procci.request.MixinsService;
+import org.ow2.proactive.procci.request.InstanceService;
+import org.ow2.proactive.procci.request.MixinService;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -62,10 +62,10 @@ public class MixinBuilder {
     /**
      * Construct a mixin according to its rendering
      *
-     * @param instancesService is the instances manager
+     * @param instanceService is the instances manager
      * @param mixinRendering   is the rendering mixin
      */
-    public MixinBuilder(MixinsService mixinsService, InstancesService instancesService,
+    public MixinBuilder(MixinService mixinService, InstanceService instanceService,
             MixinRendering mixinRendering) throws ClientException, IOException {
         this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(
                 () -> new MissingAttributesException("scheme", "mixin"));
@@ -78,7 +78,7 @@ public class MixinBuilder {
         this.actions = new ArrayList<>();
         this.depends = new ArrayList<>();
         for (String depends : Optional.ofNullable(mixinRendering.getDepends()).orElse(new ArrayList<>())) {
-            this.depends.add(mixinsService.getMixinMockByTitle(depends));
+            this.depends.add(mixinService.getMixinMockByTitle(depends));
         }
         this.applies = new ArrayList<>();
         for (String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())) {
@@ -89,7 +89,7 @@ public class MixinBuilder {
         for (String entityId : Optional.ofNullable(mixinRendering.getEntities())
                 .map(entitiesId -> new ArrayList<>(entitiesId))
                 .orElse(new ArrayList<>())) {
-            instancesService.getMockedEntity(entityId).ifPresent(entity -> this.entities.add(entity));
+            instanceService.getMockedEntity(entityId).ifPresent(entity -> this.entities.add(entity));
         }
     }
 
