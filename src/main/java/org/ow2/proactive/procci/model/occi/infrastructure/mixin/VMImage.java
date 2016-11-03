@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
@@ -56,27 +54,25 @@ public class VMImage extends Mixin {
 
     public static class Builder extends MixinBuilder {
 
+        private String VMImage;
+
         public Builder() {
             super(Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE);
         }
 
         @Override
-        public Mixin build(Map attributesMap) throws ClientException {
-            return new VMImage(this.getTitle(), this.getDepends(), this.getEntities(),
-                    Optional.ofNullable(
-                            convertAttributeInString(attributesMap.get(Attributes.COMPUTE_IMAGE_NAME)))
-                            .orElseThrow(() -> new MissingAttributesException(Attributes.COMPUTE_IMAGE_NAME,
-                                    Attributes.COMPUTE_IMAGE.getName())));
+        public MixinBuilder attributes(Map attributes) throws ClientException {
+            super.attributes(attributes);
+            this.VMImage = readAttributeAsString(attributes, Attributes.COMPUTE_IMAGE_NAME)
+                    .orElseThrow(() -> new MissingAttributesException(Attributes.COMPUTE_IMAGE_NAME,
+                            Attributes.COMPUTE_IMAGE.getName()));
+            return this;
         }
 
-        private String convertAttributeInString(Object attribute) throws SyntaxException {
-            try {
-                return (String) attribute;
-            } catch (ClassCastException e) {
-                throw new SyntaxException(attribute.toString());
-            }
+        @Override
+        public VMImage build() {
+            return new VMImage(this.getTitle(), this.getDepends(), this.getEntities(), this.VMImage);
         }
-
 
     }
 }

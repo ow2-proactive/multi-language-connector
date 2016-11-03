@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Contextualization;
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.VMImage;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
@@ -27,6 +28,10 @@ import org.springframework.stereotype.Component;
 /**
  * Created by the Activeeon Team on 12/10/16.
  */
+
+/**
+ * This class manage the mixins, it give access to the mixin references and enables to access to the provider defined mixin
+ */
 @Component
 public class MixinService {
 
@@ -39,6 +44,7 @@ public class MixinService {
     public MixinService() {
         providerMixin = new ImmutableMap.Builder<String, Supplier<MixinBuilder>>()
                 .put(Identifiers.VM_IMAGE, (() -> new VMImage.Builder()))
+                .put(Identifiers.CONTEXTUALIZATION, (() -> new Contextualization.Builder()))
                 .build();
     }
 

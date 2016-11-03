@@ -10,6 +10,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure.constants;
 public class Identifiers {
 
     //schemes
+    public static final String COMPUTE_SCHEME = "http://schemas.ogf.org/occi/infrastructure/compute#";
     public static final String INFRASTRUCTURE_SCHEME = "http://schemas.ogf.org/occi/infrastructure#";
     public static final String NETWORK_SCHEME = "http://schemas.ogf.org/occi/infrastructure/network#";
     public static final String NETWORKINTERFACE_SCHEME = "http://schemas.ogf.org/occi/infrastructure/networkinterface#";

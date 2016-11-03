@@ -165,11 +165,14 @@ public class ComputeBuilder {
         }
         for (String mixinName : attributes.keySet()) {
             if (mixinService.getMixinBuilder(mixinName).isPresent()) {
-                try {
-                    this.mixins.add(mixinService.getMixinBuilder(mixinName).get().build(
-                            (Map) attributes.get(mixinName)));
-                } catch (ClassCastException e) {
-                    throw new SyntaxException(mixinName);
+                Object attributeMap = attributes.get(mixinName);
+                if(attributeMap instanceof Map) {
+                    this.mixins.add(mixinService.getMixinBuilder(mixinName).get()
+                            .attributes((Map) attributeMap)
+                            .build());
+                }
+                else{
+                    throw new SyntaxException(attributeMap.toString(),"Map");
                 }
             }
 
@@ -275,7 +278,7 @@ public class ComputeBuilder {
             case COMPUTE_STATE_ERROR:
                 return Optional.of(ComputeState.ERROR);
             default:
-                throw new SyntaxException(state.get());
+                throw new SyntaxException(state.get(),"Compute State");
         }
 
     }
@@ -296,7 +299,7 @@ public class ComputeBuilder {
         } else if (Compute.Architecture.X86.toString().equalsIgnoreCase(architecture.get())) {
             return Optional.of(Compute.Architecture.X86);
         } else {
-            throw new SyntaxException(architecture.get());
+            throw new SyntaxException(architecture.get(),"Compute Architecture");
         }
     }
 
@@ -324,7 +327,7 @@ public class ComputeBuilder {
             case ERROR_STATE:
                 return Optional.of(ComputeState.ERROR);
             default:
-                throw new SyntaxException(state.get());
+                throw new SyntaxException(state.get(),"Compute State");
         }
     }
 

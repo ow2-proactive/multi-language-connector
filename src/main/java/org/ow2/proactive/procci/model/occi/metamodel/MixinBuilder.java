@@ -14,6 +14,7 @@ import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.request.InstanceService;
@@ -32,9 +33,9 @@ import lombok.Getter;
 public class MixinBuilder {
 
     @Getter(value = AccessLevel.PROTECTED)
-    private String scheme;
+    private final String scheme;
     @Getter(value = AccessLevel.PROTECTED)
-    private String term;
+    private final String term;
     @Getter(value = AccessLevel.PROTECTED)
     private String title;
     @Getter(value = AccessLevel.PROTECTED)
@@ -83,7 +84,7 @@ public class MixinBuilder {
         this.applies = new ArrayList<>();
         for (String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())) {
             this.applies.add(
-                    InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply)));
+                    InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply,"Kind")));
         }
         this.entities = new ArrayList<>();
         for (String entityId : Optional.ofNullable(mixinRendering.getEntities())
@@ -98,16 +99,6 @@ public class MixinBuilder {
                 .stream()
                 .map(key -> new Attribute.Builder(key, attributeMap.get(key)).build())
                 .collect(Collectors.toSet());
-    }
-
-    public MixinBuilder scheme(String scheme) {
-        this.scheme = scheme;
-        return this;
-    }
-
-    public MixinBuilder term(String term) {
-        this.term = term;
-        return this;
     }
 
     public MixinBuilder title(String title) {
@@ -140,6 +131,12 @@ public class MixinBuilder {
         return this;
     }
 
+    public MixinBuilder attributes(Map attributes) throws ClientException {
+        this.title = readAttributeAsString(attributes, Attributes.CATEGORY_TITLE_NAME)
+                .orElse(this.title);
+        return this;
+    }
+
 
     /**
      * Build the instance of a mixin according to its scheme and term
@@ -147,17 +144,6 @@ public class MixinBuilder {
      * @return a mixin instance
      */
     public Mixin build() {
-        return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
-    }
-
-    /**
-     * Construct a mixin
-     *
-     * @param attributesMap should be empty becase a default mixin has no attributes
-     * @return
-     * @throws ClientException
-     */
-    public Mixin build(Map attributesMap) throws ClientException {
         return new Mixin(scheme, term, title, attributes, actions, depends, applies, entities);
     }
 
@@ -170,6 +156,19 @@ public class MixinBuilder {
     public Mixin buildMock() {
         this.entities = new ArrayList<>();
         return build();
+    }
+
+    protected Optional<String> readAttributeAsString(Map attributes, String key) throws SyntaxException {
+        Optional<Object> value = Optional.ofNullable(attributes.get(key));
+        if (value.isPresent()) {
+            if (value.get() instanceof String) {
+                return Optional.of((String) value.get());
+            } else {
+                throw new SyntaxException(key,"String");
+            }
+        } else {
+            return Optional.empty();
+        }
     }
 
 }

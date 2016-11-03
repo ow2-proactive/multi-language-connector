@@ -80,6 +80,8 @@ public class MixinTest {
 
         Mixin dependMixin = new MixinBuilder("dependScheme", "dependTerm").build();
 
+        //maximum builder configuration
+
         Mixin mixin = new MixinBuilder("schemeTest", "termTest")
                 .title("titleTest")
                 .addAttribute(attribute)
@@ -94,15 +96,34 @@ public class MixinTest {
         assertThat(mixin.getDepends()).containsExactly(dependMixin);
         assertThat(mixin.getApplies()).containsExactly(InfrastructureKinds.COMPUTE);
 
-        Mixin mixin2 = new MixinBuilder("schemeTest", "termTest")
+        //minimum builder configuration
+
+        Mixin mixin2 = new MixinBuilder("schemeTest2", "termTest2")
                 .build();
 
-        assertThat(mixin2.getScheme()).matches("schemeTest");
-        assertThat(mixin2.getTerm()).matches("termTest");
-        assertThat(mixin2.getTitle()).matches("termTest");
+        assertThat(mixin2.getScheme()).matches("schemeTest2");
+        assertThat(mixin2.getTerm()).matches("termTest2");
+        assertThat(mixin2.getTitle()).matches("termTest2");
         assertThat(mixin2.getAttributes()).isNotNull();
         assertThat(mixin2.getDepends()).isEmpty();
         assertThat(mixin2.getApplies()).isEmpty();
+
+        //appliying attributes
+        MixinBuilder mixinBuilder = new MixinBuilder("schemeTest3","termTest3");
+        Map attributes = new HashMap();
+        attributes.put("occi.category.title","titleTest3");
+        try{
+            mixinBuilder.attributes(attributes);
+        }catch (ClientException ex){
+            ex.printStackTrace();
+        }
+
+        Mixin mixin3 = mixinBuilder.build();
+
+        assertThat(mixin3.getScheme()).matches("schemeTest3");
+        assertThat(mixin3.getTerm()).matches("termTest3");
+        assertThat(mixin3.getTitle()).matches("titleTest3");
+
     }
 
     @Test
@@ -125,7 +146,6 @@ public class MixinTest {
                             .build()
             ).build();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
             assertThat(ex).isInstanceOf(SyntaxException.class);
         }
 
