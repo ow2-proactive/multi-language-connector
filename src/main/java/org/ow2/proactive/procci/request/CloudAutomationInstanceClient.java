@@ -11,10 +11,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CloudAutomationInstanceClient {
 
-    private final Logger logger = LogManager.getRootLogger();
+    private final Logger logger = LoggerFactory.getLogger(CloudAutomationInstanceClient.class);
 
     private static final String INSTANCE_ENDPOINT = "cloud-automation-service.instances.endpoint";
 
@@ -120,7 +120,7 @@ public class CloudAutomationInstanceClient {
      * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
      */
     private void raiseException(Exception ex) throws CloudAutomationException {
-        logger.error(this.getClass(), ex);
+        logger.error(this.getClass().getName(), ex);
         throw new CloudAutomationException(ex.getMessage());
     }
 }

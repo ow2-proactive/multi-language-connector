@@ -48,8 +48,8 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.request.InstanceService;
 import org.ow2.proactive.procci.request.MixinService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -67,7 +67,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = PathConstant.COMPUTE_PATH)
 public class ComputeRest {
 
-    private final Logger logger = LogManager.getRootLogger();
+    private final Logger logger = LoggerFactory.getLogger(ComputeRest.class);
 
     @Autowired
     private MixinService mixinService;
@@ -87,10 +87,10 @@ public class ComputeRest {
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(entityRenderings).build(),
                     HttpStatus.OK);
         } catch (ClientException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -110,10 +110,10 @@ public class ComputeRest {
                 return new ResponseEntity<>(((Compute) compute.get()).getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -131,10 +131,10 @@ public class ComputeRest {
             Compute response = instanceService.create(computeBuilder.build());
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

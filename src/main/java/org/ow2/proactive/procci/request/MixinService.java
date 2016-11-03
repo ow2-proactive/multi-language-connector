@@ -19,8 +19,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +29,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MixinService {
-
-    private final Logger logger = LogManager.getLogger(this);
 
     private final Map<String, Supplier<MixinBuilder>> providerMixin;
     @Autowired

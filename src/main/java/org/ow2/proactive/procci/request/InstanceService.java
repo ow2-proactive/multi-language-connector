@@ -26,8 +26,6 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 @Component
 public class InstanceService {
 
-    private final Logger logger = LogManager.getLogger(this);
-
     @Autowired
     private CloudAutomationInstanceClient cloudAutomationInstanceClient;
 

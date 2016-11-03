@@ -9,8 +9,8 @@ import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.request.InstanceService;
 import org.ow2.proactive.procci.request.MixinService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = PathConstant.QUERY_PATH)
 public class MixinRest {
 
-    private final Logger logger = LogManager.getRootLogger();
+    private final Logger logger = LoggerFactory.getLogger(MixinRest.class);
 
     @Autowired
     private InstanceService instanceService;
@@ -66,7 +66,7 @@ public class MixinRest {
 
             return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
         } catch (IOException ex) {
-            logger.error(this.getClass(), ex);
+            logger.error(this.getClass().getName(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
@@ -86,7 +86,7 @@ public class MixinRest {
             mixin = new MixinBuilder(mixinService, instanceService, mixinRendering).build();
             mixinService.addMixin(mixin);
         } catch (IOException ex) {
-            logger.error(this.getClass(), ex);
+            logger.error(this.getClass().getName(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);

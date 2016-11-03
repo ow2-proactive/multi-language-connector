@@ -8,8 +8,9 @@ import org.apache.http.HttpVersion;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CloudAutomationVariablesClient {
 
-    private static final Logger logger = LogManager.getLogger(CloudAutomationVariablesClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(CloudAutomationVariablesClient.class);
 
     private static final String VARIABLES_ENDPOINT= "cloud-automation-service.variables.endpoint";
 
@@ -40,7 +41,7 @@ public class CloudAutomationVariablesClient {
             return requestUtils.readHttpResponse(response.returnResponse());
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariablesClient.class, ex);
+            logger.error(this.getClass().getName()+ex);
             throw new RuntimeException(
                     "Unable to get on " + getResourceUrl(key) + ", exception : " + ex);
         }
@@ -60,7 +61,7 @@ public class CloudAutomationVariablesClient {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariablesClient.class, ex);
+            logger.error(this.getClass().getName(), ex);
             throw new RuntimeException(
                     "Unable to post on " + getQueryUrl(key) + ", exception : " + ex);
         }
@@ -80,7 +81,7 @@ public class CloudAutomationVariablesClient {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariablesClient.class, ex);
+            logger.error(this.getClass().getName(), ex);
             throw new RuntimeException(
                     "Unable to put on " + getResourceUrl(key) + " ,exception : " + ex);
         }
@@ -97,7 +98,7 @@ public class CloudAutomationVariablesClient {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariablesClient.class, ex);
+            logger.error(this.getClass().getName(), ex);
             throw new RuntimeException(
                     "Unable to delete on " + getQueryUrl(key) + ", exception : " + ex);
         }

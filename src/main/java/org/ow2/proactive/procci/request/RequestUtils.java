@@ -13,8 +13,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RequestUtils {
 
-    private final Logger logger = LogManager.getRootLogger();
+    private final Logger logger = LoggerFactory.getLogger(RequestUtils.class);
 
     /**
      * Read an http respond and convert it into a string
@@ -69,7 +69,7 @@ public class RequestUtils {
             return prop.getProperty(propertyKey);
 
         } catch (IOException ex) {
-            logger.error(this.getClass(), ex);
+            logger.error(this.getClass().getName(), ex);
             throw new RuntimeException(
                     "Unable to get the cloud automation service url from config.properties");
         } finally {
@@ -77,7 +77,7 @@ public class RequestUtils {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    logger.error(this.getClass(), e);
+                    logger.error(this.getClass().getName(), e);
                 }
             }
         }
