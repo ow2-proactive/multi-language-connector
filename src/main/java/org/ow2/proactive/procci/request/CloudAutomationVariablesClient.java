@@ -8,8 +8,8 @@ import org.apache.http.HttpVersion;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,20 +18,20 @@ import org.springframework.stereotype.Service;
  */
 
 /**
- * Send crud request on cloud-automation-service/variables
+ * Send CRUD request on cloud-automation-service/variables
  */
 @Service
 public class CloudAutomationVariablesClient {
 
-    private static final Logger logger = LogManager.getLogger(CloudAutomationVariablesClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(CloudAutomationVariablesClient.class);
 
-    private static final String VARIABLES_ENDPOINT= "cloud-automation-service.variables.endpoint";
+    private static final String VARIABLES_ENDPOINT = "cloud-automation-service.variables.endpoint";
 
     @Autowired
     private RequestUtils requestUtils;
 
     public String get(String key) throws CloudAutomationException {
-        logger.debug("get " + key + " on cloud-automation-service/variables");
+        logger.debug("get " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         try {
             Response response = Request.Get(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)
@@ -40,7 +40,7 @@ public class CloudAutomationVariablesClient {
             return requestUtils.readHttpResponse(response.returnResponse());
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariablesClient.class, ex);
+            logger.error(this.getClass().getName() + ex);
             throw new RuntimeException(
                     "Unable to get on " + getResourceUrl(key) + ", exception : " + ex);
         }
@@ -48,7 +48,7 @@ public class CloudAutomationVariablesClient {
 
 
     public void post(String key, String value) throws CloudAutomationException {
-        logger.debug("post " + key + " on cloud-automation-service/variables");
+        logger.debug("post " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         try {
             HttpResponse response = Request.Post(getQueryUrl(key))
                     .useExpectContinue()
@@ -60,7 +60,7 @@ public class CloudAutomationVariablesClient {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariablesClient.class, ex);
+            logger.error(this.getClass().getName(), ex);
             throw new RuntimeException(
                     "Unable to post on " + getQueryUrl(key) + ", exception : " + ex);
         }
@@ -68,7 +68,7 @@ public class CloudAutomationVariablesClient {
     }
 
     public void update(String key, String value) throws CloudAutomationException {
-        logger.debug("update " + key + " on cloud-automation-service/variables");
+        logger.debug("update " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         try {
             HttpResponse response = Request.Put(getResourceUrl(key))
                     .useExpectContinue()
@@ -80,14 +80,14 @@ public class CloudAutomationVariablesClient {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariablesClient.class, ex);
+            logger.error(this.getClass().getName(), ex);
             throw new RuntimeException(
                     "Unable to put on " + getResourceUrl(key) + " ,exception : " + ex);
         }
     }
 
     public void delete(String key) throws CloudAutomationException {
-        logger.debug("delete " + key + " on cloud-automation-service/variables");
+        logger.debug("delete " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         try {
             HttpResponse response = Request.Delete(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)
@@ -97,7 +97,7 @@ public class CloudAutomationVariablesClient {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(CloudAutomationVariablesClient.class, ex);
+            logger.error(this.getClass().getName(), ex);
             throw new RuntimeException(
                     "Unable to delete on " + getQueryUrl(key) + ", exception : " + ex);
         }

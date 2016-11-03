@@ -13,7 +13,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.request.CloudAutomationVariablesClient;
-import org.ow2.proactive.procci.request.MixinsService;
+import org.ow2.proactive.procci.request.MixinService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -27,7 +27,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class LinkTest {
 
     @Mock
-    private MixinsService mixinsService;
+    private MixinService mixinService;
 
     @Mock
     private CloudAutomationVariablesClient cloudAutomationVariablesClient;

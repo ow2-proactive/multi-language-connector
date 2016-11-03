@@ -46,10 +46,10 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.InstancesService;
-import org.ow2.proactive.procci.request.MixinsService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.ow2.proactive.procci.request.InstanceService;
+import org.ow2.proactive.procci.request.MixinService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -67,13 +67,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = PathConstant.COMPUTE_PATH)
 public class ComputeRest {
 
-    private final Logger logger = LogManager.getRootLogger();
+    private final Logger logger = LoggerFactory.getLogger(ComputeRest.class);
 
     @Autowired
-    private MixinsService mixinsService;
+    private MixinService mixinService;
 
     @Autowired
-    private InstancesService instancesService;
+    private InstanceService instanceService;
 
 
     //-------------------Retrieve All Computes--------------------------------------------------------
@@ -83,14 +83,14 @@ public class ComputeRest {
         logger.debug("Get all Compute instances");
         try {
 
-            List<EntityRendering> entityRenderings = instancesService.getInstancesRendering();
+            List<EntityRendering> entityRenderings = instanceService.getInstancesRendering();
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(entityRenderings).build(),
                     HttpStatus.OK);
         } catch (ClientException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -103,17 +103,17 @@ public class ComputeRest {
         logger.debug("Get Compute ");
         try {
 
-            Optional<Entity> compute = instancesService.getEntity(ConvertUtils.formatURL(id));
+            Optional<Entity> compute = instanceService.getEntity(ConvertUtils.formatURL(id));
             if (!compute.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
                 return new ResponseEntity<>(((Compute) compute.get()).getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -127,14 +127,14 @@ public class ComputeRest {
             @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            ComputeBuilder computeBuilder = new ComputeBuilder(mixinsService, computeRendering);
-            Compute response = instancesService.create(computeBuilder.build());
+            ComputeBuilder computeBuilder = new ComputeBuilder(mixinService, computeRendering);
+            Compute response = instanceService.create(computeBuilder.build());
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (IOException e) {
-            logger.error(this.getClass(), e);
+            logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

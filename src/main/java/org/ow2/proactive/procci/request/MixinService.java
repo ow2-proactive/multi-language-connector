@@ -20,8 +20,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,17 +33,15 @@ import org.springframework.stereotype.Component;
  * This class manage the mixins, it give access to the mixin references and enables to access to the provider defined mixin
  */
 @Component
-public class MixinsService {
-
-    private final Logger logger = LogManager.getLogger(this);
+public class MixinService {
 
     private final Map<String, Supplier<MixinBuilder>> providerMixin;
     @Autowired
-    InstancesService instancesService;
+    private InstanceService instanceService;
     @Autowired
     private CloudAutomationVariablesClient cloudAutomationVariablesClient;
 
-    public MixinsService() {
+    public MixinService() {
         providerMixin = new ImmutableMap.Builder<String, Supplier<MixinBuilder>>()
                 .put(Identifiers.VM_IMAGE, (() -> new VMImage.Builder()))
                 .put(Identifiers.CONTEXTUALIZATION, (() -> new Contextualization.Builder()))
@@ -73,7 +69,7 @@ public class MixinsService {
     public Mixin getMixinByTitle(String title) throws IOException, ClientException {
 
         MixinRendering mixinRendering = getMixinRenderingByTitle(title);
-        return new MixinBuilder(this, instancesService, mixinRendering).build();
+        return new MixinBuilder(this, instanceService, mixinRendering).build();
     }
 
     /**
@@ -87,7 +83,7 @@ public class MixinsService {
     public Mixin getMixinMockByTitle(String title) throws IOException, ClientException {
 
         MixinRendering mixinRendering = getMixinRenderingByTitle(title);
-        return new MixinBuilder(this, instancesService, mixinRendering).buildMock();
+        return new MixinBuilder(this, instanceService, mixinRendering).buildMock();
     }
 
     /**

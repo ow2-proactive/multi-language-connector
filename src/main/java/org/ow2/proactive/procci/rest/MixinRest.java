@@ -7,10 +7,10 @@ import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.InstancesService;
-import org.ow2.proactive.procci.request.MixinsService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.ow2.proactive.procci.request.InstanceService;
+import org.ow2.proactive.procci.request.MixinService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,13 +28,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = PathConstant.QUERY_PATH)
 public class MixinRest {
 
-    private final Logger logger = LogManager.getRootLogger();
+    private final Logger logger = LoggerFactory.getLogger(MixinRest.class);
 
     @Autowired
-    private InstancesService instancesService;
+    private InstanceService instanceService;
 
     @Autowired
-    private MixinsService mixinsService;
+    private MixinService mixinService;
 
     //-------------------Get a Mixin--------------------------------------------------------
 
@@ -44,7 +44,7 @@ public class MixinRest {
 
         try {
             return new ResponseEntity(
-                    mixinsService.getMixinByTitle(mixinTitle).getRendering(),
+                    mixinService.getMixinByTitle(mixinTitle).getRendering(),
                     HttpStatus.OK);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
@@ -61,12 +61,12 @@ public class MixinRest {
             @RequestBody MixinRendering mixinRendering) {
         logger.debug("Creating Mixin " + mixinRendering.toString());
         try {
-            Mixin mixin = new MixinBuilder(mixinsService, instancesService, mixinRendering).build();
-            mixinsService.addMixin(mixin);
+            Mixin mixin = new MixinBuilder(mixinService, instanceService, mixinRendering).build();
+            mixinService.addMixin(mixin);
 
             return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
         } catch (IOException ex) {
-            logger.error(this.getClass(), ex);
+            logger.error(this.getClass().getName(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
@@ -83,10 +83,10 @@ public class MixinRest {
 
         Mixin mixin = null;
         try {
-            mixin = new MixinBuilder(mixinsService, instancesService, mixinRendering).build();
-            mixinsService.addMixin(mixin);
+            mixin = new MixinBuilder(mixinService, instanceService, mixinRendering).build();
+            mixinService.addMixin(mixin);
         } catch (IOException ex) {
-            logger.error(this.getClass(), ex);
+            logger.error(this.getClass().getName(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);

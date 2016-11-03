@@ -26,10 +26,10 @@ import static org.mockito.Mockito.when;
 /**
  * Created by the Activeeon team on 20/10/16.
  */
-public class MixinsServiceTest {
+public class MixinServiceTest {
 
     @InjectMocks
-    private MixinsService mixinsService;
+    private MixinService mixinService;
 
     @Mock
     private CloudAutomationVariablesClient cloudAutomationVariablesClient;
@@ -46,19 +46,19 @@ public class MixinsServiceTest {
         references.add("ref2Test");
         when(cloudAutomationVariablesClient.get("idTest")).thenReturn(
                 new ObjectMapper().writeValueAsString(references));
-        Set<String> result = mixinsService.getEntityMixinNames("idTest");
+        Set<String> result = mixinService.getEntityMixinNames("idTest");
         assertThat(result).contains("ref1Test");
         assertThat(result).contains("ref2Test");
 
         when(cloudAutomationVariablesClient.get("idTest2")).thenReturn("[]");
-        references = mixinsService.getEntityMixinNames("idTest2");
+        references = mixinService.getEntityMixinNames("idTest2");
         assertThat(references).isEmpty();
 
         when(cloudAutomationVariablesClient.get("idTest3")).thenThrow(
                 new CloudAutomationException("idTest3"));
         Exception ex = null;
         try {
-            mixinsService.getEntityMixinNames("idTest3");
+            mixinService.getEntityMixinNames("idTest3");
         } catch (Exception e) {
             ex = e;
         }
@@ -88,7 +88,7 @@ public class MixinsServiceTest {
         when(cloudAutomationVariablesClient.get("mixinTest")).thenReturn(
                 mapper.writeValueAsString(mixin.getRendering()));
 
-        mixinsService.addEntity(compute);
+        mixinService.addEntity(compute);
 
         mixin.addEntity(compute);
 
@@ -121,7 +121,7 @@ public class MixinsServiceTest {
                 "mixinTest2");
 
 
-        mixinsService.addEntity(compute2);
+        mixinService.addEntity(compute2);
 
         verify(cloudAutomationVariablesClient).post("idTest2",
                 mapper.writeValueAsString(mixinId2));

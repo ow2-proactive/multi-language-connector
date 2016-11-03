@@ -12,7 +12,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.request.CloudAutomationVariablesClient;
-import org.ow2.proactive.procci.request.MixinsService;
+import org.ow2.proactive.procci.request.MixinService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -28,7 +28,7 @@ public class ResourceTest {
     @Mock
     CloudAutomationVariablesClient cloudAutomationVariablesClient;
     @Mock
-    private MixinsService mixinsService;
+    private MixinService mixinService;
 
     @Before
     public void setUp() {

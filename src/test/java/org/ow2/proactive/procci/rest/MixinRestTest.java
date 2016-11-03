@@ -7,7 +7,7 @@ import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.request.CloudAutomationVariablesClient;
-import org.ow2.proactive.procci.request.MixinsService;
+import org.ow2.proactive.procci.request.MixinService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +30,7 @@ public class MixinRestTest {
     private CloudAutomationVariablesClient cloudAutomationVariables;
 
     @Mock
-    private MixinsService mixinsService;
+    private MixinService mixinService;
 
     @Before
     public void initMocks() {
@@ -39,19 +39,19 @@ public class MixinRestTest {
 
     @Test
     public void getMixinTest() throws ClientException, IOException {
-        when(mixinsService.getMixinByTitle("titleTest")).thenReturn(
+        when(mixinService.getMixinByTitle("titleTest")).thenReturn(
                 new MixinBuilder("schemeTest", "termTest").title("titleTest").build());
         ResponseEntity<MixinRendering> response = mixinRest.getMixin("titleTest");
         assertThat(response.getBody().getScheme()).matches("schemeTest");
         assertThat(response.getBody().getTerm()).matches("termTest");
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 
-        when(mixinsService.getMixinByTitle("titleTest2")).thenThrow(
+        when(mixinService.getMixinByTitle("titleTest2")).thenThrow(
                 new CloudAutomationException("titleTest2"));
         ResponseEntity<MixinRendering> responseClientError = mixinRest.getMixin("titleTest2");
         assertThat(responseClientError.getStatusCode().is4xxClientError()).isTrue();
 
-        when(mixinsService.getMixinByTitle("titleTest3")).thenThrow(IOException.class);
+        when(mixinService.getMixinByTitle("titleTest3")).thenThrow(IOException.class);
         ResponseEntity<MixinRendering> responseServerError = mixinRest.getMixin("titleTest3");
         assertThat(responseServerError.getStatusCode().is5xxServerError()).isTrue();
     }

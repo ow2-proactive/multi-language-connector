@@ -41,8 +41,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import com.google.common.collect.ImmutableSet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Category is the basis type of identification mecanism

@@ -12,12 +12,12 @@ import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.metamodel.Action;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
+import lombok.Getter;
 
 /**
  * Created by the Activeeon Team on 2/25/16.
@@ -26,6 +26,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 /**
  * Indicated the data that will be supplied to the compute
  */
+@Getter
 public class Contextualization extends Mixin {
 
     private String userdata;
@@ -41,7 +42,7 @@ public class Contextualization extends Mixin {
      */
     public Contextualization(String title, List<Mixin> depends, List<Entity> entities, String userdata) {
         super(Identifiers.COMPUTE_SCHEME, Identifiers.CONTEXTUALIZATION, title,
-                createAttributeSet(), new ArrayList<Action>(), depends, setApplies(),
+                createAttributeSet(), new ArrayList<>(), depends, setApplies(),
                 entities);
         this.userdata = userdata;
     }

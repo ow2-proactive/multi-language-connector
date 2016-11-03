@@ -7,7 +7,7 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
 import org.ow2.proactive.procci.request.CloudAutomationVariablesClient;
-import org.ow2.proactive.procci.request.MixinsService;
+import org.ow2.proactive.procci.request.MixinService;
 import com.google.common.truth.Truth;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class NetworkInterfaceTest {
     @Mock
     private CloudAutomationVariablesClient cloudAutomationVariablesClient;
     @Mock
-    private MixinsService mixinsService;
+    private MixinService mixinService;
 
     @Before
     public void setUp() {

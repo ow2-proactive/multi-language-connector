@@ -9,7 +9,6 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.metamodel.Action;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
@@ -41,7 +40,7 @@ public class IPNetworkInterface extends Mixin {
 
         super(Identifiers.NETWORKINTERFACE_SCHEME, Identifiers.IPNETWORK_INTERFACE,
                 Identifiers.IPNETWORK_INTERFACE,
-                createAttributesSet(), new ArrayList<Action>(), new ArrayList<Mixin>(), initApplies(),
+                createAttributesSet(), new ArrayList<>(), new ArrayList<>(), initApplies(),
                 entities);
 
         this.address = address;
