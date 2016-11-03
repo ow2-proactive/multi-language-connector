@@ -28,10 +28,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class CloudAutomationInstanceClient {
 
-    private final Logger logger = LoggerFactory.getLogger(CloudAutomationInstanceClient.class);
-
     private static final String INSTANCE_ENDPOINT = "cloud-automation-service.instances.endpoint";
-
+    private final Logger logger = LoggerFactory.getLogger(CloudAutomationInstanceClient.class);
     @Autowired
     private RequestUtils requestUtils;
 

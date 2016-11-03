@@ -63,7 +63,7 @@ public class MixinBuilder {
      * Construct a mixin according to its rendering
      *
      * @param instanceService is the instances manager
-     * @param mixinRendering   is the rendering mixin
+     * @param mixinRendering  is the rendering mixin
      */
     public MixinBuilder(MixinService mixinService, InstanceService instanceService,
             MixinRendering mixinRendering) throws ClientException, IOException {

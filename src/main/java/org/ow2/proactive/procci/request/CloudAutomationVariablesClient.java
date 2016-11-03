@@ -8,7 +8,6 @@ import org.apache.http.HttpVersion;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class CloudAutomationVariablesClient {
 
     private static final Logger logger = LoggerFactory.getLogger(CloudAutomationVariablesClient.class);
 
-    private static final String VARIABLES_ENDPOINT= "cloud-automation-service.variables.endpoint";
+    private static final String VARIABLES_ENDPOINT = "cloud-automation-service.variables.endpoint";
 
     @Autowired
     private RequestUtils requestUtils;
@@ -41,7 +40,7 @@ public class CloudAutomationVariablesClient {
             return requestUtils.readHttpResponse(response.returnResponse());
 
         } catch (IOException ex) {
-            logger.error(this.getClass().getName()+ex);
+            logger.error(this.getClass().getName() + ex);
             throw new RuntimeException(
                     "Unable to get on " + getResourceUrl(key) + ", exception : " + ex);
         }
@@ -88,7 +87,7 @@ public class CloudAutomationVariablesClient {
     }
 
     public void delete(String key) throws CloudAutomationException {
-        logger.debug("delete " + key + " on " +requestUtils.getProperty(VARIABLES_ENDPOINT));
+        logger.debug("delete " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         try {
             HttpResponse response = Request.Delete(getResourceUrl(key))
                     .version(HttpVersion.HTTP_1_1)

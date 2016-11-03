@@ -87,7 +87,7 @@ public class ComputeBuilder {
     public ComputeBuilder(Model cloudAutomation)
             throws IOException, ClientException {
 
-        Map<String,String> attributes = cloudAutomation.getVariables();
+        Map<String, String> attributes = cloudAutomation.getVariables();
 
         this.url = Optional.ofNullable(attributes.get(ID_NAME));
         this.title = Optional.ofNullable(attributes.get(ENTITY_TITLE_NAME));
@@ -120,9 +120,10 @@ public class ComputeBuilder {
         this.url = Optional.ofNullable(rendering.getId());
         this.title = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
                 .map(attributes -> attributes.getOrDefault(ENTITY_TITLE_NAME, null)));
-        this.architecture = getArchitectureFromString(ConvertUtils.convertStringFromObject(Optional.ofNullable(
-                rendering.getAttributes()).map(
-                attributes -> attributes.getOrDefault(ARCHITECTURE_NAME, null))));
+        this.architecture = getArchitectureFromString(
+                ConvertUtils.convertStringFromObject(Optional.ofNullable(
+                        rendering.getAttributes()).map(
+                        attributes -> attributes.getOrDefault(ARCHITECTURE_NAME, null))));
         this.state = getStateFromString(ConvertUtils.convertStringFromObject(Optional.ofNullable(
                 rendering.getAttributes()).map(
                 attributes -> attributes.getOrDefault(COMPUTE_STATE_NAME, null))));

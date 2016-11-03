@@ -115,7 +115,7 @@ public class Mixin extends Category {
                 .build();
     }
 
-    private List<String> mapTitle(List<? extends Category> input){
+    private List<String> mapTitle(List<? extends Category> input) {
         return input.stream()
                 .map(action -> action.getTitle())
                 .collect(Collectors.toList());

@@ -15,8 +15,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -131,7 +129,7 @@ public class InstanceService {
      */
     private List<Mixin> pullMixinFromCloudAutomation(String computeId) throws IOException, ClientException {
 
-        Set<String> mixinsName =  mixinService.getEntityMixinNames(computeId);
+        Set<String> mixinsName = mixinService.getEntityMixinNames(computeId);
         List<Mixin> mixins = new ArrayList<>(mixinsName.size());
         for (String mixin : mixinsName) {
             mixins.add(mixinService.getMixinMockByTitle(mixin));
