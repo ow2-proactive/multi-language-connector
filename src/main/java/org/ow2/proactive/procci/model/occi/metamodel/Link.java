@@ -95,7 +95,7 @@ public class Link extends Entity {
         try {
             return new URI(uri);
         } catch (URISyntaxException e) {
-            throw new SyntaxException(uri,"URI");
+            throw new SyntaxException(uri, "URI");
         }
     }
 

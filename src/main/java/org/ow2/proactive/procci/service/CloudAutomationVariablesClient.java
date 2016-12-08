@@ -1,4 +1,4 @@
-package org.ow2.proactive.procci.request;
+package org.ow2.proactive.procci.service;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  */
 
 /**
- * Send CRUD request on cloud-automation-service/variables
+ * Send CRUD service on cloud-automation-service/variables
  */
 @Service
 public class CloudAutomationVariablesClient {

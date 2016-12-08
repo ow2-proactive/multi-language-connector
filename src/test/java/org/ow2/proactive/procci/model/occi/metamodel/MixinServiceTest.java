@@ -1,6 +1,6 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import org.ow2.proactive.procci.request.MixinService;
+import org.ow2.proactive.procci.service.occi.MixinService;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;

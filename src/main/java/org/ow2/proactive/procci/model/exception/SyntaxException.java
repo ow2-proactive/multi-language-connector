@@ -14,6 +14,6 @@ public class SyntaxException extends ClientException {
 
     @Override
     public String getJsonError() {
-        return "{\"error\" : \" Invalid content type received '"  + stringException + "', expected "+expected+" \"}";
+        return "{\"error\" : \" Invalid content type received '" + stringException + "', expected " + expected + " \"}";
     }
 }
