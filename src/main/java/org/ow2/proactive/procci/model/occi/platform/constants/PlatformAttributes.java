@@ -5,7 +5,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Type;
 import org.ow2.proactive.procci.model.occi.platform.Status;
 
 
-public class Attributes {
+public class PlatformAttributes {
 
     public static final String STATUS_NAME = "occi.platform.status";
 

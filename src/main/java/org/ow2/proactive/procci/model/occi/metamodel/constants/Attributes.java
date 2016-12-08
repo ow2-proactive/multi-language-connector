@@ -57,7 +57,7 @@ public class Attributes {
                     "with the Mixin instance.").build();
     public static final Attribute MIXINS = new Attribute.Builder(MIXINS_NAME).type(Type.LIST).mutable(
             false).required(false).description("Mixin instances associated to this en" +
-            "tity instance. Consumers can expect the Attributes and Actions of the as" +
+            "tity instance. Consumers can expect the BigDataAttributes and Actions of the as" +
             "sociated Mixins to be exposed by the instance.").build();
     public static final Attribute KIND_ACTIONS = new Attribute.Builder(KIND_ACTIONS_NAME).type(
             Type.LIST).mutable(false).required(false).description(

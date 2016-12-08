@@ -3,7 +3,7 @@ package org.ow2.proactive.procci.model.occi.platform.bigdata.constants;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Type;
 
-public class Attributes {
+public class BigDataAttributes {
 
     public static final String SWARM_EXTENSION = "pca.plaform.swarm";
 

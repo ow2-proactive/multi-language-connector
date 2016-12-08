@@ -6,8 +6,8 @@ import org.ow2.proactive.procci.model.occi.platform.Component;
 
 public class PlatformKinds {
 
-    public static final Kind COMPONENT = new Kind.Builder(Identifiers.PLATFORM_SCHEME,
-            Identifiers.COMPONENT_TERM)
+    public static final Kind COMPONENT = new Kind.Builder(PlatformIdentifiers.PLATFORM_SCHEME,
+            PlatformIdentifiers.COMPONENT_TERM)
             .addAttribute(Component.createAttributeSet())
             .addParent(Kinds.RESOURCE)
             .build();

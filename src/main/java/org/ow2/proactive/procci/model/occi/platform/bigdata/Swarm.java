@@ -18,18 +18,18 @@ import lombok.ToString;
 
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.AGENTS_IP;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.AGENTS_IP_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.HOST_IP;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.HOST_IP_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.MACHINE_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.MACHINE_NAME_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.MASTER_IP;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.MASTER_IP_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.NETWORK_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Attributes.NETWORK_NAME_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Identifiers.SWARM_MODEL;
-import static org.ow2.proactive.procci.model.occi.platform.constants.Attributes.STATUS_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.AGENTS_IP;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.AGENTS_IP_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.HOST_IP;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.HOST_IP_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MACHINE_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MACHINE_NAME_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MASTER_IP;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MASTER_IP_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.NETWORK_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.NETWORK_NAME_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers.SWARM_MODEL;
+import static org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes.STATUS_NAME;
 
 @Getter
 @ToString
@@ -38,7 +38,7 @@ public class Swarm extends Component {
 
     private final String hostIp;
     private final String masterIp;
-    private final List<String> agentIp;
+    private final List<String> agentsIp;
     private Optional<String> machineName;
     private Optional<String> networkName;
 
@@ -51,14 +51,14 @@ public class Swarm extends Component {
             Optional<String> machineName,
             String hostIp,
             String masterIp,
-            List<String> agentIp,
+            List<String> agentsIp,
             Optional<String> networkName
     ) {
         super(url, kind, title, mixins, summary, links);
         this.machineName = machineName;
         this.hostIp = hostIp;
         this.masterIp = masterIp;
-        this.agentIp = agentIp;
+        this.agentsIp = agentsIp;
         this.networkName = networkName;
     }
 
@@ -85,7 +85,7 @@ public class Swarm extends Component {
                 .addVariable(STATUS_NAME, this.getStatus())
                 .addVariable(HOST_IP_NAME, this.getHostIp())
                 .addVariable(MASTER_IP_NAME, this.getMasterIp())
-                .addVariable(AGENTS_IP_NAME, this.getAgentIp());
+                .addVariable(AGENTS_IP_NAME, this.getAgentsIp());
 
         this.machineName.ifPresent(machineName -> serviceBuilder.addVariable(MACHINE_NAME_NAME, machineName));
         this.networkName.ifPresent(networkName -> serviceBuilder.addVariable(NETWORK_NAME_NAME, networkName));
@@ -104,11 +104,11 @@ public class Swarm extends Component {
                 this.getRenderingId());
         this.getTitle().ifPresent(title -> resourceRendering.addAttribute(ENTITY_TITLE_NAME, title));
         this.getSummary().ifPresent(summary -> resourceRendering.addAttribute(SUMMARY_NAME, summary));
-        resourceRendering.addAttribute(STATUS_NAME, this.getStatus().name());
+        this.getStatus().ifPresent(status -> resourceRendering.addAttribute(STATUS_NAME, status.name()));
         this.machineName.ifPresent(name -> resourceRendering.addAttribute(MACHINE_NAME_NAME, name));
         resourceRendering.addAttribute(HOST_IP_NAME, hostIp);
         resourceRendering.addAttribute(MASTER_IP_NAME, masterIp);
-        resourceRendering.addAttribute(AGENTS_IP_NAME, agentIp);
+        resourceRendering.addAttribute(AGENTS_IP_NAME, agentsIp);
         networkName.ifPresent(name -> resourceRendering.addAttribute(NETWORK_NAME_NAME, name));
 
         this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getTitle()));

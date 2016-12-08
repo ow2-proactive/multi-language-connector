@@ -42,6 +42,7 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
+import org.ow2.proactive.procci.model.occi.platform.Component;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import lombok.EqualsAndHashCode;
@@ -99,12 +100,13 @@ public class Resource extends Entity {
         return resourceRendering.build();
     }
 
+    @Getter
     public static class Builder {
-        private Optional<String> url;
-        private Optional<String> title;
-        private List<Mixin> mixins;
-        private Optional<String> summary;
-        private List<Link> links;
+        protected Optional<String> url;
+        protected Optional<String> title;
+        protected List<Mixin> mixins;
+        protected Optional<String> summary;
+        protected List<Link> links;
 
         public Builder() {
             this.url = Optional.empty();
@@ -126,6 +128,11 @@ public class Resource extends Entity {
 
         public Builder addMixin(Mixin mixin) {
             this.mixins.add(mixin);
+            return this;
+        }
+
+        public Builder addMixins(List<Mixin> mixins){
+            this.mixins.addAll(mixins);
             return this;
         }
 

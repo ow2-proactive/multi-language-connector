@@ -1,6 +1,6 @@
 package org.ow2.proactive.procci.model.occi.platform.bigdata.constants;
 
-public class Identifiers {
+public class BigDataIdentifiers {
 
     //schemes
     public static final String SWARM_SCHEME = "http://schema.activeeon.org/occi/platform#";
