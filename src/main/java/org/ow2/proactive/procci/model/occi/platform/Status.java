@@ -15,17 +15,14 @@ public enum Status {
 
 
     public static Status getStatusFromString(String value) throws SyntaxException {
-       if (ACTIVE.name().equalsIgnoreCase(value)){
-           return ACTIVE;
-       }
-       else if(INACTIVE.name().equalsIgnoreCase(value)){
-           return INACTIVE;
-       }
-       else if(ERROR.name().equalsIgnoreCase(value)){
-           return  ERROR;
-       }
-       else {
-           throw new SyntaxException(value,ACTIVE.name()+", "+INACTIVE.name()+" or "+ERROR.name());
-       }
+        if (ACTIVE.name().equalsIgnoreCase(value)) {
+            return ACTIVE;
+        } else if (INACTIVE.name().equalsIgnoreCase(value)) {
+            return INACTIVE;
+        } else if (ERROR.name().equalsIgnoreCase(value)) {
+            return ERROR;
+        } else {
+            throw new SyntaxException(value, ACTIVE.name() + ", " + INACTIVE.name() + " or " + ERROR.name());
+        }
     }
 }

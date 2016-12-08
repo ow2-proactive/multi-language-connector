@@ -109,12 +109,12 @@ public class MixinTest {
         assertThat(mixin2.getApplies()).isEmpty();
 
         //appliying attributes
-        MixinBuilder mixinBuilder = new MixinBuilder("schemeTest3","termTest3");
+        MixinBuilder mixinBuilder = new MixinBuilder("schemeTest3", "termTest3");
         Map attributes = new HashMap();
-        attributes.put("occi.category.title","titleTest3");
-        try{
+        attributes.put("occi.category.title", "titleTest3");
+        try {
             mixinBuilder.attributes(attributes);
-        }catch (ClientException ex){
+        } catch (ClientException ex) {
             ex.printStackTrace();
         }
 

@@ -42,7 +42,6 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
-import org.ow2.proactive.procci.model.occi.platform.Component;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import lombok.EqualsAndHashCode;
@@ -131,7 +130,7 @@ public class Resource extends Entity {
             return this;
         }
 
-        public Builder addMixins(List<Mixin> mixins){
+        public Builder addMixins(List<Mixin> mixins) {
             this.mixins.addAll(mixins);
             return this;
         }

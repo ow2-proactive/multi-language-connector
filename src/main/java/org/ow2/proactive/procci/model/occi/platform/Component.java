@@ -26,12 +26,6 @@ public class Component extends Resource {
         this.status = status;
     }
 
-    public Component(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-            Optional<String> summary, List<Link> links) {
-        super(url, kind, title, mixins, summary, links);
-        this.status = Optional.empty();
-    }
-
     public static Set<Attribute> createAttributeSet() {
         Set<Attribute> attributeSet = new HashSet<>();
         attributeSet.addAll(Resource.createAttributeSet());
@@ -43,15 +37,56 @@ public class Component extends Resource {
 
         protected Optional<Status> status;
 
+        public Builder() {
+            status = Optional.empty();
+        }
+
         public Component.Builder status(String status) throws SyntaxException {
             this.status = Optional.ofNullable(Status.getStatusFromString(status));
             return this;
         }
 
         @Override
-        public Component build(){
-            return new Component(this.getUrl(), PlatformKinds.COMPONENT,this.getTitle(),this.getMixins(),
-                    this.getSummary(),this.getLinks(),status);
+        public Component.Builder url(String url) {
+            this.url = Optional.ofNullable(url);
+            return this;
+        }
+
+        @Override
+        public Component.Builder title(String title) {
+            this.title = Optional.ofNullable(title);
+            return this;
+        }
+
+        @Override
+        public Component.Builder addMixin(Mixin mixin) {
+            this.mixins.add(mixin);
+            return this;
+        }
+
+        @Override
+        public Component.Builder addMixins(List<Mixin> mixins) {
+            this.mixins.addAll(mixins);
+            return this;
+        }
+
+        @Override
+        public Component.Builder summary(String summary) {
+            this.summary = Optional.ofNullable(summary);
+            return this;
+        }
+
+        @Override
+        public Component.Builder addLink(Link link) {
+            this.links.add(link);
+            return this;
+        }
+
+
+        @Override
+        public Component build() {
+            return new Component(this.getUrl(), PlatformKinds.COMPONENT, this.getTitle(), this.getMixins(),
+                    this.getSummary(), this.getLinks(), status);
         }
     }
 

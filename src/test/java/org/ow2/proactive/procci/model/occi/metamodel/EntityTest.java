@@ -20,7 +20,8 @@ public class EntityTest {
     public void constructorTest() {
         Kind k = Kinds.ENTITY;
         List<Mixin> mixins = new ArrayList<>();
-        Contextualization contextualization = new Contextualization("contextualizationTest",new ArrayList<>(), new ArrayList<>(),"userDataTest");
+        Contextualization contextualization = new Contextualization("contextualizationTest",
+                new ArrayList<>(), new ArrayList<>(), "userDataTest");
         mixins.add(contextualization);
         EntityImplemented implemented = new EntityImplemented("url", k, "titleTest2", mixins);
 

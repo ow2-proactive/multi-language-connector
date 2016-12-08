@@ -10,8 +10,12 @@ import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.occi.platform.Component;
+import org.ow2.proactive.procci.model.occi.platform.Status;
+import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
+import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -48,13 +52,14 @@ public class Swarm extends Component {
             List<Mixin> mixins,
             Optional<String> summary,
             List<Link> links,
+            Optional<Status> status,
             Optional<String> machineName,
             String hostIp,
             String masterIp,
             List<String> agentsIp,
             Optional<String> networkName
     ) {
-        super(url, kind, title, mixins, summary, links);
+        super(url, kind, title, mixins, summary, links, status);
         this.machineName = machineName;
         this.hostIp = hostIp;
         this.masterIp = masterIp;
@@ -82,21 +87,43 @@ public class Swarm extends Component {
     public Model toCloudAutomationModel(String actionType) {
 
         Model.Builder serviceBuilder = new Model.Builder(SWARM_MODEL, actionType)
-                .addVariable(STATUS_NAME, this.getStatus())
                 .addVariable(HOST_IP_NAME, this.getHostIp())
                 .addVariable(MASTER_IP_NAME, this.getMasterIp())
-                .addVariable(AGENTS_IP_NAME, this.getAgentsIp());
+                .addVariable(AGENTS_IP_NAME, getAgentsIpAsString());
 
         this.machineName.ifPresent(machineName -> serviceBuilder.addVariable(MACHINE_NAME_NAME, machineName));
         this.networkName.ifPresent(networkName -> serviceBuilder.addVariable(NETWORK_NAME_NAME, networkName));
+        this.getStatus().ifPresent(
+                status -> serviceBuilder.addVariable(PlatformAttributes.STATUS_NAME, status));
+        this.getTitle().ifPresent(title -> serviceBuilder.addVariable(Attributes.ENTITY_TITLE_NAME, title));
+        this.getSummary().ifPresent(summary -> serviceBuilder.addVariable(Attributes.SUMMARY_NAME, summary));
+
+        this.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
 
         return serviceBuilder.build();
     }
 
     /**
+     * Concatenate the ip contained in the agents ip list
+     *
+     * @return the ip separated by the AGENT_IP_SEPARATOR
+     */
+    private String getAgentsIpAsString() {
+        String agentsIp;
+        if (this.agentsIp.isEmpty()) {
+            return "";
+        }
+        agentsIp = this.agentsIp.get(0);
+        for (int i = 1; i < this.agentsIp.size(); i++) {
+            agentsIp += BigDataIdentifiers.AGENT_IP_SEPARATOR + this.agentsIp.get(i);
+        }
+        return agentsIp;
+    }
+
+    /**
      * Give the OCCI rendering of a swarm
      *
-     * @return the compute rendering
+     * @return the swarm rendering
      */
     public ResourceRendering getRendering() {
 
@@ -108,7 +135,7 @@ public class Swarm extends Component {
         this.machineName.ifPresent(name -> resourceRendering.addAttribute(MACHINE_NAME_NAME, name));
         resourceRendering.addAttribute(HOST_IP_NAME, hostIp);
         resourceRendering.addAttribute(MASTER_IP_NAME, masterIp);
-        resourceRendering.addAttribute(AGENTS_IP_NAME, agentsIp);
+        resourceRendering.addAttribute(AGENTS_IP_NAME, getAgentsIpAsString());
         networkName.ifPresent(name -> resourceRendering.addAttribute(NETWORK_NAME_NAME, name));
 
         this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getTitle()));
