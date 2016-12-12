@@ -1,4 +1,4 @@
-package org.ow2.proactive.procci.request;
+package org.ow2.proactive.procci.service;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package org.ow2.proactive.procci.request;
+package org.ow2.proactive.procci.service.occi;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
+import org.ow2.proactive.procci.service.CloudAutomationInstanceClient;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -96,12 +97,12 @@ public class InstanceService {
     }
 
     /**
-     * Send the request to cloud automation in order to create the instance and update the data
+     * Send the service to cloud automation in order to create the instance and update the data
      *
      * @param compute is the compute that will be created
      * @return a compute created from the server response
      * @throws IOException     if the response was not parsable
-     * @throws ClientException if there is an error in the request sent to the server
+     * @throws ClientException if there is an error in the service sent to the server
      */
     public Compute create(Compute compute)
             throws IOException, ClientException {
@@ -112,7 +113,7 @@ public class InstanceService {
         //update the references between mixin and compute
         mixinService.addEntity(compute);
 
-        //create a new compute from the response to the compute creation request sent to cloud-automation-service
+        //create a new compute from the response to the compute creation service sent to cloud-automation-service
         Compute computeResult = new ComputeBuilder(
                 new Model(cloudAutomationInstanceClient.postRequest(
                         compute.toCloudAutomationModel("create").getJson())))

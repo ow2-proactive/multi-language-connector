@@ -17,8 +17,8 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Infrastructu
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.InstanceService;
-import org.ow2.proactive.procci.request.MixinService;
+import org.ow2.proactive.procci.service.occi.InstanceService;
+import org.ow2.proactive.procci.service.occi.MixinService;
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -84,7 +84,7 @@ public class MixinBuilder {
         this.applies = new ArrayList<>();
         for (String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())) {
             this.applies.add(
-                    InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply,"Kind")));
+                    InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply, "Kind")));
         }
         this.entities = new ArrayList<>();
         for (String entityId : Optional.ofNullable(mixinRendering.getEntities())
@@ -164,7 +164,7 @@ public class MixinBuilder {
             if (value.get() instanceof String) {
                 return Optional.of((String) value.get());
             } else {
-                throw new SyntaxException(key,"String");
+                throw new SyntaxException(key, "String");
             }
         } else {
             return Optional.empty();

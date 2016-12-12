@@ -46,8 +46,8 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.InstanceService;
-import org.ow2.proactive.procci.request.MixinService;
+import org.ow2.proactive.procci.service.occi.InstanceService;
+import org.ow2.proactive.procci.service.occi.MixinService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
