@@ -13,8 +13,8 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.InstanceService;
-import org.ow2.proactive.procci.request.MixinService;
+import org.ow2.proactive.procci.service.occi.InstanceService;
+import org.ow2.proactive.procci.service.occi.MixinService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -178,7 +178,7 @@ public class MixinTest {
         AttributeRendering attributeRendering = new AttributeRendering();
         attributes.put("attributesName", attributeRendering);
         List depend = new ArrayList();
-        //cannot test depend because it will send request to cloud-automation-service
+        //cannot test depend because it will send service to cloud-automation-service
 
         Mixin allAttributesFilledRendering = new MixinBuilder(mixinService, instanceService,
                 MixinRendering.builder()

@@ -16,7 +16,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.MixinService;
+import org.ow2.proactive.procci.service.occi.MixinService;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

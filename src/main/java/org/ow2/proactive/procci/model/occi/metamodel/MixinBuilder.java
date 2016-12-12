@@ -17,8 +17,8 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Infrastructu
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.request.InstanceService;
-import org.ow2.proactive.procci.request.MixinService;
+import org.ow2.proactive.procci.service.occi.InstanceService;
+import org.ow2.proactive.procci.service.occi.MixinService;
 import lombok.AccessLevel;
 import lombok.Getter;
 
