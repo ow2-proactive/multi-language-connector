@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
@@ -39,7 +40,7 @@ public class LinkTest {
 
 
     @Test
-    public void constructorTest() {
+    public void constructorTest() throws ClientException{
 
         Resource r1 = new Compute.Builder().url("url").build();
         Kind kind = Kinds.LINK;

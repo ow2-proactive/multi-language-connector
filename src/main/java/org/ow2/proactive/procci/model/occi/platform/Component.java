@@ -2,9 +2,12 @@ package org.ow2.proactive.procci.model.occi.platform;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
@@ -39,6 +42,18 @@ public class Component extends Resource {
 
         public Builder() {
             status = Optional.empty();
+        }
+
+        public Builder(Model cloudAutomation) throws SyntaxException {
+            super(cloudAutomation);
+
+            Map<String, String> attributes = cloudAutomation.getVariables();
+            Optional<String> status = Optional.ofNullable(attributes.get(PlatformAttributes.STATUS_NAME));
+            if (status.isPresent()) {
+                this.status = Optional.of(Status.getStatusFromString(status.get()));
+            } else {
+                this.status = Optional.empty();
+            }
         }
 
         public Component.Builder status(String status) throws SyntaxException {
@@ -84,7 +99,7 @@ public class Component extends Resource {
 
 
         @Override
-        public Component build() {
+        public Component build() throws ClientException {
             return new Component(this.getUrl(), PlatformKinds.COMPONENT, this.getTitle(), this.getMixins(),
                     this.getSummary(), this.getLinks(), status);
         }

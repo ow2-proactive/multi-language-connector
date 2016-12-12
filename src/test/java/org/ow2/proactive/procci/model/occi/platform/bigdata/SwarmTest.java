@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.occi.platform.Status;
@@ -21,7 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class SwarmTest {
 
     @Test
-    public void requiredConstructorTest() {
+    public void requiredConstructorTest() throws ClientException {
         Swarm swarm = new SwarmBuilder("hostIpTest", "masterIpTest").build();
         assertThat(swarm.getHostIp()).matches("hostIpTest");
         assertThat(swarm.getMasterIp()).matches("masterIpTest");
@@ -74,7 +73,7 @@ public class SwarmTest {
     }
 
     @Test
-    public void toCloudAutomationModelTest() throws SyntaxException {
+    public void toCloudAutomationModelTest() throws ClientException {
         Swarm swarm = new SwarmBuilder("hostIpTest", "masterIpTest")
                 .addAgentIp("agent1")
                 .addAgentIp("agent2")
@@ -95,7 +94,7 @@ public class SwarmTest {
     }
 
     @Test
-    public void getRenderingTest() throws SyntaxException {
+    public void getRenderingTest() throws ClientException {
         Swarm swarm = new SwarmBuilder("hostIpTest", "masterIpTest")
                 .addAgentIp("agent1")
                 .addAgentIp("agent2")

@@ -13,6 +13,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Infrastructu
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.request.MixinService;
@@ -38,28 +39,22 @@ import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attri
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.MEMORY_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.SHARE_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
 /**
  * Compute Builder class, enable to easily construct a Compute from RenderingCompute or Cloud Automation Model
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
 @Getter
-public class ComputeBuilder {
+public class ComputeBuilder extends Resource.Builder {
 
-    private Optional<String> url;
-    private Optional<String> title;
-    private Optional<String> summary;
     private Optional<Compute.Architecture> architecture;
     private Optional<Integer> cores;
     private Optional<Integer> share;
     private Optional<Float> memory; // in Gigabytes
     private Optional<String> hostname;
     private Optional<ComputeState> state;
-    private List<Link> links;
-    private List<Mixin> mixins;
 
     /**
      * Default Builder
@@ -87,12 +82,11 @@ public class ComputeBuilder {
     public ComputeBuilder(Model cloudAutomation)
             throws IOException, ClientException {
 
+        super(cloudAutomation);
+
         Map<String, String> attributes = cloudAutomation.getVariables();
 
-        this.url = Optional.ofNullable(attributes.get(ID_NAME));
-        this.title = Optional.ofNullable(attributes.get(ENTITY_TITLE_NAME));
         this.hostname = Optional.ofNullable(attributes.get(INSTANCE_ENDPOINT));
-        this.summary = Optional.ofNullable(attributes.get(SUMMARY_NAME));
         this.cores = ConvertUtils.convertIntegerFromString(
                 Optional.ofNullable(attributes.get(CORES_NAME)));
         this.memory = ConvertUtils.convertFloatFromString(
@@ -105,9 +99,7 @@ public class ComputeBuilder {
         this.state = getStateFromCloudAutomation(
                 Optional.ofNullable(attributes.get(INSTANCE_STATUS)));
 
-        this.mixins = new ArrayList<>();
 
-        this.links = new ArrayList<>();
     }
 
     /**
@@ -178,33 +170,37 @@ public class ComputeBuilder {
         }
     }
 
-
+    @Override
     public ComputeBuilder url(String url) {
         this.url = Optional.of(url);
         return this;
     }
 
+    @Override
     public ComputeBuilder title(String title) {
         this.title = Optional.of(title);
         return this;
     }
 
+    @Override
     public ComputeBuilder summary(String summary) {
         this.summary = Optional.of(summary);
         return this;
     }
 
-
+    @Override
     public ComputeBuilder addMixin(Mixin mixin) {
         this.mixins.add(mixin);
         return this;
     }
 
+    @Override
     public ComputeBuilder addMixins(List<Mixin> mixins) {
         this.mixins.addAll(mixins);
         return this;
     }
 
+    @Override
     public ComputeBuilder addLink(Link link) {
         this.links.add(link);
         return this;
@@ -335,6 +331,7 @@ public class ComputeBuilder {
      *
      * @return a compute
      */
+    @Override
     public Compute build() {
         Compute compute = new Compute(url, InfrastructureKinds.COMPUTE, title, mixins, summary,
                 new ArrayList<>(), architecture,

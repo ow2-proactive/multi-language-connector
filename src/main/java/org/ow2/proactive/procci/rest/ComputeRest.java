@@ -42,6 +42,7 @@ import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
+import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
@@ -128,7 +129,7 @@ public class ComputeRest {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
             ComputeBuilder computeBuilder = new ComputeBuilder(mixinService, computeRendering);
-            Compute response = instanceService.create(computeBuilder.build());
+            Resource response = instanceService.create(computeBuilder.build());
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);

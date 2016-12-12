@@ -17,61 +17,57 @@ import org.ow2.proactive.procci.model.occi.platform.Status;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataKinds;
-import lombok.AllArgsConstructor;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes.STATUS_NAME;
-
-@AllArgsConstructor
 public class SwarmBuilder extends Component.Builder {
 
-    private final String hostIp;
-    private final String masterIp;
+    private Optional<String> hostIp;
+    private Optional<String> masterIp;
     private List<String> agentsIp;
     private Optional<String> machineName;
     private Optional<String> networkName;
 
-    public SwarmBuilder(String hostIp, String masterIp) {
-        this.hostIp = hostIp;
-        this.masterIp = masterIp;
+    public SwarmBuilder() {
+        this.hostIp = Optional.empty();
+        this.masterIp = Optional.empty();
         this.agentsIp = new ArrayList<>();
         this.machineName = Optional.empty();
         this.networkName = Optional.empty();
     }
 
+    public SwarmBuilder(String hostIp, String masterIp) {
+        this.hostIp = Optional.of(hostIp);
+        this.masterIp = Optional.of(masterIp);
+        this.agentsIp = new ArrayList<>();
+        this.machineName = Optional.empty();
+        this.networkName = Optional.empty();
+    }
+
+    public SwarmBuilder(String hostIp, String masterIp, List<String> agentsIp, Optional<String> machineName,
+            Optional<String> networkName) {
+        this.hostIp = Optional.ofNullable(hostIp);
+        this.masterIp = Optional.ofNullable(masterIp);
+        this.agentsIp = agentsIp;
+        this.machineName = machineName;
+        this.networkName = networkName;
+
+    }
+
     public SwarmBuilder(Model cloudautomation) throws ClientException {
 
+        super(cloudautomation);
+
         Map<String, String> attributes = cloudautomation.getVariables();
-        this.url = Optional.ofNullable(attributes.get(ID_NAME));
-        this.title = Optional.ofNullable(attributes.get(ENTITY_TITLE_NAME));
-        this.summary = Optional.ofNullable(attributes.get(SUMMARY_NAME));
         this.machineName = Optional.ofNullable(attributes.get(BigDataAttributes.MACHINE_NAME_NAME));
         this.networkName = Optional.ofNullable(attributes.get(BigDataAttributes.NETWORK_NAME_NAME));
 
-        this.hostIp = Optional.ofNullable(attributes.get(BigDataAttributes.HOST_IP_NAME))
-                .orElseThrow(() -> new MissingAttributesException(BigDataAttributes.HOST_IP_NAME,
-                        BigDataKinds.SWARM.getTitle())
-                );
-        this.masterIp = Optional.ofNullable(attributes.get(BigDataAttributes.MASTER_IP_NAME))
-                .orElseThrow(() -> new MissingAttributesException(BigDataAttributes.HOST_IP_NAME,
-                        BigDataKinds.SWARM.getTitle()));
+        this.hostIp = Optional.ofNullable(attributes.get(BigDataAttributes.HOST_IP_NAME));
+        this.masterIp = Optional.ofNullable(attributes.get(BigDataAttributes.MASTER_IP_NAME));
         this.agentsIp = new ArrayList<>(
                 Arrays.asList(Optional.ofNullable(attributes.get(BigDataAttributes.AGENTS_IP_NAME))
                         .orElseThrow(() -> new MissingAttributesException(BigDataAttributes.HOST_IP_NAME,
                                 BigDataKinds.SWARM.getTitle()))
                         .replaceAll(" ", "")
                         .split(BigDataIdentifiers.AGENT_IP_SEPARATOR)));
-
-        Optional<String> status = Optional.ofNullable(attributes.get(STATUS_NAME));
-        if (status.isPresent()) {
-            this.status = Optional.of(Status.getStatusFromString(status.get()));
-        } else {
-            this.status = Optional.empty();
-        }
-
-
     }
 
     public SwarmBuilder machineName(String machineName) {
@@ -132,10 +128,16 @@ public class SwarmBuilder extends Component.Builder {
     }
 
     @Override
-    public Swarm build() {
+    public Swarm build() throws ClientException {
         return new Swarm(this.getUrl(), BigDataKinds.SWARM, this.getTitle(), this.getMixins(),
                 this.getSummary(), this.getLinks(),
-                status, machineName, hostIp, masterIp, agentsIp, networkName);
+                status, machineName,
+                hostIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.HOST_IP_NAME,
+                        BigDataKinds.SWARM.getTitle())),
+                masterIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.MASTER_IP_NAME,
+                        BigDataKinds.SWARM.getTitle())),
+                agentsIp, networkName);
     }
+
 
 }

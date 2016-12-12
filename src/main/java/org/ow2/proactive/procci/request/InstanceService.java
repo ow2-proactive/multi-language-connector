@@ -9,11 +9,14 @@ import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
+import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
+import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 @Component
 public class InstanceService {
 
+
     @Autowired
     private CloudAutomationInstanceClient cloudAutomationInstanceClient;
 
@@ -34,22 +38,21 @@ public class InstanceService {
     private MixinService mixinService;
 
     /**
-     * Give a compute from the data stored in Cloud-automation-service
+     * Give a resource from the data stored in Cloud-automation-service
      *
-     * @param id is the id of compute
-     * @return a compute
+     * @param id is the id of the entity
+     * @return an entity
      * @throws IOException
      * @throws ClientException
      */
     public Optional<Entity> getEntity(String id) throws IOException, ClientException {
-        Optional<Model> computeModel = cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
+        Optional<Model> model = cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
-        if (!computeModel.isPresent()) {
-            return Optional.empty();
-        } else {
-            return Optional.of(new ComputeBuilder(computeModel.get()).addMixins(
-                    pullMixinFromCloudAutomation(id)).build());
+        Optional<Resource.Builder> builder = getResourceBuilder(model.get());
+        if (builder.isPresent()) {
+            return Optional.of(builder.get().build());
         }
+        return Optional.empty();
     }
 
     /**
@@ -63,15 +66,16 @@ public class InstanceService {
     public Optional<Entity> getMockedEntity(String id) throws IOException, ClientException {
         Optional<Model> computeModel = cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
-        if (!computeModel.isPresent()) {
-            return Optional.empty();
-        } else {
-            return Optional.of(new ComputeBuilder(computeModel.get()).build());
+        Optional<Resource.Builder> builder = getResourceBuilder(computeModel.get());
+        if (builder.isPresent()) {
+            return Optional.of(builder.get().build());
         }
+        return Optional.empty();
+
     }
 
     /**
-     * Create a list of entity rendering  containing the rendering of all entity created
+     * Create a list of entity rendering  containing the rendering of all entities created
      *
      * @return a list of entity rendering
      * @throws IOException
@@ -96,30 +100,60 @@ public class InstanceService {
     }
 
     /**
+     * Create a list of entity rendering  containing the rendering of all entities matching with the model
+     *
+     * @return a list of entity rendering
+     * @throws IOException
+     * @throws ClientException
+     */
+    public List<EntityRendering> getInstancesRendering(
+            String entityModel) throws IOException, ClientException {
+        JSONObject resources = cloudAutomationInstanceClient.getRequest();
+
+        List<Model> models = (List<Model>) resources.keySet()
+                .stream()
+                .map(key -> new Model((JSONObject) resources.get(key)))
+                .filter(model -> entityModel.equals(((Model) model).getServiceModel()))
+                .collect(Collectors.toList());
+
+        List<EntityRendering> results = new ArrayList<>(models.size());
+        for (Model model : models) {
+            ComputeBuilder computeBuilder = new ComputeBuilder(model);
+            computeBuilder.addMixins(pullMixinFromCloudAutomation(computeBuilder.getUrl().get()));
+            results.add(computeBuilder.build().getRendering());
+        }
+
+        return results;
+    }
+
+    /**
      * Send the request to cloud automation in order to create the instance and update the data
      *
-     * @param compute is the compute that will be created
+     * @param resource the resource that will be created
      * @return a compute created from the server response
      * @throws IOException     if the response was not parsable
      * @throws ClientException if there is an error in the request sent to the server
      */
-    public Compute create(Compute compute)
+    public Resource create(Resource resource)
             throws IOException, ClientException {
 
         //add the compute reference in all his mixins
-        compute.getMixins().stream().forEach(mixin -> mixin.addEntity(compute));
+        resource.getMixins().stream().forEach(mixin -> mixin.addEntity(resource));
 
         //update the references between mixin and compute
-        mixinService.addEntity(compute);
+        mixinService.addEntity(resource);
+
 
         //create a new compute from the response to the compute creation request sent to cloud-automation-service
-        Compute computeResult = new ComputeBuilder(
+
+
+        Resource resourceResult = new Resource.Builder(
                 new Model(cloudAutomationInstanceClient.postRequest(
-                        compute.toCloudAutomationModel("create").getJson())))
-                .addMixins(pullMixinFromCloudAutomation(compute.getId()))
+                        resource.toCloudAutomationModel("create").getJson())))
+                .addMixins(pullMixinFromCloudAutomation(resource.getId()))
                 .build();
 
-        return compute;
+        return resourceResult;
     }
 
     /**
@@ -138,5 +172,16 @@ public class InstanceService {
             mixins.add(mixinService.getMixinMockByTitle(mixin));
         }
         return mixins;
+    }
+
+    private Optional<Resource.Builder> getResourceBuilder(Model model) throws IOException, ClientException {
+        switch (model.getServiceModel()) {
+            case BigDataIdentifiers.SWARM_MODEL:
+                return Optional.of(new SwarmBuilder(model));
+            case Identifiers.COMPUTE_MODEL:
+                return Optional.of(new ComputeBuilder(model));
+            default:
+                return Optional.empty();
+        }
     }
 }

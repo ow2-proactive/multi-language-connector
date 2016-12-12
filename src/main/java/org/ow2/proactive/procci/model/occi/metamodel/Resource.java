@@ -36,10 +36,14 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import com.google.common.collect.ImmutableCollection;
@@ -50,6 +54,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
 /**
@@ -80,13 +85,25 @@ public class Resource extends Entity {
         super(url, kind, title, mixins);
         this.summary = summary;
         this.links = new ImmutableList.Builder<Link>().addAll(links).build();
+        ;
     }
+
 
     public static Set<Attribute> createAttributeSet() {
         Set<Attribute> attributes = Entity.getAttributes();
         attributes.add(Attributes.LINKS);
         attributes.add(Attributes.SUMMARY);
         return attributes;
+    }
+
+    public Model toCloudAutomationModel(String actionType) {
+        Model.Builder serviceBuilder = new Model.Builder(Identifiers.RESSOURCE_MODEL, actionType);
+        this.getTitle().ifPresent(title -> serviceBuilder.addVariable(Attributes.ENTITY_TITLE_NAME, title));
+        this.getSummary().ifPresent(summary -> serviceBuilder.addVariable(Attributes.SUMMARY_NAME, summary));
+
+        this.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
+
+        return serviceBuilder.build();
     }
 
     @Override
@@ -112,6 +129,18 @@ public class Resource extends Entity {
             this.title = Optional.empty();
             this.mixins = new ArrayList<>();
             this.summary = Optional.empty();
+            this.links = new ArrayList<>();
+        }
+
+        public Builder(Model cloudAutomation) {
+
+            Map<String, String> attributes = cloudAutomation.getVariables();
+
+            this.url = Optional.ofNullable(attributes.get(ID_NAME));
+            this.title = Optional.ofNullable(attributes.get(ENTITY_TITLE_NAME));
+            this.summary = Optional.ofNullable(attributes.get(SUMMARY_NAME));
+
+            this.mixins = new ArrayList<>();
             this.links = new ArrayList<>();
         }
 
@@ -145,7 +174,7 @@ public class Resource extends Entity {
             return this;
         }
 
-        public Resource build() {
+        public Resource build() throws ClientException {
             return new Resource(url, Kinds.RESOURCE, title, mixins, summary, links);
         }
     }
