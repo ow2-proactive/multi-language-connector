@@ -112,6 +112,7 @@ public class Application extends WebMvcConfigurerAdapter {
     private Predicate<String> allowedPaths() {
         List<String> pathList = new ArrayList<String>();
         pathList.add("/occi/compute.*");
+        pathList.add("/occi/swarm.*");
         pathList.add("/occi/.*");
         String pathRegex = "(" + pathList.get(0) + ")";
         for (int i = 1; i < pathList.size(); i++) {

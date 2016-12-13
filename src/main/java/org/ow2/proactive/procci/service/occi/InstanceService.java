@@ -14,6 +14,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import org.ow2.proactive.procci.model.occi.metamodel.ResourceBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
@@ -49,7 +50,7 @@ public class InstanceService {
     public Optional<Entity> getEntity(String id) throws IOException, ClientException {
         Optional<Model> model = cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
-        Optional<Resource.Builder> builder = getResourceBuilder(model.get());
+        Optional<ResourceBuilder> builder = getResourceBuilder(model.get());
         if (builder.isPresent()) {
             return Optional.of(builder.get().build());
         }
@@ -67,7 +68,7 @@ public class InstanceService {
     public Optional<Entity> getMockedEntity(String id) throws IOException, ClientException {
         Optional<Model> computeModel = cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
                 ConvertUtils.formatURL(id));
-        Optional<Resource.Builder> builder = getResourceBuilder(computeModel.get());
+        Optional<ResourceBuilder> builder = getResourceBuilder(computeModel.get());
         if (builder.isPresent()) {
             return Optional.of(builder.get().build());
         }
@@ -146,7 +147,7 @@ public class InstanceService {
 
 
         //create a new resource from the response to the compute creation request sent to cloud-automation-service
-        Resource resourceResult = new Resource.Builder(
+        Resource resourceResult = new ResourceBuilder(
                 new Model(cloudAutomationInstanceClient.postRequest(
                         resource.toCloudAutomationModel("create").getJson())))
                 .addMixins(pullMixinFromCloudAutomation(resource.getId()))
@@ -173,7 +174,7 @@ public class InstanceService {
         return mixins;
     }
 
-    private Optional<Resource.Builder> getResourceBuilder(Model model) throws IOException, ClientException {
+    private Optional<ResourceBuilder> getResourceBuilder(Model model) throws IOException, ClientException {
         switch (model.getServiceModel()) {
             case BigDataIdentifiers.SWARM_MODEL:
                 return Optional.of(new SwarmBuilder(model));

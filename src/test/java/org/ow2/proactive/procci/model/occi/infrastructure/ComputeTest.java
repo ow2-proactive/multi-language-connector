@@ -2,8 +2,6 @@ package org.ow2.proactive.procci.model.occi.infrastructure;
 
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
@@ -199,32 +197,5 @@ public class ComputeTest {
         assertThat(rendering.getLinks()).isEmpty();
         assertThat(rendering.getActions()).isEmpty();
         assertThat(rendering.getMixins()).isEmpty();
-    }
-
-    @Test
-    public void associateProviderMixin() throws IOException, ClientException {
-
-        ComputeBuilder computeBuilder = new ComputeBuilder().url("url")
-                .architecture(Compute.Architecture.X64)
-                .cores(5)
-                .hostame("hostnameTest")
-                .memory(new Float(3))
-                .state(ComputeState.SUSPENDED)
-                .share(2)
-                .summary("summaryTest")
-                .title("titleTest");
-
-        when(mixinService.getMixinBuilder("title")).thenReturn(Optional.empty());
-        when(mixinService.getMixinBuilder("title2")).thenReturn(
-                Optional.of(new MixinBuilder("scheme", "term")));
-        Map<String, Object> attributes = new HashMap<>();
-        Map<String, String> attribute1 = new HashMap<>();
-        Map<String, String> attribute2 = new HashMap<>();
-        attribute1.put("key", "value");
-        attribute2.put("key2", "value2");
-        attributes.put("title", attribute1);
-        attributes.put("title2", attribute2);
-
-        computeBuilder.associateProviderMixin(mixinService, attributes);
     }
 }

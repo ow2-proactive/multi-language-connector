@@ -40,9 +40,9 @@ public class LinkTest {
 
 
     @Test
-    public void constructorTest() throws ClientException{
+    public void constructorTest() throws ClientException {
 
-        Resource r1 = new Compute.Builder().url("url").build();
+        Resource r1 = new ComputeBuilder().url("url").build();
         Kind kind = Kinds.LINK;
         List<Mixin> mixins = new ArrayList<>();
         try {

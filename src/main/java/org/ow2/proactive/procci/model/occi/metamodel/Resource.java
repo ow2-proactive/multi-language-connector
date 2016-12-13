@@ -34,17 +34,13 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Identifiers;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
@@ -54,7 +50,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
 /**
@@ -114,69 +109,6 @@ public class Resource extends Entity {
         this.getSummary().ifPresent(summary -> resourceRendering.addAttribute(SUMMARY_NAME, summary));
         this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getTitle()));
         return resourceRendering.build();
-    }
-
-    @Getter
-    public static class Builder {
-        protected Optional<String> url;
-        protected Optional<String> title;
-        protected List<Mixin> mixins;
-        protected Optional<String> summary;
-        protected List<Link> links;
-
-        public Builder() {
-            this.url = Optional.empty();
-            this.title = Optional.empty();
-            this.mixins = new ArrayList<>();
-            this.summary = Optional.empty();
-            this.links = new ArrayList<>();
-        }
-
-        public Builder(Model cloudAutomation) {
-
-            Map<String, String> attributes = cloudAutomation.getVariables();
-
-            this.url = Optional.ofNullable(attributes.get(ID_NAME));
-            this.title = Optional.ofNullable(attributes.get(ENTITY_TITLE_NAME));
-            this.summary = Optional.ofNullable(attributes.get(SUMMARY_NAME));
-
-            this.mixins = new ArrayList<>();
-            this.links = new ArrayList<>();
-        }
-
-        public Builder url(String url) {
-            this.url = Optional.ofNullable(url);
-            return this;
-        }
-
-        public Builder title(String title) {
-            this.title = Optional.ofNullable(title);
-            return this;
-        }
-
-        public Builder addMixin(Mixin mixin) {
-            this.mixins.add(mixin);
-            return this;
-        }
-
-        public Builder addMixins(List<Mixin> mixins) {
-            this.mixins.addAll(mixins);
-            return this;
-        }
-
-        public Builder summary(String summary) {
-            this.summary = Optional.ofNullable(summary);
-            return this;
-        }
-
-        public Builder addLink(Link link) {
-            this.links.add(link);
-            return this;
-        }
-
-        public Resource build() throws ClientException {
-            return new Resource(url, Kinds.RESOURCE, title, mixins, summary, links);
-        }
     }
 
 }

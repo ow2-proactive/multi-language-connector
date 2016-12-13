@@ -1,5 +1,6 @@
 package org.ow2.proactive.procci.model.occi.platform;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +15,11 @@ import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import org.ow2.proactive.procci.model.occi.metamodel.ResourceBuilder;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformKinds;
+import org.ow2.proactive.procci.service.occi.MixinService;
 import lombok.Getter;
 
 public class Component extends Resource {
@@ -36,7 +40,7 @@ public class Component extends Resource {
         return attributeSet;
     }
 
-    public static class Builder extends Resource.Builder {
+    public static class Builder extends ResourceBuilder {
 
         protected Optional<Status> status;
 
@@ -51,6 +55,21 @@ public class Component extends Resource {
             Optional<String> status = Optional.ofNullable(attributes.get(PlatformAttributes.STATUS_NAME));
             if (status.isPresent()) {
                 this.status = Optional.of(Status.getStatusFromString(status.get()));
+            } else {
+                this.status = Optional.empty();
+            }
+        }
+
+        public Builder(MixinService mixinService,
+                ResourceRendering rendering) throws IOException, ClientException {
+            super(mixinService, rendering);
+            Optional<String> stringStatus = Optional.ofNullable(
+                    rendering.getAttributes())
+                    .map(attributes -> attributes.getOrDefault(PlatformAttributes.STATUS_NAME, null))
+                    .filter(status -> status instanceof String)
+                    .map(status -> (String) status);
+            if (stringStatus.isPresent()) {
+                this.status = Optional.of(Status.getStatusFromString(stringStatus.get()));
             } else {
                 this.status = Optional.empty();
             }

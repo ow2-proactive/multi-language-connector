@@ -13,7 +13,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Infrastructu
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
-import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import org.ow2.proactive.procci.model.occi.metamodel.ResourceBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.MixinService;
@@ -38,8 +38,6 @@ import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attri
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.HOSTNAME_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.MEMORY_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.SHARE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
 /**
  * Compute Builder class, enable to easily construct a Compute from RenderingCompute or Cloud Automation Model
@@ -47,7 +45,7 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @Getter
-public class ComputeBuilder extends Resource.Builder {
+public class ComputeBuilder extends ResourceBuilder {
 
     private Optional<Compute.Architecture> architecture;
     private Optional<Integer> cores;
@@ -98,8 +96,6 @@ public class ComputeBuilder extends Resource.Builder {
                 Optional.ofNullable(attributes.get(ARCHITECTURE_NAME)));
         this.state = getStateFromCloudAutomation(
                 Optional.ofNullable(attributes.get(INSTANCE_STATUS)));
-
-
     }
 
     /**
@@ -109,9 +105,7 @@ public class ComputeBuilder extends Resource.Builder {
      */
     public ComputeBuilder(MixinService mixinService,
             ResourceRendering rendering) throws ClientException, IOException {
-        this.url = Optional.ofNullable(rendering.getId());
-        this.title = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
-                .map(attributes -> attributes.getOrDefault(ENTITY_TITLE_NAME, null)));
+        super(mixinService, rendering);
         this.architecture = getArchitectureFromString(
                 ConvertUtils.convertStringFromObject(Optional.ofNullable(
                         rendering.getAttributes()).map(
@@ -133,41 +127,6 @@ public class ComputeBuilder extends Resource.Builder {
                 Optional.ofNullable(rendering.getAttributes())
                         .map(attributes -> attributes.getOrDefault(SHARE_NAME, null))
                         .map(shareNumber -> String.valueOf(shareNumber)));
-        this.summary = ConvertUtils.convertStringFromObject(Optional.ofNullable(
-                rendering.getAttributes()).map(attributes -> attributes.getOrDefault(SUMMARY_NAME, null)));
-        this.mixins = new ArrayList<>();
-        for (String mixin : Optional.ofNullable(rendering.getMixins()).orElse(new ArrayList<>())) {
-            this.mixins.add(mixinService.getMixinByTitle(mixin));
-        }
-        associateProviderMixin(mixinService, rendering.getAttributes());
-
-        this.links = new ArrayList<>();
-    }
-
-    /**
-     * Check all attributes and add in the mixin collection the attributes from mixin
-     *
-     * @param attributes is the attriutes list of the compute
-     * @throws ClientException is thrown if there is an error during the mixin reading
-     */
-    void associateProviderMixin(MixinService mixinService,
-            Map<String, Object> attributes) throws ClientException {
-        if (attributes == null) {
-            return;
-        }
-        for (String mixinName : attributes.keySet()) {
-            if (mixinService.getMixinBuilder(mixinName).isPresent()) {
-                Object attributeMap = attributes.get(mixinName);
-                if (attributeMap instanceof Map) {
-                    this.mixins.add(mixinService.getMixinBuilder(mixinName).get()
-                            .attributes((Map) attributeMap)
-                            .build());
-                } else {
-                    throw new SyntaxException(attributeMap.toString(), "Map");
-                }
-            }
-
-        }
     }
 
     @Override
