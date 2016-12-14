@@ -2,18 +2,18 @@
 
 OCCI Proactive Cloud Automation deployment ensure services for deploying spark as a service.
 
-## List the information of all deployed swarm
+## List informations of all deployed swarm container
 
 ```curl -X GET --header 'Accept: application/json' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/swarm/'```
 
 
-## Describes the information of a deployed swarm
+## Display informations of a specific swarm container
 
 ```curl -X GET --header 'Accept: application/json' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/swarm/urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29'```
 
 ## Create a compute
 
-### Curl complete request :
+### Full curl request :
 
 <pre>
 <code>

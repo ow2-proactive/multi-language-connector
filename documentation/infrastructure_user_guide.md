@@ -2,19 +2,19 @@
 
 OCCI Proactive Cloud Automation deployment ensure services for Infrastructure, which are the services responsible of resource provisioning at the infrastructure level regarding virtual machines, operating systems, network,storage.
 
-## List the information of all deployed compute
+## List informations of all deployed compute
 
 ```curl -X GET --header 'Accept: application/json' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/compute/'```
 
 
-## Describes the information of a deployed compute
+## Display informations of a specific compute
 
 ```curl -X GET --header 'Accept: application/json' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/compute/urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29'```
 
 
 ## Create a compute
 
-### Curl complete request :
+### Full curl request :
 
 <pre>
 <code>
@@ -36,7 +36,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
 </pre>
 </code>
 
-### Curl short request :
+### Short form curl request :
 
 <pre>
 <code>
@@ -69,7 +69,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
 
 ##Use a provider mixin during compute creation
 
-Create a compute (VM instance) from an image. Attribute “imagename” is the ID of the image to be used, and “occi.entity.title” specifies the VM name.
+Create a compute (VM instance) from an image with “imagename” is the image ID and “occi.entity.title” the VM name.
 
 <pre>
 <code>
@@ -90,8 +90,8 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
 </code>
 
 This request creates : 
-the mixin vmimage and give it the name ubuntuMixin
-the mixin scriptMixin and give it the name scriptMixin
+the mixin vmimage with "ubuntuMixin" as name
+the mixin scriptMixin with "scriptMixin" as name
 the compute vm_name with the mixins ubuntuMixin and scriptMixin
 
 
