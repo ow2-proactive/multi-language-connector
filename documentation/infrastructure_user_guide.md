@@ -6,17 +6,20 @@ The current OCCI infrastructure runtime enables to manage virtual machines.
 
 ## List the information of all deployed compute
 
-curl -X GET --header 'Accept: application/json' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/compute/'
+```curl -X GET --header 'Accept: application/json' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/compute/'```
 
 
 ## Describes the information of a deployed compute
 
-curl -X GET --header 'Accept: application/json' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/compute/urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29'
+```curl -X GET --header 'Accept: application/json' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/compute/urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29'```
 
 
 ## Create a compute
 
 ### Curl complete request :
+
+<pre>
+<code>
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
   "actions": [],
     "attributes": {
@@ -32,11 +35,13 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
   "links": [],
   "mixins": []
 }' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/compute/'
-
+</pre>
+</code>
 
 ### Curl short request :
 
-
+</pre>
+</code>
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
   "attributes": {
   "occi.compute.memory":3.0,
@@ -47,22 +52,29 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
   "id": "urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29",
   "kind": "http://schemas.ogf.org/occi/infrastructure#compute"
 }' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/compute/'
+</pre>
+</code>
 
 
 ## Create a user-defined Mixin
 
+<pre>
+<code>
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
 {
     "scheme": "my.mixin",
       "term": "mine"
 }
+</pre>
+</code>
 
 
 Use a provider mixin during compute creation
 
 ## Create a compute (VM instance) from an image. Attribute “imagename” is the ID of the image to be used, and “occi.entity.title” specifies the VM name.
 
-
+<pre>
+<code>
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
     "attributes": {
         "occi.entity.title": "vm_name",
@@ -76,7 +88,8 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
         }
     }
 }' 'http://xx.xxx.xx.xxx:8080/multi-language-connector/occi/compute/'
-
+</pre>
+</code>
 
 This request creates : 
 the mixin vmimage and give it the name ubuntuMixin
