@@ -90,11 +90,11 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
 </code>
 
 This request creates : 
-the mixin vmimage with "ubuntuMixin" as name
-the mixin scriptMixin with "scriptMixin" as name
-the compute vm_name with the mixins ubuntuMixin and scriptMixin
+ - the mixin vmimage with "ubuntuMixin" as name
+ - the mixin scriptMixin with "scriptMixin" as name
+ - the compute vm_name with the mixins ubuntuMixin and scriptMixin
 
 
 Provider Mixin available : 
-Vmimage -> enable to deploy a specific image
-Userdata -> enable to deploy a script on the instance 
+ - Vmimage -> enable to deploy a specific image
+ - Userdata -> enable to deploy a script on the instance 
