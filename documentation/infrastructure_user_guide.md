@@ -40,8 +40,8 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
 
 ### Curl short request :
 
-</pre>
-</code>
+<pre>
+<code>
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
   "attributes": {
   "occi.compute.memory":3.0,
@@ -69,9 +69,9 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
 </code>
 
 
-Use a provider mixin during compute creation
+##Use a provider mixin during compute creation
 
-## Create a compute (VM instance) from an image. Attribute “imagename” is the ID of the image to be used, and “occi.entity.title” specifies the VM name.
+Create a compute (VM instance) from an image. Attribute “imagename” is the ID of the image to be used, and “occi.entity.title” specifies the VM name.
 
 <pre>
 <code>
