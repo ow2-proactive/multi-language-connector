@@ -15,7 +15,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
-import org.ow2.proactive.procci.request.MixinService;
+import org.ow2.proactive.procci.service.occi.MixinService;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -166,13 +166,12 @@ public class ComputeBuilder {
         for (String mixinName : attributes.keySet()) {
             if (mixinService.getMixinBuilder(mixinName).isPresent()) {
                 Object attributeMap = attributes.get(mixinName);
-                if(attributeMap instanceof Map) {
+                if (attributeMap instanceof Map) {
                     this.mixins.add(mixinService.getMixinBuilder(mixinName).get()
                             .attributes((Map) attributeMap)
                             .build());
-                }
-                else{
-                    throw new SyntaxException(attributeMap.toString(),"Map");
+                } else {
+                    throw new SyntaxException(attributeMap.toString(), "Map");
                 }
             }
 
@@ -278,7 +277,7 @@ public class ComputeBuilder {
             case COMPUTE_STATE_ERROR:
                 return Optional.of(ComputeState.ERROR);
             default:
-                throw new SyntaxException(state.get(),"Compute State");
+                throw new SyntaxException(state.get(), "Compute State");
         }
 
     }
@@ -299,7 +298,7 @@ public class ComputeBuilder {
         } else if (Compute.Architecture.X86.toString().equalsIgnoreCase(architecture.get())) {
             return Optional.of(Compute.Architecture.X86);
         } else {
-            throw new SyntaxException(architecture.get(),"Compute Architecture");
+            throw new SyntaxException(architecture.get(), "Compute Architecture");
         }
     }
 
@@ -327,7 +326,7 @@ public class ComputeBuilder {
             case ERROR_STATE:
                 return Optional.of(ComputeState.ERROR);
             default:
-                throw new SyntaxException(state.get(),"Compute State");
+                throw new SyntaxException(state.get(), "Compute State");
         }
     }
 

@@ -1,4 +1,4 @@
-package org.ow2.proactive.procci.request;
+package org.ow2.proactive.procci.service;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
  */
 
 /**
- * Manage the connection and the request with Cloud Automation Microservices
+ * Manage the connection and the service with Cloud Automation Microservices
  */
 @Service
 public class CloudAutomationInstanceClient {
@@ -36,7 +36,7 @@ public class CloudAutomationInstanceClient {
     /**
      * Get the deployed instances from Cloud Automation Model
      *
-     * @return a json object containing the request results
+     * @return a json object containing the service results
      */
     public JSONObject getRequest() throws CloudAutomationException {
         final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
@@ -80,7 +80,7 @@ public class CloudAutomationInstanceClient {
 
 
     /**
-     * Send a request to pca service with a header containing the session id and sending content
+     * Send a service to pca service with a header containing the session id and sending content
      *
      * @param content is which is send to the cloud automation service
      * @return the information about gathered from cloud automation service
