@@ -1,8 +1,6 @@
 # OCCI Proactive Cloud Automation for infrastructure
 
-Proactive Cloud Automation enables to deploy cloud resources through his OCCI infrastructure extension.
-The current OCCI infrastructure runtime enables to manage virtual machines.
-
+OCCI Proactive Cloud Automation deployment ensure services for Infrastructure, which are the services responsible of resource provisioning at the infrastructure level regarding virtual machines, operating systems, network,storage.
 
 ## List the information of all deployed compute
 
