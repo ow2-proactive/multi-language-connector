@@ -1,4 +1,4 @@
-package org.ow2.proactive.procci.request;
+package org.ow2.proactive.procci.service.occi;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +16,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
+import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 import org.codehaus.jackson.type.TypeReference;

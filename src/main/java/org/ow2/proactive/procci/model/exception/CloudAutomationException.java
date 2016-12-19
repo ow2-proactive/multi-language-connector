@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
  */
 
 /**
- * The Exception occur when an http request fail with an other Cloud Automation microservice
+ * The Exception occur when an http service fail with an other Cloud Automation microservice
  */
 @Getter
 @AllArgsConstructor

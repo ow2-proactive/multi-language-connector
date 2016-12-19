@@ -1,4 +1,4 @@
-package org.ow2.proactive.procci.request;
+package org.ow2.proactive.procci.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -85,7 +85,7 @@ public class RequestUtils {
     }
 
     /**
-     * Send a request to the scheduler with the name and the password from the configuration file in order to get the
+     * Send a service to the scheduler with the name and the password from the configuration file in order to get the
      * session id
      *
      * @return the session id
