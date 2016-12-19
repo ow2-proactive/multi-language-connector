@@ -1,6 +1,5 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -67,7 +66,7 @@ public class MixinBuilder {
      * @param mixinRendering  is the rendering mixin
      */
     public MixinBuilder(MixinService mixinService, InstanceService instanceService,
-            MixinRendering mixinRendering) throws ClientException, IOException {
+            MixinRendering mixinRendering) throws ClientException {
         this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(
                 () -> new MissingAttributesException("scheme", "mixin"));
         this.term = Optional.ofNullable(mixinRendering.getTerm()).orElseThrow(
@@ -77,21 +76,31 @@ public class MixinBuilder {
                 new HashMap()));
         //action are not manage yet
         this.actions = new ArrayList<>();
-        this.depends = new ArrayList<>();
-        for (String depends : Optional.ofNullable(mixinRendering.getDepends()).orElse(new ArrayList<>())) {
-            this.depends.add(mixinService.getMixinMockByTitle(depends));
-        }
-        this.applies = new ArrayList<>();
-        for (String apply : Optional.ofNullable(mixinRendering.getApplies()).orElse(new ArrayList<>())) {
-            this.applies.add(
-                    InfrastructureKinds.getKind(apply).orElseThrow(() -> new SyntaxException(apply, "Kind")));
-        }
-        this.entities = new ArrayList<>();
-        for (String entityId : Optional.ofNullable(mixinRendering.getEntities())
+
+        this.depends = Optional.ofNullable(mixinRendering.getDepends()).orElse(new ArrayList<>())
+                .stream()
+                .map(depend -> mixinService.getMixinMockByTitle(depend))
+                .collect(Collectors.toList());
+
+
+        this.applies = Optional.ofNullable(mixinRendering.getApplies())
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(apply -> InfrastructureKinds.getKind(apply).orElseThrow(
+                        () -> new SyntaxException(apply, "Kind")))
+                .collect(Collectors.toList());
+
+
+        this.entities = Optional.ofNullable(mixinRendering.getEntities())
                 .map(entitiesId -> new ArrayList<>(entitiesId))
-                .orElse(new ArrayList<>())) {
-            instanceService.getMockedEntity(entityId).ifPresent(entity -> this.entities.add(entity));
-        }
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(entityId -> instanceService.getMockedEntity(entityId))
+                .filter(entity -> entity.isPresent())
+                .map(entity -> entity.get())
+                .collect(Collectors.toList());
+
+
     }
 
     private Set<Attribute> convertAttributesMap(Map<String, AttributeRendering> attributeMap) {
@@ -159,16 +168,14 @@ public class MixinBuilder {
     }
 
     protected Optional<String> readAttributeAsString(Map attributes, String key) throws SyntaxException {
-        Optional<Object> value = Optional.ofNullable(attributes.get(key));
-        if (value.isPresent()) {
-            if (value.get() instanceof String) {
-                return Optional.of((String) value.get());
-            } else {
-                throw new SyntaxException(key, "String");
-            }
-        } else {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(attributes.get(key))
+                .map(attribute -> {
+                    if (attribute instanceof String) {
+                        return (String) attribute;
+                    } else {
+                        throw new SyntaxException(key, "String");
+                    }
+                });
     }
 
 }

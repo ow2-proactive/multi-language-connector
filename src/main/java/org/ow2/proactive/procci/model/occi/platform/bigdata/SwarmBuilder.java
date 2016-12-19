@@ -64,12 +64,8 @@ public class SwarmBuilder extends Component.Builder {
                         .replaceAll(" ", "")
                         .split(BigDataIdentifiers.AGENT_IP_SEPARATOR)));
 
-        Optional<String> status = Optional.ofNullable(attributes.get(STATUS_NAME));
-        if (status.isPresent()) {
-            this.status = Optional.of(Status.getStatusFromString(status.get()));
-        } else {
-            this.status = Optional.empty();
-        }
+        this.status = Optional.ofNullable(attributes.get(STATUS_NAME))
+                .map(statusName -> Status.getStatusFromString(statusName));
 
 
     }

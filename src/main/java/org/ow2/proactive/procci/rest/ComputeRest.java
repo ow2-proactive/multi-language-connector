@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
@@ -89,7 +90,7 @@ public class ComputeRest {
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
-        } catch (IOException e) {
+        } catch (ServerException e) {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -112,7 +113,7 @@ public class ComputeRest {
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
-        } catch (IOException e) {
+        } catch (ServerException e) {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -133,7 +134,7 @@ public class ComputeRest {
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
-        } catch (IOException e) {
+        } catch (ServerException e) {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }

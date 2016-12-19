@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -69,15 +70,15 @@ public class RequestUtils {
             return prop.getProperty(propertyKey);
 
         } catch (IOException ex) {
-            logger.error(this.getClass().getName(), ex);
-            throw new RuntimeException(
-                    "Unable to get the cloud automation service url from config.properties");
+            logger.error("Unable to get the cloud automation service url from config.properties", ex);
+            throw new ServerException();
         } finally {
             if (input != null) {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    logger.error(this.getClass().getName(), e);
+                    logger.error("Unable to get the cloud automation service url from config.properties", e);
+                    throw new ServerException();
                 }
             }
         }
@@ -117,7 +118,7 @@ public class RequestUtils {
             }
             httpClient.close();
         } catch (Exception ex) {
-            logger.debug(ex.getMessage());
+            logger.error("Unable to get the the session id", ex);
         }
         return result.toString();
     }

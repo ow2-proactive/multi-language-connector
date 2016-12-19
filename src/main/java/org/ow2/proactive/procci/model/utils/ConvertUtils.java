@@ -1,13 +1,21 @@
 package org.ow2.proactive.procci.model.utils;
 
+import java.io.IOException;
 import java.util.Optional;
 
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by the Activeeon Team on 29/09/16.
  */
 public class ConvertUtils {
+
+    public static Logger logger = LoggerFactory.getLogger(ConvertUtils.class);
 
     /**
      * Parse a string integer into an optional integer
@@ -63,4 +71,23 @@ public class ConvertUtils {
         return url.replaceAll("−", "-");
     }
 
+    public static String mapObject(Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (IOException ex) {
+            logger.error("IO Exception in " + ConvertUtils.class.getName() + " :", ex);
+            throw new ServerException();
+        }
+
+    }
+
+    public static <T> T readMappedObject(String references, TypeReference<T> mapType) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(references, mapType);
+        } catch (IOException ex) {
+            logger.error("IO Exception in " + ConvertUtils.class.getName() + " :", ex);
+            throw new ServerException();
+        }
+    }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.request.CloudAutomationVariablesClient;
@@ -51,7 +52,7 @@ public class MixinRestTest {
         ResponseEntity<MixinRendering> responseClientError = mixinRest.getMixin("titleTest2");
         assertThat(responseClientError.getStatusCode().is4xxClientError()).isTrue();
 
-        when(mixinService.getMixinByTitle("titleTest3")).thenThrow(IOException.class);
+        when(mixinService.getMixinByTitle("titleTest3")).thenThrow(ServerException.class);
         ResponseEntity<MixinRendering> responseServerError = mixinRest.getMixin("titleTest3");
         assertThat(responseServerError.getStatusCode().is5xxServerError()).isTrue();
     }
