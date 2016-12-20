@@ -119,6 +119,7 @@ public class RequestUtils {
             httpClient.close();
         } catch (Exception ex) {
             logger.error("Unable to get the the session id", ex);
+            throw new ServerException();
         }
         return result.toString();
     }

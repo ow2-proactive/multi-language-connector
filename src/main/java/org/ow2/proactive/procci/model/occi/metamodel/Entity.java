@@ -41,6 +41,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import org.ow2.proactive.procci.model.InstanceModel;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
@@ -52,9 +53,9 @@ import lombok.ToString;
  * Entity is the abstract type that will gather the information contained in Resource and Link
  */
 @ToString
-@EqualsAndHashCode(of = { "id" })
+@EqualsAndHashCode(of = { "id" },callSuper = true)
 @Getter
-public abstract class Entity {
+public abstract class Entity extends InstanceModel{
     private final String id;
     private final Kind kind;
     private Optional<String> title;

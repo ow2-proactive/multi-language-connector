@@ -124,30 +124,6 @@ public class Compute extends Resource {
     }
 
     /**
-     * Convert OCCI compute to Proactive Cloud Automation Compute
-     *
-     * @param actionType is the action to apply on the compute
-     * @return the proactive cloud automation model for the compute
-     */
-    public Model toCloudAutomationModel(String actionType) {
-
-        Model.Builder serviceBuilder = new Model.Builder(COMPUTE_MODEL, actionType)
-                .addVariable(ID_NAME, this.getId());
-        this.getTitle().ifPresent(title -> serviceBuilder.addVariable(ENTITY_TITLE_NAME, title));
-        this.getSummary().ifPresent(summary -> serviceBuilder.addVariable(SUMMARY_NAME, summary));
-        this.architecture.ifPresent(archi -> serviceBuilder.addVariable(ARCHITECTURE_NAME, archi));
-        this.cores.ifPresent(coresNumber -> serviceBuilder.addVariable(CORES_NAME, coresNumber));
-        this.memory.ifPresent(memoryNumber -> serviceBuilder.addVariable(MEMORY_NAME, memoryNumber));
-        this.share.ifPresent(shareNumber -> serviceBuilder.addVariable(SHARE_NAME, shareNumber));
-        this.hostname.ifPresent(host -> serviceBuilder.addVariable(HOSTNAME_NAME, host));
-        this.state.ifPresent(currentState -> serviceBuilder.addVariable(COMPUTE_STATE_NAME, currentState));
-
-        this.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
-
-        return serviceBuilder.build();
-    }
-
-    /**
      * Give the OCCI rendering of a compute
      *
      * @return the compute rendering

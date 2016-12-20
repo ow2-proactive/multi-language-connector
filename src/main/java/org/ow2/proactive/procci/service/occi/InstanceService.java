@@ -13,6 +13,8 @@ import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.CloudAutomationInstanceClient;
+import org.ow2.proactive.procci.service.transformer.TransformerManager;
+import org.ow2.proactive.procci.service.transformer.TransformerType;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,6 +32,9 @@ public class InstanceService {
 
     @Autowired
     private MixinService mixinService;
+
+    @Autowired
+    private TransformerManager transformerManager;
 
     /**
      * Give a compute from the data stored in Cloud-automation-service
@@ -84,12 +89,7 @@ public class InstanceService {
      *
      * @param compute is the compute that will be created
      * @return a compute created from the server response
-<<<<<<< HEAD:src/main/java/org/ow2/proactive/procci/request/InstanceService.java
-     * @throws ClientException if there is an error in the request sent to the server
-=======
-     * @throws IOException     if the response was not parsable
      * @throws ClientException if there is an error in the service sent to the server
->>>>>>> 9512982f52da901e414467e2c31a9cfc4817c70e:src/main/java/org/ow2/proactive/procci/service/occi/InstanceService.java
      */
     public Compute create(Compute compute)
             throws ClientException {
@@ -103,7 +103,8 @@ public class InstanceService {
         //create a new compute from the response to the compute creation service sent to cloud-automation-service
         Compute computeResult = new ComputeBuilder(
                 new Model(cloudAutomationInstanceClient.postRequest(
-                        compute.toCloudAutomationModel("create").getJson())))
+                        transformerManager.getTransformerProvider(TransformerType.COMPUTE)
+                                .toCloudAutomationModel(compute,"create").getJson())))
                 .addMixins(pullMixinFromCloudAutomation(compute.getId()))
                 .build();
 

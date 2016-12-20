@@ -108,6 +108,9 @@ public class ComputeRest {
             if (!compute.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
+
+                //transformerManager.getTransformer(TransformerType.SWARN).toRendering((Compute)compute.get())
+
                 return new ResponseEntity<>(((Compute) compute.get()).getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
