@@ -79,36 +79,11 @@ public class Swarm extends Component {
     }
 
     /**
-     * Convert OCCI swarm to Proactive Cloud Automation Compute
-     *
-     * @param actionType is the action to apply on the swarm
-     * @return the proactive cloud automation model for the swarm
-     */
-    public Model toCloudAutomationModel(String actionType) {
-
-        Model.Builder serviceBuilder = new Model.Builder(SWARM_MODEL, actionType)
-                .addVariable(HOST_IP_NAME, this.getHostIp())
-                .addVariable(MASTER_IP_NAME, this.getMasterIp())
-                .addVariable(AGENTS_IP_NAME, getAgentsIpAsString());
-
-        this.machineName.ifPresent(machineName -> serviceBuilder.addVariable(MACHINE_NAME_NAME, machineName));
-        this.networkName.ifPresent(networkName -> serviceBuilder.addVariable(NETWORK_NAME_NAME, networkName));
-        this.getStatus().ifPresent(
-                status -> serviceBuilder.addVariable(PlatformAttributes.STATUS_NAME, status));
-        this.getTitle().ifPresent(title -> serviceBuilder.addVariable(Attributes.ENTITY_TITLE_NAME, title));
-        this.getSummary().ifPresent(summary -> serviceBuilder.addVariable(Attributes.SUMMARY_NAME, summary));
-
-        this.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
-
-        return serviceBuilder.build();
-    }
-
-    /**
      * Concatenate the ip contained in the agents ip list
      *
      * @return the ip separated by the AGENT_IP_SEPARATOR
      */
-    private String getAgentsIpAsString() {
+    public String getAgentsIpAsString() {
         String agentsIp;
         if (this.agentsIp.isEmpty()) {
             return "";
