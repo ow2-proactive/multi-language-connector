@@ -3,6 +3,7 @@ package org.ow2.proactive.procci.service;
 import java.io.IOException;
 
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.fluent.Request;
@@ -40,9 +41,8 @@ public class CloudAutomationVariablesClient {
             return requestUtils.readHttpResponse(response.returnResponse());
 
         } catch (IOException ex) {
-            logger.error(this.getClass().getName() + ex);
-            throw new RuntimeException(
-                    "Unable to get on " + getResourceUrl(key) + ", exception : " + ex);
+            logger.error("Unable to get on " + getResourceUrl(key) + ", exception : " + ex.getMessage());
+            throw new ServerException();
         }
     }
 
@@ -60,9 +60,8 @@ public class CloudAutomationVariablesClient {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(this.getClass().getName(), ex);
-            throw new RuntimeException(
-                    "Unable to post on " + getQueryUrl(key) + ", exception : " + ex);
+            logger.error("Unable to post on " + getQueryUrl(key) + ", exception : " + ex.getMessage());
+            throw new ServerException();
         }
 
     }
@@ -80,9 +79,8 @@ public class CloudAutomationVariablesClient {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(this.getClass().getName(), ex);
-            throw new RuntimeException(
-                    "Unable to put on " + getResourceUrl(key) + " ,exception : " + ex);
+            logger.error("Unable to put on " + getResourceUrl(key) + " ,exception : " + ex.getMessage());
+            throw new ServerException();
         }
     }
 
@@ -97,9 +95,8 @@ public class CloudAutomationVariablesClient {
             checkStatus(response);
 
         } catch (IOException ex) {
-            logger.error(this.getClass().getName(), ex);
-            throw new RuntimeException(
-                    "Unable to delete on " + getQueryUrl(key) + ", exception : " + ex);
+            logger.error("Unable to delete on " + getQueryUrl(key) + ", exception : " + ex.getMessage());
+            throw new ServerException();
         }
     }
 

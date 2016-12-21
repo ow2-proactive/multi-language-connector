@@ -1,10 +1,10 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
@@ -85,7 +85,7 @@ public class ComputeBuilder {
      * @param cloudAutomation is the instance of the cloud automation model for a compute
      */
     public ComputeBuilder(Model cloudAutomation)
-            throws IOException, ClientException {
+            throws ClientException {
 
         Map<String, String> attributes = cloudAutomation.getVariables();
 
@@ -116,7 +116,7 @@ public class ComputeBuilder {
      * @param rendering is the instance of the cloud automation model for a compute
      */
     public ComputeBuilder(MixinService mixinService,
-            ResourceRendering rendering) throws ClientException, IOException {
+            ResourceRendering rendering) throws ClientException {
         this.url = Optional.ofNullable(rendering.getId());
         this.title = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
                 .map(attributes -> attributes.getOrDefault(ENTITY_TITLE_NAME, null)));
@@ -143,10 +143,12 @@ public class ComputeBuilder {
                         .map(shareNumber -> String.valueOf(shareNumber)));
         this.summary = ConvertUtils.convertStringFromObject(Optional.ofNullable(
                 rendering.getAttributes()).map(attributes -> attributes.getOrDefault(SUMMARY_NAME, null)));
-        this.mixins = new ArrayList<>();
-        for (String mixin : Optional.ofNullable(rendering.getMixins()).orElse(new ArrayList<>())) {
-            this.mixins.add(mixinService.getMixinByTitle(mixin));
-        }
+        this.mixins = Optional.ofNullable(rendering.getMixins())
+                .orElse(new ArrayList<>())
+                .stream()
+                .map(mixin -> mixinService.getMixinByTitle(mixin))
+                .collect(Collectors.toList());
+
         associateProviderMixin(mixinService, rendering.getAttributes());
 
         this.links = new ArrayList<>();
@@ -155,7 +157,7 @@ public class ComputeBuilder {
     /**
      * Check all attributes and add in the mixin collection the attributes from mixin
      *
-     * @param attributes is the attriutes list of the compute
+     * @param attributes is the attributes list of the compute
      * @throws ClientException is thrown if there is an error during the mixin reading
      */
     void associateProviderMixin(MixinService mixinService,
@@ -163,19 +165,19 @@ public class ComputeBuilder {
         if (attributes == null) {
             return;
         }
-        for (String mixinName : attributes.keySet()) {
-            if (mixinService.getMixinBuilder(mixinName).isPresent()) {
-                Object attributeMap = attributes.get(mixinName);
-                if (attributeMap instanceof Map) {
-                    this.mixins.add(mixinService.getMixinBuilder(mixinName).get()
-                            .attributes((Map) attributeMap)
-                            .build());
-                } else {
-                    throw new SyntaxException(attributeMap.toString(), "Map");
-                }
-            }
 
-        }
+        attributes.keySet().stream()
+                .filter(mixinName -> mixinService.getMixinBuilder(mixinName).isPresent())
+                .forEach(mixinName -> {
+                    Object attributeMap = attributes.get(mixinName);
+                    if (attributeMap instanceof Map) {
+                        this.mixins.add(mixinService.getMixinBuilder(mixinName).get()
+                                .attributes((Map) attributeMap)
+                                .build());
+                    } else {
+                        throw new SyntaxException(attributeMap.toString(), "Map");
+                    }
+                });
     }
 
 

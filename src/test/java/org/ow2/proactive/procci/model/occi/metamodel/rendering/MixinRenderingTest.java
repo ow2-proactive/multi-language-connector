@@ -19,14 +19,8 @@ public class MixinRenderingTest {
     public void getJsonTest() {
 
         MixinRendering rendering = MixinRendering.builder().scheme("schemeTest").term("termTest").build();
-        try {
-            String renderingJson = MixinRendering.convertStringFromMixin(rendering);
-            assertThat(renderingJson).isNotEmpty();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-
+        String renderingJson = MixinRendering.convertStringFromMixin(rendering);
+        assertThat(renderingJson).isNotEmpty();
     }
 
     @Test
@@ -45,20 +39,17 @@ public class MixinRenderingTest {
 
         MixinRendering rendering = null;
 
-        try {
-            rendering = MixinRendering.convertMixinFromString(
-                    MixinRendering.convertStringFromMixin(
-                            MixinRendering.builder()
-                                    .scheme("schemeTest")
-                                    .term("termTest")
-                                    .title("titleTest")
-                                    .depends(depends)
-                                    .applies(applies)
-                                    .attributes(attributes)
-                                    .build()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        rendering = MixinRendering.convertMixinFromString(
+                MixinRendering.convertStringFromMixin(
+                        MixinRendering.builder()
+                                .scheme("schemeTest")
+                                .term("termTest")
+                                .title("titleTest")
+                                .depends(depends)
+                                .applies(applies)
+                                .attributes(attributes)
+                                .build()));
+
 
         assertThat(rendering.getScheme()).matches("schemeTest");
         assertThat(rendering.getTerm()).matches("termTest");
