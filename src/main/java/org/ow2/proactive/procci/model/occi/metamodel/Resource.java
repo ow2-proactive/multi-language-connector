@@ -78,7 +78,6 @@ public class Resource extends Entity {
         super(url, kind, title, mixins);
         this.summary = summary;
         this.links = new ImmutableList.Builder<Link>().addAll(links).build();
-        ;
     }
 
 
