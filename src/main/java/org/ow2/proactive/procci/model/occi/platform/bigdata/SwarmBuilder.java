@@ -1,6 +1,5 @@
 package org.ow2.proactive.procci.model.occi.platform.bigdata;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

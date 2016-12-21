@@ -1,6 +1,5 @@
 package org.ow2.proactive.procci.rest;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
@@ -13,6 +12,7 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.InstanceService;
 import org.ow2.proactive.procci.service.occi.MixinService;
+import org.ow2.proactive.procci.service.transformer.TransformerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +60,6 @@ public class SwarmRest {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
 
@@ -72,7 +71,7 @@ public class SwarmRest {
         logger.debug("Deploy a swarm " + swarmRendering.toString());
         try {
             SwarmBuilder swarmBuilder = new SwarmBuilder(mixinService, swarmRendering);
-            Resource response = instanceService.create(swarmBuilder.build());
+            Resource response = instanceService.create(swarmBuilder.build(), TransformerType.SWARM);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);

@@ -1,8 +1,6 @@
 package org.ow2.proactive.procci.rest;
 
 
-import java.io.IOException;
-
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;

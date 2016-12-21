@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
@@ -104,7 +103,7 @@ public class ComputeBuilder extends ResourceBuilder {
      * @param rendering is the instance of the cloud automation model for a compute
      */
     public ComputeBuilder(MixinService mixinService,
-            ResourceRendering rendering) throws ClientException{
+            ResourceRendering rendering) throws ClientException {
         super(mixinService, rendering);
         this.architecture = getArchitectureFromString(
                 ConvertUtils.convertStringFromObject(Optional.ofNullable(

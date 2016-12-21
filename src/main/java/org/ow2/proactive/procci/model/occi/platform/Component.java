@@ -1,6 +1,5 @@
 package org.ow2.proactive.procci.model.occi.platform;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;

@@ -97,7 +97,7 @@ public class InstanceService {
      * @throws ClientException if there is an error in the service sent to the server
      */
 
-    public Resource create(Resource resource)
+    public Resource create(Resource resource, TransformerType transformerType)
             throws ClientException {
 
         //add the compute reference in all his mixins
@@ -110,8 +110,8 @@ public class InstanceService {
         //create a new resource from the response to the compute creation request sent to cloud-automation-service
         Resource resourceResult = new ResourceBuilder(
                 new Model(cloudAutomationInstanceClient.postRequest(
-                        transformerManager.getTransformerProvider(TransformerType.COMPUTE)
-                                .toCloudAutomationModel(resource,"create").getJson())))
+                        transformerManager.getTransformerProvider(transformerType)
+                                .toCloudAutomationModel(resource, "create").getJson())))
                 .addMixins(pullMixinFromCloudAutomation(resource.getId()))
                 .build();
 

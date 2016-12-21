@@ -12,19 +12,21 @@ public abstract class TransformerProvider {
 
     public static Logger logger = LoggerFactory.getLogger(TransformerProvider.class);
 
-    public abstract TransformerType getType();
-    public abstract Model toCloudAutomationModel(InstanceModel instanceModel,String actionType);
+    protected static <T> T castInstanceModel(Class<T> classe, InstanceModel instanceModel) {
 
-    protected static <T> T castInstanceModel(Class<T> classe, InstanceModel instanceModel){
-
-        if (classe.isInstance(instanceModel)){
+        if (classe.isInstance(instanceModel)) {
             return classe.cast(instanceModel);
-        }else {
-            logger.error("Error in castInstanceModel : the instance of "+instanceModel.getClass().getName() +
-                    " is not an instance of "+classe.getName());
+        } else {
+            logger.error(
+                    "Error in castInstanceModel : the instance of " + instanceModel.getClass().getName() +
+                            " is not an instance of " + classe.getName());
             throw new ServerException();
         }
 
     }
+
+    public abstract TransformerType getType();
+
+    public abstract Model toCloudAutomationModel(InstanceModel instanceModel, String actionType);
 
 }

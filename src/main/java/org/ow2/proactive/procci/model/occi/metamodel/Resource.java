@@ -38,9 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;

@@ -34,7 +34,6 @@
  */
 package org.ow2.proactive.procci.rest;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +49,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.InstanceService;
 import org.ow2.proactive.procci.service.occi.MixinService;
+import org.ow2.proactive.procci.service.transformer.TransformerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,7 +133,7 @@ public class ComputeRest {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
             ComputeBuilder computeBuilder = new ComputeBuilder(mixinService, computeRendering);
-            Resource response = instanceService.create(computeBuilder.build());
+            Resource response = instanceService.create(computeBuilder.build(), TransformerType.COMPUTE);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);

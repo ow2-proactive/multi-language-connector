@@ -8,7 +8,6 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
-
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -24,7 +23,7 @@ public class SwarmTransformerTest {
                 .title("titleTest")
                 .build();
 
-        Model model = new SwarmTransformer().toCloudAutomationModel(swarm,"create");
+        Model model = new SwarmTransformer().toCloudAutomationModel(swarm, "create");
         assertThat(model.getServiceModel()).matches(BigDataIdentifiers.SWARM_MODEL);
         assertThat(model.getActionType()).matches("create");
         assertThat(model.getVariables().get(BigDataAttributes.HOST_IP_NAME)).matches("hostIpTest");

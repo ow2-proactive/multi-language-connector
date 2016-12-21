@@ -1,6 +1,5 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
