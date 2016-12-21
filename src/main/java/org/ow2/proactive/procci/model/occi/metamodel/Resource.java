@@ -91,16 +91,6 @@ public class Resource extends Entity {
         return attributes;
     }
 
-    public Model toCloudAutomationModel(String actionType) {
-        Model.Builder serviceBuilder = new Model.Builder(Identifiers.RESSOURCE_MODEL, actionType);
-        this.getTitle().ifPresent(title -> serviceBuilder.addVariable(Attributes.ENTITY_TITLE_NAME, title));
-        this.getSummary().ifPresent(summary -> serviceBuilder.addVariable(Attributes.SUMMARY_NAME, summary));
-
-        this.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
-
-        return serviceBuilder.build();
-    }
-
     @Override
     public ResourceRendering getRendering() {
         ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(),

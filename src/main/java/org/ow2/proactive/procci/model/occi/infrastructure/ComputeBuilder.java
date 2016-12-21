@@ -1,10 +1,10 @@
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
@@ -78,7 +78,7 @@ public class ComputeBuilder extends ResourceBuilder {
      * @param cloudAutomation is the instance of the cloud automation model for a compute
      */
     public ComputeBuilder(Model cloudAutomation)
-            throws IOException, ClientException {
+            throws ClientException {
 
         super(cloudAutomation);
 
@@ -104,7 +104,7 @@ public class ComputeBuilder extends ResourceBuilder {
      * @param rendering is the instance of the cloud automation model for a compute
      */
     public ComputeBuilder(MixinService mixinService,
-            ResourceRendering rendering) throws ClientException, IOException {
+            ResourceRendering rendering) throws ClientException{
         super(mixinService, rendering);
         this.architecture = getArchitectureFromString(
                 ConvertUtils.convertStringFromObject(Optional.ofNullable(
@@ -129,7 +129,6 @@ public class ComputeBuilder extends ResourceBuilder {
                         .map(shareNumber -> String.valueOf(shareNumber)));
     }
 
-    @Override
     public ComputeBuilder url(String url) {
         this.url = Optional.of(url);
         return this;

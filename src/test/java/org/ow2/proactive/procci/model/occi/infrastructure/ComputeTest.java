@@ -147,28 +147,6 @@ public class ComputeTest {
     }
 
     @Test
-    public void toCloudAutomationModelTest() throws IOException, CloudAutomationException {
-        ComputeBuilder computeBuilder = new ComputeBuilder().url("url")
-                .architecture(Compute.Architecture.X64)
-                .cores(5)
-                .hostame("hostnameTest")
-                .memory(new Float(3))
-                .state(ComputeState.SUSPENDED)
-                .share(2)
-                .summary("summaryTest")
-                .title("titleTest");
-
-        Model model = computeBuilder.build().toCloudAutomationModel("create");
-        assertThat(model.getServiceModel()).isEqualTo("occi.infrastructure.compute");
-        assertThat(model.getActionType()).isEqualTo("create");
-        assertThat(model.getVariables()).containsEntry("occi.compute.cores", "5");
-        assertThat(model.getVariables()).containsEntry("occi.compute.architecture", "X64");
-        assertThat(model.getVariables()).containsEntry("occi.compute.memory", "3.0");
-        assertThat(model.getVariables()).containsEntry("occi.entity.title", "titleTest");
-    }
-
-
-    @Test
     public void getRenderingTest() throws IOException, CloudAutomationException {
 
         ComputeBuilder computeBuilder = new ComputeBuilder().url("url")

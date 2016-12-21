@@ -68,7 +68,7 @@ public class SwarmBuilder extends Component.Builder {
     }
 
     public SwarmBuilder(MixinService mixinService,
-            ResourceRendering rendering) throws IOException, ClientException {
+            ResourceRendering rendering) throws ClientException {
         super(mixinService, rendering);
         this.machineName = Optional.ofNullable(
                 rendering.getAttributes().get(BigDataAttributes.MACHINE_NAME_NAME))
@@ -87,8 +87,6 @@ public class SwarmBuilder extends Component.Builder {
         this.agentsIp = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.AGENTS_IP_NAME))
                 .filter(agentIp -> agentIp instanceof String)
                 .map(agentIp -> (String) agentIp);
-
-
     }
 
     public SwarmBuilder machineName(String machineName) {

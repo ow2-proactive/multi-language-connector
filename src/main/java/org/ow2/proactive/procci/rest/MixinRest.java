@@ -4,6 +4,7 @@ package org.ow2.proactive.procci.rest;
 import java.io.IOException;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
@@ -48,7 +49,7 @@ public class MixinRest {
                     HttpStatus.OK);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
-        } catch (IOException exception) {
+        } catch (ServerException exception) {
             return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -65,7 +66,7 @@ public class MixinRest {
             mixinService.addMixin(mixin);
 
             return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
-        } catch (IOException ex) {
+        } catch (ServerException ex) {
             logger.error(this.getClass().getName(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ClientException ex) {
@@ -85,7 +86,7 @@ public class MixinRest {
         try {
             mixin = new MixinBuilder(mixinService, instanceService, mixinRendering).build();
             mixinService.addMixin(mixin);
-        } catch (IOException ex) {
+        } catch (ServerException ex) {
             logger.error(this.getClass().getName(), ex);
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (ClientException ex) {

@@ -61,7 +61,7 @@ public class Component extends Resource {
         }
 
         public Builder(MixinService mixinService,
-                ResourceRendering rendering) throws IOException, ClientException {
+                ResourceRendering rendering) throws ClientException {
             super(mixinService, rendering);
             Optional<String> stringStatus = Optional.ofNullable(
                     rendering.getAttributes())

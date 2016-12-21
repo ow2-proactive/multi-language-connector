@@ -50,7 +50,7 @@ public class ResourceBuilder {
     }
 
     public ResourceBuilder(MixinService mixinService,
-            ResourceRendering rendering) throws IOException, ClientException {
+            ResourceRendering rendering) throws ClientException {
         this.url = Optional.ofNullable(rendering.getId());
         this.title = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
                 .map(attributes -> attributes.getOrDefault(ENTITY_TITLE_NAME, null)));
