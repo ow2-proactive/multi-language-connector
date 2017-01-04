@@ -52,9 +52,9 @@ public class ResourceBuilder {
             ResourceRendering rendering) throws ClientException {
         this.url = Optional.ofNullable(rendering.getId());
         this.title = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
-                .map(attributes -> attributes.getOrDefault(ENTITY_TITLE_NAME, null)));
+                .map(attributes -> attributes.get(ENTITY_TITLE_NAME)));
         this.summary = ConvertUtils.convertStringFromObject(Optional.ofNullable(
-                rendering.getAttributes()).map(attributes -> attributes.getOrDefault(SUMMARY_NAME, null)));
+                rendering.getAttributes()).map(attributes -> attributes.get(SUMMARY_NAME)));
         this.mixins = new ArrayList<>();
         for (String mixin : Optional.ofNullable(rendering.getMixins()).orElse(new ArrayList<>())) {
             this.mixins.add(mixinService.getMixinByTitle(mixin));
