@@ -74,19 +74,22 @@ public class ResourceBuilder {
         if (attributes == null) {
             return;
         }
-        for (String mixinName : attributes.keySet()) {
-            if (mixinService.getMixinBuilder(mixinName).isPresent()) {
-                Object attributeMap = attributes.get(mixinName);
-                if (attributeMap instanceof Map) {
-                    this.mixins.add(mixinService.getMixinBuilder(mixinName).get()
-                            .attributes((Map) attributeMap)
-                            .build());
-                } else {
-                    throw new SyntaxException(attributeMap.toString(), "Map");
-                }
-            }
 
-        }
+        attributes.keySet()
+                .forEach(mixinName -> {
+                    mixinService.getMixinBuilder(mixinName)
+                            .ifPresent(mixinBuilder -> {
+                                Object attributeMap = attributes.get(mixinName);
+                                if (attributeMap instanceof Map) {
+                                    this.mixins.add(mixinBuilder
+                                            .attributes((Map) attributeMap)
+                                            .build());
+                                } else {
+                                    throw new SyntaxException(attributeMap.toString(), "Map");
+                                }
+                            });
+                });
+
     }
 
     public ResourceBuilder url(String url) {
