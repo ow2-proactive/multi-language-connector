@@ -87,7 +87,7 @@ public class ResourceTest {
     }
 
     @Test
-    public void associateProviderMixin() throws IOException, ClientException {
+    public void associateProviderMixinTest() throws IOException, ClientException {
 
         ResourceBuilder resourceBuilder = new ComputeBuilder().url("url")
                 .architecture(Compute.Architecture.X64)
