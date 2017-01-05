@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
@@ -13,6 +12,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Infrastructu
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.ResourceBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.MixinService;
@@ -37,29 +37,21 @@ import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attri
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.HOSTNAME_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.MEMORY_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.SHARE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
 /**
  * Compute Builder class, enable to easily construct a Compute from RenderingCompute or Cloud Automation Model
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ToString
 @Getter
-public class ComputeBuilder {
+public class ComputeBuilder extends ResourceBuilder {
 
-    private Optional<String> url;
-    private Optional<String> title;
-    private Optional<String> summary;
     private Optional<Compute.Architecture> architecture;
     private Optional<Integer> cores;
     private Optional<Integer> share;
     private Optional<Float> memory; // in Gigabytes
     private Optional<String> hostname;
     private Optional<ComputeState> state;
-    private List<Link> links;
-    private List<Mixin> mixins;
 
     /**
      * Default Builder
@@ -87,12 +79,11 @@ public class ComputeBuilder {
     public ComputeBuilder(Model cloudAutomation)
             throws ClientException {
 
+        super(cloudAutomation);
+
         Map<String, String> attributes = cloudAutomation.getVariables();
 
-        this.url = Optional.ofNullable(attributes.get(ID_NAME));
-        this.title = Optional.ofNullable(attributes.get(ENTITY_TITLE_NAME));
         this.hostname = Optional.ofNullable(attributes.get(INSTANCE_ENDPOINT));
-        this.summary = Optional.ofNullable(attributes.get(SUMMARY_NAME));
         this.cores = ConvertUtils.convertIntegerFromString(
                 Optional.ofNullable(attributes.get(CORES_NAME)));
         this.memory = ConvertUtils.convertFloatFromString(
@@ -104,10 +95,6 @@ public class ComputeBuilder {
                 Optional.ofNullable(attributes.get(ARCHITECTURE_NAME)));
         this.state = getStateFromCloudAutomation(
                 Optional.ofNullable(attributes.get(INSTANCE_STATUS)));
-
-        this.mixins = new ArrayList<>();
-
-        this.links = new ArrayList<>();
     }
 
     /**
@@ -117,9 +104,7 @@ public class ComputeBuilder {
      */
     public ComputeBuilder(MixinService mixinService,
             ResourceRendering rendering) throws ClientException {
-        this.url = Optional.ofNullable(rendering.getId());
-        this.title = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
-                .map(attributes -> attributes.getOrDefault(ENTITY_TITLE_NAME, null)));
+        super(mixinService, rendering);
         this.architecture = getArchitectureFromString(
                 ConvertUtils.convertStringFromObject(Optional.ofNullable(
                         rendering.getAttributes()).map(
@@ -141,72 +126,38 @@ public class ComputeBuilder {
                 Optional.ofNullable(rendering.getAttributes())
                         .map(attributes -> attributes.getOrDefault(SHARE_NAME, null))
                         .map(shareNumber -> String.valueOf(shareNumber)));
-        this.summary = ConvertUtils.convertStringFromObject(Optional.ofNullable(
-                rendering.getAttributes()).map(attributes -> attributes.getOrDefault(SUMMARY_NAME, null)));
-        this.mixins = Optional.ofNullable(rendering.getMixins())
-                .orElse(new ArrayList<>())
-                .stream()
-                .map(mixin -> mixinService.getMixinByTitle(mixin))
-                .collect(Collectors.toList());
-
-        associateProviderMixin(mixinService, rendering.getAttributes());
-
-        this.links = new ArrayList<>();
     }
-
-    /**
-     * Check all attributes and add in the mixin collection the attributes from mixin
-     *
-     * @param attributes is the attributes list of the compute
-     * @throws ClientException is thrown if there is an error during the mixin reading
-     */
-    void associateProviderMixin(MixinService mixinService,
-            Map<String, Object> attributes) throws ClientException {
-        if (attributes == null) {
-            return;
-        }
-
-        attributes.keySet().stream()
-                .filter(mixinName -> mixinService.getMixinBuilder(mixinName).isPresent())
-                .forEach(mixinName -> {
-                    Object attributeMap = attributes.get(mixinName);
-                    if (attributeMap instanceof Map) {
-                        this.mixins.add(mixinService.getMixinBuilder(mixinName).get()
-                                .attributes((Map) attributeMap)
-                                .build());
-                    } else {
-                        throw new SyntaxException(attributeMap.toString(), "Map");
-                    }
-                });
-    }
-
 
     public ComputeBuilder url(String url) {
         this.url = Optional.of(url);
         return this;
     }
 
+    @Override
     public ComputeBuilder title(String title) {
         this.title = Optional.of(title);
         return this;
     }
 
+    @Override
     public ComputeBuilder summary(String summary) {
         this.summary = Optional.of(summary);
         return this;
     }
 
-
+    @Override
     public ComputeBuilder addMixin(Mixin mixin) {
         this.mixins.add(mixin);
         return this;
     }
 
+    @Override
     public ComputeBuilder addMixins(List<Mixin> mixins) {
         this.mixins.addAll(mixins);
         return this;
     }
 
+    @Override
     public ComputeBuilder addLink(Link link) {
         this.links.add(link);
         return this;
@@ -337,6 +288,7 @@ public class ComputeBuilder {
      *
      * @return a compute
      */
+    @Override
     public Compute build() {
         Compute compute = new Compute(url, InfrastructureKinds.COMPUTE, title, mixins, summary,
                 new ArrayList<>(), architecture,

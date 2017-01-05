@@ -4,8 +4,6 @@ package org.ow2.proactive.procci.service.transformer;
 import org.ow2.proactive.procci.model.InstanceModel;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
-
-
 import org.springframework.stereotype.Component;
 
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.ARCHITECTURE_NAME;
@@ -20,9 +18,9 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
 
 @Component
-public class ComputeTransformer extends TransformerProvider{
+public class ComputeTransformer extends TransformerProvider {
 
-    public TransformerType getType(){
+    public TransformerType getType() {
         return TransformerType.COMPUTE;
     }
 
@@ -46,7 +44,8 @@ public class ComputeTransformer extends TransformerProvider{
         compute.getMemory().ifPresent(memoryNumber -> serviceBuilder.addVariable(MEMORY_NAME, memoryNumber));
         compute.getShare().ifPresent(shareNumber -> serviceBuilder.addVariable(SHARE_NAME, shareNumber));
         compute.getHostname().ifPresent(host -> serviceBuilder.addVariable(HOSTNAME_NAME, host));
-        compute.getState().ifPresent(currentState -> serviceBuilder.addVariable(COMPUTE_STATE_NAME, currentState));
+        compute.getState().ifPresent(
+                currentState -> serviceBuilder.addVariable(COMPUTE_STATE_NAME, currentState));
 
         compute.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
 

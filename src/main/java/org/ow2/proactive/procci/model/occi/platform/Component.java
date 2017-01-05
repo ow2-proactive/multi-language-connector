@@ -5,14 +5,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.ow2.proactive.procci.model.cloud.automation.Model;
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import org.ow2.proactive.procci.model.occi.metamodel.ResourceBuilder;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformKinds;
+import org.ow2.proactive.procci.service.occi.MixinService;
 import lombok.Getter;
 
 public class Component extends Resource {
@@ -33,12 +38,29 @@ public class Component extends Resource {
         return attributeSet;
     }
 
-    public static class Builder extends Resource.Builder {
+    public static class Builder extends ResourceBuilder {
 
         protected Optional<Status> status;
 
         public Builder() {
             status = Optional.empty();
+        }
+
+        public Builder(Model cloudAutomation) throws SyntaxException {
+            super(cloudAutomation);
+
+            this.status = Optional.ofNullable( cloudAutomation.getVariables().get(PlatformAttributes.STATUS_NAME))
+                    .map(s -> Status.getStatusFromString(s));
+        }
+
+        public Builder(MixinService mixinService,
+                ResourceRendering rendering) throws ClientException {
+            super(mixinService, rendering);
+
+            this.status =  Optional.ofNullable(rendering.getAttributes())
+                    .map(attributes -> attributes.get(PlatformAttributes.STATUS_NAME))
+                    .filter(status -> status instanceof String)
+                    .map(status -> Status.getStatusFromString((String) status));
         }
 
         public Component.Builder status(String status) throws SyntaxException {
@@ -84,7 +106,7 @@ public class Component extends Resource {
 
 
         @Override
-        public Component build() {
+        public Component build() throws ClientException {
             return new Component(this.getUrl(), PlatformKinds.COMPONENT, this.getTitle(), this.getMixins(),
                     this.getSummary(), this.getLinks(), status);
         }

@@ -1,12 +1,11 @@
 package org.ow2.proactive.procci.model.occi.platform.bigdata;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
+import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.occi.platform.Status;
@@ -14,14 +13,31 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAtt
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataKinds;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
+import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
+import org.ow2.proactive.procci.service.occi.MixinService;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.when;
 
 public class SwarmTest {
 
+    @Mock
+    private MixinService mixinService;
+
+    @Mock
+    private CloudAutomationVariablesClient cloudAutomationVariablesClient;
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+
     @Test
-    public void requiredConstructorTest() {
+    public void requiredConstructorTest() throws ClientException {
         Swarm swarm = new SwarmBuilder("hostIpTest", "masterIpTest").build();
         assertThat(swarm.getHostIp()).matches("hostIpTest");
         assertThat(swarm.getMasterIp()).matches("masterIpTest");
@@ -36,9 +52,7 @@ public class SwarmTest {
     @Test
     public void allArgsConstructortest() throws ClientException {
 
-        List<String> agents = new ArrayList<>();
-        agents.add("agent1");
-        agents.add("agent2");
+        String agents = "agent1, agent2";
         Swarm swarm = new SwarmBuilder("hostIpTest2", "masterIpTest2", agents, Optional.of("machineNameTest"),
                 Optional.of("networkNameTest"))
                 .status("active")
@@ -74,10 +88,54 @@ public class SwarmTest {
     }
 
     @Test
-    public void getRenderingTest() throws SyntaxException {
+    public void renderingConstructorTest() throws ClientException, IOException {
+
+        when(mixinService.getMixinBuilder(BigDataAttributes.HOST_IP_NAME)).thenReturn(Optional.empty());
+        when(mixinService.getMixinBuilder(BigDataAttributes.MASTER_IP_NAME)).thenReturn(Optional.empty());
+        when(mixinService.getMixinBuilder(BigDataAttributes.AGENTS_IP_NAME)).thenReturn(Optional.empty());
+        when(mixinService.getMixinBuilder(BigDataAttributes.MACHINE_NAME_NAME)).thenReturn(Optional.empty());
+        when(mixinService.getMixinBuilder(PlatformAttributes.STATUS_NAME)).thenReturn(Optional.empty());
+        when(mixinService.getMixinBuilder(Attributes.SUMMARY_NAME)).thenReturn(Optional.empty());
+
+        ResourceRendering rendering = new ResourceRendering.Builder(BigDataKinds.SWARM.getTitle(),
+                "urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29")
+                .addAttribute(BigDataAttributes.HOST_IP_NAME, "xx.xxx.xx.xxx")
+                .addAttribute(BigDataAttributes.MASTER_IP_NAME, "yy.yyy.yy.yyy")
+                .addAttribute(BigDataAttributes.AGENTS_IP_NAME, "aa.aaa.aa.aaa , bb.bbb.bb.bbb")
+                .addAttribute(BigDataAttributes.MACHINE_NAME_NAME, "machineTest")
+                .addAttribute(PlatformAttributes.STATUS_NAME, "inactive")
+                .addAttribute(Attributes.SUMMARY_NAME, "summaryTest")
+                .build();
+
+        Swarm swarm = new SwarmBuilder(mixinService, rendering).build();
+
+        assertThat(swarm.getHostIp()).matches("xx.xxx.xx.xxx");
+        assertThat(swarm.getMasterIp()).matches("yy.yyy.yy.yyy");
+        assertThat(swarm.getAgentsIp()).containsExactly("aa.aaa.aa.aaa", "bb.bbb.bb.bbb");
+        assertThat(swarm.getStatus().get()).isEqualTo(Status.INACTIVE);
+        assertThat(swarm.getMachineName().get()).matches("machineTest");
+        assertThat(swarm.getNetworkName().isPresent()).isFalse();
+        assertThat(swarm.getTitle().isPresent()).isFalse();
+        assertThat(swarm.getId()).isNotNull();
+        assertThat(swarm.getSummary().get()).matches("summaryTest");
+
+        ResourceRendering missingParameterRendering = new ResourceRendering.Builder(
+                BigDataKinds.SWARM.getTitle(), "urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29").build();
+
+        Exception ex = null;
+        try {
+            new SwarmBuilder(mixinService, missingParameterRendering).build();
+        } catch (Exception e) {
+            ex = e;
+        }
+        assertThat(ex).isInstanceOf(MissingAttributesException.class);
+
+    }
+
+    @Test
+    public void getRenderingTest() throws ClientException {
         Swarm swarm = new SwarmBuilder("hostIpTest", "masterIpTest")
-                .addAgentIp("agent1")
-                .addAgentIp("agent2")
+                .addAgentIp(" agent1 ,agent2")
                 .machineName("machineNameTest")
                 .status("active")
                 .title("titleTest")

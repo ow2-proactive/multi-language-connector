@@ -34,13 +34,11 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
@@ -82,6 +80,7 @@ public class Resource extends Entity {
         this.links = new ImmutableList.Builder<Link>().addAll(links).build();
     }
 
+
     public static Set<Attribute> createAttributeSet() {
         Set<Attribute> attributes = Entity.getAttributes();
         attributes.add(Attributes.LINKS);
@@ -97,57 +96,6 @@ public class Resource extends Entity {
         this.getSummary().ifPresent(summary -> resourceRendering.addAttribute(SUMMARY_NAME, summary));
         this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getTitle()));
         return resourceRendering.build();
-    }
-
-    @Getter
-    public static class Builder {
-        protected Optional<String> url;
-        protected Optional<String> title;
-        protected List<Mixin> mixins;
-        protected Optional<String> summary;
-        protected List<Link> links;
-
-        public Builder() {
-            this.url = Optional.empty();
-            this.title = Optional.empty();
-            this.mixins = new ArrayList<>();
-            this.summary = Optional.empty();
-            this.links = new ArrayList<>();
-        }
-
-        public Builder url(String url) {
-            this.url = Optional.ofNullable(url);
-            return this;
-        }
-
-        public Builder title(String title) {
-            this.title = Optional.ofNullable(title);
-            return this;
-        }
-
-        public Builder addMixin(Mixin mixin) {
-            this.mixins.add(mixin);
-            return this;
-        }
-
-        public Builder addMixins(List<Mixin> mixins) {
-            this.mixins.addAll(mixins);
-            return this;
-        }
-
-        public Builder summary(String summary) {
-            this.summary = Optional.ofNullable(summary);
-            return this;
-        }
-
-        public Builder addLink(Link link) {
-            this.links.add(link);
-            return this;
-        }
-
-        public Resource build() {
-            return new Resource(url, Kinds.RESOURCE, title, mixins, summary, links);
-        }
     }
 
 }

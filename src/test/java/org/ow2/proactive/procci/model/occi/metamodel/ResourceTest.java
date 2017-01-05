@@ -2,14 +2,17 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
 import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
 import org.ow2.proactive.procci.service.occi.MixinService;
@@ -19,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by the Activeeon team  on 2/25/16.
@@ -65,7 +69,7 @@ public class ResourceTest {
             Mixin mixin = new MixinBuilder("schemeTest", "termTest")
                     .addAttribute(mixinAttribute)
                     .build();
-            Resource resource = new Resource.Builder()
+            Resource resource = new ResourceBuilder()
                     .url("resource")
                     .summary("summary")
                     .title("title")
@@ -80,5 +84,32 @@ public class ResourceTest {
         } catch (SyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void associateProviderMixinTest() throws IOException, ClientException {
+
+        ResourceBuilder resourceBuilder = new ComputeBuilder().url("url")
+                .architecture(Compute.Architecture.X64)
+                .cores(5)
+                .hostame("hostnameTest")
+                .memory(new Float(3))
+                .state(ComputeState.SUSPENDED)
+                .share(2)
+                .summary("summaryTest")
+                .title("titleTest");
+
+        when(mixinService.getMixinBuilder("title")).thenReturn(Optional.empty());
+        when(mixinService.getMixinBuilder("title2")).thenReturn(
+                Optional.of(new MixinBuilder("scheme", "term")));
+        Map<String, Object> attributes = new HashMap<>();
+        Map<String, String> attribute1 = new HashMap<>();
+        Map<String, String> attribute2 = new HashMap<>();
+        attribute1.put("key", "value");
+        attribute2.put("key2", "value2");
+        attributes.put("title", attribute1);
+        attributes.put("title2", attribute2);
+
+        resourceBuilder.associateProviderMixin(mixinService, attributes);
     }
 }

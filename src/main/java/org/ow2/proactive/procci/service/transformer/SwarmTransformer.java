@@ -5,7 +5,6 @@ import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.Swarm;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
-
 import org.springframework.stereotype.Component;
 
 import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.AGENTS_IP_NAME;
@@ -18,7 +17,7 @@ import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Big
 @Component
 public class SwarmTransformer extends TransformerProvider {
 
-    public TransformerType getType(){
+    public TransformerType getType() {
         return TransformerType.SWARM;
     }
 
@@ -31,15 +30,17 @@ public class SwarmTransformer extends TransformerProvider {
     @Override
     public Model toCloudAutomationModel(InstanceModel instanceModel, String actionType) {
 
-        Swarm swarm = castInstanceModel(Swarm.class,instanceModel);
+        Swarm swarm = castInstanceModel(Swarm.class, instanceModel);
 
         Model.Builder serviceBuilder = new Model.Builder(SWARM_MODEL, actionType)
                 .addVariable(HOST_IP_NAME, swarm.getHostIp())
                 .addVariable(MASTER_IP_NAME, swarm.getMasterIp())
                 .addVariable(AGENTS_IP_NAME, swarm.getAgentsIpAsString());
 
-        swarm.getMachineName().ifPresent(machineName -> serviceBuilder.addVariable(MACHINE_NAME_NAME, machineName));
-        swarm.getNetworkName().ifPresent(networkName -> serviceBuilder.addVariable(NETWORK_NAME_NAME, networkName));
+        swarm.getMachineName().ifPresent(
+                machineName -> serviceBuilder.addVariable(MACHINE_NAME_NAME, machineName));
+        swarm.getNetworkName().ifPresent(
+                networkName -> serviceBuilder.addVariable(NETWORK_NAME_NAME, networkName));
         swarm.getStatus().ifPresent(
                 status -> serviceBuilder.addVariable(PlatformAttributes.STATUS_NAME, status));
         swarm.getTitle().ifPresent(title -> serviceBuilder.addVariable(Attributes.ENTITY_TITLE_NAME, title));

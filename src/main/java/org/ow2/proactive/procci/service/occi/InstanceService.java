@@ -6,11 +6,15 @@ import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+import org.ow2.proactive.procci.model.occi.metamodel.ResourceBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
+import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
+import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.CloudAutomationInstanceClient;
 import org.ow2.proactive.procci.service.transformer.TransformerManager;
@@ -27,6 +31,7 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes
 @Component
 public class InstanceService {
 
+
     @Autowired
     private CloudAutomationInstanceClient cloudAutomationInstanceClient;
 
@@ -37,10 +42,10 @@ public class InstanceService {
     private TransformerManager transformerManager;
 
     /**
-     * Give a compute from the data stored in Cloud-automation-service
+     * Get a resource from the data stored in Cloud-automation-service
      *
-     * @param id is the id of compute
-     * @return a compute
+     * @param id is the id of the entity
+     * @return an entity
      * @throws ClientException
      */
     public Optional<Entity> getEntity(String id) throws ClientException {
@@ -48,11 +53,10 @@ public class InstanceService {
                 .map(model -> new ComputeBuilder(model)
                         .addMixins(pullMixinFromCloudAutomation(id))
                         .build());
-
     }
 
     /**
-     * Give a compute without mixins in order to avoid infinite loop
+     * Get a compute without mixins in order to avoid infinite loop
      *
      * @param id is the id of the compute
      * @return a compute without the object references set
@@ -65,7 +69,7 @@ public class InstanceService {
     }
 
     /**
-     * Create a list of entity rendering  containing the rendering of all entity created
+     * Create a list of entity rendering from all the entities created
      *
      * @return a list of entity rendering
      * @throws ClientException
@@ -84,31 +88,33 @@ public class InstanceService {
                 .collect(Collectors.toList()));
     }
 
+
     /**
-     * Send the service to cloud automation in order to create the instance and update the data
+     * Send the request to cloud automation in order to create the instance and update the data
      *
-     * @param compute is the compute that will be created
+     * @param resource the resource that will be created
      * @return a compute created from the server response
      * @throws ClientException if there is an error in the service sent to the server
      */
-    public Compute create(Compute compute)
+    public Resource create(Resource resource, TransformerType transformerType)
             throws ClientException {
 
         //add the compute reference in all his mixins
-        compute.getMixins().stream().forEach(mixin -> mixin.addEntity(compute));
+        resource.getMixins().stream().forEach(mixin -> mixin.addEntity(resource));
 
         //update the references between mixin and compute
-        mixinService.addEntity(compute);
+        mixinService.addEntity(resource);
 
-        //create a new compute from the response to the compute creation service sent to cloud-automation-service
-        Compute computeResult = new ComputeBuilder(
+
+        //create a resource according to the creation request sent to cloud-automation-service
+        Resource resourceResult = new ResourceBuilder(
                 new Model(cloudAutomationInstanceClient.postRequest(
-                        transformerManager.getTransformerProvider(TransformerType.COMPUTE)
-                                .toCloudAutomationModel(compute,"create").getJson())))
-                .addMixins(pullMixinFromCloudAutomation(compute.getId()))
+                        transformerManager.getTransformerProvider(transformerType)
+                                .toCloudAutomationModel(resource, "create").getJson())))
+                .addMixins(pullMixinFromCloudAutomation(resource.getId()))
                 .build();
 
-        return compute;
+        return resourceResult;
     }
 
     /**
@@ -124,6 +130,17 @@ public class InstanceService {
                 .stream()
                 .map(mixin -> mixinService.getMixinMockByTitle(mixin))
                 .collect(Collectors.toList());
+    }
 
+
+    private Optional<ResourceBuilder> getResourceBuilder(Model model) throws ClientException {
+        switch (model.getServiceModel()) {
+            case BigDataIdentifiers.SWARM_MODEL:
+                return Optional.of(new SwarmBuilder(model));
+            case Identifiers.COMPUTE_MODEL:
+                return Optional.of(new ComputeBuilder(model));
+            default:
+                return Optional.empty();
+        }
     }
 }

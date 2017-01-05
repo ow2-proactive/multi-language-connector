@@ -5,12 +5,12 @@ import org.ow2.proactive.procci.model.occi.metamodel.Type;
 
 public class BigDataAttributes {
 
-    public static final String SWARM_EXTENSION = "pca.plaform.swarm";
+    public static final String SWARM_EXTENSION = "pca.platform.swarm";
 
     public static final String MACHINE_NAME_NAME = SWARM_EXTENSION + ".machineName";
     public static final String HOST_IP_NAME = SWARM_EXTENSION + ".hostIP";
     public static final String MASTER_IP_NAME = SWARM_EXTENSION + ".masterIP";
-    public static final String AGENTS_IP_NAME = SWARM_EXTENSION + ".agentIP";
+    public static final String AGENTS_IP_NAME = SWARM_EXTENSION + ".agentsIP";
     public static final String NETWORK_NAME_NAME = SWARM_EXTENSION + ".networkName";
 
     public static final Attribute MACHINE_NAME = new Attribute.Builder(MACHINE_NAME_NAME)

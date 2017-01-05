@@ -1,7 +1,5 @@
 package org.ow2.proactive.procci.service.transformer;
 
-import java.io.IOException;
-
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
@@ -27,7 +25,7 @@ public class ComputeTransformerTest {
                 .title("titleTest")
                 .build();
 
-        Model model = new ComputeTransformer().toCloudAutomationModel(compute,"create");
+        Model model = new ComputeTransformer().toCloudAutomationModel(compute, "create");
         assertThat(model.getServiceModel()).isEqualTo("occi.infrastructure.compute");
         assertThat(model.getActionType()).isEqualTo("create");
         assertThat(model.getVariables()).containsEntry("occi.compute.cores", "5");

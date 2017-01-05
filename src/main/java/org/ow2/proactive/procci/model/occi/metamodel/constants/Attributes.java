@@ -36,8 +36,7 @@ public class Attributes {
     //occi core attributes
     public static final Attribute TERM = new Attribute.Builder(TERM_NAME).type(Type.OBJECT).mutable(
             true).required(false).description(
-            "Unique identifier of the Category instance " +
-                    "within the categorization scheme.").build();
+            "Unique identifier of the Category instance within the categorization scheme.").build();
     public static final Attribute SCHEME = new Attribute.Builder(SCHEME_NAME).type(Type.OBJECT).mutable(
             true).required(false).description("The categorization scheme.").build();
     public static final Attribute CATEGORY_TITLE = new Attribute.Builder(CATEGORY_TITLE_NAME).type(
@@ -52,13 +51,12 @@ public class Attributes {
                     "provider’s name-space) of the Entity sub-type instance.").build();
     public static final Attribute KIND = new Attribute.Builder(KIND_NAME).type(Type.OBJECT).mutable(
             true).required(false).description(
-            "The Kind instance uniquely identify" +
-                    "ing the particular Entity sub-type of this instance.List of Entity instances associated " +
-                    "with the Mixin instance.").build();
+            "The Kind instance uniquely identifying the particular Entity sub-type of this instance.List " +
+                    "of Entity instances associated with the Mixin instance.").build();
     public static final Attribute MIXINS = new Attribute.Builder(MIXINS_NAME).type(Type.LIST).mutable(
-            false).required(false).description("Mixin instances associated to this en" +
-            "tity instance. Consumers can expect the BigDataAttributes and Actions of the as" +
-            "sociated Mixins to be exposed by the instance.").build();
+            false).required(false).description("Mixin instances associated to this entity instance. " +
+            "Consumers can expect the Attributes and Actions of the associated Mixins to be exposed " +
+            "by the instance.").build();
     public static final Attribute KIND_ACTIONS = new Attribute.Builder(KIND_ACTIONS_NAME).type(
             Type.LIST).mutable(false).required(false).description(
             "List of Action instances defined by the Kind instances").build();
@@ -92,9 +90,8 @@ public class Attributes {
             "with the Mixin instance.").build();
     public static final Attribute LINKS = new Attribute.Builder(LINKS_NAME).type(Type.LIST).mutable(
             false).required(true).description(
-            "List of Link compositions. Being a" +
-                    "composite relation the removal of a Link from the set MUST also remove" +
-                    "the Link instance.").build();
+            "List of Link compositions. Being a composite relation the removal of a Link from the set " +
+                    "MUST also remove the Link instance.").build();
     public static final Attribute SUMMARY = new Attribute.Builder(SUMMARY_NAME).type(Type.OBJECT).mutable(
             false).required(true).description("A summarizing description of the Re" +
             "source instance.").build();
