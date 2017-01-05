@@ -2,7 +2,6 @@ package org.ow2.proactive.procci.model.occi.platform;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -50,28 +49,18 @@ public class Component extends Resource {
         public Builder(Model cloudAutomation) throws SyntaxException {
             super(cloudAutomation);
 
-            Map<String, String> attributes = cloudAutomation.getVariables();
-            Optional<String> status = Optional.ofNullable(attributes.get(PlatformAttributes.STATUS_NAME));
-            if (status.isPresent()) {
-                this.status = Optional.of(Status.getStatusFromString(status.get()));
-            } else {
-                this.status = Optional.empty();
-            }
+            this.status = Optional.ofNullable( cloudAutomation.getVariables().get(PlatformAttributes.STATUS_NAME))
+                    .map(s -> Status.getStatusFromString(s));
         }
 
         public Builder(MixinService mixinService,
                 ResourceRendering rendering) throws ClientException {
             super(mixinService, rendering);
-            Optional<String> stringStatus = Optional.ofNullable(
-                    rendering.getAttributes())
-                    .map(attributes -> attributes.getOrDefault(PlatformAttributes.STATUS_NAME, null))
+
+            this.status =  Optional.ofNullable(rendering.getAttributes())
+                    .map(attributes -> attributes.get(PlatformAttributes.STATUS_NAME))
                     .filter(status -> status instanceof String)
-                    .map(status -> (String) status);
-            if (stringStatus.isPresent()) {
-                this.status = Optional.of(Status.getStatusFromString(stringStatus.get()));
-            } else {
-                this.status = Optional.empty();
-            }
+                    .map(status -> Status.getStatusFromString((String) status));
         }
 
         public Component.Builder status(String status) throws SyntaxException {
