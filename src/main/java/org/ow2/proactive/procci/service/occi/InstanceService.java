@@ -69,7 +69,7 @@ public class InstanceService {
     }
 
     /**
-     * Create a list of entity rendering  containing the rendering of all entities created
+     * Create a list of entity rendering from all the entities created
      *
      * @return a list of entity rendering
      * @throws ClientException
@@ -96,7 +96,6 @@ public class InstanceService {
      * @return a compute created from the server response
      * @throws ClientException if there is an error in the service sent to the server
      */
-
     public Resource create(Resource resource, TransformerType transformerType)
             throws ClientException {
 
@@ -107,7 +106,7 @@ public class InstanceService {
         mixinService.addEntity(resource);
 
 
-        //create a new resource from the response to the compute creation request sent to cloud-automation-service
+        //create a resource according to the creation request sent to cloud-automation-service
         Resource resourceResult = new ResourceBuilder(
                 new Model(cloudAutomationInstanceClient.postRequest(
                         transformerManager.getTransformerProvider(transformerType)
