@@ -42,7 +42,7 @@ public class InstanceService {
     private TransformerManager transformerManager;
 
     /**
-     * Give a resource from the data stored in Cloud-automation-service
+     * Get a resource from the data stored in Cloud-automation-service
      *
      * @param id is the id of the entity
      * @return an entity
@@ -56,7 +56,7 @@ public class InstanceService {
     }
 
     /**
-     * Give a compute without mixins in order to avoid infinite loop
+     * Get a compute without mixins in order to avoid infinite loop
      *
      * @param id is the id of the compute
      * @return a compute without the object references set
