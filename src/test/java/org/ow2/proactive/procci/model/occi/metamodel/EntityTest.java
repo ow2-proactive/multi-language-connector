@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Contextualization;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class EntityTest {
 
     @Test
     public void constructorTest() {
-        Kind k = Kinds.ENTITY;
+        Kind k = MetamodelKinds.ENTITY;
         List<Mixin> mixins = new ArrayList<>();
         Contextualization contextualization = new Contextualization("contextualizationTest",
                 new ArrayList<>(), new ArrayList<>(), "userDataTest");

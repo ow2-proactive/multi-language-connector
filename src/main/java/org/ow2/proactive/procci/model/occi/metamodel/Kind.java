@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 
@@ -123,9 +123,9 @@ public class Kind extends Category {
         }
 
         private void createAttributesSet() {
-            this.attributes.add(Attributes.KIND_ACTIONS);
-            this.attributes.add(Attributes.PARENT);
-            this.attributes.add(Attributes.KIND_ENTITIES);
+            this.attributes.add(MetamodelAttributes.KIND_ACTIONS);
+            this.attributes.add(MetamodelAttributes.PARENT);
+            this.attributes.add(MetamodelAttributes.KIND_ENTITIES);
         }
     }
 }

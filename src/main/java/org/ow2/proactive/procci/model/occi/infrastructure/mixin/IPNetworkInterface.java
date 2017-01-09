@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
@@ -38,8 +38,8 @@ public class IPNetworkInterface extends Mixin {
     public IPNetworkInterface(String address, String gateway, boolean dynamic,
             List<Entity> entities) throws UnknownHostException {
 
-        super(Identifiers.NETWORKINTERFACE_SCHEME, Identifiers.IPNETWORK_INTERFACE,
-                Identifiers.IPNETWORK_INTERFACE,
+        super(InfrastructureIdentifiers.NETWORKINTERFACE_SCHEME, InfrastructureIdentifiers.IPNETWORK_INTERFACE,
+                InfrastructureIdentifiers.IPNETWORK_INTERFACE,
                 createAttributesSet(), new ArrayList<>(), new ArrayList<>(), initApplies(),
                 entities);
 
@@ -56,9 +56,9 @@ public class IPNetworkInterface extends Mixin {
 
     private static Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = new HashSet<>();
-        attributes.add(Attributes.NETWORKINTERFACE_ADDRESS);
-        attributes.add(Attributes.NETWORKINTERFACE_ALLOCATION);
-        attributes.add(Attributes.NETWORKINTERFACE_GATEWAY);
+        attributes.add(InfrastructureAttributes.NETWORKINTERFACE_ADDRESS);
+        attributes.add(InfrastructureAttributes.NETWORKINTERFACE_ALLOCATION);
+        attributes.add(InfrastructureAttributes.NETWORKINTERFACE_GATEWAY);
         return attributes;
     }
 }

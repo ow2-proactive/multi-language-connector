@@ -19,7 +19,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.action.StopCompute;
 import org.ow2.proactive.procci.model.occi.infrastructure.action.SuspendCompute;
 import org.ow2.proactive.procci.model.occi.infrastructure.action.UpNetwork;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 
 /**
  * Created by the Activeeon Team on 3/2/16.
@@ -30,48 +30,48 @@ import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
  */
 public class InfrastructureKinds {
 
-    public static final Kind COMPUTE = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
-            Identifiers.COMPUTE)
+    public static final Kind COMPUTE = new Kind.Builder(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME,
+            InfrastructureIdentifiers.COMPUTE)
             .addAttribute(Compute.getAttributes())
-            .addParent(Kinds.RESOURCE)
+            .addParent(MetamodelKinds.RESOURCE)
             .addAction(RestartCompute.getInstance())
             .addAction(SaveCompute.getInstance())
             .addAction(StartCompute.getInstance())
             .addAction(SuspendCompute.getInstance())
             .addAction(StopCompute.getInstance())
             .build();
-    public static final Kind NETWORK = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
-            Identifiers.NETWORK)
+    public static final Kind NETWORK = new Kind.Builder(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME,
+            InfrastructureIdentifiers.NETWORK)
             .addAttribute(Network.getAttributes())
-            .addParent(Kinds.RESOURCE)
+            .addParent(MetamodelKinds.RESOURCE)
             .addAction(UpNetwork.getInstance())
             .addAction(DownNetwork.getInstance())
             .build();
-    public static final Kind STORAGE = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
-            Identifiers.STORAGE)
+    public static final Kind STORAGE = new Kind.Builder(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME,
+            InfrastructureIdentifiers.STORAGE)
             .addAttribute(Storage.getAttributes())
-            .addParent(Kinds.RESOURCE)
+            .addParent(MetamodelKinds.RESOURCE)
             .addAction(OfflineStorage.getInstance())
             .addAction(OnlineStorage.getInstance())
             .build();
-    public static final Kind NETWORK_INTERFACE = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
-            Identifiers.NETWORK_INTERFACE)
+    public static final Kind NETWORK_INTERFACE = new Kind.Builder(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME,
+            InfrastructureIdentifiers.NETWORK_INTERFACE)
             .addAttribute(NetworkInterface.getAttributes())
-            .addParent(Kinds.LINK)
+            .addParent(MetamodelKinds.LINK)
             .build();
-    public static final Kind STORAGE_LINK = new Kind.Builder(Identifiers.INFRASTRUCTURE_SCHEME,
-            Identifiers.STORAGE_LINK)
+    public static final Kind STORAGE_LINK = new Kind.Builder(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME,
+            InfrastructureIdentifiers.STORAGE_LINK)
             .addAttribute(StorageLink.getAttributes())
-            .addParent(Kinds.LINK)
+            .addParent(MetamodelKinds.LINK)
             .build();
     private static Map<String, Kind> INFRASTRUCTURE_KINDS = new HashMap<>();
 
     static {
-        INFRASTRUCTURE_KINDS.put(Identifiers.COMPUTE, COMPUTE);
-        INFRASTRUCTURE_KINDS.put(Identifiers.NETWORK, NETWORK);
-        INFRASTRUCTURE_KINDS.put(Identifiers.STORAGE, STORAGE);
-        INFRASTRUCTURE_KINDS.put(Identifiers.NETWORK_INTERFACE, NETWORK_INTERFACE);
-        INFRASTRUCTURE_KINDS.put(Identifiers.STORAGE_LINK, STORAGE_LINK);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.COMPUTE, COMPUTE);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.NETWORK, NETWORK);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.STORAGE, STORAGE);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.NETWORK_INTERFACE, NETWORK_INTERFACE);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.STORAGE_LINK, STORAGE_LINK);
     }
 
     public static Optional<Kind> getKind(String term) {

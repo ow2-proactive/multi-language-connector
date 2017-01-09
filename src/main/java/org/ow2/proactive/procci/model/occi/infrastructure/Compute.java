@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
@@ -51,14 +51,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.ARCHITECTURE_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.CORES_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.HOSTNAME_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.MEMORY_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.SHARE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.ARCHITECTURE_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.COMPUTE_STATE_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.CORES_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.HOSTNAME_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.MEMORY_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.SHARE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;
 
 /**
  * This class represents a generic information processing resource
@@ -110,13 +110,13 @@ public class Compute extends Resource {
 
     public static Set<Attribute> getAttributes() {
         Set<Attribute> attributes = Resource.getAttributes();
-        attributes.add(Attributes.ARCHITECTURE);
-        attributes.add(Attributes.CORES);
-        attributes.add(Attributes.HOSTNAME);
-        attributes.add(Attributes.SHARE);
-        attributes.add(Attributes.MEMORY);
-        attributes.add(Attributes.COMPUTE_STATE);
-        attributes.add(Attributes.COMPUTE_MESSAGE);
+        attributes.add(InfrastructureAttributes.ARCHITECTURE);
+        attributes.add(InfrastructureAttributes.CORES);
+        attributes.add(InfrastructureAttributes.HOSTNAME);
+        attributes.add(InfrastructureAttributes.SHARE);
+        attributes.add(InfrastructureAttributes.MEMORY);
+        attributes.add(InfrastructureAttributes.COMPUTE_STATE);
+        attributes.add(InfrastructureAttributes.COMPUTE_MESSAGE);
         return attributes;
     }
 

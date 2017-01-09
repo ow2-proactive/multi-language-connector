@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Contextualization;
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.VMImage;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
@@ -44,8 +44,8 @@ public class MixinService {
 
     public MixinService() {
         providerMixin = new ImmutableMap.Builder<String, Supplier<MixinBuilder>>()
-                .put(Identifiers.VM_IMAGE, (() -> new VMImage.Builder()))
-                .put(Identifiers.CONTEXTUALIZATION, (() -> new Contextualization.Builder()))
+                .put(InfrastructureIdentifiers.VM_IMAGE, (() -> new VMImage.Builder()))
+                .put(InfrastructureIdentifiers.CONTEXTUALIZATION, (() -> new Contextualization.Builder()))
                 .build();
     }
 

@@ -7,7 +7,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure.constants;
 /**
  * Contains all the identifiers for the infrastructure kind : scheme and terms for all resources, links and actions
  */
-public class Identifiers {
+public class InfrastructureIdentifiers {
 
     //schemes
     public static final String COMPUTE_SCHEME = "http://schemas.ogf.org/occi/infrastructure/compute#";

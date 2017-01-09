@@ -42,8 +42,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.exception.SyntaxException;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.LinkLocationRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.LinkRendering;
 import lombok.Getter;
@@ -79,9 +79,9 @@ public class Link extends Entity {
 
     public static Set<Attribute> getAttributes() {
         Set<Attribute> attributes = Entity.getAttributes();
-        attributes.add(Attributes.SOURCE);
-        attributes.add(Attributes.TARGET);
-        attributes.add(Attributes.TARGET_KIND);
+        attributes.add(MetamodelAttributes.SOURCE);
+        attributes.add(MetamodelAttributes.TARGET);
+        attributes.add(MetamodelAttributes.TARGET_KIND);
         return attributes;
     }
 
@@ -137,7 +137,7 @@ public class Link extends Entity {
         }
 
         public Link build() throws SyntaxException {
-            return new Link(url, Kinds.LINK, title, mixins, source, target, targetKind);
+            return new Link(url, MetamodelKinds.LINK, title, mixins, source, target, targetKind);
         }
     }
 

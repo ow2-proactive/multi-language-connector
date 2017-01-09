@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
@@ -23,7 +23,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
 
 /**
  * This class enable the user to get and create instances
@@ -137,7 +137,7 @@ public class InstanceService {
         switch (model.getServiceModel()) {
             case BigDataIdentifiers.SWARM_MODEL:
                 return Optional.of(new SwarmBuilder(model));
-            case Identifiers.COMPUTE_MODEL:
+            case InfrastructureIdentifiers.COMPUTE_MODEL:
                 return Optional.of(new ComputeBuilder(model));
             default:
                 return Optional.empty();

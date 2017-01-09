@@ -9,8 +9,8 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
@@ -41,7 +41,7 @@ public class Contextualization extends Mixin {
      * @param userdata userdata Contextualization data(e.g., script executable) that the client supplies once and only once. It cannot be updated
      */
     public Contextualization(String title, List<Mixin> depends, List<Entity> entities, String userdata) {
-        super(Identifiers.COMPUTE_SCHEME, Identifiers.CONTEXTUALIZATION, title,
+        super(InfrastructureIdentifiers.COMPUTE_SCHEME, InfrastructureIdentifiers.CONTEXTUALIZATION, title,
                 createAttributeSet(), new ArrayList<>(), depends, setApplies(),
                 entities);
         this.userdata = userdata;
@@ -55,7 +55,7 @@ public class Contextualization extends Mixin {
 
     private static Set<Attribute> createAttributeSet() {
         Set<Attribute> attributes = new HashSet<>();
-        attributes.add(Attributes.USERDATA);
+        attributes.add(InfrastructureAttributes.USERDATA);
         return attributes;
     }
 
@@ -66,7 +66,7 @@ public class Contextualization extends Mixin {
 
     @Override
     public Model.Builder toCloudAutomationModel(Model.Builder cloudAutomation) {
-        cloudAutomation.addVariable(Attributes.USERDATA_NAME, this.userdata);
+        cloudAutomation.addVariable(InfrastructureAttributes.USERDATA_NAME, this.userdata);
         return cloudAutomation;
     }
 
@@ -75,15 +75,15 @@ public class Contextualization extends Mixin {
         private String userdata;
 
         public Builder() {
-            super(Identifiers.COMPUTE_SCHEME, Identifiers.CONTEXTUALIZATION);
+            super(InfrastructureIdentifiers.COMPUTE_SCHEME, InfrastructureIdentifiers.CONTEXTUALIZATION);
         }
 
         @Override
         public Contextualization.Builder attributes(Map attributesMap) throws ClientException {
             super.attributes(attributesMap);
-            this.userdata = readAttributeAsString(attributesMap, Attributes.USERDATA_NAME)
-                    .orElseThrow(() -> new MissingAttributesException(Attributes.USERDATA_NAME,
-                            Attributes.USERDATA.getName()));
+            this.userdata = readAttributeAsString(attributesMap, InfrastructureAttributes.USERDATA_NAME)
+                    .orElseThrow(() -> new MissingAttributesException(InfrastructureAttributes.USERDATA_NAME,
+                            InfrastructureAttributes.USERDATA.getName()));
             return this;
         }
 

@@ -13,7 +13,7 @@ import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.service.occi.InstanceService;
@@ -141,7 +141,7 @@ public class MixinBuilder {
     }
 
     public MixinBuilder attributes(Map attributes) throws ClientException {
-        this.title = readAttributeAsString(attributes, Attributes.CATEGORY_TITLE_NAME)
+        this.title = readAttributeAsString(attributes, MetamodelAttributes.CATEGORY_TITLE_NAME)
                 .orElse(this.title);
         return this;
     }

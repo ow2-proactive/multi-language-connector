@@ -41,7 +41,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.exception.SyntaxException;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
@@ -92,10 +92,10 @@ public class NetworkInterface extends Link {
 
     private static Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = Link.getAttributes();
-        attributes.add(Attributes.INTERFACE);
-        attributes.add(Attributes.MAC);
-        attributes.add(Attributes.NETWORKINTERFACE_STATE);
-        attributes.add(Attributes.NETWORKINTERFACE_MESSAGE);
+        attributes.add(InfrastructureAttributes.INTERFACE);
+        attributes.add(InfrastructureAttributes.MAC);
+        attributes.add(InfrastructureAttributes.NETWORKINTERFACE_STATE);
+        attributes.add(InfrastructureAttributes.NETWORKINTERFACE_MESSAGE);
         return attributes;
     }
 

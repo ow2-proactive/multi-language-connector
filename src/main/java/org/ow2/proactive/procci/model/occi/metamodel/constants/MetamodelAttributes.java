@@ -10,7 +10,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Type;
 /**
  * Contains all the attributes of the meta-model
  */
-public class Attributes {
+public class MetamodelAttributes {
 
     //occi  core variables
     public static final String TERM_NAME = "occi.category.term";
@@ -55,7 +55,7 @@ public class Attributes {
                     "of Entity instances associated with the Mixin instance.").build();
     public static final Attribute MIXINS = new Attribute.Builder(MIXINS_NAME).type(Type.LIST).mutable(
             false).required(false).description("Mixin instances associated to this entity instance. " +
-            "Consumers can expect the Attributes and Actions of the associated Mixins to be exposed " +
+            "Consumers can expect the InfrastructureAttributes and Actions of the associated Mixins to be exposed " +
             "by the instance.").build();
     public static final Attribute KIND_ACTIONS = new Attribute.Builder(KIND_ACTIONS_NAME).type(
             Type.LIST).mutable(false).required(false).description(

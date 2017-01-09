@@ -7,7 +7,7 @@ package org.ow2.proactive.procci.model.occi.metamodel.constants;
 /**
  * Contains the term and scheme of the meta-model
  */
-public class Identifiers {
+public class MetamodelIdentifiers {
 
     //scheme
     public final static String CORE_SCHEME = "http://schemas.ogf.org/occi/core#";
