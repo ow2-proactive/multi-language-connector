@@ -12,7 +12,7 @@ import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.Big
 import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MACHINE_NAME_NAME;
 import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MASTER_IP_NAME;
 import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.NETWORK_NAME_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers.SWARM_MODEL;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers.SWARM_SCHEME;
 
 @Component
 public class SwarmTransformer extends TransformerProvider {
@@ -32,7 +32,7 @@ public class SwarmTransformer extends TransformerProvider {
 
         Swarm swarm = castInstanceModel(Swarm.class, instanceModel);
 
-        Model.Builder serviceBuilder = new Model.Builder(SWARM_MODEL, actionType)
+        Model.Builder serviceBuilder = new Model.Builder(SWARM_SCHEME, actionType)
                 .addVariable(HOST_IP_NAME, swarm.getHostIp())
                 .addVariable(MASTER_IP_NAME, swarm.getMasterIp())
                 .addVariable(AGENTS_IP_NAME, swarm.getAgentsIpAsString());

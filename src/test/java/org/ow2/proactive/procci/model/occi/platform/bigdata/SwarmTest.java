@@ -69,7 +69,7 @@ public class SwarmTest {
 
     @Test
     public void cloudAutomationModelConstructorTest() throws ClientException {
-        Model model = new Model.Builder(BigDataIdentifiers.SWARM_MODEL, "create")
+        Model model = new Model.Builder(BigDataIdentifiers.SWARM_SCHEME, "create")
                 .addVariable(BigDataAttributes.AGENTS_IP_NAME, "agentIp1, agentIp2")
                 .addVariable(BigDataAttributes.HOST_IP_NAME, "hostIpTest3")
                 .addVariable(BigDataAttributes.MASTER_IP_NAME, "masterIpTest3")

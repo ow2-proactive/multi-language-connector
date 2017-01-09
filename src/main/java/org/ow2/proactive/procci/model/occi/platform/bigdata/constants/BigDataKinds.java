@@ -7,7 +7,7 @@ import static org.ow2.proactive.procci.model.occi.platform.constants.PlatformKin
 
 public class BigDataKinds {
 
-    public static final Kind SWARM = new Kind.Builder(BigDataIdentifiers.SWARM_SCHEME,
+    public static final Kind SWARM = new Kind.Builder(BigDataIdentifiers.BIGDATA_SCHEME,
             BigDataIdentifiers.SWARM_TERM)
             .addAttribute(Swarm.createAttributeSet())
             .addParent(COMPONENT)

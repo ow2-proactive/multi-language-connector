@@ -5,11 +5,10 @@ public class BigDataIdentifiers {
     public static final String AGENT_IP_SEPARATOR = ",";
 
     //schemes
-    public static final String SWARM_SCHEME = "http://schema.activeeon.org/occi/platform#";
+    public static final String BIGDATA_SCHEME = "http://schema.activeeon.org/occi/platform/bigdata#";
+    public static final String SWARM_SCHEME = "http://schema.activeeon.org/occi/platform/bigdata/swarm#";
 
     //terms
     public static final String SWARM_TERM = "swarm";
 
-    //proactive cloud automation models
-    public static final String SWARM_MODEL = "pca.platform.swarm";
 }

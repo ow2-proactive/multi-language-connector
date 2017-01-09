@@ -50,8 +50,7 @@ public class InstanceService {
      */
     public Optional<Entity> getEntity(String id) throws ClientException {
         return cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME, ConvertUtils.formatURL(id))
-                .map(model -> new ComputeBuilder(model)
-                        .addMixins(pullMixinFromCloudAutomation(id))
+                .map(model -> getResourceBuilder(model).addMixins(pullMixinFromCloudAutomation(id))
                         .build());
     }
 
@@ -133,14 +132,14 @@ public class InstanceService {
     }
 
 
-    private Optional<ResourceBuilder> getResourceBuilder(Model model) throws ClientException {
+    private ResourceBuilder getResourceBuilder(Model model) throws ClientException {
         switch (model.getServiceModel()) {
-            case BigDataIdentifiers.SWARM_MODEL:
-                return Optional.of(new SwarmBuilder(model));
-            case InfrastructureIdentifiers.COMPUTE_MODEL:
-                return Optional.of(new ComputeBuilder(model));
+            case BigDataIdentifiers.SWARM_SCHEME:
+                return new SwarmBuilder(model);
+            case InfrastructureIdentifiers.COMPUTE_SCHEME:
+                return new ComputeBuilder(model);
             default:
-                return Optional.empty();
+                return new ResourceBuilder(model);
         }
     }
 }
