@@ -53,4 +53,7 @@ public class InfrastructureIdentifiers {
     public static final String CONTEXTUALIZATION = "user_data";
     public static final String VM_IMAGE = "vmimage";
 
+    //model
+    public static final String COMPUTE_MODEL = "occi.infrastructure.compute";
+
 }

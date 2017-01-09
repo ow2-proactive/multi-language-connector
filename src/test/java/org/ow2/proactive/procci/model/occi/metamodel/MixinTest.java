@@ -10,6 +10,7 @@ import java.util.Map;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
@@ -245,6 +246,6 @@ public class MixinTest {
         assertThat(rendering.getActions()).isEmpty();
         assertThat(rendering.getAttributes()).containsEntry("attributeName", attribute.getRendering());
         assertThat(rendering.getDepends()).containsExactly(dependMixin.getTerm());
-        assertThat(rendering.getApplies()).containsExactly(InfrastructureKinds.COMPUTE.getTerm());
+        assertThat(rendering.getApplies()).containsExactly(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.COMPUTE);
     }
 }

@@ -5,8 +5,10 @@ import static org.mockito.Mockito.when;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 
+import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -14,9 +16,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelIdentifiers;
+import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.Swarm;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
@@ -60,7 +65,7 @@ public class InstanceServiceTest {
         assertThat(entity.get()).isInstanceOf(Resource.class);
 
         String id2 = "idTest2";
-        Model model2 = new Model.Builder("http://schemas.ogf.org/occi/infrastructure/compute#","actionTest")
+        Model model2 = new Model.Builder("http://schemas.ogf.org/occi/infrastructure#compute","actionTest")
                 .addVariable(MetamodelAttributes.ID_NAME,id)
                 .build();
 
@@ -97,7 +102,7 @@ public class InstanceServiceTest {
         assertThat(entity.get().getId()).matches(id);
 
         String id2 = "idTest2";
-        Model model2 = new Model.Builder(BigDataIdentifiers.SWARM_SCHEME,"actionTest")
+        Model model2 = new Model.Builder(BigDataIdentifiers.BIGDATA_SCHEME+BigDataIdentifiers.SWARM_TERM,"actionTest")
                 .addVariable(MetamodelAttributes.ID_NAME,id)
                 .addVariable(BigDataAttributes.HOST_IP_NAME,"hostTest")
                 .addVariable(BigDataAttributes.MASTER_IP_NAME,"masterTest")
@@ -115,5 +120,46 @@ public class InstanceServiceTest {
         assertThat(entity2.get().getId()).matches(id);
         assertThat(entity2.get()).isInstanceOf(Resource.class);
         assertThat(entity2.get()).isInstanceOf(Swarm.class);
+    }
+
+    @Test
+    public void getInstancesRenderingTest(){
+        Model compute = new Model
+                .Builder(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.COMPUTE,"action")
+                .addVariable(MetamodelAttributes.ID_NAME,"id1")
+                .build();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id1",compute.getJson());
+
+        when(cloudAutomationInstanceClient.getRequest())
+                .thenReturn(jsonObject);
+
+        when(mixinService.getEntityMixinNames("id1"))
+                .thenReturn(new HashSet<>());
+
+        List<EntityRendering> renderings = instanceService.getInstancesRendering();
+
+
+        assertThat(renderings.get(0).getKind())
+                .matches(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.COMPUTE);
+
+        Model resource = new Model.Builder("test","action")
+                .build();
+
+        jsonObject = new JSONObject();
+        jsonObject.put("id2",resource.getJson());
+
+        when(cloudAutomationInstanceClient.getRequest())
+                .thenReturn(jsonObject);
+
+        when(mixinService.getEntityMixinNames("id2"))
+                .thenReturn(new HashSet<>());
+
+        renderings = instanceService.getInstancesRendering();
+
+        assertThat(renderings.get(0).getKind())
+                .matches(MetamodelIdentifiers.CORE_SCHEME+MetamodelIdentifiers.RESOURCE_TERM);
+
     }
 }

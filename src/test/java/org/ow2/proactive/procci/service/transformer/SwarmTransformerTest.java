@@ -24,7 +24,7 @@ public class SwarmTransformerTest {
                 .build();
 
         Model model = new SwarmTransformer().toCloudAutomationModel(swarm, "create");
-        assertThat(model.getServiceModel()).matches(BigDataIdentifiers.SWARM_SCHEME);
+        assertThat(model.getServiceModel()).matches(BigDataIdentifiers.SWARM_MODEL);
         assertThat(model.getActionType()).matches("create");
         assertThat(model.getVariables().get(BigDataAttributes.HOST_IP_NAME)).matches("hostIpTest");
         assertThat(model.getVariables().get(BigDataAttributes.MASTER_IP_NAME)).matches("masterIpTest");

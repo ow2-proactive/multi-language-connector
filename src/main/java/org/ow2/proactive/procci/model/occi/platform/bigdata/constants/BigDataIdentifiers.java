@@ -11,4 +11,7 @@ public class BigDataIdentifiers {
     //terms
     public static final String SWARM_TERM = "swarm";
 
+    //model
+    public static final String SWARM_MODEL = "pca.platform.swarm";
+
 }

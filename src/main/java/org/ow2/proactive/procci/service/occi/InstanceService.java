@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
@@ -79,11 +81,11 @@ public class InstanceService {
         return ((List) resources.keySet()
                 .stream()
                 .map(key -> new Model((JSONObject) resources.get(key)))
-                .map(model -> new ComputeBuilder((Model) model))
-                .map(computeBuilder -> ((ComputeBuilder) computeBuilder)
-                        .addMixins(pullMixinFromCloudAutomation(((ComputeBuilder) computeBuilder).getUrl()
+                .map(model -> getResourceBuilder((Model) model))
+                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder)
+                        .addMixins(pullMixinFromCloudAutomation(((ResourceBuilder) resourceBuilder).getUrl()
                                 .orElse(""))))
-                .map(computeBuilder -> ((ComputeBuilder) computeBuilder).build().getRendering())
+                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder).build().getRendering())
                 .collect(Collectors.toList()));
     }
 
@@ -104,9 +106,8 @@ public class InstanceService {
         //update the references between mixin and compute
         mixinService.addEntity(resource);
 
-
         //create a resource according to the creation request sent to cloud-automation-service
-        Resource resourceResult = new ResourceBuilder(
+        Resource resourceResult = getResourceBuilder(
                 new Model(cloudAutomationInstanceClient.postRequest(
                         transformerManager.getTransformerProvider(transformerType)
                                 .toCloudAutomationModel(resource, "create").getJson())))
@@ -133,10 +134,11 @@ public class InstanceService {
 
 
     private ResourceBuilder getResourceBuilder(Model model) throws ClientException {
+
         switch (model.getServiceModel()) {
-            case BigDataIdentifiers.SWARM_SCHEME:
+            case BigDataIdentifiers.BIGDATA_SCHEME+BigDataIdentifiers.SWARM_TERM:
                 return new SwarmBuilder(model);
-            case InfrastructureIdentifiers.COMPUTE_SCHEME:
+            case InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.COMPUTE:
                 return new ComputeBuilder(model);
             default:
                 return new ResourceBuilder(model);
