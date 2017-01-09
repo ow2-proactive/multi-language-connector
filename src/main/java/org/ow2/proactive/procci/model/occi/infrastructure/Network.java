@@ -85,8 +85,8 @@ public class Network extends Resource {
         this.label = label;
     }
 
-    public static Set<Attribute> createAttributeSet() {
-        Set<Attribute> attributes = Resource.createAttributeSet();
+    public static Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = Resource.getAttributes();
         attributes.add(Attributes.VLAN);
         attributes.add(Attributes.LABEL);
         attributes.add(Attributes.NETWORK_STATE);

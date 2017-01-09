@@ -81,7 +81,7 @@ public class Resource extends Entity {
     }
 
 
-    public static Set<Attribute> createAttributeSet() {
+    public static Set<Attribute> getAttributes() {
         Set<Attribute> attributes = Entity.getAttributes();
         attributes.add(Attributes.LINKS);
         attributes.add(Attributes.SUMMARY);

@@ -79,15 +79,13 @@ public class Storage extends Resource {
             Optional<String> title, List<Mixin> mixins,
             Optional<String> summary, List<Link> links, Optional<Float> size, StorageState state) {
 
-        super(url, kind,
-                title, mixins, summary, links);
-        createAttributesSet();
+        super(url, kind, title, mixins, summary, links);
         this.size = size;
         this.state = state;
     }
 
-    private static Set<Attribute> createAttributesSet() {
-        Set<Attribute> attributes = Resource.createAttributeSet();
+    public static Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = Resource.getAttributes();
         attributes.add(Attributes.SIZE);
         attributes.add(Attributes.STORAGE_STATE);
         attributes.add(Attributes.STORAGE_MESSAGE);

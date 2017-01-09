@@ -19,7 +19,7 @@ public class Kinds {
             .build();
 
     public static final Kind RESOURCE = new Kind.Builder(Identifiers.CORE_SCHEME, Identifiers.RESOURCE_TERM)
-            .addAttribute(Resource.createAttributeSet())
+            .addAttribute(Resource.getAttributes())
             .addParent(ENTITY)
             .build();
 
