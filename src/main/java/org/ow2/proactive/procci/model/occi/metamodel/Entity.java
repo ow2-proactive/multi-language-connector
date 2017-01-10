@@ -53,7 +53,7 @@ import lombok.ToString;
  * Entity is the abstract type that will gather the information contained in Resource and Link
  */
 @ToString
-@EqualsAndHashCode(of = { "id" }, callSuper = true)
+@EqualsAndHashCode(of = { "id" }, callSuper = false)
 @Getter
 public abstract class Entity extends InstanceModel {
     private final String id;

@@ -33,7 +33,6 @@ import static org.ow2.proactive.procci.model.occi.platform.constants.PlatformAtt
 
 @Getter
 @ToString
-@EqualsAndHashCode(callSuper = true)
 public class Swarm extends Component {
 
     private final String hostIp;

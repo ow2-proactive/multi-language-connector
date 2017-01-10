@@ -1,12 +1,15 @@
 package org.ow2.proactive.procci.service.occi;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.json.simple.JSONObject;
 import org.junit.Before;
@@ -16,8 +19,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
+import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.mixin.VMImage;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
+import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelIdentifiers;
@@ -27,6 +33,9 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAtt
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.CloudAutomationInstanceClient;
+import org.ow2.proactive.procci.service.transformer.ComputeTransformer;
+import org.ow2.proactive.procci.service.transformer.TransformerManager;
+import org.ow2.proactive.procci.service.transformer.TransformerType;
 
 public class InstanceServiceTest {
 
@@ -38,6 +47,9 @@ public class InstanceServiceTest {
 
     @Mock
     private MixinService mixinService;
+
+    @Mock
+    private TransformerManager transformerManager;
 
     @Before
     public void setUp() {
@@ -65,7 +77,7 @@ public class InstanceServiceTest {
         assertThat(entity.get()).isInstanceOf(Resource.class);
 
         String id2 = "idTest2";
-        Model model2 = new Model.Builder("http://schemas.ogf.org/occi/infrastructure#compute","actionTest")
+        Model model2 = new Model.Builder("occi.infrastructure.compute","actionTest")
                 .addVariable(MetamodelAttributes.ID_NAME,id)
                 .build();
 
@@ -102,7 +114,7 @@ public class InstanceServiceTest {
         assertThat(entity.get().getId()).matches(id);
 
         String id2 = "idTest2";
-        Model model2 = new Model.Builder(BigDataIdentifiers.BIGDATA_SCHEME+BigDataIdentifiers.SWARM_TERM,"actionTest")
+        Model model2 = new Model.Builder(BigDataIdentifiers.SWARM_MODEL,"actionTest")
                 .addVariable(MetamodelAttributes.ID_NAME,id)
                 .addVariable(BigDataAttributes.HOST_IP_NAME,"hostTest")
                 .addVariable(BigDataAttributes.MASTER_IP_NAME,"masterTest")
@@ -125,7 +137,7 @@ public class InstanceServiceTest {
     @Test
     public void getInstancesRenderingTest(){
         Model compute = new Model
-                .Builder(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.COMPUTE,"action")
+                .Builder(InfrastructureIdentifiers.COMPUTE_MODEL,"action")
                 .addVariable(MetamodelAttributes.ID_NAME,"id1")
                 .build();
 
@@ -160,6 +172,54 @@ public class InstanceServiceTest {
 
         assertThat(renderings.get(0).getKind())
                 .matches(MetamodelIdentifiers.CORE_SCHEME+MetamodelIdentifiers.RESOURCE_TERM);
-
     }
+
+    @Test
+    public void createTest(){
+        Mixin mixin = new VMImage("vmimageTest",new ArrayList<>(),new ArrayList<>(),"imageTest");
+        Mixin mockedMixin = new VMImage("vmimageTest2",new ArrayList<>(),new ArrayList<>(),"imageTest2");
+
+        Compute compute = new ComputeBuilder().cores("2").title("titleTest").addMixin(mixin).build();
+        Set<String> mixinSet = new HashSet<>(1);
+        mixinSet.add(mixin.getTitle());
+
+        //get the transformer
+        when(transformerManager.getTransformerProvider(TransformerType.COMPUTE))
+                .thenReturn(new ComputeTransformer());
+
+        //in -> the compute in json, out -> the response in json
+        when(cloudAutomationInstanceClient.postRequest(new ComputeTransformer()
+                .toCloudAutomationModel(compute,"create")
+                .getJson())
+        ).thenReturn(new ComputeTransformer()
+                .toCloudAutomationModel(compute,"create")
+                .getJson()
+        );
+
+        //list the mixin name
+        when(mixinService.getEntityMixinNames(compute.getId()))
+                .thenReturn(mixinSet);
+
+        //get the mixin from its title
+        when(mixinService.getMixinMockByTitle(mixin.getTitle()))
+                .thenReturn(mockedMixin);
+
+        assertThat(compute.getMixins()).containsExactly(mixin);
+        assertThat(mixin.getEntities()).containsExactly(compute);
+
+        Resource resource = instanceService.create(compute,TransformerType.COMPUTE);
+
+        verify(mixinService).addEntity(compute);
+        verify(mixinService).getEntityMixinNames(compute.getId());
+
+        assertThat(resource).isInstanceOf(Compute.class);
+        assertThat(mockedMixin.getEntities().get(0)).isEqualTo(compute);
+        assertThat(resource.getMixins()).containsExactly(mockedMixin);
+
+        Compute result = (Compute) resource;
+
+        assertThat(result.getCores().get()).isEqualTo(new Integer(2));
+        assertThat(result.getTitle().get()).matches("titleTest");
+    }
+
 }

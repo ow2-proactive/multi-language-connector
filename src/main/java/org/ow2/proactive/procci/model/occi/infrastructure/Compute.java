@@ -64,7 +64,6 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelA
  * This class represents a generic information processing resource
  */
 @ToString
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Getter
 public class Compute extends Resource {

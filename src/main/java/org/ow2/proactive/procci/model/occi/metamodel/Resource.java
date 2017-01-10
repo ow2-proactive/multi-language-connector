@@ -55,7 +55,6 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelA
  */
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(callSuper = true)
 @Getter
 public class Resource extends Entity {
 
