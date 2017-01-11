@@ -67,11 +67,11 @@ public class InfrastructureKinds {
     private static Map<String, Kind> INFRASTRUCTURE_KINDS = new HashMap<>();
 
     static {
-        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.COMPUTE, COMPUTE);
-        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.NETWORK, NETWORK);
-        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.STORAGE, STORAGE);
-        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.NETWORK_INTERFACE, NETWORK_INTERFACE);
-        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.STORAGE_LINK, STORAGE_LINK);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.COMPUTE, COMPUTE);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.NETWORK, NETWORK);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.STORAGE, STORAGE);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.NETWORK_INTERFACE, NETWORK_INTERFACE);
+        INFRASTRUCTURE_KINDS.put(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.STORAGE_LINK, STORAGE_LINK);
     }
 
     public static Optional<Kind> getKind(String term) {

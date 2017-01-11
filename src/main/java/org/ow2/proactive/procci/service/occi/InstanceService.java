@@ -100,9 +100,6 @@ public class InstanceService {
     public Resource create(Resource resource, TransformerType transformerType)
             throws ClientException {
 
-        //add the compute reference in all his mixins
-        resource.getMixins().stream().forEach(mixin -> mixin.addEntity(resource));
-
         //update the references between mixin and compute
         mixinService.addEntity(resource);
 
@@ -136,9 +133,9 @@ public class InstanceService {
     private ResourceBuilder getResourceBuilder(Model model) throws ClientException {
 
         switch (model.getServiceModel()) {
-            case BigDataIdentifiers.BIGDATA_SCHEME+BigDataIdentifiers.SWARM_TERM:
+            case BigDataIdentifiers.SWARM_MODEL:
                 return new SwarmBuilder(model);
-            case InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.COMPUTE:
+            case InfrastructureIdentifiers.COMPUTE_MODEL:
                 return new ComputeBuilder(model);
             default:
                 return new ResourceBuilder(model);

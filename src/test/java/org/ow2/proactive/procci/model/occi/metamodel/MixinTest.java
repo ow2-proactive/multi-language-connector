@@ -174,7 +174,7 @@ public class MixinTest {
         List actions = new ArrayList();
         actions.add("actionTest");
         List applies = new ArrayList();
-        applies.add("compute");
+        applies.add(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+"compute");
         Map attributes = new HashMap();
         AttributeRendering attributeRendering = new AttributeRendering();
         attributes.put("attributesName", attributeRendering);
