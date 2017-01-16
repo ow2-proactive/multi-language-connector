@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
@@ -85,12 +85,12 @@ public class Network extends Resource {
         this.label = label;
     }
 
-    public static Set<Attribute> createAttributeSet() {
-        Set<Attribute> attributes = Resource.createAttributeSet();
-        attributes.add(Attributes.VLAN);
-        attributes.add(Attributes.LABEL);
-        attributes.add(Attributes.NETWORK_STATE);
-        attributes.add(Attributes.NETWORK_MESSAGE);
+    public static Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = Resource.getAttributes();
+        attributes.add(InfrastructureAttributes.VLAN);
+        attributes.add(InfrastructureAttributes.LABEL);
+        attributes.add(InfrastructureAttributes.NETWORK_STATE);
+        attributes.add(InfrastructureAttributes.NETWORK_MESSAGE);
         return attributes;
     }
 

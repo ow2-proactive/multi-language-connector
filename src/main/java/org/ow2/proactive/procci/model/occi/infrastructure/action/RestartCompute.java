@@ -2,7 +2,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure.action;
 
 import java.util.HashSet;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 
 /**
@@ -17,7 +17,7 @@ public final class RestartCompute extends ComputeAction {
     private static RestartCompute RESTART_COMPUTE = new RestartCompute();
 
     private RestartCompute() {
-        super(Identifiers.COMPUTE_ACTION_SCHEME, Identifiers.RESTART, Identifiers.RESTART,
+        super(InfrastructureIdentifiers.COMPUTE_ACTION_SCHEME, InfrastructureIdentifiers.RESTART, InfrastructureIdentifiers.RESTART,
                 new HashSet<Attribute>());
     }
 

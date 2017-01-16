@@ -2,7 +2,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure.action;
 
 import java.util.HashSet;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 
 /**
@@ -17,7 +17,7 @@ public final class SuspendCompute extends ComputeAction {
     private static SuspendCompute SUSPEND_COMPUTE = new SuspendCompute();
 
     private SuspendCompute() {
-        super(Identifiers.COMPUTE_ACTION_SCHEME, Identifiers.SUSPEND, Identifiers.SUSPEND,
+        super(InfrastructureIdentifiers.COMPUTE_ACTION_SCHEME, InfrastructureIdentifiers.SUSPEND, InfrastructureIdentifiers.SUSPEND,
                 new HashSet<Attribute>());
     }
 

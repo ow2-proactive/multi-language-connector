@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
@@ -33,7 +33,7 @@ public class Credentials extends Mixin {
      * @param entities  is the set of resource instances
      */
     public Credentials(String publickey, List<Entity> entities) {
-        super(Identifiers.CREDENTIALS_SCHEME, Identifiers.CREDENTIALS, Identifiers.CREDENTIALS,
+        super(InfrastructureIdentifiers.CREDENTIALS_SCHEME, InfrastructureIdentifiers.CREDENTIALS, InfrastructureIdentifiers.CREDENTIALS,
                 createAttributesSet(), new ArrayList<>(), new ArrayList<>(), setApplies(),
                 entities);
         this.publickey = publickey;
@@ -47,7 +47,7 @@ public class Credentials extends Mixin {
 
     private static Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = new HashSet<>();
-        attributes.add(Attributes.SSH_PUBLICKEY);
+        attributes.add(InfrastructureAttributes.SSH_PUBLICKEY);
         return attributes;
     }
 

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.occi.infrastructure.action.StartCompute;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -31,7 +31,7 @@ public class KindTest {
         Set<Attribute> attributes = new HashSet<>();
         attributes.add(a);
 
-        Kind parent = Kinds.RESOURCE;
+        Kind parent = MetamodelKinds.RESOURCE;
         Kind k = new Kind.Builder(uri, "compute")
                 .addAttribute(attributes)
                 .addAction(StartCompute.getInstance())

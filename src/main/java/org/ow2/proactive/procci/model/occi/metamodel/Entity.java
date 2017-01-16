@@ -42,7 +42,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.ow2.proactive.procci.model.InstanceModel;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import lombok.EqualsAndHashCode;
@@ -53,7 +53,7 @@ import lombok.ToString;
  * Entity is the abstract type that will gather the information contained in Resource and Link
  */
 @ToString
-@EqualsAndHashCode(of = { "id" }, callSuper = true)
+@EqualsAndHashCode(of = { "id" }, callSuper = false)
 @Getter
 public abstract class Entity extends InstanceModel {
     private final String id;
@@ -99,10 +99,10 @@ public abstract class Entity extends InstanceModel {
 
     public static Set<Attribute> getAttributes() {
         Set<Attribute> attributes = new HashSet<>();
-        attributes.add(Attributes.ID);
-        attributes.add(Attributes.ENTITY_TITLE);
-        attributes.add(Attributes.KIND);
-        attributes.add(Attributes.MIXINS);
+        attributes.add(MetamodelAttributes.ID);
+        attributes.add(MetamodelAttributes.ENTITY_TITLE);
+        attributes.add(MetamodelAttributes.KIND);
+        attributes.add(MetamodelAttributes.MIXINS);
         return attributes;
     }
 

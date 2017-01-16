@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
@@ -119,8 +120,8 @@ public class ComputeTest {
 
         assertThat(compute.getRenderingId()).matches("urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29");
         assertThat(compute.getId()).matches("urn:uuid:996ad860-2a9a-504f-886-aeafd0b2ae29");
-        assertThat(compute.getKind().getTitle()).matches(
-                "compute");
+        assertThat(compute.getKind().getTitle())
+                .matches(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+InfrastructureIdentifiers.COMPUTE);
         assertThat(compute.getCores().get()).isEqualTo(new Integer(2));
         assertThat(compute.getMemory().get()).isWithin(new Float(0.001)).of(new Float(4.0));
         assertThat(compute.getHostname().get()).matches("80.200.35.140");
@@ -163,7 +164,7 @@ public class ComputeTest {
                 Optional.of(new MixinBuilder("schemeMixinTest", "termMixinTest")));
         ResourceRendering rendering = computeBuilder.build().getRendering();
         assertThat(rendering.getId()).matches("url");
-        assertThat(rendering.getKind()).matches("compute");
+        assertThat(rendering.getKind()).matches(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME+ InfrastructureIdentifiers.COMPUTE);
         assertThat(rendering.getAttributes()).containsEntry("occi.compute.hostname", "hostnameTest");
         assertThat(rendering.getAttributes()).containsEntry("occi.compute.memory", new Float(3));
         assertThat(rendering.getAttributes()).containsEntry("occi.compute.cores", new Integer(5));

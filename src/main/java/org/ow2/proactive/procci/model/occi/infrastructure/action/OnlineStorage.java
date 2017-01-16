@@ -2,7 +2,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure.action;
 
 import java.util.HashSet;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 
 /**
@@ -17,7 +17,7 @@ public final class OnlineStorage extends StorageAction {
     private static OnlineStorage ONLINE_STORAGE = new OnlineStorage();
 
     private OnlineStorage() {
-        super(Identifiers.STORAGE_ACTION_SCHEME, Identifiers.ONLINE, Identifiers.ONLINE,
+        super(InfrastructureIdentifiers.STORAGE_ACTION_SCHEME, InfrastructureIdentifiers.ONLINE, InfrastructureIdentifiers.ONLINE,
                 new HashSet<Attribute>());
     }
 

@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
@@ -47,15 +47,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;
 
 /**
  * Resource describes a concrete resource that can be inspected or manipulated
  */
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(callSuper = true)
 @Getter
 public class Resource extends Entity {
 
@@ -81,10 +80,10 @@ public class Resource extends Entity {
     }
 
 
-    public static Set<Attribute> createAttributeSet() {
+    public static Set<Attribute> getAttributes() {
         Set<Attribute> attributes = Entity.getAttributes();
-        attributes.add(Attributes.LINKS);
-        attributes.add(Attributes.SUMMARY);
+        attributes.add(MetamodelAttributes.LINKS);
+        attributes.add(MetamodelAttributes.SUMMARY);
         return attributes;
     }
 

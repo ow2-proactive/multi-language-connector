@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.occi.platform.Status;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes;
@@ -69,13 +69,13 @@ public class SwarmTest {
 
     @Test
     public void cloudAutomationModelConstructorTest() throws ClientException {
-        Model model = new Model.Builder(BigDataIdentifiers.SWARM_MODEL, "create")
+        Model model = new Model.Builder(BigDataIdentifiers.SWARM_SCHEME, "create")
                 .addVariable(BigDataAttributes.AGENTS_IP_NAME, "agentIp1, agentIp2")
                 .addVariable(BigDataAttributes.HOST_IP_NAME, "hostIpTest3")
                 .addVariable(BigDataAttributes.MASTER_IP_NAME, "masterIpTest3")
                 .addVariable(BigDataAttributes.NETWORK_NAME_NAME, "my-net")
                 .addVariable(PlatformAttributes.STATUS_NAME, "inactive")
-                .addVariable(Attributes.ENTITY_TITLE_NAME, "title")
+                .addVariable(MetamodelAttributes.ENTITY_TITLE_NAME, "title")
                 .build();
 
         Swarm swarm = new SwarmBuilder(model).build();
@@ -95,7 +95,7 @@ public class SwarmTest {
         when(mixinService.getMixinBuilder(BigDataAttributes.AGENTS_IP_NAME)).thenReturn(Optional.empty());
         when(mixinService.getMixinBuilder(BigDataAttributes.MACHINE_NAME_NAME)).thenReturn(Optional.empty());
         when(mixinService.getMixinBuilder(PlatformAttributes.STATUS_NAME)).thenReturn(Optional.empty());
-        when(mixinService.getMixinBuilder(Attributes.SUMMARY_NAME)).thenReturn(Optional.empty());
+        when(mixinService.getMixinBuilder(MetamodelAttributes.SUMMARY_NAME)).thenReturn(Optional.empty());
 
         ResourceRendering rendering = new ResourceRendering.Builder(BigDataKinds.SWARM.getTitle(),
                 "urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29")
@@ -104,7 +104,7 @@ public class SwarmTest {
                 .addAttribute(BigDataAttributes.AGENTS_IP_NAME, "aa.aaa.aa.aaa , bb.bbb.bb.bbb")
                 .addAttribute(BigDataAttributes.MACHINE_NAME_NAME, "machineTest")
                 .addAttribute(PlatformAttributes.STATUS_NAME, "inactive")
-                .addAttribute(Attributes.SUMMARY_NAME, "summaryTest")
+                .addAttribute(MetamodelAttributes.SUMMARY_NAME, "summaryTest")
                 .build();
 
         Swarm swarm = new SwarmBuilder(mixinService, rendering).build();
@@ -152,7 +152,7 @@ public class SwarmTest {
                 "machineNameTest");
         assertThat(rendering.getAttributes()).containsEntry(PlatformAttributes.STATUS_NAME,
                 Status.ACTIVE.name());
-        assertThat(rendering.getAttributes()).containsEntry(Attributes.ENTITY_TITLE_NAME, "titleTest");
+        assertThat(rendering.getAttributes()).containsEntry(MetamodelAttributes.ENTITY_TITLE_NAME, "titleTest");
 
         assertThat(rendering.getId()).isNotNull();
         assertThat(rendering.getKind()).matches(BigDataKinds.SWARM.getTitle());

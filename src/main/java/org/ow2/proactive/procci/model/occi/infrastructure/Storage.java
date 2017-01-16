@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.StorageState;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
@@ -79,18 +79,16 @@ public class Storage extends Resource {
             Optional<String> title, List<Mixin> mixins,
             Optional<String> summary, List<Link> links, Optional<Float> size, StorageState state) {
 
-        super(url, kind,
-                title, mixins, summary, links);
-        createAttributesSet();
+        super(url, kind, title, mixins, summary, links);
         this.size = size;
         this.state = state;
     }
 
-    private static Set<Attribute> createAttributesSet() {
-        Set<Attribute> attributes = Resource.createAttributeSet();
-        attributes.add(Attributes.SIZE);
-        attributes.add(Attributes.STORAGE_STATE);
-        attributes.add(Attributes.STORAGE_MESSAGE);
+    public static Set<Attribute> getAttributes() {
+        Set<Attribute> attributes = Resource.getAttributes();
+        attributes.add(InfrastructureAttributes.SIZE);
+        attributes.add(InfrastructureAttributes.STORAGE_STATE);
+        attributes.add(InfrastructureAttributes.STORAGE_MESSAGE);
         return attributes;
     }
 

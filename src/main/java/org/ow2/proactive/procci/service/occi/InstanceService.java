@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
@@ -23,7 +25,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
 
 /**
  * This class enable the user to get and create instances
@@ -50,8 +52,7 @@ public class InstanceService {
      */
     public Optional<Entity> getEntity(String id) throws ClientException {
         return cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME, ConvertUtils.formatURL(id))
-                .map(model -> new ComputeBuilder(model)
-                        .addMixins(pullMixinFromCloudAutomation(id))
+                .map(model -> getResourceBuilder(model).addMixins(pullMixinFromCloudAutomation(id))
                         .build());
     }
 
@@ -80,11 +81,11 @@ public class InstanceService {
         return ((List) resources.keySet()
                 .stream()
                 .map(key -> new Model((JSONObject) resources.get(key)))
-                .map(model -> new ComputeBuilder((Model) model))
-                .map(computeBuilder -> ((ComputeBuilder) computeBuilder)
-                        .addMixins(pullMixinFromCloudAutomation(((ComputeBuilder) computeBuilder).getUrl()
+                .map(model -> getResourceBuilder((Model) model))
+                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder)
+                        .addMixins(pullMixinFromCloudAutomation(((ResourceBuilder) resourceBuilder).getUrl()
                                 .orElse(""))))
-                .map(computeBuilder -> ((ComputeBuilder) computeBuilder).build().getRendering())
+                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder).build().getRendering())
                 .collect(Collectors.toList()));
     }
 
@@ -99,15 +100,11 @@ public class InstanceService {
     public Resource create(Resource resource, TransformerType transformerType)
             throws ClientException {
 
-        //add the compute reference in all his mixins
-        resource.getMixins().stream().forEach(mixin -> mixin.addEntity(resource));
-
         //update the references between mixin and compute
         mixinService.addEntity(resource);
 
-
         //create a resource according to the creation request sent to cloud-automation-service
-        Resource resourceResult = new ResourceBuilder(
+        Resource resourceResult = getResourceBuilder(
                 new Model(cloudAutomationInstanceClient.postRequest(
                         transformerManager.getTransformerProvider(transformerType)
                                 .toCloudAutomationModel(resource, "create").getJson())))
@@ -133,14 +130,15 @@ public class InstanceService {
     }
 
 
-    private Optional<ResourceBuilder> getResourceBuilder(Model model) throws ClientException {
+    private ResourceBuilder getResourceBuilder(Model model) throws ClientException {
+
         switch (model.getServiceModel()) {
             case BigDataIdentifiers.SWARM_MODEL:
-                return Optional.of(new SwarmBuilder(model));
-            case Identifiers.COMPUTE_MODEL:
-                return Optional.of(new ComputeBuilder(model));
+                return new SwarmBuilder(model);
+            case InfrastructureIdentifiers.COMPUTE_MODEL:
+                return new ComputeBuilder(model);
             default:
-                return Optional.empty();
+                return new ResourceBuilder(model);
         }
     }
 }

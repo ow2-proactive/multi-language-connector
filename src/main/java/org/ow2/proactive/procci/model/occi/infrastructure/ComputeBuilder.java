@@ -27,16 +27,16 @@ import static org.ow2.proactive.procci.model.ModelConstant.PENDING_STATE;
 import static org.ow2.proactive.procci.model.ModelConstant.RUNNING_STATE;
 import static org.ow2.proactive.procci.model.ModelConstant.STOPPED_STATE;
 import static org.ow2.proactive.procci.model.ModelConstant.TERMINATED_STATE;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.ARCHITECTURE_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_ACTIVE;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_ERROR;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_INACTIVE;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.COMPUTE_STATE_SUSPENDED;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.CORES_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.HOSTNAME_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.MEMORY_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes.SHARE_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.ARCHITECTURE_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.COMPUTE_STATE_ACTIVE;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.COMPUTE_STATE_ERROR;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.COMPUTE_STATE_INACTIVE;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.COMPUTE_STATE_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.COMPUTE_STATE_SUSPENDED;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.CORES_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.HOSTNAME_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.MEMORY_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.SHARE_NAME;
 
 /**
  * Compute Builder class, enable to easily construct a Compute from RenderingCompute or Cloud Automation Model

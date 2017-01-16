@@ -37,7 +37,7 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 import java.util.Set;
 import java.util.UUID;
 
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import com.google.common.collect.ImmutableSet;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -71,9 +71,9 @@ public class Category {
         this.title = title;
         this.term = term;
         this.attributes = new ImmutableSet.Builder<Attribute>()
-                .add(Attributes.SCHEME)
-                .add(Attributes.TERM)
-                .add(Attributes.CATEGORY_TITLE)
+                .add(MetamodelAttributes.SCHEME)
+                .add(MetamodelAttributes.TERM)
+                .add(MetamodelAttributes.CATEGORY_TITLE)
                 .addAll(attributes)
                 .build();
     }

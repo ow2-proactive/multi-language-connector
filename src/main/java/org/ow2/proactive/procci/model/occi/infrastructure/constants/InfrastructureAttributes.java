@@ -10,7 +10,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Type;
 /**
  * Contains the description of all attributes of the infrastructure
  */
-public class Attributes {
+public class InfrastructureAttributes {
 
     public static final String HOSTNAME_NAME = "occi.compute.hostname";
     public static final String ARCHITECTURE_NAME = "occi.compute.architecture";

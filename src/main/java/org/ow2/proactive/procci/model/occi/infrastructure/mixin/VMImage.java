@@ -9,8 +9,8 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.MissingAttributesException;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Identifiers;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
@@ -28,7 +28,7 @@ public class VMImage extends Mixin {
     private String image;
 
     public VMImage(String title, List<Mixin> depends, List<Entity> entities, String image) {
-        super(Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE, title, createAttributesSet(),
+        super(InfrastructureIdentifiers.OCCIWARE_SCHEME, InfrastructureIdentifiers.VM_IMAGE, title, createAttributesSet(),
                 new ArrayList<>(),
                 depends, initApplies(), entities);
         this.image = image;
@@ -42,13 +42,13 @@ public class VMImage extends Mixin {
 
     private static Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = new HashSet<>();
-        attributes.add(Attributes.COMPUTE_IMAGE);
+        attributes.add(InfrastructureAttributes.COMPUTE_IMAGE);
         return attributes;
     }
 
     @Override
     public Model.Builder toCloudAutomationModel(Model.Builder cloudAutomation) {
-        cloudAutomation.addVariable(Attributes.COMPUTE_IMAGE_NAME, image);
+        cloudAutomation.addVariable(InfrastructureAttributes.COMPUTE_IMAGE_NAME, image);
         return cloudAutomation;
     }
 
@@ -57,15 +57,15 @@ public class VMImage extends Mixin {
         private String VMImage;
 
         public Builder() {
-            super(Identifiers.OCCIWARE_SCHEME, Identifiers.VM_IMAGE);
+            super(InfrastructureIdentifiers.OCCIWARE_SCHEME, InfrastructureIdentifiers.VM_IMAGE);
         }
 
         @Override
         public MixinBuilder attributes(Map attributes) throws ClientException {
             super.attributes(attributes);
-            this.VMImage = readAttributeAsString(attributes, Attributes.COMPUTE_IMAGE_NAME)
-                    .orElseThrow(() -> new MissingAttributesException(Attributes.COMPUTE_IMAGE_NAME,
-                            Attributes.COMPUTE_IMAGE.getName()));
+            this.VMImage = readAttributeAsString(attributes, InfrastructureAttributes.COMPUTE_IMAGE_NAME)
+                    .orElseThrow(() -> new MissingAttributesException(InfrastructureAttributes.COMPUTE_IMAGE_NAME,
+                            InfrastructureAttributes.COMPUTE_IMAGE.getName()));
             return this;
         }
 

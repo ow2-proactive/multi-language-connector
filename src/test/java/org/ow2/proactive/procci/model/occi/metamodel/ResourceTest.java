@@ -13,7 +13,7 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
 import org.ow2.proactive.procci.service.occi.MixinService;
 import org.junit.Before;
@@ -42,7 +42,7 @@ public class ResourceTest {
     @Test
     public void constructorTest() {
 
-        Kind kind = Kinds.RESOURCE;
+        Kind kind = MetamodelKinds.RESOURCE;
         List<Mixin> mixins = new ArrayList<>();
         List<Link> links = new ArrayList<>();
         mixins.add(new Mixin("http://schemas.ogf.org/occi/metamodel#mixin", "mixin", "mixin",
