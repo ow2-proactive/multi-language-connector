@@ -15,6 +15,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,6 @@ public class CloudAutomationInstanceClient {
      */
     public JSONObject getRequest() {
         final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
-        JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet getRequest = new HttpGet(url);
@@ -50,17 +50,12 @@ public class CloudAutomationInstanceClient {
             HttpResponse response = httpClient.execute(getRequest);
             String serverOutput = requestUtils.readHttpResponse(response,url,"GET");
             httpClient.close();
-            result = (JSONObject) new JSONParser().parse(serverOutput);
+            return parseJSON(serverOutput);
         } catch (IOException ex) {
             logger.error(" IO exception in CloudAutomationInstanceClient::getRequest "
                     + ", exception : " + ex.getMessage());
-        } catch (ParseException ex){
-            logger.error(" Parse exception in CloudAutomationInstanceClient::getRequest "
-                    + ", exception : " + ex.getMessage());
-
+            throw new ServerException();
         }
-
-        return result;
     }
 
 
@@ -96,7 +91,6 @@ public class CloudAutomationInstanceClient {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
         final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
-        JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost postRequest = new HttpPost(url);
@@ -109,16 +103,22 @@ public class CloudAutomationInstanceClient {
 
             String serverOutput = requestUtils.readHttpResponse(response,url,"POST "+content.toJSONString());
             httpClient.close();
-            result = (JSONObject) new JSONParser().parse(serverOutput);
+            return parseJSON(serverOutput);
         } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest "
+            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest "
                     + ", exception : " + ex.getMessage());
-        } catch (ParseException ex){
-            logger.error(" Parse exception in CloudAutomationInstanceClient::getRequest "
-                    + ", exception : " + ex.getMessage());
-
+            throw new ServerException();
         }
-        return result;
+    }
+
+    private JSONObject parseJSON(String jsonString){
+        try {
+            return (JSONObject) new JSONParser().parse(jsonString);
+        }catch (ParseException ex){
+            logger.error(" Parse exception in CloudAutomationInstanceClient::parseJSON "
+                    + ", exception : " + ex.getMessage());
+            throw new ServerException();
+        }
     }
 
 
