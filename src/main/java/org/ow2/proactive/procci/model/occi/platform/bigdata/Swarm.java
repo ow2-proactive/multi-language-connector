@@ -53,7 +53,6 @@ import org.ow2.proactive.procci.model.occi.platform.Component;
 import org.ow2.proactive.procci.model.occi.platform.Status;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 

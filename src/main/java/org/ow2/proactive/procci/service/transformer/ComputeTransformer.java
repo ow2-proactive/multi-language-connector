@@ -32,7 +32,6 @@ import static org.ow2.proactive.procci.model.occi.infrastructure.constants.Infra
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.MEMORY_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.SHARE_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers.COMPUTE_MODEL;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers.COMPUTE_SCHEME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;

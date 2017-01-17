@@ -38,7 +38,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

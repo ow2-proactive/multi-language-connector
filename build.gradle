@@ -2,24 +2,26 @@ buildscript {
     repositories {
         mavenCentral()
         jcenter()
-    maven { url 'http://repository.activeeon.com/content/groups/proactive/' }
-    maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'http://repository.activeeon.com/content/groups/proactive/' }
+        maven { url "https://plugins.gradle.org/m2/" }
 
     }
 
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springVersion}"
-    classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.7.1'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.7.1'
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1"
         classpath "com.diffplug.gradle.spotless:spotless:2.4.0"
         classpath "org.ow2.proactive:coding-rules:1.0.0"
     }
 
-   dependencies {
-      delete "gradle/ext"
-      ant.unjar src: configurations.classpath.find { it.name.startsWith("coding-rules"
-) }, dest: 'gradle/ext'
-  }
+    dependencies {
+        delete "gradle/ext"
+        ant.unjar src: configurations.classpath.find {
+            it.name.startsWith("coding-rules"
+            )
+        }, dest: 'gradle/ext'
+    }
 
 }
 
@@ -111,7 +113,7 @@ dependencies {
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 
     compile "org.springframework.boot:spring-boot-starter-log4j2:${springVersion}"
-    compile ("org.springframework.boot:spring-boot-starter-web:${springVersion}")  {
+    compile("org.springframework.boot:spring-boot-starter-web:${springVersion}") {
         exclude module: 'spring-boot-starter-tomcat'
         exclude module: 'spring-boot-starter-validation'
     }
@@ -182,7 +184,7 @@ jacocoTestReport {
 
 clean {
     sourceSets.generated.java.srcDirs.each {
-       srcDir -> delete srcDir
+        srcDir -> delete srcDir
     }
 }
 

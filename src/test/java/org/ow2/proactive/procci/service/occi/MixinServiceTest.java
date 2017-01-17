@@ -47,7 +47,6 @@ import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
-import org.ow2.proactive.procci.service.occi.MixinService;
 
 
 /**
