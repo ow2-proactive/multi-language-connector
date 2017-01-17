@@ -1,4 +1,32 @@
+/*
+ * ProActive Parallel Suite(TM):
+ * The Open Source library for parallel and distributed
+ * Workflows & Scheduling, Orchestration, Cloud Automation
+ * and Big Data Analysis on Enterprise Grids & Clouds.
+ *
+ * Copyright (c) 2007 - 2017 ActiveEon
+ * Contact: contact@activeeon.com
+ *
+ * This library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation: version 3 of
+ * the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If needed, contact us to obtain a release under GPL Version 2 or 3
+ * or a different license than the AGPL.
+ */
 package org.ow2.proactive.procci.service.occi;
+
+import static org.ow2.proactive.procci.model.utils.ConvertUtils.mapObject;
+import static org.ow2.proactive.procci.model.utils.ConvertUtils.readMappedObject;
 
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +35,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.codehaus.jackson.type.TypeReference;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
@@ -17,14 +46,12 @@ import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
-import com.google.common.base.Supplier;
-import com.google.common.collect.ImmutableMap;
-import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.ow2.proactive.procci.model.utils.ConvertUtils.mapObject;
-import static org.ow2.proactive.procci.model.utils.ConvertUtils.readMappedObject;
+import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableMap;
+
 
 /**
  * Created by the Activeeon Team on 12/10/16.
@@ -37,16 +64,19 @@ import static org.ow2.proactive.procci.model.utils.ConvertUtils.readMappedObject
 public class MixinService {
 
     private final Map<String, Supplier<MixinBuilder>> providerMixin;
+
     @Autowired
     private InstanceService instanceService;
+
     @Autowired
     private CloudAutomationVariablesClient cloudAutomationVariablesClient;
 
     public MixinService() {
-        providerMixin = new ImmutableMap.Builder<String, Supplier<MixinBuilder>>()
-                .put(InfrastructureIdentifiers.VM_IMAGE, (() -> new VMImage.Builder()))
-                .put(InfrastructureIdentifiers.CONTEXTUALIZATION, (() -> new Contextualization.Builder()))
-                .build();
+        providerMixin = new ImmutableMap.Builder<String, Supplier<MixinBuilder>>().put(InfrastructureIdentifiers.VM_IMAGE,
+                                                                                       (() -> new VMImage.Builder()))
+                                                                                  .put(InfrastructureIdentifiers.CONTEXTUALIZATION,
+                                                                                       (() -> new Contextualization.Builder()))
+                                                                                  .build();
     }
 
     /**
@@ -93,9 +123,7 @@ public class MixinService {
      * @throws ClientException if there is an error in the cloud automation service response
      */
     public List<Mixin> getMixinsByTitles(List<String> titles) throws ClientException {
-        return titles.stream()
-                .map(title -> getMixinByTitle(title))
-                .collect(Collectors.toList());
+        return titles.stream().map(title -> getMixinByTitle(title)).collect(Collectors.toList());
     }
 
     /**
@@ -120,27 +148,24 @@ public class MixinService {
      */
     public void addEntity(Entity entity) throws ClientException {
 
-        Set<String> entityMixinsTitle = entity.getMixins().stream().map(mixin -> mixin.getTitle()).collect(
-                Collectors.toSet());
+        Set<String> entityMixinsTitle = entity.getMixins()
+                                              .stream()
+                                              .map(mixin -> mixin.getTitle())
+                                              .collect(Collectors.toSet());
         //add entity references
         cloudAutomationVariablesClient.post(entity.getId(), mapObject(entityMixinsTitle));
 
-
         //add entity to mixin references
-        entity.getMixins().forEach(
-                mixin -> setMixinReferences(mixin.getRendering())
-        );
+        entity.getMixins().forEach(mixin -> setMixinReferences(mixin.getRendering()));
 
     }
 
     public void addMixin(Mixin mixin) throws ClientException {
         //add the new entity references
-        cloudAutomationVariablesClient.post(mixin.getTitle(),
-                mapObject(mixin.getRendering()));
+        cloudAutomationVariablesClient.post(mixin.getTitle(), mapObject(mixin.getRendering()));
 
         //add mixin to entity references
-        for (String entityId : mixin.getEntities().stream().map(entity -> entity.getId()).collect(
-                Collectors.toSet())) {
+        for (String entityId : mixin.getEntities().stream().map(entity -> entity.getId()).collect(Collectors.toSet())) {
             addEntityReferences(entityId, mixin.getTitle());
         }
     }
@@ -160,11 +185,9 @@ public class MixinService {
         try {
             Set<String> entitiesId = getMixinRenderingByTitle(mixinRendering.getTitle()).getEntities();
             mixinRendering.getEntities().addAll(entitiesId);
-            cloudAutomationVariablesClient.update(mixinRendering.getTitle(),
-                    mapObject(mixinRendering));
+            cloudAutomationVariablesClient.update(mixinRendering.getTitle(), mapObject(mixinRendering));
         } catch (CloudAutomationException ex) {
-            cloudAutomationVariablesClient.post(mixinRendering.getTitle(),
-                    mapObject(mixinRendering));
+            cloudAutomationVariablesClient.post(mixinRendering.getTitle(), mapObject(mixinRendering));
         }
 
     }

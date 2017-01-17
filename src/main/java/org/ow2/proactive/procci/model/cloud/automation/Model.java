@@ -1,48 +1,29 @@
 /*
- *  *
- * ProActive Parallel Suite(TM): The Java(TM) library for
- *    Parallel, Distributed, Multi-Core Computing for
- *    Enterprise Grids & Clouds
+ * ProActive Parallel Suite(TM):
+ * The Open Source library for parallel and distributed
+ * Workflows & Scheduling, Orchestration, Cloud Automation
+ * and Big Data Analysis on Enterprise Grids & Clouds.
  *
- * Copyright (C) 1997-2016 INRIA/University of
- *                 Nice-Sophia Antipolis/ActiveEon
- * Contact: proactive@ow2.org or contact@activeeon.com
+ * Copyright (c) 2007 - 2017 ActiveEon
+ * Contact: contact@activeeon.com
  *
- * This library is free software; you can redistribute it and/or
+ * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; version 3 of
+ * as published by the Free Software Foundation: version 3 of
  * the License.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Affero General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
- * USA
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * If needed, contact us to obtain a release under GPL Version 2 or 3
  * or a different license than the AGPL.
- *
- *  Initial developer(s):               The ProActive Team
- *                        http://proactive.inria.fr/team_members.htm
- *  Contributor(s):
- *
- *  * $$ACTIVEEON_INITIAL_DEV$$
  */
 package org.ow2.proactive.procci.model.cloud.automation;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import org.json.simple.JSONObject;
 
 import static org.ow2.proactive.procci.model.ModelConstant.ACTION_DESCRIPTION;
 import static org.ow2.proactive.procci.model.ModelConstant.ACTION_ICON;
@@ -56,6 +37,18 @@ import static org.ow2.proactive.procci.model.ModelConstant.SERVICE_NAME;
 import static org.ow2.proactive.procci.model.ModelConstant.SERVICE_TYPE;
 import static org.ow2.proactive.procci.model.ModelConstant.VARIABLES;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.simple.JSONObject;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
+
 /**
  * Cloud Automation serviceModel
  */
@@ -66,14 +59,23 @@ import static org.ow2.proactive.procci.model.ModelConstant.VARIABLES;
 public class Model {
 
     private final String serviceModel;
+
     private final String serviceType;
+
     private final String serviceName;
+
     private final String serviceDescription;
+
     private final String actionType;
+
     private final String actionName;
+
     private final String actionDescription;
+
     private final String actionOriginStates;
+
     private final String actionIcon;
+
     private final Map<String, String> variables;
 
     /**
@@ -84,8 +86,7 @@ public class Model {
     public Model(JSONObject CloudAutomationJson) {
 
         JSONObject variables = (JSONObject) CloudAutomationJson.getOrDefault(VARIABLES, new JSONObject());
-        JSONObject genericInfo = (JSONObject) CloudAutomationJson.getOrDefault(GENERIC_INFORMATION,
-                new JSONObject());
+        JSONObject genericInfo = (JSONObject) CloudAutomationJson.getOrDefault(GENERIC_INFORMATION, new JSONObject());
 
         this.serviceModel = (String) genericInfo.getOrDefault(SERVICE_MODEL, "");
         this.serviceType = (String) genericInfo.getOrDefault(SERVICE_TYPE, "");
@@ -103,7 +104,6 @@ public class Model {
             this.variables.put((String) key, (String) variables.get(key));
         }
     }
-
 
     /**
      * Create a json object which contains the cloud automation serviceModel and its values
@@ -136,14 +136,23 @@ public class Model {
     public static class Builder {
 
         private final String serviceModel;
+
         private final String actionType;
+
         private String serviceType;
+
         private String serviceName;
+
         private String serviceDescription;
+
         private String actionName;
+
         private String actionDescription;
+
         private String actionOriginStates;
+
         private String actionIcon;
+
         private Map<String, String> variables;
 
         public Builder(String model, String actionType) {
@@ -207,12 +216,17 @@ public class Model {
         }
 
         public Model build() {
-            return new Model(serviceModel, serviceType, serviceName, serviceDescription, actionType,
-                    actionName,
-                    actionDescription, actionOriginStates, actionIcon, variables);
+            return new Model(serviceModel,
+                             serviceType,
+                             serviceName,
+                             serviceDescription,
+                             actionType,
+                             actionName,
+                             actionDescription,
+                             actionOriginStates,
+                             actionIcon,
+                             variables);
         }
     }
 
-
 }
-

@@ -1,39 +1,29 @@
 /*
- * ProActive Parallel Suite(TM): The Java(TM) library for
- *    Parallel, Distributed, Multi-Core Computing for
- *    Enterprise Grids & Clouds
+ * ProActive Parallel Suite(TM):
+ * The Open Source library for parallel and distributed
+ * Workflows & Scheduling, Orchestration, Cloud Automation
+ * and Big Data Analysis on Enterprise Grids & Clouds.
  *
- * Copyright (C) 2013-2015 ActiveEon
- * 
- * Contact: proactive@ow2.org or contact@activeeon.com
+ * Copyright (c) 2007 - 2017 ActiveEon
+ * Contact: contact@activeeon.com
  *
- * This library is free software; you can redistribute it and/or
+ * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; version 3 of
+ * as published by the Free Software Foundation: version 3 of
  * the License.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Affero General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
- * USA
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * If needed, contact us to obtain a release under GPL Version 2 or 3
  * or a different license than the AGPL.
- *
- *  Initial developer(s):               The ProActive Team
- *                        http://proactive.inria.fr/team_members.htm
- *  Contributor(s):
- *
- * $$ACTIVEEON_INITIAL_DEV$$
  */
-
 package org.ow2.proactive.procci.model.occi.metamodel;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +33,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
+
 import com.google.common.collect.ImmutableMap;
+
 import lombok.Getter;
 
 
@@ -54,8 +46,10 @@ public class Kind extends Category {
 
     @Getter
     private final ImmutableMap<String, Action> actions;
+
     @Getter
     private final Kind parent;
+
     @Getter
     private List<Entity> entities;
 
@@ -69,8 +63,8 @@ public class Kind extends Category {
      * @param attributes are the kind type attributes
      * @param parent     is the set of the kind instances
      */
-    private Kind(String scheme, String term, String title, Set<Attribute> attributes,
-            Map<String, Action> actions, Kind parent) {
+    private Kind(String scheme, String term, String title, Set<Attribute> attributes, Map<String, Action> actions,
+            Kind parent) {
         super(scheme, term, title, attributes);
         this.actions = new ImmutableMap.Builder<String, Action>() {
         }.putAll(actions).build();
@@ -81,17 +75,21 @@ public class Kind extends Category {
     public static class Builder {
 
         private final String scheme;
+
         private final String term;
 
         private String title;
+
         private Set<Attribute> attributes;
+
         private Map<String, Action> actions;
+
         private Kind parent;
 
         public Builder(String scheme, String term) {
             this.scheme = scheme;
             this.term = term;
-            this.title = scheme+term;
+            this.title = scheme + term;
             this.attributes = new HashSet<>();
             this.actions = new HashMap<>();
             this.parent = null;

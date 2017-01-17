@@ -1,37 +1,28 @@
 /*
- * ProActive Parallel Suite(TM): The Java(TM) library for
- *    Parallel, Distributed, Multi-Core Computing for
- *    Enterprise Grids & Clouds
+ * ProActive Parallel Suite(TM):
+ * The Open Source library for parallel and distributed
+ * Workflows & Scheduling, Orchestration, Cloud Automation
+ * and Big Data Analysis on Enterprise Grids & Clouds.
  *
- * Copyright (C) 2013-2015 ActiveEon
- * 
- * Contact: proactive@ow2.org or contact@activeeon.com
+ * Copyright (c) 2007 - 2017 ActiveEon
+ * Contact: contact@activeeon.com
  *
- * This library is free software; you can redistribute it and/or
+ * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; version 3 of
+ * as published by the Free Software Foundation: version 3 of
  * the License.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Affero General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
- * USA
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * If needed, contact us to obtain a release under GPL Version 2 or 3
  * or a different license than the AGPL.
- *
- *  Initial developer(s):               The ProActive Team
- *                        http://proactive.inria.fr/team_members.htm
- *  Contributor(s):
- *
- * $$ACTIVEEON_INITIAL_DEV$$
  */
-
 package org.ow2.proactive.procci.model.occi.metamodel;
 
 import java.net.URI;
@@ -46,7 +37,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttribut
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.LinkLocationRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.LinkRendering;
+
 import lombok.Getter;
+
 
 /**
  * Link defines the base associaction between 2 resources
@@ -55,7 +48,9 @@ import lombok.Getter;
 public class Link extends Entity {
 
     private Resource source;
+
     private URI target;
+
     private Optional<Kind> targetKind;
 
     /**
@@ -69,8 +64,8 @@ public class Link extends Entity {
      * @param target     is the id of the resource instance the link point to
      * @param targetKind is the kind of the target
      */
-    protected Link(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-            Resource source, String target, Optional<Kind> targetKind) throws SyntaxException {
+    protected Link(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins, Resource source,
+            String target, Optional<Kind> targetKind) throws SyntaxException {
         super(url, kind, title, mixins);
         this.source = source;
         this.target = getURIFromString(target);
@@ -87,8 +82,10 @@ public class Link extends Entity {
 
     @Override
     public LinkRendering getRendering() {
-        return new LinkRendering.Builder(this.getKind().getTitle(), this.getId(),
-                new LinkLocationRendering(), new LinkLocationRendering()).build();
+        return new LinkRendering.Builder(this.getKind().getTitle(),
+                                         this.getId(),
+                                         new LinkLocationRendering(),
+                                         new LinkLocationRendering()).build();
     }
 
     private URI getURIFromString(String uri) throws SyntaxException {
@@ -101,10 +98,15 @@ public class Link extends Entity {
 
     public static class Builder {
         private final Resource source;
+
         private final String target;
+
         private Optional<String> url;
+
         private Optional<String> title;
+
         private List<Mixin> mixins;
+
         private Optional<Kind> targetKind;
 
         public Builder(Resource source, String target) {
@@ -114,7 +116,6 @@ public class Link extends Entity {
             this.mixins = new ArrayList<>();
             this.targetKind = Optional.empty();
         }
-
 
         public Builder url(String url) {
             this.url = Optional.ofNullable(url);

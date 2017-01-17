@@ -1,5 +1,29 @@
+/*
+ * ProActive Parallel Suite(TM):
+ * The Open Source library for parallel and distributed
+ * Workflows & Scheduling, Orchestration, Cloud Automation
+ * and Big Data Analysis on Enterprise Grids & Clouds.
+ *
+ * Copyright (c) 2007 - 2017 ActiveEon
+ * Contact: contact@activeeon.com
+ *
+ * This library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation: version 3 of
+ * the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If needed, contact us to obtain a release under GPL Version 2 or 3
+ * or a different license than the AGPL.
+ */
 package org.ow2.proactive.procci.rest;
-
 
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.ServerException;
@@ -19,6 +43,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * Created by the Activeeon Team on 05/10/16.
@@ -42,9 +67,7 @@ public class MixinRest {
         logger.debug("Getting Mixin " + mixinTitle);
 
         try {
-            return new ResponseEntity(
-                    mixinService.getMixinByTitle(mixinTitle).getRendering(),
-                    HttpStatus.OK);
+            return new ResponseEntity(mixinService.getMixinByTitle(mixinTitle).getRendering(), HttpStatus.OK);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (ServerException exception) {
@@ -52,12 +75,10 @@ public class MixinRest {
         }
     }
 
-
     //-------------------Create a Mixin--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<MixinRendering> createMixin(
-            @RequestBody MixinRendering mixinRendering) {
+    public ResponseEntity<MixinRendering> createMixin(@RequestBody MixinRendering mixinRendering) {
         logger.debug("Creating Mixin " + mixinRendering.toString());
         try {
             Mixin mixin = new MixinBuilder(mixinService, instanceService, mixinRendering).build();
@@ -75,8 +96,7 @@ public class MixinRest {
     //-------------------Update a Mixin--------------------------------------------------------
 
     @RequestMapping(value = "{mixinTitle}", method = RequestMethod.PUT)
-    public ResponseEntity<MixinRendering> updateMixin(
-            @PathVariable("mixinTitle") String mixinTitle,
+    public ResponseEntity<MixinRendering> updateMixin(@PathVariable("mixinTitle") String mixinTitle,
             @RequestBody MixinRendering mixinRendering) {
         logger.debug("Updating Mixin " + mixinTitle + " with " + mixinRendering.toString());
 

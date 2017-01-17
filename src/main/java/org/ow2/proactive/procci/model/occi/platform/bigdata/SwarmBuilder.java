@@ -1,3 +1,28 @@
+/*
+ * ProActive Parallel Suite(TM):
+ * The Open Source library for parallel and distributed
+ * Workflows & Scheduling, Orchestration, Cloud Automation
+ * and Big Data Analysis on Enterprise Grids & Clouds.
+ *
+ * Copyright (c) 2007 - 2017 ActiveEon
+ * Contact: contact@activeeon.com
+ *
+ * This library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation: version 3 of
+ * the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If needed, contact us to obtain a release under GPL Version 2 or 3
+ * or a different license than the AGPL.
+ */
 package org.ow2.proactive.procci.model.occi.platform.bigdata;
 
 import java.util.ArrayList;
@@ -20,12 +45,17 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIde
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataKinds;
 import org.ow2.proactive.procci.service.occi.MixinService;
 
+
 public class SwarmBuilder extends Component.Builder {
 
     private Optional<String> hostIp;
+
     private Optional<String> masterIp;
+
     private Optional<String> agentsIp;
+
     private Optional<String> machineName;
+
     private Optional<String> networkName;
 
     public SwarmBuilder() {
@@ -66,26 +96,23 @@ public class SwarmBuilder extends Component.Builder {
         this.agentsIp = Optional.ofNullable(attributes.get(BigDataAttributes.AGENTS_IP_NAME));
     }
 
-    public SwarmBuilder(MixinService mixinService,
-            ResourceRendering rendering) throws ClientException {
+    public SwarmBuilder(MixinService mixinService, ResourceRendering rendering) throws ClientException {
         super(mixinService, rendering);
-        this.machineName = Optional.ofNullable(
-                rendering.getAttributes().get(BigDataAttributes.MACHINE_NAME_NAME))
-                .filter(machineName -> machineName instanceof String)
-                .map(machineName -> (String) machineName);
-        this.networkName = Optional.ofNullable(
-                rendering.getAttributes().get(BigDataAttributes.NETWORK_NAME_NAME))
-                .filter(networkName -> networkName instanceof String)
-                .map(networkName -> (String) networkName);
+        this.machineName = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.MACHINE_NAME_NAME))
+                                   .filter(machineName -> machineName instanceof String)
+                                   .map(machineName -> (String) machineName);
+        this.networkName = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.NETWORK_NAME_NAME))
+                                   .filter(networkName -> networkName instanceof String)
+                                   .map(networkName -> (String) networkName);
         this.hostIp = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.HOST_IP_NAME))
-                .filter(hostIp -> hostIp instanceof String)
-                .map(hostIp -> (String) hostIp);
+                              .filter(hostIp -> hostIp instanceof String)
+                              .map(hostIp -> (String) hostIp);
         this.masterIp = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.MASTER_IP_NAME))
-                .filter(masterIp -> masterIp instanceof String)
-                .map(masterIp -> (String) masterIp);
+                                .filter(masterIp -> masterIp instanceof String)
+                                .map(masterIp -> (String) masterIp);
         this.agentsIp = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.AGENTS_IP_NAME))
-                .filter(agentIp -> agentIp instanceof String)
-                .map(agentIp -> (String) agentIp);
+                                .filter(agentIp -> agentIp instanceof String)
+                                .map(agentIp -> (String) agentIp);
     }
 
     public SwarmBuilder machineName(String machineName) {
@@ -147,25 +174,27 @@ public class SwarmBuilder extends Component.Builder {
 
     @Override
     public Swarm build() throws ClientException {
-        return new Swarm(this.getUrl(), BigDataKinds.SWARM, this.getTitle(), this.getMixins(),
-                this.getSummary(), this.getLinks(),
-                status,
-                machineName,
-                hostIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.HOST_IP_NAME,
-                        BigDataKinds.SWARM.getTitle())),
-                masterIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.MASTER_IP_NAME,
-                        BigDataKinds.SWARM.getTitle())),
-                getAgentsIpFromString(this.agentsIp),
-                networkName);
+        return new Swarm(this.getUrl(),
+                         BigDataKinds.SWARM,
+                         this.getTitle(),
+                         this.getMixins(),
+                         this.getSummary(),
+                         this.getLinks(),
+                         status,
+                         machineName,
+                         hostIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.HOST_IP_NAME,
+                                                                                 BigDataKinds.SWARM.getTitle())),
+                         masterIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.MASTER_IP_NAME,
+                                                                                   BigDataKinds.SWARM.getTitle())),
+                         getAgentsIpFromString(this.agentsIp),
+                         networkName);
     }
 
     private List<String> getAgentsIpFromString(Optional<String> agentsIpString) {
-        return agentsIpString
-                .map(ip -> ip.replaceAll(" ", ""))
-                .map(ip -> ip.split(BigDataIdentifiers.AGENT_IP_SEPARATOR))
-                .map(ip -> Arrays.asList(ip))
-                .orElse(new ArrayList<>());
+        return agentsIpString.map(ip -> ip.replaceAll(" ", ""))
+                             .map(ip -> ip.split(BigDataIdentifiers.AGENT_IP_SEPARATOR))
+                             .map(ip -> Arrays.asList(ip))
+                             .orElse(new ArrayList<>());
     }
-
 
 }

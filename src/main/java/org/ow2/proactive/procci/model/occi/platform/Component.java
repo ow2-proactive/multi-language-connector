@@ -1,3 +1,28 @@
+/*
+ * ProActive Parallel Suite(TM):
+ * The Open Source library for parallel and distributed
+ * Workflows & Scheduling, Orchestration, Cloud Automation
+ * and Big Data Analysis on Enterprise Grids & Clouds.
+ *
+ * Copyright (c) 2007 - 2017 ActiveEon
+ * Contact: contact@activeeon.com
+ *
+ * This library is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License
+ * as published by the Free Software Foundation: version 3 of
+ * the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * If needed, contact us to obtain a release under GPL Version 2 or 3
+ * or a different license than the AGPL.
+ */
 package org.ow2.proactive.procci.model.occi.platform;
 
 import java.util.HashSet;
@@ -18,7 +43,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformKinds;
 import org.ow2.proactive.procci.service.occi.MixinService;
+
 import lombok.Getter;
+
 
 public class Component extends Resource {
 
@@ -49,18 +76,17 @@ public class Component extends Resource {
         public Builder(Model cloudAutomation) throws SyntaxException {
             super(cloudAutomation);
 
-            this.status = Optional.ofNullable( cloudAutomation.getVariables().get(PlatformAttributes.STATUS_NAME))
-                    .map(s -> Status.getStatusFromString(s));
+            this.status = Optional.ofNullable(cloudAutomation.getVariables().get(PlatformAttributes.STATUS_NAME))
+                                  .map(s -> Status.getStatusFromString(s));
         }
 
-        public Builder(MixinService mixinService,
-                ResourceRendering rendering) throws ClientException {
+        public Builder(MixinService mixinService, ResourceRendering rendering) throws ClientException {
             super(mixinService, rendering);
 
-            this.status =  Optional.ofNullable(rendering.getAttributes())
-                    .map(attributes -> attributes.get(PlatformAttributes.STATUS_NAME))
-                    .filter(status -> status instanceof String)
-                    .map(status -> Status.getStatusFromString((String) status));
+            this.status = Optional.ofNullable(rendering.getAttributes())
+                                  .map(attributes -> attributes.get(PlatformAttributes.STATUS_NAME))
+                                  .filter(status -> status instanceof String)
+                                  .map(status -> Status.getStatusFromString((String) status));
         }
 
         public Component.Builder status(String status) throws SyntaxException {
@@ -104,13 +130,16 @@ public class Component extends Resource {
             return this;
         }
 
-
         @Override
         public Component build() throws ClientException {
-            return new Component(this.getUrl(), PlatformKinds.COMPONENT, this.getTitle(), this.getMixins(),
-                    this.getSummary(), this.getLinks(), status);
+            return new Component(this.getUrl(),
+                                 PlatformKinds.COMPONENT,
+                                 this.getTitle(),
+                                 this.getMixins(),
+                                 this.getSummary(),
+                                 this.getLinks(),
+                                 status);
         }
     }
-
 
 }

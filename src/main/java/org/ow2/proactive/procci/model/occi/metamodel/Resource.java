@@ -1,38 +1,32 @@
 /*
- * ProActive Parallel Suite(TM): The Java(TM) library for
- *    Parallel, Distributed, Multi-Core Computing for
- *    Enterprise Grids & Clouds
+ * ProActive Parallel Suite(TM):
+ * The Open Source library for parallel and distributed
+ * Workflows & Scheduling, Orchestration, Cloud Automation
+ * and Big Data Analysis on Enterprise Grids & Clouds.
  *
- * Copyright (C) 2013-2015 ActiveEon
- * 
- * Contact: proactive@ow2.org or contact@activeeon.com
+ * Copyright (c) 2007 - 2017 ActiveEon
+ * Contact: contact@activeeon.com
  *
- * This library is free software; you can redistribute it and/or
+ * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; version 3 of
+ * as published by the Free Software Foundation: version 3 of
  * the License.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Affero General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
- * USA
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * If needed, contact us to obtain a release under GPL Version 2 or 3
  * or a different license than the AGPL.
- *
- *  Initial developer(s):               The ProActive Team
- *                        http://proactive.inria.fr/team_members.htm
- *  Contributor(s):
- *
- * $$ACTIVEEON_INITIAL_DEV$$
  */
-
 package org.ow2.proactive.procci.model.occi.metamodel;
+
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,15 +34,15 @@ import java.util.Set;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
+
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;
 
 /**
  * Resource describes a concrete resource that can be inspected or manipulated
@@ -59,8 +53,8 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelA
 public class Resource extends Entity {
 
     private Optional<String> summary;
-    private ImmutableCollection<Link> links;
 
+    private ImmutableCollection<Link> links;
 
     /**
      * Constructor which set all parameters
@@ -79,7 +73,6 @@ public class Resource extends Entity {
         this.links = new ImmutableList.Builder<Link>().addAll(links).build();
     }
 
-
     public static Set<Attribute> getAttributes() {
         Set<Attribute> attributes = Entity.getAttributes();
         attributes.add(MetamodelAttributes.LINKS);
@@ -90,7 +83,7 @@ public class Resource extends Entity {
     @Override
     public ResourceRendering getRendering() {
         ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(),
-                this.getRenderingId());
+                                                                                    this.getRenderingId());
         this.getTitle().ifPresent(title -> resourceRendering.addAttribute(ENTITY_TITLE_NAME, title));
         this.getSummary().ifPresent(summary -> resourceRendering.addAttribute(SUMMARY_NAME, summary));
         this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getTitle()));

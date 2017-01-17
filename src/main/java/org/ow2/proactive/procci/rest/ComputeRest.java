@@ -1,36 +1,27 @@
 /*
- *  *
- * ProActive Parallel Suite(TM): The Java(TM) library for
- *    Parallel, Distributed, Multi-Core Computing for
- *    Enterprise Grids & Clouds
+ * ProActive Parallel Suite(TM):
+ * The Open Source library for parallel and distributed
+ * Workflows & Scheduling, Orchestration, Cloud Automation
+ * and Big Data Analysis on Enterprise Grids & Clouds.
  *
- * Copyright (C) 1997-2016 INRIA/University of
- *                 Nice-Sophia Antipolis/ActiveEon
- * Contact: proactive@ow2.org or contact@activeeon.com
+ * Copyright (c) 2007 - 2017 ActiveEon
+ * Contact: contact@activeeon.com
  *
- * This library is free software; you can redistribute it and/or
+ * This library is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License
- * as published by the Free Software Foundation; version 3 of
+ * as published by the Free Software Foundation: version 3 of
  * the License.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Affero General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
- * USA
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  * If needed, contact us to obtain a release under GPL Version 2 or 3
  * or a different license than the AGPL.
- *
- *  Initial developer(s):               The ProActive Team
- *                        http://proactive.inria.fr/team_members.htm
- *  Contributor(s):
- *
- *  * $$ACTIVEEON_INITIAL_DEV$$
  */
 package org.ow2.proactive.procci.rest;
 
@@ -62,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+
 /**
  * Implement CRUD methods for REST service
  */
@@ -77,7 +69,6 @@ public class ComputeRest {
     @Autowired
     private InstanceService instanceService;
 
-
     //-------------------Retrieve All Computes--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.GET)
@@ -87,7 +78,7 @@ public class ComputeRest {
 
             List<EntityRendering> entityRenderings = instanceService.getInstancesRendering();
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(entityRenderings).build(),
-                    HttpStatus.OK);
+                                        HttpStatus.OK);
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
@@ -96,7 +87,6 @@ public class ComputeRest {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     //-------------------Retrieve Single Compute--------------------------------------------------------
 
@@ -124,12 +114,11 @@ public class ComputeRest {
 
     }
 
-
     //-------------------Create a Compute--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ResourceRendering> createCompute(
-            @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
+    public ResponseEntity<ResourceRendering> createCompute(@RequestBody ResourceRendering computeRendering)
+            throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
             ComputeBuilder computeBuilder = new ComputeBuilder(mixinService, computeRendering);
