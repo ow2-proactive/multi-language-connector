@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
@@ -59,7 +59,7 @@ public class LinkTest {
     }
 
     @Test
-    public void builderTest() throws IOException, CloudAutomationException {
+    public void builderTest() throws IOException, CloudAutomationServerException {
         Compute compute = new ComputeBuilder().url("compute").build();
 
         try {

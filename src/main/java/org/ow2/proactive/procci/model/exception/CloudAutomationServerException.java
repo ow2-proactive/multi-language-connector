@@ -15,12 +15,14 @@ import org.json.simple.JSONObject;
 @Getter
 @AllArgsConstructor
 @ToString
-public class CloudAutomationException extends ClientException {
+public class CloudAutomationServerException extends ServerException {
     private JSONObject jsonError;
 
-    public CloudAutomationException(String exception) {
+    public CloudAutomationServerException(String exception, String url, String request) {
         jsonError = new JSONObject();
         jsonError.put("error", exception);
+        jsonError.put("url", url);
+        jsonError.put("request", request);
     }
 
     @Override

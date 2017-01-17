@@ -2,15 +2,16 @@ package org.ow2.proactive.procci.model.exception;
 
 import org.json.simple.JSONObject;
 
-public class ServerException extends RuntimeException {
+public class CloudAutomationClientException extends ClientException{
 
     private JSONObject jsonError;
 
-    public ServerException() {
+    public CloudAutomationClientException(String exception) {
         jsonError = new JSONObject();
-        jsonError.put("error","500 Internal Server Error");
+        jsonError.put("error", exception);
     }
 
+    @Override
     public String getJsonError() {
         return jsonError.toJSONString();
     }

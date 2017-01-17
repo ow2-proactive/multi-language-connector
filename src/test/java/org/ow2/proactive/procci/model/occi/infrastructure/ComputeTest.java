@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
@@ -39,7 +39,7 @@ public class ComputeTest {
     }
 
     @Test
-    public void computeConstructorTest() throws IOException, CloudAutomationException {
+    public void computeConstructorTest() throws IOException, CloudAutomationServerException {
 
         ComputeBuilder computeBuilder = new ComputeBuilder().url("url")
                 .architecture(Compute.Architecture.X64)
@@ -148,7 +148,7 @@ public class ComputeTest {
     }
 
     @Test
-    public void getRenderingTest() throws IOException, CloudAutomationException {
+    public void getRenderingTest() throws IOException, CloudAutomationServerException {
 
         ComputeBuilder computeBuilder = new ComputeBuilder().url("url")
                 .architecture(Compute.Architecture.X64)
