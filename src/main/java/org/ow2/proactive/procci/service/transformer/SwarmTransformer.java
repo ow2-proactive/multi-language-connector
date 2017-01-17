@@ -25,6 +25,7 @@
  */
 package org.ow2.proactive.procci.service.transformer;
 
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
 import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.AGENTS_IP_NAME;
 import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.HOST_IP_NAME;
 import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MACHINE_NAME_NAME;
@@ -59,7 +60,8 @@ public class SwarmTransformer extends TransformerProvider {
         Swarm swarm = castInstanceModel(Swarm.class, instanceModel);
 
         Model.Builder serviceBuilder = new Model.Builder(SWARM_MODEL,
-                                                         actionType).addVariable(HOST_IP_NAME, swarm.getHostIp())
+                                                         actionType).addVariable(ID_NAME, swarm.getId())
+                                                                    .addVariable(HOST_IP_NAME, swarm.getHostIp())
                                                                     .addVariable(MASTER_IP_NAME, swarm.getMasterIp())
                                                                     .addVariable(AGENTS_IP_NAME,
                                                                                  swarm.getAgentsIpAsString());
