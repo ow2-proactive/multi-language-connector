@@ -6,6 +6,7 @@ public class BigDataIdentifiers {
 
     //schemes
     public static final String BIGDATA_SCHEME = "http://schema.activeeon.org/occi/platform/bigdata#";
+
     public static final String SWARM_SCHEME = "http://schema.activeeon.org/occi/platform/bigdata/swarm#";
 
     //terms

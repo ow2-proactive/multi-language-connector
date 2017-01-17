@@ -62,6 +62,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+
 /**
  * Implement CRUD methods for REST service
  */
@@ -77,7 +78,6 @@ public class ComputeRest {
     @Autowired
     private InstanceService instanceService;
 
-
     //-------------------Retrieve All Computes--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.GET)
@@ -87,7 +87,7 @@ public class ComputeRest {
 
             List<EntityRendering> entityRenderings = instanceService.getInstancesRendering();
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(entityRenderings).build(),
-                    HttpStatus.OK);
+                                        HttpStatus.OK);
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
@@ -96,7 +96,6 @@ public class ComputeRest {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     //-------------------Retrieve Single Compute--------------------------------------------------------
 
@@ -124,15 +123,14 @@ public class ComputeRest {
 
     }
 
-
     //-------------------Create a Compute--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ResourceRendering> createCompute(
-            @RequestBody ResourceRendering computeRendering) throws InterruptedException, NumberFormatException {
+    public ResponseEntity<ResourceRendering> createCompute(@RequestBody ResourceRendering computeRendering)
+            throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            computeRendering.checkAttributes(Compute.getAttributes(),"Compute");
+            computeRendering.checkAttributes(Compute.getAttributes(), "Compute");
             ComputeBuilder computeBuilder = new ComputeBuilder(mixinService, computeRendering);
             Resource response = instanceService.create(computeBuilder.build(), TransformerType.COMPUTE);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);

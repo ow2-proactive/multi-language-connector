@@ -2,18 +2,17 @@ package org.ow2.proactive.procci.service;
 
 import java.io.IOException;
 
-import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
-import org.ow2.proactive.procci.model.exception.ServerException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 /**
  * Created by the Activeeon Team on 06/10/16.
@@ -36,11 +35,9 @@ public class CloudAutomationVariablesClient {
         logger.debug("get " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         String url = getResourceUrl(key);
         try {
-            Response response = Request.Get(url)
-                    .version(HttpVersion.HTTP_1_1)
-                    .execute();
+            Response response = Request.Get(url).version(HttpVersion.HTTP_1_1).execute();
 
-            return requestUtils.readHttpResponse(response.returnResponse(),url,"GET");
+            return requestUtils.readHttpResponse(response.returnResponse(), url, "GET");
 
         } catch (IOException ex) {
             logger.error("Unable to get on " + getResourceUrl(key) + ", exception : " + ex.getMessage());
@@ -48,19 +45,18 @@ public class CloudAutomationVariablesClient {
         }
     }
 
-
     public void post(String key, String value) {
         logger.debug("post " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         String url = getQueryUrl(key);
         try {
             HttpResponse response = Request.Post(url)
-                    .useExpectContinue()
-                    .version(HttpVersion.HTTP_1_1)
-                    .bodyString(value, ContentType.APPLICATION_JSON)
-                    .execute()
-                    .returnResponse();
+                                           .useExpectContinue()
+                                           .version(HttpVersion.HTTP_1_1)
+                                           .bodyString(value, ContentType.APPLICATION_JSON)
+                                           .execute()
+                                           .returnResponse();
 
-            requestUtils.readHttpResponse(response, url,"POST "+value);
+            requestUtils.readHttpResponse(response, url, "POST " + value);
 
         } catch (IOException ex) {
             logger.error("Unable to post on " + getQueryUrl(key) + ", exception : " + ex.getMessage());
@@ -74,13 +70,13 @@ public class CloudAutomationVariablesClient {
         String url = getResourceUrl(key);
         try {
             HttpResponse response = Request.Put(url)
-                    .useExpectContinue()
-                    .version(HttpVersion.HTTP_1_1)
-                    .bodyString(value, ContentType.APPLICATION_JSON)
-                    .execute()
-                    .returnResponse();
+                                           .useExpectContinue()
+                                           .version(HttpVersion.HTTP_1_1)
+                                           .bodyString(value, ContentType.APPLICATION_JSON)
+                                           .execute()
+                                           .returnResponse();
 
-            requestUtils.readHttpResponse(response,url,"PUT "+value);
+            requestUtils.readHttpResponse(response, url, "PUT " + value);
 
         } catch (IOException ex) {
             logger.error("Unable to put on " + getResourceUrl(key) + " ,exception : " + ex.getMessage());
@@ -88,16 +84,13 @@ public class CloudAutomationVariablesClient {
         }
     }
 
-    public void delete(String key)  {
+    public void delete(String key) {
         logger.debug("delete " + key + " on " + requestUtils.getProperty(VARIABLES_ENDPOINT));
         String url = getResourceUrl(key);
         try {
-            HttpResponse response = Request.Delete(url)
-                    .version(HttpVersion.HTTP_1_1)
-                    .execute()
-                    .returnResponse();
+            HttpResponse response = Request.Delete(url).version(HttpVersion.HTTP_1_1).execute().returnResponse();
 
-            requestUtils.readHttpResponse(response,url,"DELETE");
+            requestUtils.readHttpResponse(response, url, "DELETE");
 
         } catch (IOException ex) {
             logger.error("Unable to delete on " + getQueryUrl(key) + ", exception : " + ex.getMessage());

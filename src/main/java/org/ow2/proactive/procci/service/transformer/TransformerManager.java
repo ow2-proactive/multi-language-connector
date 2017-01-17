@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class TransformerManager {
 
@@ -15,8 +16,8 @@ public class TransformerManager {
 
     @Autowired
     public TransformerManager(List<TransformerProvider> transformerProviders) {
-        transformerPerType = transformerProviders.stream()
-                .collect(Collectors.toMap(TransformerProvider::getType, Function.identity()));
+        transformerPerType = transformerProviders.stream().collect(Collectors.toMap(TransformerProvider::getType,
+                                                                                    Function.identity()));
     }
 
     public TransformerProvider getTransformerProvider(TransformerType transformerType) {

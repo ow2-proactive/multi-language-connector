@@ -13,7 +13,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+
 import lombok.Getter;
+
 
 /**
  * This class enables to support L3/L4 capabilities with the NetworkInterface class
@@ -22,7 +24,9 @@ import lombok.Getter;
 public class IPNetworkInterface extends Mixin {
 
     private String address;
+
     private String gateway;
+
     //if dynamic allocation is true then the allocation is dynamic otherwise it is static
     //default is false
     private boolean dynamic;
@@ -35,13 +39,17 @@ public class IPNetworkInterface extends Mixin {
      * @param dynamic  defines the allocation protocol
      * @param entities is the set of resource instances
      */
-    public IPNetworkInterface(String address, String gateway, boolean dynamic,
-            List<Entity> entities) throws UnknownHostException {
+    public IPNetworkInterface(String address, String gateway, boolean dynamic, List<Entity> entities)
+            throws UnknownHostException {
 
-        super(InfrastructureIdentifiers.NETWORKINTERFACE_SCHEME, InfrastructureIdentifiers.IPNETWORK_INTERFACE,
-                InfrastructureIdentifiers.IPNETWORK_INTERFACE,
-                createAttributesSet(), new ArrayList<>(), new ArrayList<>(), initApplies(),
-                entities);
+        super(InfrastructureIdentifiers.NETWORKINTERFACE_SCHEME,
+              InfrastructureIdentifiers.IPNETWORK_INTERFACE,
+              InfrastructureIdentifiers.IPNETWORK_INTERFACE,
+              createAttributesSet(),
+              new ArrayList<>(),
+              new ArrayList<>(),
+              initApplies(),
+              entities);
 
         this.address = address;
         this.gateway = gateway;

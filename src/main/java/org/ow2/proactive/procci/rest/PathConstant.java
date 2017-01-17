@@ -5,7 +5,9 @@ package org.ow2.proactive.procci.rest;
  */
 public class PathConstant {
     public static final String COMPUTE_PATH = "/occi/compute/";
+
     public static final String SWARM_PATH = "/occi/swarm/";
+
     public static final String QUERY_PATH = "/occi/";
 
 }

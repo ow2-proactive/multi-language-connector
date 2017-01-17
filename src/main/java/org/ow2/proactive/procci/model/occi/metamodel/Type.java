@@ -8,5 +8,7 @@ package org.ow2.proactive.procci.model.occi.metamodel;
  * Define the type of some variables of Attribute
  */
 public enum Type {
-    OBJECT, LIST, HASH
+    OBJECT,
+    LIST,
+    HASH
 }

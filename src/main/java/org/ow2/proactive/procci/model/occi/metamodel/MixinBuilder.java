@@ -18,6 +18,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRenderin
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import org.ow2.proactive.procci.service.occi.InstanceService;
 import org.ow2.proactive.procci.service.occi.MixinService;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 
@@ -33,18 +34,25 @@ public class MixinBuilder {
 
     @Getter(value = AccessLevel.PROTECTED)
     private final String scheme;
+
     @Getter(value = AccessLevel.PROTECTED)
     private final String term;
+
     @Getter(value = AccessLevel.PROTECTED)
     private String title;
+
     @Getter(value = AccessLevel.PROTECTED)
     private Set<Attribute> attributes;
+
     @Getter(value = AccessLevel.PROTECTED)
     private List<Action> actions;
+
     @Getter(value = AccessLevel.PROTECTED)
     private List<Mixin> depends;
+
     @Getter(value = AccessLevel.PROTECTED)
     private List<Kind> applies;
+
     @Getter(value = AccessLevel.PROTECTED)
     private List<Entity> entities;
 
@@ -65,49 +73,47 @@ public class MixinBuilder {
      * @param instanceService is the instances manager
      * @param mixinRendering  is the rendering mixin
      */
-    public MixinBuilder(MixinService mixinService, InstanceService instanceService,
-            MixinRendering mixinRendering) throws ClientException {
-        this.scheme = Optional.ofNullable(mixinRendering.getScheme()).orElseThrow(
-                () -> new MissingAttributesException("scheme", "mixin"));
-        this.term = Optional.ofNullable(mixinRendering.getTerm()).orElseThrow(
-                () -> new MissingAttributesException("term", "mixin"));
+    public MixinBuilder(MixinService mixinService, InstanceService instanceService, MixinRendering mixinRendering)
+            throws ClientException {
+        this.scheme = Optional.ofNullable(mixinRendering.getScheme())
+                              .orElseThrow(() -> new MissingAttributesException("scheme", "mixin"));
+        this.term = Optional.ofNullable(mixinRendering.getTerm())
+                            .orElseThrow(() -> new MissingAttributesException("term", "mixin"));
         this.title = Optional.ofNullable(mixinRendering.getTitle()).orElse(this.term);
-        this.attributes = convertAttributesMap(Optional.ofNullable(mixinRendering.getAttributes()).orElse(
-                new HashMap()));
+        this.attributes = convertAttributesMap(Optional.ofNullable(mixinRendering.getAttributes())
+                                                       .orElse(new HashMap()));
         //action are not manage yet
         this.actions = new ArrayList<>();
 
-        this.depends = Optional.ofNullable(mixinRendering.getDepends()).orElse(new ArrayList<>())
-                .stream()
-                .map(depend -> mixinService.getMixinMockByTitle(depend))
-                .collect(Collectors.toList());
-
+        this.depends = Optional.ofNullable(mixinRendering.getDepends())
+                               .orElse(new ArrayList<>())
+                               .stream()
+                               .map(depend -> mixinService.getMixinMockByTitle(depend))
+                               .collect(Collectors.toList());
 
         this.applies = Optional.ofNullable(mixinRendering.getApplies())
-                .orElse(new ArrayList<>())
-                .stream()
-                .map(apply -> InfrastructureKinds.getKind(apply).orElseThrow(
-                        () -> new SyntaxException(apply, "Kind")))
-                .collect(Collectors.toList());
-
+                               .orElse(new ArrayList<>())
+                               .stream()
+                               .map(apply -> InfrastructureKinds.getKind(apply)
+                                                                .orElseThrow(() -> new SyntaxException(apply, "Kind")))
+                               .collect(Collectors.toList());
 
         this.entities = Optional.ofNullable(mixinRendering.getEntities())
-                .map(entitiesId -> new ArrayList<>(entitiesId))
-                .orElse(new ArrayList<>())
-                .stream()
-                .map(entityId -> instanceService.getMockedEntity(entityId))
-                .filter(entity -> entity.isPresent())
-                .map(entity -> entity.get())
-                .collect(Collectors.toList());
-
+                                .map(entitiesId -> new ArrayList<>(entitiesId))
+                                .orElse(new ArrayList<>())
+                                .stream()
+                                .map(entityId -> instanceService.getMockedEntity(entityId))
+                                .filter(entity -> entity.isPresent())
+                                .map(entity -> entity.get())
+                                .collect(Collectors.toList());
 
     }
 
     private Set<Attribute> convertAttributesMap(Map<String, AttributeRendering> attributeMap) {
         return attributeMap.keySet()
-                .stream()
-                .map(key -> new Attribute.Builder(key, attributeMap.get(key)).build())
-                .collect(Collectors.toSet());
+                           .stream()
+                           .map(key -> new Attribute.Builder(key, attributeMap.get(key)).build())
+                           .collect(Collectors.toSet());
     }
 
     public MixinBuilder title(String title) {
@@ -141,11 +147,9 @@ public class MixinBuilder {
     }
 
     public MixinBuilder attributes(Map attributes) throws ClientException {
-        this.title = readAttributeAsString(attributes, MetamodelAttributes.CATEGORY_TITLE_NAME)
-                .orElse(this.title);
+        this.title = readAttributeAsString(attributes, MetamodelAttributes.CATEGORY_TITLE_NAME).orElse(this.title);
         return this;
     }
-
 
     /**
      * Build the instance of a mixin according to its scheme and term
@@ -168,14 +172,13 @@ public class MixinBuilder {
     }
 
     protected Optional<String> readAttributeAsString(Map attributes, String key) throws SyntaxException {
-        return Optional.ofNullable(attributes.get(key))
-                .map(attribute -> {
-                    if (attribute instanceof String) {
-                        return (String) attribute;
-                    } else {
-                        throw new SyntaxException(key, "String");
-                    }
-                });
+        return Optional.ofNullable(attributes.get(key)).map(attribute -> {
+            if (attribute instanceof String) {
+                return (String) attribute;
+            } else {
+                throw new SyntaxException(key, "String");
+            }
+        });
     }
 
 }

@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 /**
  * Model rendering for an attribute
  */
@@ -17,10 +18,15 @@ import lombok.NoArgsConstructor;
 public class AttributeRendering {
 
     private boolean mutable;
+
     private boolean required;
+
     private String type;
+
     private Object pattern;
+
     private Object defaultValue;
+
     private String description;
 
 }

@@ -1,6 +1,5 @@
 package org.ow2.proactive.procci.rest;
 
-
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * Created by the Activeeon Team on 05/10/16.
@@ -42,9 +42,7 @@ public class MixinRest {
         logger.debug("Getting Mixin " + mixinTitle);
 
         try {
-            return new ResponseEntity(
-                    mixinService.getMixinByTitle(mixinTitle).getRendering(),
-                    HttpStatus.OK);
+            return new ResponseEntity(mixinService.getMixinByTitle(mixinTitle).getRendering(), HttpStatus.OK);
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (ServerException exception) {
@@ -52,12 +50,10 @@ public class MixinRest {
         }
     }
 
-
     //-------------------Create a Mixin--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<MixinRendering> createMixin(
-            @RequestBody MixinRendering mixinRendering) {
+    public ResponseEntity<MixinRendering> createMixin(@RequestBody MixinRendering mixinRendering) {
         logger.debug("Creating Mixin " + mixinRendering.toString());
         try {
             Mixin mixin = new MixinBuilder(mixinService, instanceService, mixinRendering).build();
@@ -75,8 +71,7 @@ public class MixinRest {
     //-------------------Update a Mixin--------------------------------------------------------
 
     @RequestMapping(value = "{mixinTitle}", method = RequestMethod.PUT)
-    public ResponseEntity<MixinRendering> updateMixin(
-            @PathVariable("mixinTitle") String mixinTitle,
+    public ResponseEntity<MixinRendering> updateMixin(@PathVariable("mixinTitle") String mixinTitle,
             @RequestBody MixinRendering mixinRendering) {
         logger.debug("Updating Mixin " + mixinTitle + " with " + mixinRendering.toString());
 

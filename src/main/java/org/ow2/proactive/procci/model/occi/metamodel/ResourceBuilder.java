@@ -1,34 +1,36 @@
 package org.ow2.proactive.procci.model.occi.metamodel;
 
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.MissingAttributesException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.MixinService;
+
 import lombok.Getter;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;
 
 @Getter
 public class ResourceBuilder {
 
-
     protected Optional<String> url;
+
     protected Optional<String> title;
+
     protected List<Mixin> mixins;
+
     protected Optional<String> summary;
+
     protected List<Link> links;
 
     public ResourceBuilder() {
@@ -51,13 +53,12 @@ public class ResourceBuilder {
         this.links = new ArrayList<>();
     }
 
-    public ResourceBuilder(MixinService mixinService,
-            ResourceRendering rendering) throws ClientException {
+    public ResourceBuilder(MixinService mixinService, ResourceRendering rendering) throws ClientException {
         this.url = Optional.ofNullable(rendering.getId());
         this.title = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
-                .map(attributes -> attributes.get(ENTITY_TITLE_NAME)));
-        this.summary = ConvertUtils.convertStringFromObject(Optional.ofNullable(
-                rendering.getAttributes()).map(attributes -> attributes.get(SUMMARY_NAME)));
+                                                                  .map(attributes -> attributes.get(ENTITY_TITLE_NAME)));
+        this.summary = ConvertUtils.convertStringFromObject(Optional.ofNullable(rendering.getAttributes())
+                                                                    .map(attributes -> attributes.get(SUMMARY_NAME)));
         this.mixins = new ArrayList<>();
         for (String mixin : Optional.ofNullable(rendering.getMixins()).orElse(new ArrayList<>())) {
             this.mixins.add(mixinService.getMixinByTitle(mixin));
@@ -72,26 +73,21 @@ public class ResourceBuilder {
      * @param attributes is the attriutes list of the compute
      * @throws ClientException is thrown if there is an error during the mixin reading
      */
-    void associateProviderMixin(MixinService mixinService,
-            Map<String, Object> attributes) throws ClientException {
+    void associateProviderMixin(MixinService mixinService, Map<String, Object> attributes) throws ClientException {
         if (attributes == null) {
             return;
         }
 
-        attributes.keySet()
-                .forEach(mixinName -> {
-                    mixinService.getMixinBuilder(mixinName)
-                            .ifPresent(mixinBuilder -> {
-                                Object attributeMap = attributes.get(mixinName);
-                                if (attributeMap instanceof Map) {
-                                    this.mixins.add(mixinBuilder
-                                            .attributes((Map) attributeMap)
-                                            .build());
-                                } else {
-                                    throw new SyntaxException(attributeMap.toString(), "Map");
-                                }
-                            });
-                });
+        attributes.keySet().forEach(mixinName -> {
+            mixinService.getMixinBuilder(mixinName).ifPresent(mixinBuilder -> {
+                Object attributeMap = attributes.get(mixinName);
+                if (attributeMap instanceof Map) {
+                    this.mixins.add(mixinBuilder.attributes((Map) attributeMap).build());
+                } else {
+                    throw new SyntaxException(attributeMap.toString(), "Map");
+                }
+            });
+        });
 
     }
 
@@ -129,4 +125,3 @@ public class ResourceBuilder {
         return new Resource(url, MetamodelKinds.RESOURCE, title, mixins, summary, links);
     }
 }
-

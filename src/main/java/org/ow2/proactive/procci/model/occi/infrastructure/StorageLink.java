@@ -32,7 +32,6 @@
  * $$ACTIVEEON_INITIAL_DEV$$
  */
 
-
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
 import java.util.ArrayList;
@@ -49,9 +48,11 @@ import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
 
 /**
  * The StorageLink is a link from a Resource to a target Storage instance
@@ -60,7 +61,9 @@ import lombok.ToString;
 public class StorageLink extends Link {
 
     private final String deviceId;
+
     private final NetworkState state;
+
     private String mountPoint;
 
     /**
@@ -76,9 +79,9 @@ public class StorageLink extends Link {
      * @param deviceId   is the device identifier
      * @param mountPoint point to where is mounted the guest OS
      */
-    private StorageLink(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-            Resource source, String target, String deviceId, String mountPoint, Optional<Kind> targetkind,
-            NetworkState state) throws SyntaxException {
+    private StorageLink(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins, Resource source,
+            String target, String deviceId, String mountPoint, Optional<Kind> targetkind, NetworkState state)
+            throws SyntaxException {
 
         super(url, kind, title, mixins, source, target, targetkind);
         createAttributesSet();
@@ -100,13 +103,21 @@ public class StorageLink extends Link {
     @ToString
     public static class Builder {
         private final Resource source;
+
         private final String target;
+
         private final String deviceId;
+
         private Optional<String> url;
+
         private Optional<String> title;
+
         private List<Mixin> mixins;
+
         private Optional<Kind> targetKind;
+
         private String mountpoint;
+
         private NetworkState state;
 
         public Builder(Resource source, String target, String deviceId) {
@@ -151,8 +162,16 @@ public class StorageLink extends Link {
         }
 
         public StorageLink build() throws SyntaxException {
-            return new StorageLink(url, InfrastructureKinds.STORAGE_LINK, title, mixins, source, target,
-                    deviceId, mountpoint, targetKind, state);
+            return new StorageLink(url,
+                                   InfrastructureKinds.STORAGE_LINK,
+                                   title,
+                                   mixins,
+                                   source,
+                                   target,
+                                   deviceId,
+                                   mountpoint,
+                                   targetKind,
+                                   state);
         }
 
     }

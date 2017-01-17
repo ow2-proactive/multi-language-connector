@@ -38,9 +38,12 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
+
 import com.google.common.collect.ImmutableSet;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 
 /**
  * Category is the basis type of identification mecanism
@@ -50,8 +53,11 @@ import lombok.EqualsAndHashCode;
 public class Category {
 
     private final String scheme;
+
     private final String term;
+
     private final ImmutableSet<Attribute> attributes;
+
     private String title;
 
     /**
@@ -70,11 +76,10 @@ public class Category {
         }
         this.title = title;
         this.term = term;
-        this.attributes = new ImmutableSet.Builder<Attribute>()
-                .add(MetamodelAttributes.SCHEME)
-                .add(MetamodelAttributes.TERM)
-                .add(MetamodelAttributes.CATEGORY_TITLE)
-                .addAll(attributes)
-                .build();
+        this.attributes = new ImmutableSet.Builder<Attribute>().add(MetamodelAttributes.SCHEME)
+                                                               .add(MetamodelAttributes.TERM)
+                                                               .add(MetamodelAttributes.CATEGORY_TITLE)
+                                                               .addAll(attributes)
+                                                               .build();
     }
 }

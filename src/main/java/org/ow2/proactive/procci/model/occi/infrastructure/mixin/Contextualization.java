@@ -17,7 +17,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
+
 import lombok.Getter;
+
 
 /**
  * Created by the Activeeon Team on 2/25/16.
@@ -31,7 +33,6 @@ public class Contextualization extends Mixin {
 
     private String userdata;
 
-
     /**
      * Create a Contextualization mixin
      *
@@ -41,9 +42,14 @@ public class Contextualization extends Mixin {
      * @param userdata userdata Contextualization data(e.g., script executable) that the client supplies once and only once. It cannot be updated
      */
     public Contextualization(String title, List<Mixin> depends, List<Entity> entities, String userdata) {
-        super(InfrastructureIdentifiers.COMPUTE_SCHEME, InfrastructureIdentifiers.CONTEXTUALIZATION, title,
-                createAttributeSet(), new ArrayList<>(), depends, setApplies(),
-                entities);
+        super(InfrastructureIdentifiers.COMPUTE_SCHEME,
+              InfrastructureIdentifiers.CONTEXTUALIZATION,
+              title,
+              createAttributeSet(),
+              new ArrayList<>(),
+              depends,
+              setApplies(),
+              entities);
         this.userdata = userdata;
     }
 
@@ -63,7 +69,6 @@ public class Contextualization extends Mixin {
         return userdata;
     }
 
-
     @Override
     public Model.Builder toCloudAutomationModel(Model.Builder cloudAutomation) {
         cloudAutomation.addVariable(InfrastructureAttributes.USERDATA_NAME, this.userdata);
@@ -81,16 +86,15 @@ public class Contextualization extends Mixin {
         @Override
         public Contextualization.Builder attributes(Map attributesMap) throws ClientException {
             super.attributes(attributesMap);
-            this.userdata = readAttributeAsString(attributesMap, InfrastructureAttributes.USERDATA_NAME)
-                    .orElseThrow(() -> new MissingAttributesException(InfrastructureAttributes.USERDATA_NAME,
-                            InfrastructureAttributes.USERDATA.getName()));
+            this.userdata = readAttributeAsString(attributesMap,
+                                                  InfrastructureAttributes.USERDATA_NAME).orElseThrow(() -> new MissingAttributesException(InfrastructureAttributes.USERDATA_NAME,
+                                                                                                                                           InfrastructureAttributes.USERDATA.getName()));
             return this;
         }
 
         @Override
         public Contextualization build() {
-            return new Contextualization(this.getTitle(), this.getDepends(), this.getEntities(),
-                    this.userdata);
+            return new Contextualization(this.getTitle(), this.getDepends(), this.getEntities(), this.userdata);
         }
 
     }

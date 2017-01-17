@@ -1,9 +1,11 @@
 package org.ow2.proactive.procci.model.exception;
 
+import org.json.simple.JSONObject;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
-import org.json.simple.JSONObject;
+
 
 /**
  * Created by the Activeeon Team on 21/06/16.

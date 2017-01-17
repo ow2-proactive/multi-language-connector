@@ -36,6 +36,7 @@ package org.ow2.proactive.procci.model.occi.infrastructure.state;
 
 import lombok.Getter;
 
+
 public enum ComputeState {
 
     ACTIVE("active state", "RUNNING"),

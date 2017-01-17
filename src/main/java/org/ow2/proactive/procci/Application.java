@@ -34,8 +34,6 @@ package org.ow2.proactive.procci;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -47,6 +45,10 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -71,13 +73,13 @@ public class Application extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-        configurer.favorPathExtension(false).
-                favorParameter(true).
-                parameterName("format").
-                ignoreAcceptHeader(true).
-                useJaf(false).
-                defaultContentType(MediaType.APPLICATION_JSON).
-                mediaType("json", MediaType.APPLICATION_JSON);
+        configurer.favorPathExtension(false)
+                  .favorParameter(true)
+                  .parameterName("format")
+                  .ignoreAcceptHeader(true)
+                  .useJaf(false)
+                  .defaultContentType(MediaType.APPLICATION_JSON)
+                  .mediaType("json", MediaType.APPLICATION_JSON);
     }
 
     @Bean
@@ -86,27 +88,24 @@ public class Application extends WebMvcConfigurerAdapter {
     }
 
     /*
-    The following code is for Swagger documentation
+     * The following code is for Swagger documentation
      */
     @Bean
     public Docket procciApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(apiInfo())
-                .groupName("proactive")
-                .select()
-                .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
-                .paths(allowedPaths())
-                .build();
+        return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
+                                                      .groupName("proactive")
+                                                      .select()
+                                                      .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
+                                                      .paths(allowedPaths())
+                                                      .build();
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Multi-language connector")
-                .description(
-                        "The purpose of Multi-language connector is to offer a standard access to the cloud automation functionnalities\n")
-                .licenseUrl("https://github.com/ow2-proactive/procci/blob/master/LICENSE")
-                .version("1.0")
-                .build();
+        return new ApiInfoBuilder().title("Multi-language connector")
+                                   .description("The purpose of Multi-language connector is to offer a standard access to the cloud automation functionnalities\n")
+                                   .licenseUrl("https://github.com/ow2-proactive/procci/blob/master/LICENSE")
+                                   .version("1.0")
+                                   .build();
     }
 
     private Predicate<String> allowedPaths() {

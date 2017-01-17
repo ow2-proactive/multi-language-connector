@@ -45,7 +45,9 @@ import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
+
 import com.google.common.collect.ImmutableList;
+
 import lombok.Getter;
 
 
@@ -56,10 +58,12 @@ import lombok.Getter;
 public class Mixin extends Category {
 
     private final ImmutableList<Action> actions;
-    private final ImmutableList<Mixin> depends;
-    private final ImmutableList<Kind> applies;
-    private List<Entity> entities;
 
+    private final ImmutableList<Mixin> depends;
+
+    private final ImmutableList<Kind> applies;
+
+    private List<Entity> entities;
 
     /**
      * Mixin constructor
@@ -73,9 +77,8 @@ public class Mixin extends Category {
      * @param applies    is the list of kind this mixin instance applies to
      * @param entities   is the set of resource instances
      */
-    public Mixin(String scheme, String term, String title, Set<Attribute> attributes,
-            List<Action> actions, List<Mixin> depends, List<Kind> applies,
-            List<Entity> entities) {
+    public Mixin(String scheme, String term, String title, Set<Attribute> attributes, List<Action> actions,
+            List<Mixin> depends, List<Kind> applies, List<Entity> entities) {
         super(scheme, term, title, createAttributeSet(attributes));
         this.actions = new ImmutableList.Builder<Action>().addAll(actions).build();
         this.depends = new ImmutableList.Builder<Mixin>().addAll(depends).build();
@@ -100,25 +103,20 @@ public class Mixin extends Category {
     public MixinRendering getRendering() {
 
         return MixinRendering.builder()
-                .scheme(this.getScheme())
-                .term(this.getTerm())
-                .title(this.getTitle())
-                .attributes(generateAttributeMap())
-                .actions(mapTitle(this.actions))
-                .depends(mapTitle(this.depends))
-                .applies(mapTitle(this.applies))
-                .entities(this.entities
-                        .stream()
-                        .map(entity -> entity.getId())
-                        .collect(Collectors.toSet()))
-                .location("/" + this.getTitle())
-                .build();
+                             .scheme(this.getScheme())
+                             .term(this.getTerm())
+                             .title(this.getTitle())
+                             .attributes(generateAttributeMap())
+                             .actions(mapTitle(this.actions))
+                             .depends(mapTitle(this.depends))
+                             .applies(mapTitle(this.applies))
+                             .entities(this.entities.stream().map(entity -> entity.getId()).collect(Collectors.toSet()))
+                             .location("/" + this.getTitle())
+                             .build();
     }
 
     private List<String> mapTitle(List<? extends Category> input) {
-        return input.stream()
-                .map(action -> action.getTitle())
-                .collect(Collectors.toList());
+        return input.stream().map(action -> action.getTitle()).collect(Collectors.toList());
     }
 
     private Map<String, AttributeRendering> generateAttributeMap() {

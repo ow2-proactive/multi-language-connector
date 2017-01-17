@@ -2,6 +2,7 @@ package org.ow2.proactive.procci.model.occi.platform;
 
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 
+
 public enum Status {
     ACTIVE("The component is running"),
     INACTIVE("The component is not running"),
@@ -12,7 +13,6 @@ public enum Status {
     Status(String message) {
         this.message = message;
     }
-
 
     public static Status getStatusFromString(String value) throws SyntaxException {
         if (ACTIVE.name().equalsIgnoreCase(value)) {

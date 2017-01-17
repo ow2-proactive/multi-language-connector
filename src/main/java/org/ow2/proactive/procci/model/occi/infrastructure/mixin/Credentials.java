@@ -12,7 +12,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+
 import lombok.Getter;
+
 
 /**
  * Created by the Activeeon Team on 2/25/16.
@@ -33,9 +35,14 @@ public class Credentials extends Mixin {
      * @param entities  is the set of resource instances
      */
     public Credentials(String publickey, List<Entity> entities) {
-        super(InfrastructureIdentifiers.CREDENTIALS_SCHEME, InfrastructureIdentifiers.CREDENTIALS, InfrastructureIdentifiers.CREDENTIALS,
-                createAttributesSet(), new ArrayList<>(), new ArrayList<>(), setApplies(),
-                entities);
+        super(InfrastructureIdentifiers.CREDENTIALS_SCHEME,
+              InfrastructureIdentifiers.CREDENTIALS,
+              InfrastructureIdentifiers.CREDENTIALS,
+              createAttributesSet(),
+              new ArrayList<>(),
+              new ArrayList<>(),
+              setApplies(),
+              entities);
         this.publickey = publickey;
     }
 

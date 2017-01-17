@@ -2,7 +2,8 @@ package org.ow2.proactive.procci.model.exception;
 
 import org.json.simple.JSONObject;
 
-public class CloudAutomationClientException extends ClientException{
+
+public class CloudAutomationClientException extends ClientException {
 
     private JSONObject jsonError;
 

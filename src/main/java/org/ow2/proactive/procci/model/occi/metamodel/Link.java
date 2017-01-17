@@ -46,7 +46,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttribut
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.LinkLocationRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.LinkRendering;
+
 import lombok.Getter;
+
 
 /**
  * Link defines the base associaction between 2 resources
@@ -55,7 +57,9 @@ import lombok.Getter;
 public class Link extends Entity {
 
     private Resource source;
+
     private URI target;
+
     private Optional<Kind> targetKind;
 
     /**
@@ -69,8 +73,8 @@ public class Link extends Entity {
      * @param target     is the id of the resource instance the link point to
      * @param targetKind is the kind of the target
      */
-    protected Link(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-            Resource source, String target, Optional<Kind> targetKind) throws SyntaxException {
+    protected Link(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins, Resource source,
+            String target, Optional<Kind> targetKind) throws SyntaxException {
         super(url, kind, title, mixins);
         this.source = source;
         this.target = getURIFromString(target);
@@ -87,8 +91,10 @@ public class Link extends Entity {
 
     @Override
     public LinkRendering getRendering() {
-        return new LinkRendering.Builder(this.getKind().getTitle(), this.getId(),
-                new LinkLocationRendering(), new LinkLocationRendering()).build();
+        return new LinkRendering.Builder(this.getKind().getTitle(),
+                                         this.getId(),
+                                         new LinkLocationRendering(),
+                                         new LinkLocationRendering()).build();
     }
 
     private URI getURIFromString(String uri) throws SyntaxException {
@@ -101,10 +107,15 @@ public class Link extends Entity {
 
     public static class Builder {
         private final Resource source;
+
         private final String target;
+
         private Optional<String> url;
+
         private Optional<String> title;
+
         private List<Mixin> mixins;
+
         private Optional<Kind> targetKind;
 
         public Builder(Resource source, String target) {
@@ -114,7 +125,6 @@ public class Link extends Entity {
             this.mixins = new ArrayList<>();
             this.targetKind = Optional.empty();
         }
-
 
         public Builder url(String url) {
             this.url = Optional.ofNullable(url);

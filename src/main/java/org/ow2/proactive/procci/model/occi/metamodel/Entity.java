@@ -45,9 +45,11 @@ import org.ow2.proactive.procci.model.InstanceModel;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
 
 /**
  * Entity is the abstract type that will gather the information contained in Resource and Link
@@ -57,8 +59,11 @@ import lombok.ToString;
 @Getter
 public abstract class Entity extends InstanceModel {
     private final String id;
+
     private final Kind kind;
+
     private Optional<String> title;
+
     private List<Mixin> mixins;
 
     public Entity() {
@@ -96,7 +101,6 @@ public abstract class Entity extends InstanceModel {
         this.mixins = mixins;
     }
 
-
     public static Set<Attribute> getAttributes() {
         Set<Attribute> attributes = new HashSet<>();
         attributes.add(MetamodelAttributes.ID);
@@ -110,13 +114,11 @@ public abstract class Entity extends InstanceModel {
         return "urn:uuid:" + UUID.randomUUID().toString();
     }
 
-
     //WARNING : The Character '−' is not supported by the scheduler so it is replaced by the character '-'
 
     public String getRenderingId() {
         return this.id.replaceAll("-", "−");
     }
-
 
     public abstract EntityRendering getRendering();
 

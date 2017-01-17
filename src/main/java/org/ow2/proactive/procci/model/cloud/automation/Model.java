@@ -34,16 +34,6 @@
  */
 package org.ow2.proactive.procci.model.cloud.automation;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-import org.json.simple.JSONObject;
-
 import static org.ow2.proactive.procci.model.ModelConstant.ACTION_DESCRIPTION;
 import static org.ow2.proactive.procci.model.ModelConstant.ACTION_ICON;
 import static org.ow2.proactive.procci.model.ModelConstant.ACTION_NAME;
@@ -56,6 +46,18 @@ import static org.ow2.proactive.procci.model.ModelConstant.SERVICE_NAME;
 import static org.ow2.proactive.procci.model.ModelConstant.SERVICE_TYPE;
 import static org.ow2.proactive.procci.model.ModelConstant.VARIABLES;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.simple.JSONObject;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
+
 /**
  * Cloud Automation serviceModel
  */
@@ -66,14 +68,23 @@ import static org.ow2.proactive.procci.model.ModelConstant.VARIABLES;
 public class Model {
 
     private final String serviceModel;
+
     private final String serviceType;
+
     private final String serviceName;
+
     private final String serviceDescription;
+
     private final String actionType;
+
     private final String actionName;
+
     private final String actionDescription;
+
     private final String actionOriginStates;
+
     private final String actionIcon;
+
     private final Map<String, String> variables;
 
     /**
@@ -84,8 +95,7 @@ public class Model {
     public Model(JSONObject CloudAutomationJson) {
 
         JSONObject variables = (JSONObject) CloudAutomationJson.getOrDefault(VARIABLES, new JSONObject());
-        JSONObject genericInfo = (JSONObject) CloudAutomationJson.getOrDefault(GENERIC_INFORMATION,
-                new JSONObject());
+        JSONObject genericInfo = (JSONObject) CloudAutomationJson.getOrDefault(GENERIC_INFORMATION, new JSONObject());
 
         this.serviceModel = (String) genericInfo.getOrDefault(SERVICE_MODEL, "");
         this.serviceType = (String) genericInfo.getOrDefault(SERVICE_TYPE, "");
@@ -103,7 +113,6 @@ public class Model {
             this.variables.put((String) key, (String) variables.get(key));
         }
     }
-
 
     /**
      * Create a json object which contains the cloud automation serviceModel and its values
@@ -136,14 +145,23 @@ public class Model {
     public static class Builder {
 
         private final String serviceModel;
+
         private final String actionType;
+
         private String serviceType;
+
         private String serviceName;
+
         private String serviceDescription;
+
         private String actionName;
+
         private String actionDescription;
+
         private String actionOriginStates;
+
         private String actionIcon;
+
         private Map<String, String> variables;
 
         public Builder(String model, String actionType) {
@@ -207,12 +225,17 @@ public class Model {
         }
 
         public Model build() {
-            return new Model(serviceModel, serviceType, serviceName, serviceDescription, actionType,
-                    actionName,
-                    actionDescription, actionOriginStates, actionIcon, variables);
+            return new Model(serviceModel,
+                             serviceType,
+                             serviceName,
+                             serviceDescription,
+                             actionType,
+                             actionName,
+                             actionDescription,
+                             actionOriginStates,
+                             actionIcon,
+                             variables);
         }
     }
 
-
 }
-

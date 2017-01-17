@@ -36,6 +36,7 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 
 import java.util.Set;
 
+
 /**
  * Action defines an invocable operation applicable to an Entity
  */
@@ -52,6 +53,5 @@ public abstract class Action extends Category {
     public Action(String scheme, String term, String title, Set<Attribute> attributes) {
         super(scheme, term, title, attributes);
     }
-
 
 }

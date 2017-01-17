@@ -18,7 +18,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformKinds;
 import org.ow2.proactive.procci.service.occi.MixinService;
+
 import lombok.Getter;
+
 
 public class Component extends Resource {
 
@@ -49,17 +51,16 @@ public class Component extends Resource {
         public Builder(Model cloudAutomation) throws SyntaxException {
             super(cloudAutomation);
 
-            this.status = Optional.ofNullable( cloudAutomation.getVariables().get(PlatformAttributes.STATUS_NAME))
-                    .map(s -> Status.getStatusFromString(s));
+            this.status = Optional.ofNullable(cloudAutomation.getVariables().get(PlatformAttributes.STATUS_NAME))
+                                  .map(s -> Status.getStatusFromString(s));
         }
 
-        public Builder(MixinService mixinService,
-                ResourceRendering rendering) throws ClientException {
+        public Builder(MixinService mixinService, ResourceRendering rendering) throws ClientException {
             super(mixinService, rendering);
-            this.status =  Optional.ofNullable(rendering.getAttributes())
-                    .map(attributes -> attributes.get(PlatformAttributes.STATUS_NAME))
-                    .filter(status -> status instanceof String)
-                    .map(status -> Status.getStatusFromString((String) status));
+            this.status = Optional.ofNullable(rendering.getAttributes())
+                                  .map(attributes -> attributes.get(PlatformAttributes.STATUS_NAME))
+                                  .filter(status -> status instanceof String)
+                                  .map(status -> Status.getStatusFromString((String) status));
         }
 
         public Component.Builder status(String status) throws SyntaxException {
@@ -103,13 +104,16 @@ public class Component extends Resource {
             return this;
         }
 
-
         @Override
         public Component build() throws ClientException {
-            return new Component(this.getUrl(), PlatformKinds.COMPONENT, this.getTitle(), this.getMixins(),
-                    this.getSummary(), this.getLinks(), status);
+            return new Component(this.getUrl(),
+                                 PlatformKinds.COMPONENT,
+                                 this.getTitle(),
+                                 this.getMixins(),
+                                 this.getSummary(),
+                                 this.getLinks(),
+                                 status);
         }
     }
-
 
 }

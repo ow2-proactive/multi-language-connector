@@ -32,7 +32,6 @@
  * $$ACTIVEEON_INITIAL_DEV$$
  */
 
-
 package org.ow2.proactive.procci.model.occi.infrastructure.mixin;
 
 import java.net.UnknownHostException;
@@ -48,7 +47,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
+
 import lombok.Getter;
+
 
 /**
  * This class supports L3/L4 capabilities with the Network class
@@ -57,7 +58,9 @@ import lombok.Getter;
 public class IPNetwork extends Mixin {
 
     private String address;
+
     private String gateway;
+
     //if dynamic allocation is true then the allocation is dynamic otherwise it is static
     private boolean dynamicAllocation;
 
@@ -69,11 +72,16 @@ public class IPNetwork extends Mixin {
      * @param dynamic  defines the allocation protocol
      * @param entities is the set of resource instances
      */
-    public IPNetwork(String address, String gateway, boolean dynamic,
-            List<Entity> entities) throws UnknownHostException {
-        super(InfrastructureIdentifiers.NETWORK_SCHEME, InfrastructureIdentifiers.IPNETWORK, InfrastructureIdentifiers.IPNETWORK,
-                createAttributesSet(), new ArrayList<>(), new ArrayList<>(), setApplies(),
-                entities);
+    public IPNetwork(String address, String gateway, boolean dynamic, List<Entity> entities)
+            throws UnknownHostException {
+        super(InfrastructureIdentifiers.NETWORK_SCHEME,
+              InfrastructureIdentifiers.IPNETWORK,
+              InfrastructureIdentifiers.IPNETWORK,
+              createAttributesSet(),
+              new ArrayList<>(),
+              new ArrayList<>(),
+              setApplies(),
+              entities);
         this.address = address;
         this.gateway = gateway;
         this.dynamicAllocation = dynamic;

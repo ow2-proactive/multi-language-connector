@@ -22,13 +22,18 @@ import org.ow2.proactive.procci.service.occi.MixinService;
 
 import lombok.Getter;
 
+
 @Getter
 public class SwarmBuilder extends Component.Builder {
 
     private Optional<String> hostIp;
+
     private Optional<String> masterIp;
+
     private Optional<String> agentsIp;
+
     private Optional<String> machineName;
+
     private Optional<String> networkName;
 
     public SwarmBuilder() {
@@ -69,26 +74,23 @@ public class SwarmBuilder extends Component.Builder {
         this.agentsIp = Optional.ofNullable(attributes.get(BigDataAttributes.AGENTS_IP_NAME));
     }
 
-    public SwarmBuilder(MixinService mixinService,
-            ResourceRendering rendering) throws ClientException {
+    public SwarmBuilder(MixinService mixinService, ResourceRendering rendering) throws ClientException {
         super(mixinService, rendering);
-        this.machineName = Optional.ofNullable(
-                rendering.getAttributes().get(BigDataAttributes.MACHINE_NAME_NAME))
-                .filter(machineName -> machineName instanceof String)
-                .map(machineName -> (String) machineName);
-        this.networkName = Optional.ofNullable(
-                rendering.getAttributes().get(BigDataAttributes.NETWORK_NAME_NAME))
-                .filter(networkName -> networkName instanceof String)
-                .map(networkName -> (String) networkName);
+        this.machineName = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.MACHINE_NAME_NAME))
+                                   .filter(machineName -> machineName instanceof String)
+                                   .map(machineName -> (String) machineName);
+        this.networkName = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.NETWORK_NAME_NAME))
+                                   .filter(networkName -> networkName instanceof String)
+                                   .map(networkName -> (String) networkName);
         this.hostIp = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.HOST_IP_NAME))
-                .filter(hostIp -> hostIp instanceof String)
-                .map(hostIp -> (String) hostIp);
+                              .filter(hostIp -> hostIp instanceof String)
+                              .map(hostIp -> (String) hostIp);
         this.masterIp = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.MASTER_IP_NAME))
-                .filter(masterIp -> masterIp instanceof String)
-                .map(masterIp -> (String) masterIp);
+                                .filter(masterIp -> masterIp instanceof String)
+                                .map(masterIp -> (String) masterIp);
         this.agentsIp = Optional.ofNullable(rendering.getAttributes().get(BigDataAttributes.AGENTS_IP_NAME))
-                .filter(agentIp -> agentIp instanceof String)
-                .map(agentIp -> (String) agentIp);
+                                .filter(agentIp -> agentIp instanceof String)
+                                .map(agentIp -> (String) agentIp);
     }
 
     public SwarmBuilder machineName(String machineName) {
@@ -150,25 +152,27 @@ public class SwarmBuilder extends Component.Builder {
 
     @Override
     public Swarm build() throws ClientException {
-        return new Swarm(this.getUrl(), BigDataKinds.SWARM, this.getTitle(), this.getMixins(),
-                this.getSummary(), this.getLinks(),
-                status,
-                machineName,
-                hostIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.HOST_IP_NAME,
-                        BigDataKinds.SWARM.getTitle())),
-                masterIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.MASTER_IP_NAME,
-                        BigDataKinds.SWARM.getTitle())),
-                getAgentsIpFromString(this.agentsIp),
-                networkName);
+        return new Swarm(this.getUrl(),
+                         BigDataKinds.SWARM,
+                         this.getTitle(),
+                         this.getMixins(),
+                         this.getSummary(),
+                         this.getLinks(),
+                         status,
+                         machineName,
+                         hostIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.HOST_IP_NAME,
+                                                                                 BigDataKinds.SWARM.getTitle())),
+                         masterIp.orElseThrow(() -> new MissingAttributesException(BigDataAttributes.MASTER_IP_NAME,
+                                                                                   BigDataKinds.SWARM.getTitle())),
+                         getAgentsIpFromString(this.agentsIp),
+                         networkName);
     }
 
     private List<String> getAgentsIpFromString(Optional<String> agentsIpString) {
-        return agentsIpString
-                .map(ip -> ip.replaceAll(" ", ""))
-                .map(ip -> ip.split(BigDataIdentifiers.AGENT_IP_SEPARATOR))
-                .map(ip -> Arrays.asList(ip))
-                .orElse(new ArrayList<>());
+        return agentsIpString.map(ip -> ip.replaceAll(" ", ""))
+                             .map(ip -> ip.split(BigDataIdentifiers.AGENT_IP_SEPARATOR))
+                             .map(ip -> Arrays.asList(ip))
+                             .orElse(new ArrayList<>());
     }
-
 
 }

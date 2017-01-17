@@ -14,12 +14,14 @@ public class MetamodelIdentifiers {
 
     //term
     public final static String ENTITY_TERM = "entity";
+
     public static final String LINK_TERM = "link";
+
     public static final String RESOURCE_TERM = "resource";
+
     public static final String MIXIN = "mixin";
 
     //model
     public static final String RESSOURCE_MODEL = "occi.core.resource";
-
 
 }

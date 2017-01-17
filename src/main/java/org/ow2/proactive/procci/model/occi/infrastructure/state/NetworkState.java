@@ -35,7 +35,9 @@
 package org.ow2.proactive.procci.model.occi.infrastructure.state;
 
 public enum NetworkState {
-    ACTIVE("active state"), INACTIVE("inactive state"), ERROR("error state");
+    ACTIVE("active state"),
+    INACTIVE("inactive state"),
+    ERROR("error state");
 
     private String message;
 

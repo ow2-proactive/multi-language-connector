@@ -39,6 +39,7 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.occi.metamodel.Action;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 
+
 public abstract class ComputeAction extends Action {
 
     /**
@@ -49,8 +50,7 @@ public abstract class ComputeAction extends Action {
      * @param title      is the display name of the instance
      * @param attributes are the action properties
      */
-    public ComputeAction(String scheme, String term, String title,
-            Set<Attribute> attributes) {
+    public ComputeAction(String scheme, String term, String title, Set<Attribute> attributes) {
         super(scheme, term, title, attributes);
     }
 }

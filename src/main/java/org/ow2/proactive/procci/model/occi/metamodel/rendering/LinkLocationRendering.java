@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class LinkLocationRendering {
 
     private String location;
+
     private String kind;
 
 }

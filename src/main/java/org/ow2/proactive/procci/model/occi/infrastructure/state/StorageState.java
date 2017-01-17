@@ -35,7 +35,9 @@
 package org.ow2.proactive.procci.model.occi.infrastructure.state;
 
 public enum StorageState {
-    ONLINE("online state"), OFFLINE("offline state"), ERROR("error state");
+    ONLINE("online state"),
+    OFFLINE("offline state"),
+    ERROR("error state");
 
     private String message;
 

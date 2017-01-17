@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+
 @Component
 public abstract class TransformerProvider {
 
@@ -17,9 +18,8 @@ public abstract class TransformerProvider {
         if (classe.isInstance(instanceModel)) {
             return classe.cast(instanceModel);
         } else {
-            logger.error(
-                    "Error in castInstanceModel : the instance of " + instanceModel.getClass().getName() +
-                            " is not an instance of " + classe.getName());
+            logger.error("Error in castInstanceModel : the instance of " + instanceModel.getClass().getName() +
+                         " is not an instance of " + classe.getName());
             throw new ServerException();
         }
 

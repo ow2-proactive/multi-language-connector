@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+
 /**
  * Implement CRUD methods for REST service
  */
@@ -44,7 +45,7 @@ public class SwarmRest {
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResourceRendering> getSwarm(@PathVariable("id") String id) {
-        logger.debug("Get Swarm "+id);
+        logger.debug("Get Swarm " + id);
         try {
 
             Optional<Entity> swarm = instanceService.getEntity(ConvertUtils.formatURL(id));
@@ -62,15 +63,13 @@ public class SwarmRest {
         }
     }
 
-
     //-------------------Deploy Swarm--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ResourceRendering> createSwarm(
-            @RequestBody ResourceRendering swarmRendering) {
+    public ResponseEntity<ResourceRendering> createSwarm(@RequestBody ResourceRendering swarmRendering) {
         logger.debug("Deploy a swarm " + swarmRendering.toString());
         try {
-            swarmRendering.checkAttributes(Swarm.getAttributes(),"Compute");
+            swarmRendering.checkAttributes(Swarm.getAttributes(), "Compute");
             SwarmBuilder swarmBuilder = new SwarmBuilder(mixinService, swarmRendering);
             Resource response = instanceService.create(swarmBuilder.build(), TransformerType.SWARM);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);

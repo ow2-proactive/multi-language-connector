@@ -34,7 +34,6 @@
 
 package org.ow2.proactive.procci.model.occi.metamodel;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,7 +42,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
+
 import com.google.common.collect.ImmutableMap;
+
 import lombok.Getter;
 
 
@@ -54,8 +55,10 @@ public class Kind extends Category {
 
     @Getter
     private final ImmutableMap<String, Action> actions;
+
     @Getter
     private final Kind parent;
+
     @Getter
     private List<Entity> entities;
 
@@ -69,8 +72,8 @@ public class Kind extends Category {
      * @param attributes are the kind type attributes
      * @param parent     is the set of the kind instances
      */
-    private Kind(String scheme, String term, String title, Set<Attribute> attributes,
-            Map<String, Action> actions, Kind parent) {
+    private Kind(String scheme, String term, String title, Set<Attribute> attributes, Map<String, Action> actions,
+            Kind parent) {
         super(scheme, term, title, attributes);
         this.actions = new ImmutableMap.Builder<String, Action>() {
         }.putAll(actions).build();
@@ -81,17 +84,21 @@ public class Kind extends Category {
     public static class Builder {
 
         private final String scheme;
+
         private final String term;
 
         private String title;
+
         private Set<Attribute> attributes;
+
         private Map<String, Action> actions;
+
         private Kind parent;
 
         public Builder(String scheme, String term) {
             this.scheme = scheme;
             this.term = term;
-            this.title = scheme+term;
+            this.title = scheme + term;
             this.attributes = new HashSet<>();
             this.actions = new HashMap<>();
             this.parent = null;

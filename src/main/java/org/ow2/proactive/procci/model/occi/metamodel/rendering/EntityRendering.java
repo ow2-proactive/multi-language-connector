@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 /**
  * Model rendering for an entity
  */
@@ -19,8 +20,12 @@ import lombok.NoArgsConstructor;
 public abstract class EntityRendering {
 
     private String kind;
+
     private List<String> mixins;
+
     private Map<String, Object> attributes;
+
     private List<String> actions;
+
     private String id;
 }

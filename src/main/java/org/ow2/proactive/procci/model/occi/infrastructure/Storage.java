@@ -32,7 +32,6 @@
  * $$ACTIVEEON_INITIAL_DEV$$
  */
 
-
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
 import java.util.ArrayList;
@@ -48,9 +47,11 @@ import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
 
 /**
  * The Storage represent resources that record information to a data storage device
@@ -59,9 +60,9 @@ public class Storage extends Resource {
 
     @Getter
     private final Optional<Float> size;
+
     @Getter
     private StorageState state;
-
 
     /**
      * Constructor
@@ -75,8 +76,7 @@ public class Storage extends Resource {
      * @param size    is the storage size in GigaBytes
      * @param state   is the state aimed by the user or the current state
      */
-    private Storage(Optional<String> url, Kind kind,
-            Optional<String> title, List<Mixin> mixins,
+    private Storage(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
             Optional<String> summary, List<Link> links, Optional<Float> size, StorageState state) {
 
         super(url, kind, title, mixins, summary, links);
@@ -97,11 +97,17 @@ public class Storage extends Resource {
     public static class Builder {
 
         private Optional<String> url;
+
         private Optional<String> title;
+
         private Optional<String> summary;
+
         private Optional<Float> size;
+
         private StorageState state;
+
         private List<Mixin> mixins;
+
         private List<Link> links;
 
         public Builder() {
@@ -148,7 +154,6 @@ public class Storage extends Resource {
             this.links.add(link);
             return this;
         }
-
 
         public Storage build() {
             return new Storage(url, InfrastructureKinds.STORAGE, title, mixins, summary, links, size, state);

@@ -32,7 +32,6 @@
  * $$ACTIVEEON_INITIAL_DEV$$
  */
 
-
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
 import java.util.ArrayList;
@@ -49,6 +48,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -61,11 +61,12 @@ public class NetworkInterface extends Link {
 
     @Getter
     private final String linkInterface;
+
     @Getter
     private final String mac;
+
     @Getter
     private NetworkState state;
-
 
     /**
      * constructor with all the parameters
@@ -107,13 +108,21 @@ public class NetworkInterface extends Link {
     @ToString
     public static class Builder {
         private final Resource source;
+
         private final String target;
+
         private final String linkInterface;
+
         private final String mac;
+
         private Optional<String> url;
+
         private Optional<String> title;
+
         private Optional<Kind> targetKind;
+
         private NetworkState state;
+
         private List<Mixin> mixins;
 
         public Builder(Resource source, String targetId, String mac, String linkInterface) {
@@ -154,8 +163,16 @@ public class NetworkInterface extends Link {
         }
 
         public NetworkInterface build() throws SyntaxException {
-            return new NetworkInterface(url, InfrastructureKinds.NETWORK_INTERFACE, title,
-                    mixins, source, target, targetKind, mac, linkInterface, state);
+            return new NetworkInterface(url,
+                                        InfrastructureKinds.NETWORK_INTERFACE,
+                                        title,
+                                        mixins,
+                                        source,
+                                        target,
+                                        targetKind,
+                                        mac,
+                                        linkInterface,
+                                        state);
         }
 
     }

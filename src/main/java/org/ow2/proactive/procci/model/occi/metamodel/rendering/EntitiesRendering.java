@@ -7,6 +7,7 @@ import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+
 /**
  * Rendering model for entities
  */

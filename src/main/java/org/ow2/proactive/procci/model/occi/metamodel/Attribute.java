@@ -3,10 +3,12 @@ package org.ow2.proactive.procci.model.occi.metamodel;
 import java.util.Optional;
 
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
 
 /**
  * Created by the Activeeon Team on 2/23/16
@@ -21,11 +23,17 @@ import lombok.Getter;
 public class Attribute {
 
     private final String name;
+
     private Optional<Type> type;
+
     private Optional<Boolean> mutable;
+
     private Optional<Boolean> required;
+
     private Optional<Object> pattern;
+
     private Optional<Object> defaultValue;
+
     private Optional<String> description;
 
     public AttributeRendering getRendering() {
@@ -43,10 +51,15 @@ public class Attribute {
         private final String name;
 
         private Optional<Type> type;
+
         private Optional<Boolean> mutable;
+
         private Optional<Boolean> required;
+
         private Optional<Object> pattern;
+
         private Optional<Object> defaultValue;
+
         private Optional<String> description;
 
         public Builder(String name) {
@@ -101,8 +114,13 @@ public class Attribute {
         }
 
         public Attribute build() {
-            return new Attribute(this.name, this.type, this.mutable, this.required,
-                    this.pattern, this.defaultValue, this.description);
+            return new Attribute(this.name,
+                                 this.type,
+                                 this.mutable,
+                                 this.required,
+                                 this.pattern,
+                                 this.defaultValue,
+                                 this.description);
         }
     }
 

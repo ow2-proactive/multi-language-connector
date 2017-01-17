@@ -6,18 +6,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
-import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
-import org.ow2.proactive.procci.model.exception.ServerException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 
 /**
  * Created by the Activeeon Team on 06/10/16.
@@ -33,12 +34,10 @@ public class RequestUtils {
      * @param response is the http response
      * @return a string containing the information from response
      */
-    private String getResponseString(
-            HttpResponse response) throws IOException {
+    private String getResponseString(HttpResponse response) throws IOException {
         StringBuffer serverOutput = new StringBuffer();
 
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader((response.getEntity().getContent())));
+        BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
 
         String output;
         while ((output = br.readLine()) != null) {
@@ -86,8 +85,8 @@ public class RequestUtils {
      */
     public String getSessionId() {
         final String SCHEDULER_LOGIN_URL = getProperty("scheduler.login.endpoint");
-        final String SCHEDULER_REQUEST = "username=" + getProperty("login.name") + "&password=" + getProperty(
-                "login.password");
+        final String SCHEDULER_REQUEST = "username=" + getProperty("login.name") + "&password=" +
+                                         getProperty("login.password");
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost postRequest = new HttpPost(SCHEDULER_LOGIN_URL);
@@ -96,10 +95,10 @@ public class RequestUtils {
 
             HttpResponse response = httpClient.execute(postRequest);
 
-            return  readHttpResponse(response,SCHEDULER_LOGIN_URL,SCHEDULER_REQUEST);
+            return readHttpResponse(response, SCHEDULER_LOGIN_URL, SCHEDULER_REQUEST);
         } catch (IOException ex) {
             logger.error("Unable to get the the session id", ex);
-            logError(SCHEDULER_LOGIN_URL,SCHEDULER_REQUEST);
+            logError(SCHEDULER_LOGIN_URL, SCHEDULER_REQUEST);
             throw new ServerException();
         }
 
@@ -112,31 +111,31 @@ public class RequestUtils {
      * @param request
      * @return
      */
-    public String readHttpResponse(HttpResponse response, String url, String request ) {
+    public String readHttpResponse(HttpResponse response, String url, String request) {
         int status = response.getStatusLine().getStatusCode();
         String responseOutput;
         try {
             responseOutput = getResponseString(response);
-        }catch (IOException ex){
+        } catch (IOException ex) {
             logger.error("Unable to read the the http response in RequestUtils::checkStatus", ex);
-            logError(url,request);
+            logError(url, request);
             throw new ServerException();
         }
-        if ( status >= 400 && status < 500) {
-            logger.error("client error : "+responseOutput);
-            logError(url,request);
+        if (status >= 400 && status < 500) {
+            logger.error("client error : " + responseOutput);
+            logError(url, request);
             throw new CloudAutomationClientException(response.getStatusLine().getReasonPhrase());
         }
-        if (status >= 300){
-            logger.error("server error: "+responseOutput);
-            logError(url,request);
-            throw new CloudAutomationServerException(response.getStatusLine().getReasonPhrase(),url,request);
+        if (status >= 300) {
+            logger.error("server error: " + responseOutput);
+            logError(url, request);
+            throw new CloudAutomationServerException(response.getStatusLine().getReasonPhrase(), url, request);
         }
         return responseOutput;
     }
 
-    private void logError(String url, String request){
-        logger.error("url : "+url);
-        logger.error("request : "+request);
+    private void logError(String url, String request) {
+        logger.error("url : " + url);
+        logger.error("request : " + request);
     }
 }

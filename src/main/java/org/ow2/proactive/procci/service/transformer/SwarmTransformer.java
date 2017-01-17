@@ -1,5 +1,12 @@
 package org.ow2.proactive.procci.service.transformer;
 
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.AGENTS_IP_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.HOST_IP_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MACHINE_NAME_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MASTER_IP_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.NETWORK_NAME_NAME;
+import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers.SWARM_MODEL;
+
 import org.ow2.proactive.procci.model.InstanceModel;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
@@ -7,12 +14,6 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.Swarm;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
 import org.springframework.stereotype.Component;
 
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.AGENTS_IP_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.HOST_IP_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MACHINE_NAME_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.MASTER_IP_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes.NETWORK_NAME_NAME;
-import static org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers.SWARM_MODEL;
 
 @Component
 public class SwarmTransformer extends TransformerProvider {
@@ -32,17 +33,15 @@ public class SwarmTransformer extends TransformerProvider {
 
         Swarm swarm = castInstanceModel(Swarm.class, instanceModel);
 
-        Model.Builder serviceBuilder = new Model.Builder(SWARM_MODEL, actionType)
-                .addVariable(HOST_IP_NAME, swarm.getHostIp())
-                .addVariable(MASTER_IP_NAME, swarm.getMasterIp())
-                .addVariable(AGENTS_IP_NAME, swarm.getAgentsIpAsString());
+        Model.Builder serviceBuilder = new Model.Builder(SWARM_MODEL,
+                                                         actionType).addVariable(HOST_IP_NAME, swarm.getHostIp())
+                                                                    .addVariable(MASTER_IP_NAME, swarm.getMasterIp())
+                                                                    .addVariable(AGENTS_IP_NAME,
+                                                                                 swarm.getAgentsIpAsString());
 
-        swarm.getMachineName().ifPresent(
-                machineName -> serviceBuilder.addVariable(MACHINE_NAME_NAME, machineName));
-        swarm.getNetworkName().ifPresent(
-                networkName -> serviceBuilder.addVariable(NETWORK_NAME_NAME, networkName));
-        swarm.getStatus().ifPresent(
-                status -> serviceBuilder.addVariable(PlatformAttributes.STATUS_NAME, status));
+        swarm.getMachineName().ifPresent(machineName -> serviceBuilder.addVariable(MACHINE_NAME_NAME, machineName));
+        swarm.getNetworkName().ifPresent(networkName -> serviceBuilder.addVariable(NETWORK_NAME_NAME, networkName));
+        swarm.getStatus().ifPresent(status -> serviceBuilder.addVariable(PlatformAttributes.STATUS_NAME, status));
         swarm.getTitle().ifPresent(title -> serviceBuilder.addVariable(MetamodelAttributes.ENTITY_TITLE_NAME, title));
         swarm.getSummary().ifPresent(summary -> serviceBuilder.addVariable(MetamodelAttributes.SUMMARY_NAME, summary));
 

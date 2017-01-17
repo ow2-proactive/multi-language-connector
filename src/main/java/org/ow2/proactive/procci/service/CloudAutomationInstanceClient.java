@@ -3,10 +3,6 @@ package org.ow2.proactive.procci.service;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.json.simple.parser.ParseException;
-import org.ow2.proactive.procci.model.ModelConstant;
-import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -15,11 +11,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.ow2.proactive.procci.model.ModelConstant;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 /**
  * Created by the Activeeon Team on 02/06/16.
@@ -32,7 +32,9 @@ import org.springframework.stereotype.Service;
 public class CloudAutomationInstanceClient {
 
     private static final String INSTANCE_ENDPOINT = "cloud-automation-service.instances.endpoint";
+
     private final Logger logger = LoggerFactory.getLogger(CloudAutomationInstanceClient.class);
+
     @Autowired
     private RequestUtils requestUtils;
 
@@ -48,16 +50,15 @@ public class CloudAutomationInstanceClient {
             HttpGet getRequest = new HttpGet(url);
 
             HttpResponse response = httpClient.execute(getRequest);
-            String serverOutput = requestUtils.readHttpResponse(response,url,"GET");
+            String serverOutput = requestUtils.readHttpResponse(response, url, "GET");
             httpClient.close();
             return parseJSON(serverOutput);
         } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest "
-                    + ", exception : " + ex.getMessage());
+            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest " + ", exception : " +
+                         ex.getMessage());
             throw new ServerException();
         }
     }
-
 
     /**
      * Get the instance of cloud automation service and return the first occurance with variableValue matching variableName
@@ -66,20 +67,18 @@ public class CloudAutomationInstanceClient {
      * @param variableValue the value matching with the variableName key
      * @return the first occurance which match with variablename and variableValue
      */
-    public Optional<Model> getInstanceByVariable(String variableName,
-            String variableValue) {
+    public Optional<Model> getInstanceByVariable(String variableName, String variableValue) {
         JSONObject instances = getRequest();
 
         return instances.keySet()
-                .stream()
-                .map(key -> ((JSONObject) instances.get(key)).get(ModelConstant.VARIABLES))
-                .filter(vars -> ((JSONObject) vars).containsKey(variableName))
-                .filter(vars -> ((JSONObject) vars).get(variableName).equals(variableValue))
-                .findFirst()
-                .map(vars -> ((JSONObject) vars).get(ModelConstant.INSTANCE_ID))
-                .map(id -> new Model((JSONObject) instances.get(id)));
+                        .stream()
+                        .map(key -> ((JSONObject) instances.get(key)).get(ModelConstant.VARIABLES))
+                        .filter(vars -> ((JSONObject) vars).containsKey(variableName))
+                        .filter(vars -> ((JSONObject) vars).get(variableName).equals(variableValue))
+                        .findFirst()
+                        .map(vars -> ((JSONObject) vars).get(ModelConstant.INSTANCE_ID))
+                        .map(id -> new Model((JSONObject) instances.get(id)));
     }
-
 
     /**
      * Send a service to pca service with a header containing the session id and sending content
@@ -101,26 +100,24 @@ public class CloudAutomationInstanceClient {
 
             HttpResponse response = httpClient.execute(postRequest);
 
-            String serverOutput = requestUtils.readHttpResponse(response,url,"POST "+content.toJSONString());
+            String serverOutput = requestUtils.readHttpResponse(response, url, "POST " + content.toJSONString());
             httpClient.close();
             return parseJSON(serverOutput);
         } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest "
-                    + ", exception : " + ex.getMessage());
+            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest " + ", exception : " +
+                         ex.getMessage());
             throw new ServerException();
         }
     }
 
-    private JSONObject parseJSON(String jsonString){
+    private JSONObject parseJSON(String jsonString) {
         try {
             return (JSONObject) new JSONParser().parse(jsonString);
-        }catch (ParseException ex){
-            logger.error(" Parse exception in CloudAutomationInstanceClient::parseJSON "
-                    + ", exception : " + ex.getMessage());
+        } catch (ParseException ex) {
+            logger.error(" Parse exception in CloudAutomationInstanceClient::parseJSON " + ", exception : " +
+                         ex.getMessage());
             throw new ServerException();
         }
     }
-
-
 
 }

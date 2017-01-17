@@ -34,6 +34,15 @@
 
 package org.ow2.proactive.procci.model.occi.infrastructure;
 
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.ARCHITECTURE_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.COMPUTE_STATE_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.CORES_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.HOSTNAME_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.MEMORY_NAME;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.SHARE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,19 +55,11 @@ import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
-import lombok.EqualsAndHashCode;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.ARCHITECTURE_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.COMPUTE_STATE_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.CORES_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.HOSTNAME_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.MEMORY_NAME;
-import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.SHARE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;
 
 /**
  * This class represents a generic information processing resource
@@ -71,10 +72,15 @@ public class Compute extends Resource {
     private static final String COMPUTE_MODEL = "occi.infrastructure.compute";
 
     private Optional<Architecture> architecture;
+
     private Optional<Integer> cores;
+
     private Optional<Integer> share;
+
     private Optional<String> hostname;
+
     private Optional<Float> memory; // in Gigabytes
+
     private Optional<ComputeState> state;
 
     /**
@@ -93,11 +99,9 @@ public class Compute extends Resource {
      * @param memory       is the maxmimum ram allowed for this instance
      * @param state        is the state aimed by the user or the current state
      */
-    Compute(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-            Optional<String> summary, List<Link> links,
-            Optional<Architecture> architecture, Optional<Integer> cores, Optional<Integer> share,
-            Optional<String> hostname, Optional<Float> memory,
-            Optional<ComputeState> state) {
+    Compute(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins, Optional<String> summary,
+            List<Link> links, Optional<Architecture> architecture, Optional<Integer> cores, Optional<Integer> share,
+            Optional<String> hostname, Optional<Float> memory, Optional<ComputeState> state) {
         super(url, kind, title, mixins, summary, links);
         this.architecture = architecture;
         this.cores = cores;
@@ -127,7 +131,7 @@ public class Compute extends Resource {
     public ResourceRendering getRendering() {
 
         ResourceRendering.Builder resourceRendering = new ResourceRendering.Builder(this.getKind().getTitle(),
-                this.getRenderingId());
+                                                                                    this.getRenderingId());
         this.getTitle().ifPresent(title -> resourceRendering.addAttribute(ENTITY_TITLE_NAME, title));
         this.getSummary().ifPresent(summary -> resourceRendering.addAttribute(SUMMARY_NAME, summary));
         this.architecture.ifPresent(archi -> resourceRendering.addAttribute(ARCHITECTURE_NAME, archi.name()));
@@ -135,17 +139,16 @@ public class Compute extends Resource {
         this.memory.ifPresent(memoryNumber -> resourceRendering.addAttribute(MEMORY_NAME, memoryNumber));
         this.share.ifPresent(shareNumber -> resourceRendering.addAttribute(SHARE_NAME, shareNumber));
         this.hostname.ifPresent(host -> resourceRendering.addAttribute(HOSTNAME_NAME, host));
-        this.state.ifPresent(
-                currentState -> resourceRendering.addAttribute(COMPUTE_STATE_NAME, currentState.name()));
+        this.state.ifPresent(currentState -> resourceRendering.addAttribute(COMPUTE_STATE_NAME, currentState.name()));
 
         this.getMixins().forEach(mixin -> resourceRendering.addMixin(mixin.getTitle()));
 
         return resourceRendering.build();
     }
 
-
     public enum Architecture {
-        X86, X64;
+        X86,
+        X64;
     }
 
 }

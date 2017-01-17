@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 /**
  * Model rendering for an action
  */
@@ -15,7 +16,10 @@ import lombok.NoArgsConstructor;
 public class ActionRendering {
 
     private String term;
+
     private String scheme;
+
     private String title;
+
     private Map<String, Object> attributes;
 }

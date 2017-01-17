@@ -1,15 +1,16 @@
 package org.ow2.proactive.procci.service.occi;
 
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.json.simple.JSONObject;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
@@ -21,18 +22,15 @@ import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.CloudAutomationInstanceClient;
 import org.ow2.proactive.procci.service.transformer.TransformerManager;
 import org.ow2.proactive.procci.service.transformer.TransformerType;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
 
 /**
  * This class enable the user to get and create instances
  */
 @Component
 public class InstanceService {
-
 
     @Autowired
     private CloudAutomationInstanceClient cloudAutomationInstanceClient;
@@ -52,8 +50,8 @@ public class InstanceService {
      */
     public Optional<Entity> getEntity(String id) throws ClientException {
         return cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME, ConvertUtils.formatURL(id))
-                .map(model -> getResourceBuilder(model).addMixins(pullMixinFromCloudAutomation(id))
-                        .build());
+                                            .map(model -> getResourceBuilder(model).addMixins(pullMixinFromCloudAutomation(id))
+                                                                                   .build());
     }
 
     /**
@@ -65,8 +63,7 @@ public class InstanceService {
      */
     public Optional<Entity> getMockedEntity(String id) throws ClientException {
         return cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME, ConvertUtils.formatURL(id))
-                .map(model -> new ComputeBuilder(model)
-                        .build());
+                                            .map(model -> new ComputeBuilder(model).build());
     }
 
     /**
@@ -79,16 +76,14 @@ public class InstanceService {
         JSONObject resources = cloudAutomationInstanceClient.getRequest();
 
         return ((List) resources.keySet()
-                .stream()
-                .map(key -> new Model((JSONObject) resources.get(key)))
-                .map(model -> getResourceBuilder((Model) model))
-                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder)
-                        .addMixins(pullMixinFromCloudAutomation(((ResourceBuilder) resourceBuilder).getUrl()
-                                .orElse(""))))
-                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder).build().getRendering())
-                .collect(Collectors.toList()));
+                                .stream()
+                                .map(key -> new Model((JSONObject) resources.get(key)))
+                                .map(model -> getResourceBuilder((Model) model))
+                                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder).addMixins(pullMixinFromCloudAutomation(((ResourceBuilder) resourceBuilder).getUrl()
+                                                                                                                                                                      .orElse(""))))
+                                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder).build().getRendering())
+                                .collect(Collectors.toList()));
     }
-
 
     /**
      * Send the request to cloud automation in order to create the instance and update the data
@@ -97,19 +92,17 @@ public class InstanceService {
      * @return a compute created from the server response
      * @throws ClientException if there is an error in the service sent to the server
      */
-    public Resource create(Resource resource, TransformerType transformerType)
-            throws ClientException {
+    public Resource create(Resource resource, TransformerType transformerType) throws ClientException {
 
         //update the references between mixin and compute
         mixinService.addEntity(resource);
 
         //create a resource according to the creation request sent to cloud-automation-service
-        Resource resourceResult = getResourceBuilder(
-                new Model(cloudAutomationInstanceClient.postRequest(
-                        transformerManager.getTransformerProvider(transformerType)
-                                .toCloudAutomationModel(resource, "create").getJson())))
-                .addMixins(pullMixinFromCloudAutomation(resource.getId()))
-                .build();
+        Resource resourceResult = getResourceBuilder(new Model(cloudAutomationInstanceClient.postRequest(transformerManager.getTransformerProvider(transformerType)
+                                                                                                                           .toCloudAutomationModel(resource,
+                                                                                                                                                   "create")
+                                                                                                                           .getJson()))).addMixins(pullMixinFromCloudAutomation(resource.getId()))
+                                                                                                                                        .build();
 
         return resourceResult;
     }
@@ -124,11 +117,10 @@ public class InstanceService {
     private List<Mixin> pullMixinFromCloudAutomation(String computeId) throws ClientException {
 
         return mixinService.getEntityMixinNames(computeId)
-                .stream()
-                .map(mixin -> mixinService.getMixinMockByTitle(mixin))
-                .collect(Collectors.toList());
+                           .stream()
+                           .map(mixin -> mixinService.getMixinMockByTitle(mixin))
+                           .collect(Collectors.toList());
     }
-
 
     private ResourceBuilder getResourceBuilder(Model model) throws ClientException {
 

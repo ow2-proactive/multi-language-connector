@@ -39,6 +39,7 @@ import java.util.Set;
 import org.ow2.proactive.procci.model.occi.metamodel.Action;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 
+
 public abstract class StorageAction extends Action {
     /**
      * Initialize all the parameters
@@ -48,8 +49,7 @@ public abstract class StorageAction extends Action {
      * @param title      is the display name of the instance
      * @param attributes are the action properties
      */
-    public StorageAction(String scheme, String term, String title,
-            Set<Attribute> attributes) {
+    public StorageAction(String scheme, String term, String title, Set<Attribute> attributes) {
         super(scheme, term, title, attributes);
     }
 }

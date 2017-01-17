@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.ow2.proactive.procci.model.exception.ServerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -14,9 +18,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * Created by the Activeeon Team on 22/09/16.
@@ -34,15 +36,23 @@ public class MixinRendering {
 
     @ApiModelProperty(required = true)
     private String term;
+
     @ApiModelProperty(required = true)
     private String scheme;
+
     private String title;
+
     private Map<String, AttributeRendering> attributes;
+
     private List<String> actions;
+
     private List<String> depends;
+
     private List<String> applies;
+
     @ApiModelProperty(hidden = true)
     private String location;
+
     @ApiModelProperty(hidden = true)
     private Set<String> entities;
 

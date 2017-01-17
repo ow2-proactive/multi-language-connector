@@ -47,6 +47,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Kind;
 import org.ow2.proactive.procci.model.occi.metamodel.Link;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -59,7 +60,9 @@ import lombok.ToString;
 public class Network extends Resource {
 
     private Optional<Integer> vlan;
+
     private Optional<String> label;
+
     private Optional<NetworkState> state;
 
     /**
@@ -76,8 +79,8 @@ public class Network extends Resource {
      * @param state   is the state aimed by the user or the current state
      */
     private Network(Optional<String> url, Kind kind, Optional<String> title, List<Mixin> mixins,
-            Optional<String> summary, List<Link> links,
-            Optional<Integer> vlan, Optional<String> label, Optional<NetworkState> state) {
+            Optional<String> summary, List<Link> links, Optional<Integer> vlan, Optional<String> label,
+            Optional<NetworkState> state) {
 
         super(url, kind, title, mixins, summary, links);
         this.state = state;
@@ -98,12 +101,19 @@ public class Network extends Resource {
     @ToString
     public static class Builder {
         private Optional<String> url;
+
         private Optional<String> title;
+
         private List<Mixin> mixins;
+
         private Optional<String> summary;
+
         private List<Link> links;
+
         private Optional<Integer> vlan;
+
         private Optional<String> label;
+
         private Optional<NetworkState> state;
 
         public Builder() {
@@ -158,8 +168,7 @@ public class Network extends Resource {
         }
 
         public Network build() {
-            return new Network(url, InfrastructureKinds.NETWORK, title, mixins, summary, links, vlan, label,
-                    state);
+            return new Network(url, InfrastructureKinds.NETWORK, title, mixins, summary, links, vlan, label, state);
         }
     }
 }

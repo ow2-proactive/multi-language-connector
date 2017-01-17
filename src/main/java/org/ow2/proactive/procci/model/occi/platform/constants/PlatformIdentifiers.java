@@ -8,5 +8,4 @@ public class PlatformIdentifiers {
     //terms
     public static final String COMPONENT_TERM = "component";
 
-
 }
