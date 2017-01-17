@@ -42,7 +42,6 @@ public class ResourceRendering extends EntityRendering {
                         .map(attribute -> attribute.getName())
                         .noneMatch(attributeName -> attributeName.equals(key)))
                 .collect(Collectors.joining(", "));
-        System.out.println(unknownAttributes);
         if (! unknownAttributes.isEmpty()){
             throw new UnknownAttributeException(unknownAttributes,objectRepresentation);
         }
