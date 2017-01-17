@@ -41,7 +41,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.ow2.proactive.procci.model.exception.SyntaxException;
-import org.ow2.proactive.procci.model.occi.infrastructure.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
@@ -89,10 +89,10 @@ public class StorageLink extends Link {
 
     private Set<Attribute> createAttributesSet() {
         Set<Attribute> attributes = Link.getAttributes();
-        attributes.add(Attributes.DEVICEID);
-        attributes.add(Attributes.MOUNTPOINT);
-        attributes.add(Attributes.STORAGELINK_STATE);
-        attributes.add(Attributes.STORAGELINK_MESSAGE);
+        attributes.add(InfrastructureAttributes.DEVICEID);
+        attributes.add(InfrastructureAttributes.MOUNTPOINT);
+        attributes.add(InfrastructureAttributes.STORAGELINK_STATE);
+        attributes.add(InfrastructureAttributes.STORAGELINK_MESSAGE);
         return attributes;
     }
 

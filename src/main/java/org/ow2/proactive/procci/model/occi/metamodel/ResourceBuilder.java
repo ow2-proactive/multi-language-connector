@@ -8,15 +8,15 @@ import java.util.Optional;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.MixinService;
 import lombok.Getter;
 
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ENTITY_TITLE_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.ID_NAME;
-import static org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes.SUMMARY_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ENTITY_TITLE_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
+import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.SUMMARY_NAME;
 
 @Getter
 public class ResourceBuilder {
@@ -123,7 +123,7 @@ public class ResourceBuilder {
     }
 
     public Resource build() throws ClientException {
-        return new Resource(url, Kinds.RESOURCE, title, mixins, summary, links);
+        return new Resource(url, MetamodelKinds.RESOURCE, title, mixins, summary, links);
     }
 }
 

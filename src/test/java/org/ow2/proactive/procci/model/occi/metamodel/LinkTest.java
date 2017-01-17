@@ -12,7 +12,7 @@ import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Kinds;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
 import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
 import org.ow2.proactive.procci.service.occi.MixinService;
 import org.junit.Before;
@@ -43,7 +43,7 @@ public class LinkTest {
     public void constructorTest() throws ClientException {
 
         Resource r1 = new ComputeBuilder().url("url").build();
-        Kind kind = Kinds.LINK;
+        Kind kind = MetamodelKinds.LINK;
         List<Mixin> mixins = new ArrayList<>();
         try {
             Link link = new Link(Optional.of("user"), kind, Optional.of("title"), mixins, r1, "r2sfg",

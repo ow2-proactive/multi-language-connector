@@ -42,7 +42,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.AttributeRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
 import com.google.common.collect.ImmutableList;
@@ -86,10 +86,10 @@ public class Mixin extends Category {
     private static Set<Attribute> createAttributeSet(Set<Attribute> paramAttributes) {
         Set<Attribute> attributes = new HashSet<>();
         attributes.addAll(paramAttributes);
-        attributes.add(Attributes.DEPENDS);
-        attributes.add(Attributes.APPLIES);
-        attributes.add(Attributes.MIXIN_ENTITIES);
-        attributes.add(Attributes.MIXIN_ACTIONS);
+        attributes.add(MetamodelAttributes.DEPENDS);
+        attributes.add(MetamodelAttributes.APPLIES);
+        attributes.add(MetamodelAttributes.MIXIN_ENTITIES);
+        attributes.add(MetamodelAttributes.MIXIN_ACTIONS);
         return attributes;
     }
 

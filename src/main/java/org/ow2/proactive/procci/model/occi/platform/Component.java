@@ -33,7 +33,7 @@ public class Component extends Resource {
 
     public static Set<Attribute> createAttributeSet() {
         Set<Attribute> attributeSet = new HashSet<>();
-        attributeSet.addAll(Resource.createAttributeSet());
+        attributeSet.addAll(Resource.getAttributes());
         attributeSet.add(PlatformAttributes.STATUS);
         return attributeSet;
     }

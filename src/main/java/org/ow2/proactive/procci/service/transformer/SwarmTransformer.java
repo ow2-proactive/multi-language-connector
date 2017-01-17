@@ -2,7 +2,7 @@ package org.ow2.proactive.procci.service.transformer;
 
 import org.ow2.proactive.procci.model.InstanceModel;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.occi.metamodel.constants.Attributes;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.Swarm;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
 import org.springframework.stereotype.Component;
@@ -43,8 +43,8 @@ public class SwarmTransformer extends TransformerProvider {
                 networkName -> serviceBuilder.addVariable(NETWORK_NAME_NAME, networkName));
         swarm.getStatus().ifPresent(
                 status -> serviceBuilder.addVariable(PlatformAttributes.STATUS_NAME, status));
-        swarm.getTitle().ifPresent(title -> serviceBuilder.addVariable(Attributes.ENTITY_TITLE_NAME, title));
-        swarm.getSummary().ifPresent(summary -> serviceBuilder.addVariable(Attributes.SUMMARY_NAME, summary));
+        swarm.getTitle().ifPresent(title -> serviceBuilder.addVariable(MetamodelAttributes.ENTITY_TITLE_NAME, title));
+        swarm.getSummary().ifPresent(summary -> serviceBuilder.addVariable(MetamodelAttributes.SUMMARY_NAME, summary));
 
         swarm.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
 
