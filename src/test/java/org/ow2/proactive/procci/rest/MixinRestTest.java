@@ -75,8 +75,7 @@ public class MixinRestTest {
         assertThat(response.getBody().getTerm()).matches("termTest");
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 
-        when(mixinService.getMixinByTitle("titleTest2")).thenThrow(
-                new CloudAutomationClientException("titleTest2"));
+        when(mixinService.getMixinByTitle("titleTest2")).thenThrow(new CloudAutomationClientException("titleTest2"));
 
         ResponseEntity<MixinRendering> responseClientError = mixinRest.getMixin("titleTest2");
         assertThat(responseClientError.getStatusCode().is4xxClientError()).isTrue();

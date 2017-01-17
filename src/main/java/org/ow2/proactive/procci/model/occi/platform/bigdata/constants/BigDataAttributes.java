@@ -68,7 +68,6 @@ public class BigDataAttributes {
                                                                                    .description("The agent machines ip")
                                                                                    .build();
 
-
     public static final Attribute NETWORK_NAME = new Attribute.Builder(NETWORK_NAME_NAME).required(false)
                                                                                          .mutable(false)
                                                                                          .type(Type.OBJECT)

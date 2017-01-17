@@ -32,7 +32,6 @@ import org.apache.http.HttpVersion;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +61,6 @@ public class CloudAutomationVariablesClient {
         String url = getResourceUrl(key);
         try {
             Response response = Request.Get(url).version(HttpVersion.HTTP_1_1).execute();
-
 
             return requestUtils.readHttpResponse(response.returnResponse(), url, "GET");
 
@@ -119,7 +117,6 @@ public class CloudAutomationVariablesClient {
         String url = getResourceUrl(key);
         try {
             HttpResponse response = Request.Delete(url).version(HttpVersion.HTTP_1_1).execute().returnResponse();
-
 
             requestUtils.readHttpResponse(response, url, "DELETE");
 

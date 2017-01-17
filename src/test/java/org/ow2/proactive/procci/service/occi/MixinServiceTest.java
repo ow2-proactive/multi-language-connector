@@ -33,6 +33,13 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
@@ -41,15 +48,6 @@ import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
-
-import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-
 
 
 /**
@@ -82,8 +80,9 @@ public class MixinServiceTest {
         references = mixinService.getEntityMixinNames("idTest2");
         assertThat(references).isEmpty();
 
-        when(cloudAutomationVariablesClient.get("idTest3")).thenThrow(
-                new CloudAutomationServerException("idTest3","url","content"));
+        when(cloudAutomationVariablesClient.get("idTest3")).thenThrow(new CloudAutomationServerException("idTest3",
+                                                                                                         "url",
+                                                                                                         "content"));
 
         Exception ex = null;
         try {
@@ -131,14 +130,13 @@ public class MixinServiceTest {
 
         mixin2.addEntity(compute2);
 
-        when(cloudAutomationVariablesClient.get("idTest2")).thenReturn(
-                mapper.writeValueAsString(mixin.getRendering()));
+        when(cloudAutomationVariablesClient.get("idTest2")).thenReturn(mapper.writeValueAsString(mixin.getRendering()));
 
-        Mockito.doThrow(new CloudAutomationServerException("mixinTest2","url","content")).when(cloudAutomationVariablesClient).get(
-                "mixinTest2");
+        Mockito.doThrow(new CloudAutomationServerException("mixinTest2", "url", "content"))
+               .when(cloudAutomationVariablesClient)
+               .get("mixinTest2");
 
-
-        Mockito.doThrow(new CloudAutomationServerException("mixinTest2","url","content"))
+        Mockito.doThrow(new CloudAutomationServerException("mixinTest2", "url", "content"))
                .when(cloudAutomationVariablesClient)
                .get("mixinTest2");
 
