@@ -20,6 +20,9 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIde
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataKinds;
 import org.ow2.proactive.procci.service.occi.MixinService;
 
+import lombok.Getter;
+
+@Getter
 public class SwarmBuilder extends Component.Builder {
 
     private Optional<String> hostIp;

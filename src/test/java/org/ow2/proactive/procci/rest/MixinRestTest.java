@@ -3,7 +3,8 @@ package org.ow2.proactive.procci.rest;
 import java.io.IOException;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
@@ -48,7 +49,7 @@ public class MixinRestTest {
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
 
         when(mixinService.getMixinByTitle("titleTest2")).thenThrow(
-                new CloudAutomationException("titleTest2"));
+                new CloudAutomationClientException("titleTest2"));
         ResponseEntity<MixinRendering> responseClientError = mixinRest.getMixin("titleTest2");
         assertThat(responseClientError.getStatusCode().is4xxClientError()).isTrue();
 

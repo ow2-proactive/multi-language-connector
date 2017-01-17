@@ -44,7 +44,7 @@ public class SwarmRest {
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResourceRendering> getSwarm(@PathVariable("id") String id) {
-        logger.debug("Get Compute ");
+        logger.debug("Get Swarm "+id);
         try {
 
             Optional<Entity> swarm = instanceService.getEntity(ConvertUtils.formatURL(id));
@@ -67,9 +67,10 @@ public class SwarmRest {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<ResourceRendering> createSwarm(
-            @RequestBody ResourceRendering swarmRendering) throws InterruptedException, NumberFormatException {
+            @RequestBody ResourceRendering swarmRendering) {
         logger.debug("Deploy a swarm " + swarmRendering.toString());
         try {
+            swarmRendering.checkAttributes(Swarm.getAttributes(),"Compute");
             SwarmBuilder swarmBuilder = new SwarmBuilder(mixinService, swarmRendering);
             Resource response = instanceService.create(swarmBuilder.build(), TransformerType.SWARM);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);

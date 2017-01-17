@@ -62,7 +62,7 @@ public class Swarm extends Component {
         this.networkName = networkName;
     }
 
-    public static Set<Attribute> createAttributeSet() {
+    public static Set<Attribute> getAttributes() {
         Set<Attribute> attributeSet = new HashSet<>();
         attributeSet.addAll(Component.createAttributeSet());
         attributeSet.add(MACHINE_NAME);
