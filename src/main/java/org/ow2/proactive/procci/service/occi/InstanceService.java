@@ -31,13 +31,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.json.simple.JSONObject;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
-import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.ResourceBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
@@ -67,20 +65,24 @@ public class InstanceService {
     private TransformerManager transformerManager;
 
     /**
-     * Get a resource from the data stored in Cloud-automation-service
+     * Get an entity from the data stored in Cloud-automation-service
      *
      * @param id is the id of the entity
+     * @param transformerType the transformer type for an entity inherited type
      * @return an entity
      * @throws ClientException
      */
-    public Optional<Entity> getEntity(String id) throws ClientException {
-        return cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME, ConvertUtils.formatURL(id))
-                                            .map(model -> getResourceBuilder(model).addMixins(pullMixinFromCloudAutomation(id))
-                                                                                   .build());
+    public Optional<Entity> getEntity(String id, TransformerType transformerType) {
+        return cloudAutomationInstanceClient.getInstanceModel(ID_NAME,
+                                                              ConvertUtils.formatURL(id),
+                                                              transformerManager.getTransformerProvider(transformerType))
+                                            .filter(instanceModel -> transformerManager.getTransformerProvider(transformerType)
+                                                                                       .isInstanceOfType(instanceModel))
+                                            .map(instanceModel -> (Entity) instanceModel);
     }
 
     /**
-     * Get a compute without mixins in order to avoid infinite loop
+     * Get an entity without mixins in order to avoid infinite loop
      *
      * @param id is the id of the compute
      * @return a compute without the object references set
@@ -92,22 +94,21 @@ public class InstanceService {
     }
 
     /**
-     * Create a list of entity rendering from all the entities created
+     * Get the list of entity rendering from all the entities created
      *
      * @return a list of entity rendering
      * @throws ClientException
      */
     public List<EntityRendering> getInstancesRendering() throws ClientException {
-        JSONObject resources = cloudAutomationInstanceClient.getRequest();
 
-        return ((List) resources.keySet()
-                                .stream()
-                                .map(key -> new Model((JSONObject) resources.get(key)))
-                                .map(model -> getResourceBuilder((Model) model))
-                                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder).addMixins(pullMixinFromCloudAutomation(((ResourceBuilder) resourceBuilder).getUrl()
-                                                                                                                                                                      .orElse(""))))
-                                .map(resourceBuilder -> ((ResourceBuilder) resourceBuilder).build().getRendering())
-                                .collect(Collectors.toList()));
+        return cloudAutomationInstanceClient.getModels()
+                                            .stream()
+                                            .filter(model -> model.getVariables().containsKey(ID_NAME))
+                                            .map(model -> getResourceBuilder(model))
+                                            .map(resourceBuilder -> (resourceBuilder).addMixins(mixinService.getMixinsById((resourceBuilder).getUrl()
+                                                                                                                                            .orElse(""))))
+                                            .map(resourceBuilder -> (resourceBuilder).build().getRendering())
+                                            .collect(Collectors.toList());
     }
 
     /**
@@ -123,28 +124,9 @@ public class InstanceService {
         mixinService.addEntity(resource);
 
         //create a resource according to the creation request sent to cloud-automation-service
-        Resource resourceResult = getResourceBuilder(new Model(cloudAutomationInstanceClient.postRequest(transformerManager.getTransformerProvider(transformerType)
-                                                                                                                           .toCloudAutomationModel(resource,
-                                                                                                                                                   "create")
-                                                                                                                           .getJson()))).addMixins(pullMixinFromCloudAutomation(resource.getId()))
-                                                                                                                                        .build();
-
-        return resourceResult;
-    }
-
-    /**
-     * Give the mixins of a compute
-     *
-     * @param computeId the id of the compute
-     * @return a list of mixin realated to the compute
-     * @throws ClientException
-     */
-    private List<Mixin> pullMixinFromCloudAutomation(String computeId) throws ClientException {
-
-        return mixinService.getEntityMixinNames(computeId)
-                           .stream()
-                           .map(mixin -> mixinService.getMixinMockByTitle(mixin))
-                           .collect(Collectors.toList());
+        return (Resource) cloudAutomationInstanceClient.postInstanceModel(resource,
+                                                                          "create",
+                                                                          transformerManager.getTransformerProvider(transformerType));
     }
 
     private ResourceBuilder getResourceBuilder(Model model) throws ClientException {

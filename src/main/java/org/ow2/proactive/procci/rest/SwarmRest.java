@@ -31,7 +31,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.Swarm;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
-import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.InstanceService;
 import org.ow2.proactive.procci.service.occi.MixinService;
 import org.ow2.proactive.procci.service.transformer.TransformerType;
@@ -69,7 +68,7 @@ public class SwarmRest {
     public ResponseEntity<ResourceRendering> getSwarm(@PathVariable("id") String id) {
         logger.debug("Get Swarm " + id);
         try {
-            return instanceService.getEntity(ConvertUtils.formatURL(id))
+            return instanceService.getEntity(id, TransformerType.SWARM)
                                   .map(swar -> new ResponseEntity<>(((Swarm) swar).getRendering(), HttpStatus.OK))
                                   .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
         } catch (ClientException e) {

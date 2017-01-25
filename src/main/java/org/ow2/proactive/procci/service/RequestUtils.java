@@ -32,11 +32,15 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.exception.ServerException;
@@ -52,6 +56,56 @@ import org.springframework.stereotype.Service;
 public class RequestUtils {
 
     private final Logger logger = LoggerFactory.getLogger(RequestUtils.class);
+
+    /**
+     * Send a service to pca service with a header containing the session id and sending content
+     *
+     * @param content is which is send to the cloud automation service
+     * @return the information about gathered from cloud automation service
+     */
+    public JSONObject postRequest(JSONObject content, String url) {
+
+        final String PCA_SERVICE_SESSIONID = "sessionid";
+        try {
+            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+            HttpPost postRequest = new HttpPost(url);
+            postRequest.addHeader(PCA_SERVICE_SESSIONID, getSessionId());
+            StringEntity input = new StringEntity(content.toJSONString());
+            input.setContentType("application/json");
+            postRequest.setEntity(input);
+
+            HttpResponse response = httpClient.execute(postRequest);
+
+            String serverOutput = readHttpResponse(response, url, "POST " + content.toJSONString());
+            httpClient.close();
+            return parseJSON(serverOutput);
+        } catch (IOException ex) {
+            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest " + ", exception : " +
+                         ex.getMessage());
+            throw new ServerException();
+        }
+    }
+
+    /**
+     * Get the deployed instances from Cloud Automation Model
+     *
+     * @return a json object containing the service results
+     */
+    public JSONObject getRequest(String url) {
+        try {
+            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+            HttpGet getRequest = new HttpGet(url);
+
+            HttpResponse response = httpClient.execute(getRequest);
+            String serverOutput = readHttpResponse(response, url, "GET");
+            httpClient.close();
+            return parseJSON(serverOutput);
+        } catch (IOException ex) {
+            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest " + ", exception : " +
+                         ex.getMessage());
+            throw new ServerException();
+        }
+    }
 
     /**
      * Read an http respond and convert it into a string
@@ -163,5 +217,14 @@ public class RequestUtils {
     private void logError(String url, String request) {
         logger.error("url : " + url);
         logger.error("request : " + request);
+    }
+
+    private JSONObject parseJSON(String jsonString) {
+        try {
+            return (JSONObject) new JSONParser().parse(jsonString);
+        } catch (ParseException ex) {
+            logger.error(" Parse exception in RequestUtils::parseJSON, exception : " + ex.getMessage());
+            throw new ServerException();
+        }
     }
 }

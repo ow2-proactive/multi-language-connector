@@ -23,7 +23,7 @@
  * If needed, contact us to obtain a release under GPL Version 2 or 3
  * or a different license than the AGPL.
  */
-package org.ow2.proactive.procci.service.transformer;
+package org.ow2.proactive.procci.service.transformer.occi;
 
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.ARCHITECTURE_NAME;
 import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes.COMPUTE_STATE_NAME;
@@ -39,11 +39,19 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelA
 import org.ow2.proactive.procci.model.InstanceModel;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
+import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.service.occi.MixinService;
+import org.ow2.proactive.procci.service.transformer.TransformerProvider;
+import org.ow2.proactive.procci.service.transformer.TransformerType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class ComputeTransformer extends TransformerProvider {
+
+    @Autowired
+    private MixinService mixinService;
 
     public TransformerType getType() {
         return TransformerType.COMPUTE;
@@ -74,5 +82,16 @@ public class ComputeTransformer extends TransformerProvider {
         compute.getMixins().forEach(mixin -> mixin.toCloudAutomationModel(serviceBuilder));
 
         return serviceBuilder.build();
+    }
+
+    @Override
+    public InstanceModel toInstanceModel(Model model) {
+        return new ComputeBuilder(model).addMixins(mixinService.getMixinsById(model.getVariables().get(ID_NAME)))
+                                        .build();
+    }
+
+    @Override
+    public boolean isInstanceOfType(InstanceModel instanceModel) {
+        return instanceModel instanceof Compute ? true : false;
     }
 }

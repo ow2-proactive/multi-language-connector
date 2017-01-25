@@ -31,12 +31,9 @@ import static org.mockito.Mockito.when;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -54,13 +51,12 @@ import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttribut
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelIdentifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.Swarm;
-import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes;
-import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
-import org.ow2.proactive.procci.model.utils.ConvertUtils;
+import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
 import org.ow2.proactive.procci.service.CloudAutomationInstanceClient;
-import org.ow2.proactive.procci.service.transformer.ComputeTransformer;
 import org.ow2.proactive.procci.service.transformer.TransformerManager;
 import org.ow2.proactive.procci.service.transformer.TransformerType;
+import org.ow2.proactive.procci.service.transformer.occi.ComputeTransformer;
+import org.ow2.proactive.procci.service.transformer.occi.SwarmTransformer;
 
 
 public class InstanceServiceTest {
@@ -72,10 +68,16 @@ public class InstanceServiceTest {
     private CloudAutomationInstanceClient cloudAutomationInstanceClient;
 
     @Mock
-    private MixinService mixinService;
+    private TransformerManager transformerManager;
 
     @Mock
-    private TransformerManager transformerManager;
+    private ComputeTransformer computeTransformer;
+
+    @Mock
+    private SwarmTransformer swarmTransformer;
+
+    @Mock
+    private MixinService mixinService;
 
     @Before
     public void setUp() {
@@ -86,34 +88,43 @@ public class InstanceServiceTest {
     public void getEntityTest() {
 
         String id = "idTest";
-        Model model = new Model.Builder("modelTest", "actionTest").addVariable(MetamodelAttributes.ID_NAME, id).build();
+        Compute entryCompute = new ComputeBuilder().title("titleTest")
+                                                   .architecture(Compute.Architecture.X64)
+                                                   .cores(2)
+                                                   .url(id)
+                                                   .hostame("hostnameTest")
+                                                   .summary("summaryTest")
+                                                   .build();
 
-        when(cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
-                                                                 ConvertUtils.formatURL(id))).thenReturn(Optional.of(model));
-        when(mixinService.getEntityMixinNames(id)).thenReturn(new HashSet<>());
+        when(cloudAutomationInstanceClient.getInstanceModel(ID_NAME,
+                                                            id,
+                                                            computeTransformer)).thenReturn(Optional.of(entryCompute));
+        when(transformerManager.getTransformerProvider(TransformerType.COMPUTE)).thenReturn(computeTransformer);
+        when(computeTransformer.isInstanceOfType(entryCompute)).thenReturn(true);
 
-        Optional<Entity> entity = instanceService.getEntity(id);
+        Optional<Entity> entity = instanceService.getEntity(id, TransformerType.COMPUTE);
 
         assertThat(entity.isPresent()).isTrue();
         assertThat(entity.get().getId()).matches(id);
-        assertThat(entity.get()).isInstanceOf(Resource.class);
+        assertThat(entity.get()).isInstanceOf(Compute.class);
+
+        Compute compute = (Compute) entity.get();
+
+        assertThat(compute.getTitle().get()).matches("titleTest");
+        assertThat(compute.getArchitecture().get()).isEqualTo(Compute.Architecture.X64);
+        assertThat(compute.getCores().get()).isEqualTo(2);
+        assertThat(compute.getHostname().get()).matches("hostnameTest");
+        assertThat(compute.getSummary().get()).matches("summaryTest");
 
         String id2 = "idTest2";
-        Model model2 = new Model.Builder("occi.infrastructure.compute", "actionTest")
-                                                                                     .addVariable(MetamodelAttributes.ID_NAME,
-                                                                                                  id)
-                                                                                     .build();
 
-        when(cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
-                                                                 ConvertUtils.formatURL(id2))).thenReturn(Optional.of(model2));
-        when(mixinService.getEntityMixinNames(id2)).thenReturn(new HashSet<>());
+        when(cloudAutomationInstanceClient.getInstanceModel(ID_NAME,
+                                                            id2,
+                                                            computeTransformer)).thenReturn(Optional.empty());
 
-        Optional<Entity> entity2 = instanceService.getEntity(id2);
+        Optional<Entity> entity2 = instanceService.getEntity(id2, TransformerType.COMPUTE);
 
-        assertThat(entity2.isPresent()).isTrue();
-        assertThat(entity2.get().getId()).matches(id);
-        assertThat(entity2.get()).isInstanceOf(Resource.class);
-        assertThat(entity2.get()).isInstanceOf(Compute.class);
+        assertThat(entity2.isPresent()).isFalse();
 
     }
 
@@ -121,36 +132,40 @@ public class InstanceServiceTest {
     public void getMockedEntityTest() {
 
         String id = "idTest";
-        Model model = new Model.Builder("modelTest", "actionTest").addVariable(MetamodelAttributes.ID_NAME, id).build();
 
-        when(cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
-                                                                 ConvertUtils.formatURL(id))).thenReturn(Optional.of(model));
+        Swarm entrySwarm = new SwarmBuilder("hostTest", "masterTest").url(id).build();
 
-        Optional<Entity> entity = instanceService.getEntity(id);
+        when(cloudAutomationInstanceClient.getInstanceModel(ID_NAME,
+                                                            id,
+                                                            swarmTransformer)).thenReturn(Optional.of(entrySwarm));
+
+        when(transformerManager.getTransformerProvider(TransformerType.SWARM)).thenReturn(swarmTransformer);
+        when(swarmTransformer.isInstanceOfType(entrySwarm)).thenReturn(true);
+
+        Optional<Entity> entity = instanceService.getEntity(id, TransformerType.SWARM);
 
         assertThat(entity.isPresent()).isTrue();
         assertThat(entity.get().getId()).matches(id);
 
-        String id2 = "idTest2";
-        Model model2 = new Model.Builder(BigDataIdentifiers.SWARM_MODEL, "actionTest")
-                                                                                      .addVariable(MetamodelAttributes.ID_NAME,
-                                                                                                   id)
-                                                                                      .addVariable(BigDataAttributes.HOST_IP_NAME,
-                                                                                                   "hostTest")
-                                                                                      .addVariable(BigDataAttributes.MASTER_IP_NAME,
-                                                                                                   "masterTest")
-                                                                                      .build();
+        Swarm swarm = (Swarm) entity.get();
 
-        when(cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME,
-                                                                 ConvertUtils.formatURL(id2))).thenReturn(Optional.of(model2));
-        when(mixinService.getEntityMixinNames(id2)).thenReturn(new HashSet<>());
+        assertThat(swarm).isInstanceOf(Resource.class);
+        assertThat(swarm).isInstanceOf(Swarm.class);
+        assertThat(swarm.getHostIp()).matches("hostTest");
+        assertThat(swarm.getMasterIp()).matches("masterTest");
 
-        Optional<Entity> entity2 = instanceService.getEntity(id2);
+        String id2 = "id2Test";
 
-        assertThat(entity2.isPresent()).isTrue();
-        assertThat(entity2.get().getId()).matches(id);
-        assertThat(entity2.get()).isInstanceOf(Resource.class);
-        assertThat(entity2.get()).isInstanceOf(Swarm.class);
+        when(cloudAutomationInstanceClient.getInstanceModel(ID_NAME,
+                                                            id2,
+                                                            swarmTransformer)).thenReturn(Optional.empty());
+
+        when(transformerManager.getTransformerProvider(TransformerType.SWARM)).thenReturn(swarmTransformer);
+
+        Optional<Entity> emptyEntity = instanceService.getEntity(id2, TransformerType.SWARM);
+
+        assertThat(emptyEntity.isPresent()).isFalse();
+
     }
 
     @Test
@@ -160,26 +175,22 @@ public class InstanceServiceTest {
                                                                                                          "id1")
                                                                                             .build();
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id1", compute.getJson());
+        List<Model> models = new ArrayList<>();
+        models.add(compute);
 
-        when(cloudAutomationInstanceClient.getRequest()).thenReturn(jsonObject);
-
-        when(mixinService.getEntityMixinNames("id1")).thenReturn(new HashSet<>());
+        when(cloudAutomationInstanceClient.getModels()).thenReturn(models);
 
         List<EntityRendering> renderings = instanceService.getInstancesRendering();
 
         assertThat(renderings.get(0).getKind()).matches(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME +
                                                         InfrastructureIdentifiers.COMPUTE);
 
-        Model resource = new Model.Builder("test", "action").build();
+        Model resource = new Model.Builder("test", "action").addVariable(ID_NAME, "id").build();
 
-        jsonObject = new JSONObject();
-        jsonObject.put("id2", resource.getJson());
+        models = new ArrayList<>();
+        models.add(resource);
 
-        when(cloudAutomationInstanceClient.getRequest()).thenReturn(jsonObject);
-
-        when(mixinService.getEntityMixinNames("id2")).thenReturn(new HashSet<>());
+        when(cloudAutomationInstanceClient.getModels()).thenReturn(models);
 
         renderings = instanceService.getInstancesRendering();
 
@@ -190,39 +201,20 @@ public class InstanceServiceTest {
     @Test
     public void createTest() {
         Mixin mixin = new VMImage("vmimageTest", new ArrayList<>(), new ArrayList<>(), "imageTest");
-        Mixin mockedMixin = new VMImage("vmimageTest2", new ArrayList<>(), new ArrayList<>(), "imageTest2");
 
         Compute compute = new ComputeBuilder().cores("2").title("titleTest").addMixin(mixin).build();
-        Set<String> mixinSet = new HashSet<>(1);
-        mixinSet.add(mixin.getTitle());
 
-        //get the transformer
-        when(transformerManager.getTransformerProvider(TransformerType.COMPUTE)).thenReturn(new ComputeTransformer());
+        when(cloudAutomationInstanceClient.postInstanceModel(compute,
+                                                             "create",
+                                                             computeTransformer)).thenReturn(compute);
 
-        //in -> the compute in json, out -> the response in json
-        when(cloudAutomationInstanceClient.postRequest(new ComputeTransformer().toCloudAutomationModel(compute,
-                                                                                                       "create")
-                                                                               .getJson())).thenReturn(new ComputeTransformer().toCloudAutomationModel(compute,
-                                                                                                                                                       "create")
-                                                                                                                               .getJson());
-
-        //list the mixin name
-        when(mixinService.getEntityMixinNames(compute.getId())).thenReturn(mixinSet);
-
-        //get the mixin from its title
-        when(mixinService.getMixinMockByTitle(mixin.getTitle())).thenReturn(mockedMixin);
-
-        assertThat(compute.getMixins()).containsExactly(mixin);
-        assertThat(mixin.getEntities()).containsExactly(compute);
+        when(transformerManager.getTransformerProvider(TransformerType.COMPUTE)).thenReturn(computeTransformer);
 
         Resource resource = instanceService.create(compute, TransformerType.COMPUTE);
 
         verify(mixinService).addEntity(compute);
-        verify(mixinService).getEntityMixinNames(compute.getId());
 
         assertThat(resource).isInstanceOf(Compute.class);
-        assertThat(mockedMixin.getEntities().get(0)).isEqualTo(compute);
-        assertThat(resource.getMixins()).containsExactly(mockedMixin);
 
         Compute result = (Compute) resource;
 

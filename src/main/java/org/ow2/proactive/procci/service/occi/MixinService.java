@@ -141,6 +141,21 @@ public class MixinService {
     }
 
     /**
+     * Give the mixins of a entity
+     *
+     * @param entityId the id of the entity
+     * @return a list of mixin realated to the compute
+     * @throws ClientException
+     */
+    public List<Mixin> getMixinsById(String entityId) throws ClientException {
+
+        return this.getEntityMixinNames(entityId)
+                   .stream()
+                   .map(mixin -> this.getMixinMockByTitle(mixin))
+                   .collect(Collectors.toList());
+    }
+
+    /**
      * Add the entity to the database and update the mixins references
      *
      * @param entity is an occi entity

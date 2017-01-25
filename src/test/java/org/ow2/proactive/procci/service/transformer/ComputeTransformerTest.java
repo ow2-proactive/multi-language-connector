@@ -33,6 +33,7 @@ import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
+import org.ow2.proactive.procci.service.transformer.occi.ComputeTransformer;
 
 
 public class ComputeTransformerTest {

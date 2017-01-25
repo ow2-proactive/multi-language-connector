@@ -37,7 +37,6 @@ import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
-import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.InstanceService;
 import org.ow2.proactive.procci.service.occi.MixinService;
 import org.ow2.proactive.procci.service.transformer.TransformerType;
@@ -95,7 +94,7 @@ public class ComputeRest {
         logger.debug("Get Compute ");
         try {
 
-            Optional<Entity> compute = instanceService.getEntity(ConvertUtils.formatURL(id));
+            Optional<Entity> compute = instanceService.getEntity(id, TransformerType.COMPUTE);
             if (!compute.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {

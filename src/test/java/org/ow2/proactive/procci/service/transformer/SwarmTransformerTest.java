@@ -36,6 +36,7 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAttributes;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
+import org.ow2.proactive.procci.service.transformer.occi.SwarmTransformer;
 
 
 public class SwarmTransformerTest {
