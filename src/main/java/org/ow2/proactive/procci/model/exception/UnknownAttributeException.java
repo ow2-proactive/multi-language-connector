@@ -25,19 +25,21 @@
  */
 package org.ow2.proactive.procci.model.exception;
 
-import org.json.simple.JSONObject;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 
-public class ServerException extends RuntimeException {
+@AllArgsConstructor
+@Getter
+public class UnknownAttributeException extends ClientException {
 
-    private JSONObject jsonError;
+    private String unknownAttribute;
 
-    public ServerException() {
-        jsonError = new JSONObject();
-        jsonError.put("error", "500 Internal Server Error");
-    }
+    private String objectRepresentation;
 
+    @Override
     public String getJsonError() {
-        return jsonError.toJSONString();
+        return "{\"error\" : \" unknown attribute " + unknownAttribute + " has been found for the " +
+               objectRepresentation + " construction .\"}";
     }
 }

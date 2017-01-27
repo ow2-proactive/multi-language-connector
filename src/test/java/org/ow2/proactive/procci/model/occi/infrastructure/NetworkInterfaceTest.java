@@ -33,7 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.NetworkState;
@@ -61,8 +61,9 @@ public class NetworkInterfaceTest {
     }
 
     @Test
-    public void ConstructorTest() throws IOException, CloudAutomationException {
+    public void ConstructorTest() throws IOException, CloudAutomationServerException {
         Compute compute = new ComputeBuilder().url("url:compute").build();
+
         try {
             NetworkInterface networkInterface = new NetworkInterface.Builder(compute,
                                                                              "url:target",

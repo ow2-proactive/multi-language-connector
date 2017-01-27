@@ -27,25 +27,12 @@ package org.ow2.proactive.procci.model.exception;
 
 import org.json.simple.JSONObject;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
 
+public class CloudAutomationClientException extends ClientException {
 
-/**
- * Created by the Activeeon Team on 21/06/16.
- */
-
-/**
- * The Exception occur when an http service fail with an other Cloud Automation microservice
- */
-@Getter
-@AllArgsConstructor
-@ToString
-public class CloudAutomationException extends ClientException {
     private JSONObject jsonError;
 
-    public CloudAutomationException(String exception) {
+    public CloudAutomationClientException(String exception) {
         jsonError = new JSONObject();
         jsonError.put("error", exception);
     }

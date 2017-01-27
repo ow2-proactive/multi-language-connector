@@ -25,11 +25,8 @@
  */
 package org.ow2.proactive.procci.rest;
 
-import java.util.Optional;
-
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.ServerException;
-import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.Swarm;
@@ -70,15 +67,11 @@ public class SwarmRest {
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResourceRendering> getSwarm(@PathVariable("id") String id) {
-        logger.debug("Get Compute ");
+        logger.debug("Get Swarm " + id);
         try {
-
-            Optional<Entity> swarm = instanceService.getEntity(ConvertUtils.formatURL(id));
-            if (!swarm.isPresent()) {
-                return new ResponseEntity(HttpStatus.NOT_FOUND);
-            } else {
-                return new ResponseEntity<>(((Swarm) swarm.get()).getRendering(), HttpStatus.OK);
-            }
+            return instanceService.getEntity(ConvertUtils.formatURL(id))
+                                  .map(swar -> new ResponseEntity<>(((Swarm) swar).getRendering(), HttpStatus.OK))
+                                  .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);
             return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
@@ -91,10 +84,11 @@ public class SwarmRest {
     //-------------------Deploy Swarm--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<ResourceRendering> createSwarm(@RequestBody ResourceRendering swarmRendering)
-            throws InterruptedException, NumberFormatException {
+    public ResponseEntity<ResourceRendering> createSwarm(@RequestBody ResourceRendering swarmRendering) {
+
         logger.debug("Deploy a swarm " + swarmRendering.toString());
         try {
+            swarmRendering.checkAttributes(Swarm.getAttributes(), "Compute");
             SwarmBuilder swarmBuilder = new SwarmBuilder(mixinService, swarmRendering);
             Resource response = instanceService.create(swarmBuilder.build(), TransformerType.SWARM);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);

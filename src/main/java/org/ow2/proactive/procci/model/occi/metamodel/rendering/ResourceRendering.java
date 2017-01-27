@@ -29,6 +29,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.ow2.proactive.procci.model.exception.UnknownAttributeException;
+import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -51,6 +56,19 @@ public class ResourceRendering extends EntityRendering {
             String id, List<LinkRendering> links) {
         super(kind, mixins, attributes, actions, id);
         this.links = links;
+    }
+
+    public void checkAttributes(Set<Attribute> attributes, String objectRepresentation) {
+        String unknownAttributes = this.getAttributes()
+                                       .keySet()
+                                       .stream()
+                                       .filter(key -> attributes.stream()
+                                                                .map(attribute -> attribute.getName())
+                                                                .noneMatch(attributeName -> attributeName.equals(key)))
+                                       .collect(Collectors.joining(", "));
+        if (!unknownAttributes.isEmpty()) {
+            throw new UnknownAttributeException(unknownAttributes, objectRepresentation);
+        }
     }
 
     public static class Builder {

@@ -121,6 +121,7 @@ public class ComputeRest {
             throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
+            computeRendering.checkAttributes(Compute.getAttributes(), "Compute");
             ComputeBuilder computeBuilder = new ComputeBuilder(mixinService, computeRendering);
             Resource response = instanceService.create(computeBuilder.build(), TransformerType.COMPUTE);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);

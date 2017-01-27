@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 
 import org.codehaus.jackson.type.TypeReference;
 import org.ow2.proactive.procci.model.exception.ClientException;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Contextualization;
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.VMImage;
@@ -131,9 +131,9 @@ public class MixinService {
      *
      * @param entityId is an occi entity
      * @return the list of the mixin related to the entity instance
-     * @throws CloudAutomationException if there is an error in the cloud automation service response
+     * @throws CloudAutomationServerException if there is an error in the cloud automation service response
      */
-    public Set<String> getEntityMixinNames(String entityId) throws CloudAutomationException {
+    public Set<String> getEntityMixinNames(String entityId) throws CloudAutomationServerException {
         String references = cloudAutomationVariablesClient.get(entityId);
         TypeReference<Set<String>> mapType = new TypeReference<Set<String>>() {
         };
@@ -186,7 +186,8 @@ public class MixinService {
             Set<String> entitiesId = getMixinRenderingByTitle(mixinRendering.getTitle()).getEntities();
             mixinRendering.getEntities().addAll(entitiesId);
             cloudAutomationVariablesClient.update(mixinRendering.getTitle(), mapObject(mixinRendering));
-        } catch (CloudAutomationException ex) {
+        } catch (CloudAutomationServerException ex) {
+
             cloudAutomationVariablesClient.post(mixinRendering.getTitle(), mapObject(mixinRendering));
         }
 
@@ -207,7 +208,7 @@ public class MixinService {
         try {
             entityReferences.addAll(getEntityMixinNames(entityId));
             cloudAutomationVariablesClient.update(entityId, mapObject(entityReferences));
-        } catch (CloudAutomationException ex) {
+        } catch (CloudAutomationServerException ex) {
             cloudAutomationVariablesClient.post(entityId, mapObject(entityReferences));
         }
     }

@@ -25,6 +25,7 @@
  */
 package org.ow2.proactive.procci.service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.apache.http.HttpResponse;
@@ -35,9 +36,10 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.ow2.proactive.procci.model.ModelConstant;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.exception.CloudAutomationException;
+import org.ow2.proactive.procci.model.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,22 +68,21 @@ public class CloudAutomationInstanceClient {
      *
      * @return a json object containing the service results
      */
-    public JSONObject getRequest() throws CloudAutomationException {
+    public JSONObject getRequest() {
         final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
-        JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpGet getRequest = new HttpGet(url);
 
             HttpResponse response = httpClient.execute(getRequest);
-            String serverOutput = requestUtils.readHttpResponse(response);
+            String serverOutput = requestUtils.readHttpResponse(response, url, "GET");
             httpClient.close();
-            result = (JSONObject) new JSONParser().parse(serverOutput);
-        } catch (Exception ex) {
-            raiseException(ex);
+            return parseJSON(serverOutput);
+        } catch (IOException ex) {
+            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest " + ", exception : " +
+                         ex.getMessage());
+            throw new ServerException();
         }
-
-        return result;
     }
 
     /**
@@ -91,8 +92,8 @@ public class CloudAutomationInstanceClient {
      * @param variableValue the value matching with the variableName key
      * @return the first occurance which match with variablename and variableValue
      */
-    public Optional<Model> getInstanceByVariable(String variableName, String variableValue)
-            throws CloudAutomationException {
+    public Optional<Model> getInstanceByVariable(String variableName, String variableValue) {
+
         JSONObject instances = getRequest();
 
         return instances.keySet()
@@ -110,13 +111,11 @@ public class CloudAutomationInstanceClient {
      *
      * @param content is which is send to the cloud automation service
      * @return the information about gathered from cloud automation service
-     * @throws CloudAutomationException is thrown if something failed during the connection
      */
-    public JSONObject postRequest(JSONObject content) throws CloudAutomationException {
+    public JSONObject postRequest(JSONObject content) {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
         final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
-        JSONObject result = new JSONObject();
         try {
             CloseableHttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost postRequest = new HttpPost(url);
@@ -127,23 +126,25 @@ public class CloudAutomationInstanceClient {
 
             HttpResponse response = httpClient.execute(postRequest);
 
-            String serverOutput = requestUtils.readHttpResponse(response);
+            String serverOutput = requestUtils.readHttpResponse(response, url, "POST " + content.toJSONString());
             httpClient.close();
-            result = (JSONObject) new JSONParser().parse(serverOutput);
-        } catch (Exception ex) {
-            raiseException(ex);
+            return parseJSON(serverOutput);
+        } catch (IOException ex) {
+            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest " + ", exception : " +
+                         ex.getMessage());
+            throw new ServerException();
         }
-        return result;
     }
 
-    /**
-     * Raise an CloudAutomation exception and log it
-     *
-     * @param ex the exception to be logged
-     * @throws CloudAutomationException is an exception which occur during the connecton with cloud automation service
-     */
-    private void raiseException(Exception ex) throws CloudAutomationException {
-        logger.error(this.getClass().getName(), ex);
-        throw new CloudAutomationException(ex.getMessage());
+    private JSONObject parseJSON(String jsonString) {
+        try {
+            return (JSONObject) new JSONParser().parse(jsonString);
+        } catch (ParseException ex) {
+            logger.error(" Parse exception in CloudAutomationInstanceClient::parseJSON " + ", exception : " +
+                         ex.getMessage());
+            throw new ServerException();
+        }
+
     }
+
 }

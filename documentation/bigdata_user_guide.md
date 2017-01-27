@@ -23,7 +23,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
       "pca.platform.swarm.machineName":"myMachine",
       "pca.platform.swarm.hostIP":"xx.xxx.xx.xxx",
       "pca.platform.swarm.masterIP":"yy.yyy.yy.yyy",
-      "pca.platform.swarm.agentIP":"aa.aaa.aa.aaa, bb.bbb.bb.bbb",
+      "pca.platform.swarm.agentsIP":"aa.aaa.aa.aaa, bb.bbb.bb.bbb",
       "pca.platform.swarm.networkName":"my-net",
       "occi.entity.title":"swarm_name",
       "occi.core.summary":"creation example",
