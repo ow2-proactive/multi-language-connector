@@ -177,7 +177,7 @@ public class RequestUtils {
 
             return readHttpResponse(response, SCHEDULER_LOGIN_URL, SCHEDULER_REQUEST);
         } catch (IOException ex) {
-            logger.error("Unable to get the the session id", ex);
+            logger.error("Unable to get the session id", ex);
             logError(SCHEDULER_LOGIN_URL, SCHEDULER_REQUEST);
             throw new ServerException();
         }
@@ -197,7 +197,7 @@ public class RequestUtils {
         try {
             responseOutput = getResponseString(response);
         } catch (IOException ex) {
-            logger.error("Unable to read the the http response in RequestUtils::checkStatus", ex);
+            logger.error("Unable to read the http response in RequestUtils::checkStatus", ex);
             logError(url, request);
             throw new ServerException();
         }

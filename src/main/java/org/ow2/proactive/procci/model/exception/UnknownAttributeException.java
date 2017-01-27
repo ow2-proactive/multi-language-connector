@@ -39,7 +39,7 @@ public class UnknownAttributeException extends ClientException {
 
     @Override
     public String getJsonError() {
-        return "{\"error\" : \" unknown attribute " + unknownAttribute + "have been found for the " +
+        return "{\"error\" : \" unknown attribute " + unknownAttribute + " has been found for the " +
                objectRepresentation + " construction .\"}";
     }
 }
