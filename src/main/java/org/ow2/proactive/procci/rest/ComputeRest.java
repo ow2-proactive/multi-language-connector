@@ -103,9 +103,6 @@ public class ComputeRest {
             if (!compute.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-
-                //transformerManager.getTransformer(TransformerType.SWARN).toRendering((Compute)compute.get())
-
                 return new ResponseEntity<>(((Compute) compute.get()).getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
@@ -126,8 +123,8 @@ public class ComputeRest {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
             computeRendering.checkAttributes(Compute.getAttributes(), "Compute");
-            ComputeBuilder computeBuilder = new ComputeBuilder(mixinService, computeRendering);
-            Resource response = instanceService.create(computeBuilder.build(),
+
+            Resource response = instanceService.create(new ComputeBuilder(mixinService, computeRendering).build(),
                                                        transformerManager.getTransformerProvider(TransformerType.COMPUTE),
                                                        mixinService);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
