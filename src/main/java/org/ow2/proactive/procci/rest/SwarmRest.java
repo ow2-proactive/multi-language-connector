@@ -33,6 +33,7 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.Swarm;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
 import org.ow2.proactive.procci.service.occi.InstanceService;
 import org.ow2.proactive.procci.service.occi.MixinService;
+import org.ow2.proactive.procci.service.transformer.TransformerManager;
 import org.ow2.proactive.procci.service.transformer.TransformerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,13 +63,16 @@ public class SwarmRest {
     @Autowired
     private InstanceService instanceService;
 
+    @Autowired
+    private TransformerManager transformerManager;
+
     //-------------------Retrieve a Swarm instance--------------------------------------------------------
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResourceRendering> getSwarm(@PathVariable("id") String id) {
         logger.debug("Get Swarm " + id);
         try {
-            return instanceService.getEntity(id, TransformerType.SWARM)
+            return instanceService.getEntity(id, transformerManager.getTransformerProvider(TransformerType.SWARM))
                                   .map(swar -> new ResponseEntity<>(((Swarm) swar).getRendering(), HttpStatus.OK))
                                   .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
         } catch (ClientException e) {
@@ -89,7 +93,9 @@ public class SwarmRest {
         try {
             swarmRendering.checkAttributes(Swarm.getAttributes(), "Compute");
             SwarmBuilder swarmBuilder = new SwarmBuilder(mixinService, swarmRendering);
-            Resource response = instanceService.create(swarmBuilder.build(), TransformerType.SWARM);
+            Resource response = instanceService.create(swarmBuilder.build(),
+                                                       transformerManager.getTransformerProvider(TransformerType.SWARM),
+                                                       mixinService);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);

@@ -44,6 +44,7 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIde
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.CloudAutomationInstanceClient;
 import org.ow2.proactive.procci.service.transformer.TransformerManager;
+import org.ow2.proactive.procci.service.transformer.TransformerProvider;
 import org.ow2.proactive.procci.service.transformer.TransformerType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,26 +59,17 @@ public class InstanceService {
     @Autowired
     private CloudAutomationInstanceClient cloudAutomationInstanceClient;
 
-    @Autowired
-    private MixinService mixinService;
-
-    @Autowired
-    private TransformerManager transformerManager;
-
     /**
      * Get an entity from the data stored in Cloud-automation-service
      *
      * @param id is the id of the entity
-     * @param transformerType the transformer type for an entity inherited type
+     * @param transformerProvider the transformer provider for an entity inherited type
      * @return an entity
      * @throws ClientException
      */
-    public Optional<Entity> getEntity(String id, TransformerType transformerType) {
-        return cloudAutomationInstanceClient.getInstanceModel(ID_NAME,
-                                                              ConvertUtils.formatURL(id),
-                                                              transformerManager.getTransformerProvider(transformerType))
-                                            .filter(instanceModel -> transformerManager.getTransformerProvider(transformerType)
-                                                                                       .isInstanceOfType(instanceModel))
+    public Optional<Entity> getEntity(String id, TransformerProvider transformerProvider) {
+        return cloudAutomationInstanceClient.getInstanceModel(ID_NAME, ConvertUtils.formatURL(id), transformerProvider)
+                                            .filter(instanceModel -> transformerProvider.isInstanceOfType(instanceModel))
                                             .map(instanceModel -> (Entity) instanceModel);
     }
 
@@ -88,7 +80,7 @@ public class InstanceService {
      * @return a compute without the object references set
      * @throws ClientException
      */
-    public Optional<Entity> getMockedEntity(String id) throws ClientException {
+    public Optional<Entity> getMockedEntity(String id) {
         return cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME, ConvertUtils.formatURL(id))
                                             .map(model -> new ComputeBuilder(model).build());
     }
@@ -99,7 +91,7 @@ public class InstanceService {
      * @return a list of entity rendering
      * @throws ClientException
      */
-    public List<EntityRendering> getInstancesRendering() throws ClientException {
+    public List<EntityRendering> getInstancesRendering(MixinService mixinService) {
 
         return cloudAutomationInstanceClient.getModels()
                                             .stream()
@@ -118,18 +110,16 @@ public class InstanceService {
      * @return a compute created from the server response
      * @throws ClientException if there is an error in the service sent to the server
      */
-    public Resource create(Resource resource, TransformerType transformerType) throws ClientException {
+    public Resource create(Resource resource, TransformerProvider transformerProvider, MixinService mixinService) {
 
         //update the references between mixin and compute
         mixinService.addEntity(resource);
 
         //create a resource according to the creation request sent to cloud-automation-service
-        return (Resource) cloudAutomationInstanceClient.postInstanceModel(resource,
-                                                                          "create",
-                                                                          transformerManager.getTransformerProvider(transformerType));
+        return (Resource) cloudAutomationInstanceClient.postInstanceModel(resource, "create", transformerProvider);
     }
 
-    private ResourceBuilder getResourceBuilder(Model model) throws ClientException {
+    private ResourceBuilder getResourceBuilder(Model model) {
 
         switch (model.getServiceModel()) {
             case BigDataIdentifiers.SWARM_MODEL:

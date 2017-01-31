@@ -102,7 +102,8 @@ public class InstanceServiceTest {
         when(transformerManager.getTransformerProvider(TransformerType.COMPUTE)).thenReturn(computeTransformer);
         when(computeTransformer.isInstanceOfType(entryCompute)).thenReturn(true);
 
-        Optional<Entity> entity = instanceService.getEntity(id, TransformerType.COMPUTE);
+        Optional<Entity> entity = instanceService.getEntity(id,
+                                                            transformerManager.getTransformerProvider(TransformerType.COMPUTE));
 
         assertThat(entity.isPresent()).isTrue();
         assertThat(entity.get().getId()).matches(id);
@@ -122,7 +123,8 @@ public class InstanceServiceTest {
                                                             id2,
                                                             computeTransformer)).thenReturn(Optional.empty());
 
-        Optional<Entity> entity2 = instanceService.getEntity(id2, TransformerType.COMPUTE);
+        Optional<Entity> entity2 = instanceService.getEntity(id2,
+                                                             transformerManager.getTransformerProvider(TransformerType.COMPUTE));
 
         assertThat(entity2.isPresent()).isFalse();
 
@@ -142,7 +144,8 @@ public class InstanceServiceTest {
         when(transformerManager.getTransformerProvider(TransformerType.SWARM)).thenReturn(swarmTransformer);
         when(swarmTransformer.isInstanceOfType(entrySwarm)).thenReturn(true);
 
-        Optional<Entity> entity = instanceService.getEntity(id, TransformerType.SWARM);
+        Optional<Entity> entity = instanceService.getEntity(id,
+                                                            transformerManager.getTransformerProvider(TransformerType.SWARM));
 
         assertThat(entity.isPresent()).isTrue();
         assertThat(entity.get().getId()).matches(id);
@@ -162,7 +165,8 @@ public class InstanceServiceTest {
 
         when(transformerManager.getTransformerProvider(TransformerType.SWARM)).thenReturn(swarmTransformer);
 
-        Optional<Entity> emptyEntity = instanceService.getEntity(id2, TransformerType.SWARM);
+        Optional<Entity> emptyEntity = instanceService.getEntity(id2,
+                                                                 transformerManager.getTransformerProvider(TransformerType.SWARM));
 
         assertThat(emptyEntity.isPresent()).isFalse();
 
@@ -180,7 +184,7 @@ public class InstanceServiceTest {
 
         when(cloudAutomationInstanceClient.getModels()).thenReturn(models);
 
-        List<EntityRendering> renderings = instanceService.getInstancesRendering();
+        List<EntityRendering> renderings = instanceService.getInstancesRendering(mixinService);
 
         assertThat(renderings.get(0).getKind()).matches(InfrastructureIdentifiers.INFRASTRUCTURE_SCHEME +
                                                         InfrastructureIdentifiers.COMPUTE);
@@ -192,7 +196,7 @@ public class InstanceServiceTest {
 
         when(cloudAutomationInstanceClient.getModels()).thenReturn(models);
 
-        renderings = instanceService.getInstancesRendering();
+        renderings = instanceService.getInstancesRendering(mixinService);
 
         assertThat(renderings.get(0).getKind()).matches(MetamodelIdentifiers.CORE_SCHEME +
                                                         MetamodelIdentifiers.RESOURCE_TERM);
@@ -210,7 +214,9 @@ public class InstanceServiceTest {
 
         when(transformerManager.getTransformerProvider(TransformerType.COMPUTE)).thenReturn(computeTransformer);
 
-        Resource resource = instanceService.create(compute, TransformerType.COMPUTE);
+        Resource resource = instanceService.create(compute,
+                                                   transformerManager.getTransformerProvider(TransformerType.COMPUTE),
+                                                   mixinService);
 
         verify(mixinService).addEntity(compute);
 
