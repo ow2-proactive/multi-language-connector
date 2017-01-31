@@ -43,9 +43,7 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.CloudAutomationInstanceClient;
-import org.ow2.proactive.procci.service.transformer.TransformerManager;
 import org.ow2.proactive.procci.service.transformer.TransformerProvider;
-import org.ow2.proactive.procci.service.transformer.TransformerType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
