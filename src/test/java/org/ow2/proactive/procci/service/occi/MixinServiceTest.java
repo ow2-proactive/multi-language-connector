@@ -41,6 +41,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
@@ -69,6 +70,11 @@ public class MixinServiceTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void getMixinByTitleTest() {
+
     }
 
     @Test
@@ -194,6 +200,23 @@ public class MixinServiceTest {
                                                       mapper.writeValueAsString(notDeletedMixins));
         verify(cloudAutomationVariablesClient).update(resourceWithTheMixinToRemove.getId(),
                                                       mapper.writeValueAsString(new HashSet<String>()));
+    }
+
+    @Test
+    public void removeNotFoundMixinTest() throws IOException {
+
+        String mixinName = "unexistingMixin";
+        Exception ex = null;
+
+        when(cloudAutomationVariablesClient.get(mixinName)).thenThrow(new CloudAutomationClientException(mixinName +
+                                                                                                         " test"));
+        try {
+            mixinService.removeMixin(mixinName);
+        } catch (Exception e) {
+            ex = e;
+        }
+
+        assertThat(ex).isInstanceOf(CloudAutomationClientException.class);
 
     }
 
