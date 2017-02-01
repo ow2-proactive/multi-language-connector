@@ -135,6 +135,7 @@ public class MixinService {
      */
     public Set<String> getEntityMixinNames(String entityId) {
         String references = cloudAutomationVariablesClient.get(entityId);
+
         TypeReference<Set<String>> mapType = new TypeReference<Set<String>>() {
         };
         return readMappedObject(references, mapType);
@@ -188,15 +189,21 @@ public class MixinService {
     public void removeMixin(String mixinTitle) {
         Mixin mixinToRemove = getMixinByTitle(mixinTitle);
         List<Entity> entities = mixinToRemove.getEntities();
-        entities.forEach(entity -> entity.getMixins().remove(mixinTitle));
 
         cloudAutomationVariablesClient.delete(mixinTitle);
-        entities.forEach(entity -> cloudAutomationVariablesClient.update(entity.getId(),mapObject(entity.getMixins()
-                .stream()
-                .map(mixin -> mixin.getTitle())
-                .filter(title -> ! mixinTitle.equals(title))
-                .collect(Collectors.toSet()))));
+
+        entities.forEach(entity -> {
+            getEntityMixinNames(entity.getId()).remove(mixinTitle);
+        });
+
+        entities.forEach(entity -> {
+            Set<String> entityMixins = getEntityMixinNames(entity.getId());
+            entityMixins.remove(mixinTitle);
+            cloudAutomationVariablesClient.update(entity.getId(), mapObject(entityMixins));
+        });
+
     }
+
 
     private MixinRendering getMixinRenderingByTitle(String title) {
         return MixinRendering.convertMixinFromString(cloudAutomationVariablesClient.get(title));
