@@ -41,7 +41,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
@@ -78,12 +77,12 @@ public class MixinServiceTest {
         references.add("ref1Test");
         references.add("ref2Test");
         when(cloudAutomationVariablesClient.get("idTest")).thenReturn(new ObjectMapper().writeValueAsString(references));
-        Set<String> result = mixinService.getEntityMixinNames("idTest");
+        Set<String> result = mixinService.getMixinNamesFromEntity("idTest");
         assertThat(result).contains("ref1Test");
         assertThat(result).contains("ref2Test");
 
         when(cloudAutomationVariablesClient.get("idTest2")).thenReturn("[]");
-        references = mixinService.getEntityMixinNames("idTest2");
+        references = mixinService.getMixinNamesFromEntity("idTest2");
         assertThat(references).isEmpty();
 
         when(cloudAutomationVariablesClient.get("idTest3")).thenThrow(new CloudAutomationServerException("idTest3",
@@ -92,7 +91,7 @@ public class MixinServiceTest {
 
         Exception ex = null;
         try {
-            mixinService.getEntityMixinNames("idTest3");
+            mixinService.getMixinNamesFromEntity("idTest3");
         } catch (Exception e) {
             ex = e;
         }
@@ -155,12 +154,12 @@ public class MixinServiceTest {
     }
 
     @Test
-    public void removeMixinTest() throws IOException{
+    public void removeMixinTest() throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        Mixin mixin1 = new MixinBuilder("mixinTest","toKeep1").build();
-        Mixin mixin2 = new MixinBuilder("mixinTest","toKeep2").build();
+        Mixin mixin1 = new MixinBuilder("mixinTest", "toKeep1").build();
+        Mixin mixin2 = new MixinBuilder("mixinTest", "toKeep2").build();
         Set<String> notDeletedMixins = new HashSet<>();
         Set<String> allMixins = new HashSet<>();
         Set<String> setWithMixinToRemove = new HashSet<>();
@@ -171,35 +170,30 @@ public class MixinServiceTest {
         Resource resourceWithThreeMixin = new ResourceBuilder().url("resourceWithThreeMixin").build();
         Resource resourceWithTheMixinToRemove = new ResourceBuilder().url("resourceWithTheMixinToRemove").build();
 
-        Mixin mixinToRemove = new MixinBuilder("mixinTest","toRemove")
-                .addEntity(resourceWithTheMixinToRemove)
-                .addEntity(resourceWithThreeMixin)
-                .build();
+        Mixin mixinToRemove = new MixinBuilder("mixinTest", "toRemove").addEntity(resourceWithTheMixinToRemove)
+                                                                       .addEntity(resourceWithThreeMixin)
+                                                                       .build();
 
         allMixins.add(mixinToRemove.getTitle());
         setWithMixinToRemove.add(mixinToRemove.getTitle());
 
-        when(cloudAutomationVariablesClient.get(mixinToRemove.getTitle()))
-                .thenReturn(MixinRendering.convertStringFromMixin(mixinToRemove.getRendering()));
+        when(cloudAutomationVariablesClient.get(mixinToRemove.getTitle())).thenReturn(MixinRendering.convertStringFromMixin(mixinToRemove.getRendering()));
 
-        when(instanceService.getMockedEntity(resourceWithThreeMixin.getId()))
-                .thenReturn(Optional.of(resourceWithThreeMixin));
+        when(instanceService.getMockedEntity(resourceWithThreeMixin.getId())).thenReturn(Optional.of(resourceWithThreeMixin));
 
-        when(instanceService.getMockedEntity(resourceWithTheMixinToRemove.getId()))
-                .thenReturn(Optional.of(resourceWithTheMixinToRemove));
+        when(instanceService.getMockedEntity(resourceWithTheMixinToRemove.getId())).thenReturn(Optional.of(resourceWithTheMixinToRemove));
 
-        when(cloudAutomationVariablesClient.get(resourceWithThreeMixin.getId()))
-                .thenReturn(mapper.writeValueAsString(allMixins));
+        when(cloudAutomationVariablesClient.get(resourceWithThreeMixin.getId())).thenReturn(mapper.writeValueAsString(allMixins));
 
-
-        when(cloudAutomationVariablesClient.get(resourceWithTheMixinToRemove.getId()))
-                .thenReturn(mapper.writeValueAsString(setWithMixinToRemove));
+        when(cloudAutomationVariablesClient.get(resourceWithTheMixinToRemove.getId())).thenReturn(mapper.writeValueAsString(setWithMixinToRemove));
 
         mixinService.removeMixin(mixinToRemove.getTitle());
 
         verify(cloudAutomationVariablesClient).delete(mixinToRemove.getTitle());
-        verify(cloudAutomationVariablesClient).update(resourceWithThreeMixin.getId(),mapper.writeValueAsString(notDeletedMixins));
-        verify(cloudAutomationVariablesClient).update(resourceWithTheMixinToRemove.getId(),mapper.writeValueAsString(new HashSet<String>()));
+        verify(cloudAutomationVariablesClient).update(resourceWithThreeMixin.getId(),
+                                                      mapper.writeValueAsString(notDeletedMixins));
+        verify(cloudAutomationVariablesClient).update(resourceWithTheMixinToRemove.getId(),
+                                                      mapper.writeValueAsString(new HashSet<String>()));
 
     }
 

@@ -127,21 +127,6 @@ public class MixinService {
     }
 
     /**
-     * Give the list of the mixin name of an entity
-     *
-     * @param entityId is an occi entity
-     * @return the list of the mixin related to the entity instance
-     * @throws CloudAutomationServerException if there is an error in the cloud automation service response
-     */
-    public Set<String> getEntityMixinNames(String entityId) {
-        String references = cloudAutomationVariablesClient.get(entityId);
-
-        TypeReference<Set<String>> mapType = new TypeReference<Set<String>>() {
-        };
-        return readMappedObject(references, mapType);
-    }
-
-    /**
      * Give the mixins of a entity
      *
      * @param entityId the id of the entity
@@ -150,7 +135,7 @@ public class MixinService {
      */
     public List<Mixin> getMixinsById(String entityId) {
 
-        return this.getEntityMixinNames(entityId)
+        return this.getMixinNamesFromEntity(entityId)
                    .stream()
                    .map(mixin -> this.getMixinMockByTitle(mixin))
                    .collect(Collectors.toList());
@@ -176,6 +161,10 @@ public class MixinService {
 
     }
 
+    /**
+     * Add a mixin in the database and update the references
+     * @param mixin
+     */
     public void addMixin(Mixin mixin) {
         //add the new entity references
         cloudAutomationVariablesClient.post(mixin.getTitle(), mapObject(mixin.getRendering()));
@@ -186,6 +175,10 @@ public class MixinService {
         }
     }
 
+    /**
+     * Remove a mixin from the database and update the references
+     * @param mixinTitle the title of the mixin to remove
+     */
     public void removeMixin(String mixinTitle) {
         Mixin mixinToRemove = getMixinByTitle(mixinTitle);
         List<Entity> entities = mixinToRemove.getEntities();
@@ -193,17 +186,31 @@ public class MixinService {
         cloudAutomationVariablesClient.delete(mixinTitle);
 
         entities.forEach(entity -> {
-            getEntityMixinNames(entity.getId()).remove(mixinTitle);
+            getMixinNamesFromEntity(entity.getId()).remove(mixinTitle);
         });
 
         entities.forEach(entity -> {
-            Set<String> entityMixins = getEntityMixinNames(entity.getId());
+            Set<String> entityMixins = getMixinNamesFromEntity(entity.getId());
             entityMixins.remove(mixinTitle);
             cloudAutomationVariablesClient.update(entity.getId(), mapObject(entityMixins));
         });
 
     }
 
+    /**
+     * Give the list of the mixin name of an entity
+     *
+     * @param entityId is an occi entity
+     * @return the list of the mixin related to the entity instance
+     * @throws CloudAutomationServerException if there is an error in the cloud automation service response
+     */
+    Set<String> getMixinNamesFromEntity(String entityId) {
+        String references = cloudAutomationVariablesClient.get(entityId);
+
+        TypeReference<Set<String>> mapType = new TypeReference<Set<String>>() {
+        };
+        return readMappedObject(references, mapType);
+    }
 
     private MixinRendering getMixinRenderingByTitle(String title) {
         return MixinRendering.convertMixinFromString(cloudAutomationVariablesClient.get(title));
@@ -240,7 +247,7 @@ public class MixinService {
         Set<String> entityReferences = new HashSet<>();
         entityReferences.add(mixinsId);
         try {
-            entityReferences.addAll(getEntityMixinNames(entityId));
+            entityReferences.addAll(getMixinNamesFromEntity(entityId));
             cloudAutomationVariablesClient.update(entityId, mapObject(entityReferences));
         } catch (CloudAutomationServerException ex) {
             cloudAutomationVariablesClient.post(entityId, mapObject(entityReferences));
