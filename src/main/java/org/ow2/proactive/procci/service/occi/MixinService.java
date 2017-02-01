@@ -116,29 +116,18 @@ public class MixinService {
     }
 
     /**
-     * Give a list of mixin from their titles
-     *
-     * @param titles is the mixins titles
-     * @return a list of Mixin
-     * @throws ClientException if there is an error in the cloud automation service response
-     */
-    public List<Mixin> getMixinsByTitles(List<String> titles) {
-        return titles.stream().map(title -> getMixinByTitle(title)).collect(Collectors.toList());
-    }
-
-    /**
-     * Give the mixins of a entity
+     * Give the mixins of an entity
      *
      * @param entityId the id of the entity
      * @return a list of mixin realated to the compute
      * @throws ClientException
      */
-    public List<Mixin> getMixinsById(String entityId) {
+    public List<Mixin> getMixinsByEntityId(String entityId) {
 
-        return this.getMixinNamesFromEntity(entityId)
-                   .stream()
-                   .map(mixin -> this.getMixinMockByTitle(mixin))
-                   .collect(Collectors.toList());
+        return this.getMixinNamesFromEntity(entityId).stream().map(mixin -> {
+            System.out.println("mixin " + mixin);
+            return this.getMixinMockByTitle(mixin);
+        }).collect(Collectors.toList());
     }
 
     /**
