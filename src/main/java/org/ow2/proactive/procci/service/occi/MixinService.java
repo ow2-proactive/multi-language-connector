@@ -91,6 +91,19 @@ public class MixinService {
     }
 
     /**
+     * Give a mixin from his title
+     *
+     * @param title is the mixin title
+     * @return a mixin
+     * @throws ClientException if there is an error in the cloud automation service response
+     */
+    public Mixin getMixinByTitle(String title) {
+
+        MixinRendering mixinRendering = getMixinRenderingByTitle(title);
+        return new MixinBuilder(this, instanceService, mixinRendering).build();
+    }
+
+    /**
      * Give a mixin without entities from his title
      *
      * @param title is the mixin title
@@ -196,19 +209,6 @@ public class MixinService {
         TypeReference<Set<String>> mapType = new TypeReference<Set<String>>() {
         };
         return readMappedObject(references, mapType);
-    }
-
-    /**
-     * Give a mixin from his title
-     *
-     * @param title is the mixin title
-     * @return a mixin
-     * @throws ClientException if there is an error in the cloud automation service response
-     */
-    public Mixin getMixinByTitle(String title) {
-
-        MixinRendering mixinRendering = getMixinRenderingByTitle(title);
-        return new MixinBuilder(this, instanceService, mixinRendering).build();
     }
 
     private MixinRendering getMixinRenderingByTitle(String title) throws ClientException {
