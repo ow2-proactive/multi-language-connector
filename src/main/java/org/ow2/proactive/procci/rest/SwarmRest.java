@@ -91,7 +91,7 @@ public class SwarmRest {
 
         logger.debug("Deploy a swarm " + swarmRendering.toString());
         try {
-            swarmRendering.checkAttributes(Swarm.getAttributes(), "Compute");
+            swarmRendering.checkAttributes(Swarm.getAttributes(), "Compute", mixinService);
             SwarmBuilder swarmBuilder = new SwarmBuilder(mixinService, swarmRendering);
             Resource response = instanceService.create(swarmBuilder.build(),
                                                        transformerManager.getTransformerProvider(TransformerType.SWARM),

@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import org.codehaus.jackson.type.TypeReference;
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Contextualization;
@@ -87,19 +88,6 @@ public class MixinService {
      */
     public Optional<MixinBuilder> getMixinBuilder(String mixinName) {
         return Optional.ofNullable(providerMixin.get(mixinName)).map(supplier -> supplier.get());
-    }
-
-    /**
-     * Give a mixin from his title
-     *
-     * @param title is the mixin title
-     * @return a mixin
-     * @throws ClientException if there is an error in the cloud automation service response
-     */
-    public Mixin getMixinByTitle(String title) {
-
-        MixinRendering mixinRendering = getMixinRenderingByTitle(title);
-        return new MixinBuilder(this, instanceService, mixinRendering).build();
     }
 
     /**
@@ -187,6 +175,15 @@ public class MixinService {
     }
 
     /**
+     *  Give a the name of each mixin
+     *
+     * @return a set containing the name of each mixin
+     */
+    public Set<String> getProviderMixinsName() {
+        return providerMixin.keySet();
+    }
+
+    /**
      * Give the list of the mixin name of an entity
      *
      * @param entityId is an occi entity
@@ -201,7 +198,20 @@ public class MixinService {
         return readMappedObject(references, mapType);
     }
 
-    private MixinRendering getMixinRenderingByTitle(String title) {
+    /**
+     * Give a mixin from his title
+     *
+     * @param title is the mixin title
+     * @return a mixin
+     * @throws ClientException if there is an error in the cloud automation service response
+     */
+    public Mixin getMixinByTitle(String title) {
+
+        MixinRendering mixinRendering = getMixinRenderingByTitle(title);
+        return new MixinBuilder(this, instanceService, mixinRendering).build();
+    }
+
+    private MixinRendering getMixinRenderingByTitle(String title) throws ClientException {
         return MixinRendering.convertMixinFromString(cloudAutomationVariablesClient.get(title));
     }
 
@@ -217,8 +227,7 @@ public class MixinService {
             Set<String> entitiesId = getMixinRenderingByTitle(mixinRendering.getTitle()).getEntities();
             mixinRendering.getEntities().addAll(entitiesId);
             cloudAutomationVariablesClient.update(mixinRendering.getTitle(), mapObject(mixinRendering));
-        } catch (CloudAutomationServerException ex) {
-
+        } catch (CloudAutomationClientException ex) {
             cloudAutomationVariablesClient.post(mixinRendering.getTitle(), mapObject(mixinRendering));
         }
     }

@@ -209,11 +209,7 @@ public class MixinServiceTest {
 
         when(cloudAutomationVariablesClient.get("idTest2")).thenReturn(mapper.writeValueAsString(mixin.getRendering()));
 
-        Mockito.doThrow(new CloudAutomationServerException("mixinTest2", "url", "content"))
-               .when(cloudAutomationVariablesClient)
-               .get("mixinTest2");
-
-        Mockito.doThrow(new CloudAutomationServerException("mixinTest2", "url", "content"))
+        Mockito.doThrow(new CloudAutomationClientException("mixinTest2 not found"))
                .when(cloudAutomationVariablesClient)
                .get("mixinTest2");
 

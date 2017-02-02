@@ -26,18 +26,33 @@
 package org.ow2.proactive.procci.model.occi.metamodel.rendering;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers.VM_IMAGE;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockitoAnnotations;
 import org.ow2.proactive.procci.model.exception.UnknownAttributeException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
+import org.ow2.proactive.procci.service.occi.MixinService;
 
 
 public class ResourceRenderingTest {
 
+    private MixinService mixinService = new MixinService();
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
+
     @Test
-    public void checkAttributesTest() {
+    public void checkAttributesFailTest() {
 
         UnknownAttributeException e = null;
+
         ResourceRendering computeRendering = new ResourceRendering.Builder("http://schemas.ogf.org/occi/infrastructure#compute",
                                                                            "urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29").addAttribute("occi.compute.speed",
                                                                                                                                         2)
@@ -59,7 +74,7 @@ public class ResourceRenderingTest {
                                                                                                                                         "nothing")
                                                                                                                           .build();
         try {
-            computeRendering.checkAttributes(Compute.getAttributes(), "Compute");
+            computeRendering.checkAttributes(Compute.getAttributes(), "Compute", mixinService);
         } catch (UnknownAttributeException ex) {
             e = ex;
         }
@@ -67,6 +82,33 @@ public class ResourceRenderingTest {
         assertThat(e).isNotNull();
         assertThat(e.getUnknownAttribute()).contains("occi.compute.speed");
         assertThat(e.getUnknownAttribute()).contains("falseAttribute");
+    }
 
+    @Test
+    public void checkAttributesTest() {
+
+        Map attributes = new HashMap();
+        attributes.put("occi.compute.userdata", "userdataTest");
+        attributes.put("occi.category.title", "titleTest");
+
+        Map vmImageAttribute = new HashMap();
+        vmImageAttribute.put("imagename", "imageId");
+
+        ResourceRendering computeRendering = new ResourceRendering.Builder("http://schemas.ogf.org/occi/infrastructure#compute",
+                                                                           "urn:uuid:996ad860−2a9a−504f−886−aeafd0b2ae29").addAttribute("occi.entity.title",
+                                                                                                                                        "titleTest")
+                                                                                                                          .addAttribute(VM_IMAGE,
+                                                                                                                                        vmImageAttribute)
+                                                                                                                          .build();
+
+        Exception exception = null;
+
+        try {
+            computeRendering.checkAttributes(Compute.getAttributes(), "Compute", mixinService);
+        } catch (Exception e) {
+            e.printStackTrace();
+            exception = e;
+        }
+        assertThat(exception).isNull();
     }
 }
