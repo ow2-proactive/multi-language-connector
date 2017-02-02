@@ -52,6 +52,8 @@ import org.springframework.stereotype.Component;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
 
+import lombok.Getter;
+
 
 /**
  * Created by the Activeeon Team on 12/10/16.
@@ -183,6 +185,10 @@ public class MixinService {
         for (String entityId : mixin.getEntities().stream().map(entity -> entity.getId()).collect(Collectors.toSet())) {
             addEntityReferences(entityId, mixin.getTitle());
         }
+    }
+
+    public Set<String> getProviderMixinsName() {
+        return providerMixin.keySet();
     }
 
     private MixinRendering getMixinRenderingByTitle(String title) throws ClientException {
