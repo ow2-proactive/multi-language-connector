@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import org.codehaus.jackson.type.TypeReference;
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Contextualization;
@@ -51,8 +52,6 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
-
-import lombok.Getter;
 
 
 /**
@@ -207,8 +206,7 @@ public class MixinService {
             Set<String> entitiesId = getMixinRenderingByTitle(mixinRendering.getTitle()).getEntities();
             mixinRendering.getEntities().addAll(entitiesId);
             cloudAutomationVariablesClient.update(mixinRendering.getTitle(), mapObject(mixinRendering));
-        } catch (CloudAutomationServerException ex) {
-
+        } catch (CloudAutomationClientException ex) {
             cloudAutomationVariablesClient.post(mixinRendering.getTitle(), mapObject(mixinRendering));
         }
 

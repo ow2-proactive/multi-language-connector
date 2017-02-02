@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.ow2.proactive.procci.model.exception.SyntaxException;
 import org.ow2.proactive.procci.model.exception.UnknownAttributeException;
 import org.ow2.proactive.procci.model.occi.metamodel.Attribute;
 import org.ow2.proactive.procci.service.occi.MixinService;
