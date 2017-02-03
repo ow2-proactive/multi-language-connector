@@ -124,11 +124,10 @@ public class MixinService {
      * @throws ClientException
      */
     public List<Mixin> getMixinsByEntityId(String entityId) {
-
-        return this.getMixinNamesFromEntity(entityId).stream().map(mixin -> {
-            System.out.println("mixin " + mixin);
-            return this.getMixinMockByTitle(mixin);
-        }).collect(Collectors.toList());
+        return this.getMixinNamesFromEntity(entityId)
+                   .stream()
+                   .map(mixin -> this.getMixinMockByTitle(mixin))
+                   .collect(Collectors.toList());
     }
 
     /**
