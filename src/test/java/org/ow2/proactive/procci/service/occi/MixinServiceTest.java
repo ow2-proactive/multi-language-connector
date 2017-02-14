@@ -84,12 +84,12 @@ public class MixinServiceTest {
         Mixin mixinToReturn = new MixinBuilder("schemeTest", "termTest").addEntity(entity).title(mixinTitle).build();
 
         when(cloudAutomationVariablesClient.get(mixinTitle)).thenReturn(MixinRendering.convertStringFromMixin(mixinToReturn.getRendering()));
-        when(instanceService.getMockedEntity(entity.getId())).thenReturn(Optional.of(entity));
+        when(instanceService.getMixinsFreeEntity(entity.getId())).thenReturn(Optional.of(entity));
 
         Mixin mixinGot = mixinService.getMixinByTitle(mixinTitle);
 
         verify(cloudAutomationVariablesClient).get(mixinTitle);
-        verify(instanceService).getMockedEntity(entity.getId());
+        verify(instanceService).getMixinsFreeEntity(entity.getId());
 
         assertThat(mixinGot).isNotNull();
         assertThat(mixinGot.getTitle()).isEqualTo(mixinTitle);
@@ -105,12 +105,12 @@ public class MixinServiceTest {
         Mixin mixinToReturn = new MixinBuilder("schemeTest", "termTest").title(mixinTitle).addEntity(entity).build();
 
         when(cloudAutomationVariablesClient.get(mixinTitle)).thenReturn(MixinRendering.convertStringFromMixin(mixinToReturn.getRendering()));
-        when(instanceService.getMockedEntity(entity.getId())).thenReturn(Optional.of(entity));
+        when(instanceService.getMixinsFreeEntity(entity.getId())).thenReturn(Optional.of(entity));
 
-        Mixin mixinGot = mixinService.getMixinMockByTitle(mixinTitle);
+        Mixin mixinGot = mixinService.getEntitiesFreeMixinByTitle(mixinTitle);
 
         verify(cloudAutomationVariablesClient).get(mixinTitle);
-        verify(instanceService).getMockedEntity(entity.getId());
+        verify(instanceService).getMixinsFreeEntity(entity.getId());
 
         assertThat(mixinGot).isNotNull();
         assertThat(mixinGot.getTitle()).isEqualTo(mixinTitle);
@@ -247,9 +247,9 @@ public class MixinServiceTest {
 
         when(cloudAutomationVariablesClient.get(mixinToRemove.getTitle())).thenReturn(MixinRendering.convertStringFromMixin(mixinToRemove.getRendering()));
 
-        when(instanceService.getMockedEntity(resourceWithThreeMixin.getId())).thenReturn(Optional.of(resourceWithThreeMixin));
+        when(instanceService.getMixinsFreeEntity(resourceWithThreeMixin.getId())).thenReturn(Optional.of(resourceWithThreeMixin));
 
-        when(instanceService.getMockedEntity(resourceWithTheMixinToRemove.getId())).thenReturn(Optional.of(resourceWithTheMixinToRemove));
+        when(instanceService.getMixinsFreeEntity(resourceWithTheMixinToRemove.getId())).thenReturn(Optional.of(resourceWithTheMixinToRemove));
 
         when(cloudAutomationVariablesClient.get(resourceWithThreeMixin.getId())).thenReturn(mapper.writeValueAsString(allMixins));
 
