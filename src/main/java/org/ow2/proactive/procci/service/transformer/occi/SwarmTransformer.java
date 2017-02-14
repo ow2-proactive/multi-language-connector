@@ -92,6 +92,6 @@ public class SwarmTransformer extends TransformerProvider {
 
     @Override
     public boolean isInstanceOfType(InstanceModel instanceModel) {
-        return instanceModel instanceof Swarm ? true : false;
+        return instanceModel instanceof Swarm;
     }
 }

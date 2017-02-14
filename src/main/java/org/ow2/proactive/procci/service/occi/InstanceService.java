@@ -110,11 +110,15 @@ public class InstanceService {
      */
     public Resource create(Resource resource, TransformerProvider transformerProvider, MixinService mixinService) {
 
+        final String CREATION_KEYWORD = "create";
+
         //update the references between mixin and compute
         mixinService.addEntity(resource);
 
         //create a resource according to the creation request sent to cloud-automation-service
-        return (Resource) cloudAutomationInstanceClient.postInstanceModel(resource, "create", transformerProvider);
+        return (Resource) cloudAutomationInstanceClient.postInstanceModel(resource,
+                                                                          CREATION_KEYWORD,
+                                                                          transformerProvider);
     }
 
     private ResourceBuilder getResourceBuilder(Model model) {

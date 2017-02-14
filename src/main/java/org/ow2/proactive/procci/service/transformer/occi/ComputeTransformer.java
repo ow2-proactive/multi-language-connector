@@ -92,6 +92,6 @@ public class ComputeTransformer extends TransformerProvider {
 
     @Override
     public boolean isInstanceOfType(InstanceModel instanceModel) {
-        return instanceModel instanceof Compute ? true : false;
+        return instanceModel instanceof Compute;
     }
 }
