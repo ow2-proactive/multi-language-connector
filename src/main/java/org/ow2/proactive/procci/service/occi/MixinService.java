@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 
 import org.codehaus.jackson.type.TypeReference;
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.infrastructure.mixin.Contextualization;
@@ -185,6 +186,10 @@ public class MixinService {
         }
     }
 
+    public Set<String> getProviderMixinsName() {
+        return providerMixin.keySet();
+    }
+
     private MixinRendering getMixinRenderingByTitle(String title) throws ClientException {
         return MixinRendering.convertMixinFromString(cloudAutomationVariablesClient.get(title));
     }
@@ -201,8 +206,7 @@ public class MixinService {
             Set<String> entitiesId = getMixinRenderingByTitle(mixinRendering.getTitle()).getEntities();
             mixinRendering.getEntities().addAll(entitiesId);
             cloudAutomationVariablesClient.update(mixinRendering.getTitle(), mapObject(mixinRendering));
-        } catch (CloudAutomationServerException ex) {
-
+        } catch (CloudAutomationClientException ex) {
             cloudAutomationVariablesClient.post(mixinRendering.getTitle(), mapObject(mixinRendering));
         }
 

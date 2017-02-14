@@ -122,7 +122,7 @@ public class ComputeRest {
             throws InterruptedException, NumberFormatException {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
-            computeRendering.checkAttributes(Compute.getAttributes(), "Compute");
+            computeRendering.checkAttributes(Compute.getAttributes(), "Compute", mixinService);
 
             Resource response = instanceService.create(new ComputeBuilder(mixinService, computeRendering).build(),
                                                        transformerManager.getTransformerProvider(TransformerType.COMPUTE),

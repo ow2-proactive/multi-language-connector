@@ -41,6 +41,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
@@ -131,11 +132,7 @@ public class MixinServiceTest {
 
         when(cloudAutomationVariablesClient.get("idTest2")).thenReturn(mapper.writeValueAsString(mixin.getRendering()));
 
-        Mockito.doThrow(new CloudAutomationServerException("mixinTest2", "url", "content"))
-               .when(cloudAutomationVariablesClient)
-               .get("mixinTest2");
-
-        Mockito.doThrow(new CloudAutomationServerException("mixinTest2", "url", "content"))
+        Mockito.doThrow(new CloudAutomationClientException("mixinTest2 not found"))
                .when(cloudAutomationVariablesClient)
                .get("mixinTest2");
 
