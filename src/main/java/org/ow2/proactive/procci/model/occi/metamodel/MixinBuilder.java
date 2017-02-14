@@ -191,7 +191,7 @@ public class MixinBuilder {
      * @return a mixin witout entities
      * @throws ClientException
      */
-    public Mixin entitiesFreeBuild() {
+    public Mixin entitiesFreeMixinBuild() {
         this.entities = new ArrayList<>();
         return build();
     }

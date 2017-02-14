@@ -112,7 +112,7 @@ public class MixinService {
     public Mixin getEntitiesFreeMixinByTitle(String title) throws ClientException {
 
         MixinRendering mixinRendering = getMixinRenderingByTitle(title);
-        return new MixinBuilder(this, instanceService, mixinRendering).entitiesFreeBuild();
+        return new MixinBuilder(this, instanceService, mixinRendering).entitiesFreeMixinBuild();
     }
 
     /**
