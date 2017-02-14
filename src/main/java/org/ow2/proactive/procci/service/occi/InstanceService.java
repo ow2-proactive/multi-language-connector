@@ -78,7 +78,7 @@ public class InstanceService {
      * @return a compute without the object references set
      * @throws ClientException
      */
-    public Optional<Entity> getMockedEntity(String id) {
+    public Optional<Entity> getMixinsFreeEntity(String id) {
         return cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME, ConvertUtils.formatURL(id))
                                             .map(model -> new ComputeBuilder(model).build());
     }

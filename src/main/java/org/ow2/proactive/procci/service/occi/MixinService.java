@@ -109,10 +109,10 @@ public class MixinService {
      * @return a mixin without entities
      * @throws ClientException if there is an error in the cloud automation service response
      */
-    public Mixin getMixinMockByTitle(String title) throws ClientException {
+    public Mixin getEntitiesFreeMixinByTitle(String title) throws ClientException {
 
         MixinRendering mixinRendering = getMixinRenderingByTitle(title);
-        return new MixinBuilder(this, instanceService, mixinRendering).buildMock();
+        return new MixinBuilder(this, instanceService, mixinRendering).entitiesFreeBuild();
     }
 
     /**
@@ -151,7 +151,7 @@ public class MixinService {
 
         return this.getEntityMixinNames(entityId)
                    .stream()
-                   .map(mixin -> this.getMixinMockByTitle(mixin))
+                   .map(mixin -> this.getEntitiesFreeMixinByTitle(mixin))
                    .collect(Collectors.toList());
     }
 

@@ -78,7 +78,7 @@ public class RequestUtils {
             String serverOutput = readHttpResponse(response, url, "POST " + content.toJSONString());
             return parseJSON(serverOutput);
         } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest ",ex);
+            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest ", ex);
             throw new ServerException();
         }
     }
@@ -95,7 +95,7 @@ public class RequestUtils {
             String serverOutput = readHttpResponse(response, url, "GET");
             return parseJSON(serverOutput);
         } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest ",ex);
+            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest ", ex);
             throw new ServerException();
         }
     }
@@ -206,7 +206,7 @@ public class RequestUtils {
         try {
             return (JSONObject) new JSONParser().parse(jsonString);
         } catch (ParseException ex) {
-            logger.error(" Parse exception in RequestUtils::parseJSON",ex);
+            logger.error(" Parse exception in RequestUtils::parseJSON", ex);
             throw new ServerException();
         }
     }

@@ -113,7 +113,7 @@ public class MixinBuilder {
         this.depends = Optional.ofNullable(mixinRendering.getDepends())
                                .orElse(new ArrayList<>())
                                .stream()
-                               .map(depend -> mixinService.getMixinMockByTitle(depend))
+                               .map(depend -> mixinService.getEntitiesFreeMixinByTitle(depend))
                                .collect(Collectors.toList());
 
         this.applies = Optional.ofNullable(mixinRendering.getApplies())
@@ -127,7 +127,7 @@ public class MixinBuilder {
                                 .map(entitiesId -> new ArrayList<>(entitiesId))
                                 .orElse(new ArrayList<>())
                                 .stream()
-                                .map(entityId -> instanceService.getMockedEntity(entityId))
+                                .map(entityId -> instanceService.getMixinsFreeEntity(entityId))
                                 .filter(entity -> entity.isPresent())
                                 .map(entity -> entity.get())
                                 .collect(Collectors.toList());
@@ -191,7 +191,7 @@ public class MixinBuilder {
      * @return a mixin witout entities
      * @throws ClientException
      */
-    public Mixin buildMock() {
+    public Mixin entitiesFreeBuild() {
         this.entities = new ArrayList<>();
         return build();
     }
