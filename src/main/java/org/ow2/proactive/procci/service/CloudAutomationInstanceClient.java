@@ -58,11 +58,11 @@ public class CloudAutomationInstanceClient {
      */
     public List<Model> getModels() {
         JSONObject jsonModels = requestUtils.getRequest(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT));
-        return (List) jsonModels.keySet()
-                                .stream()
-                                .map(key -> jsonModels.get(key))
-                                .map(jsonModel -> new Model((JSONObject) jsonModel))
-                                .collect(Collectors.toList());
+
+        return (List<Model>) jsonModels.values()
+                                       .stream()
+                                       .map(jsonModel -> new Model((JSONObject) jsonModel))
+                                       .collect(Collectors.toList());
     }
 
     /**
@@ -80,10 +80,10 @@ public class CloudAutomationInstanceClient {
     }
 
     /**
-     *  Give an optional containing a instance model if the parameters match with an instance in cloud automation
+     *  Give an optional containing an instance model if the parameters match with an instance in cloud automation
      * @param variableName is a key in the variables for the cloud automation model
      * @param variableValue is a value in the variables for the cloud automation model
-     * @param transformerProvider is a transformer for converting the cloud automation model into a instance model
+     * @param transformerProvider is a transformer for converting the cloud automation model into an instance model
      * @return an instance model if the parameters match otherwise return an empty optional
      */
     public Optional<InstanceModel> getInstanceModel(String variableName, String variableValue,
@@ -97,7 +97,7 @@ public class CloudAutomationInstanceClient {
      * @param instanceModel is the model that is used to create the instance
      * @param actionType is the action to apply on the instance
      * @param transformerProvider is the transformer to apply on the instance model
-     * @return a instance model return by cloud automation
+     * @return an instance model return by cloud automation
      */
     public InstanceModel postInstanceModel(InstanceModel instanceModel, String actionType,
             TransformerProvider transformerProvider) {

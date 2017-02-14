@@ -66,8 +66,7 @@ public class RequestUtils {
     public JSONObject postRequest(JSONObject content, String url) {
 
         final String PCA_SERVICE_SESSIONID = "sessionid";
-        try {
-            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpPost postRequest = new HttpPost(url);
             postRequest.addHeader(PCA_SERVICE_SESSIONID, getSessionId());
             StringEntity input = new StringEntity(content.toJSONString());
@@ -77,11 +76,9 @@ public class RequestUtils {
             HttpResponse response = httpClient.execute(postRequest);
 
             String serverOutput = readHttpResponse(response, url, "POST " + content.toJSONString());
-            httpClient.close();
             return parseJSON(serverOutput);
         } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest " + ", exception : " +
-                         ex.getMessage());
+            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest ",ex);
             throw new ServerException();
         }
     }
@@ -92,17 +89,13 @@ public class RequestUtils {
      * @return a json object containing the service results
      */
     public JSONObject getRequest(String url) {
-        try {
-            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
             HttpGet getRequest = new HttpGet(url);
-
             HttpResponse response = httpClient.execute(getRequest);
             String serverOutput = readHttpResponse(response, url, "GET");
-            httpClient.close();
             return parseJSON(serverOutput);
         } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest " + ", exception : " +
-                         ex.getMessage());
+            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest ",ex);
             throw new ServerException();
         }
     }
@@ -133,26 +126,13 @@ public class RequestUtils {
      */
     public String getProperty(String propertyKey) {
         Properties prop = new Properties();
-        InputStream input = null;
-
         try {
             prop.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
-
-            // return the property value
             return prop.getProperty(propertyKey);
 
         } catch (IOException ex) {
             logger.error("Unable to get the cloud automation service url from config.properties", ex);
             throw new ServerException();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    logger.error("Unable to get the cloud automation service url from config.properties", e);
-                    throw new ServerException();
-                }
-            }
         }
     }
 
@@ -185,11 +165,14 @@ public class RequestUtils {
     }
 
     /**
+     * The method parse the server response
+     * if the response is valid it returns the string value
+     * if the response is not valid it throws an exception then it logs the error
      *
-     * @param response
-     * @param url
-     * @param request
-     * @return
+     * @param response is an HttpResponse containing the server response
+     * @param url is where the request was sent
+     * @param request is the string request sent to the server
+     * @return a string which contains the server response
      */
     public String readHttpResponse(HttpResponse response, String url, String request) {
         int status = response.getStatusLine().getStatusCode();
@@ -223,7 +206,7 @@ public class RequestUtils {
         try {
             return (JSONObject) new JSONParser().parse(jsonString);
         } catch (ParseException ex) {
-            logger.error(" Parse exception in RequestUtils::parseJSON, exception : " + ex.getMessage());
+            logger.error(" Parse exception in RequestUtils::parseJSON",ex);
             throw new ServerException();
         }
     }
