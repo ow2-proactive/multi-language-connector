@@ -25,23 +25,14 @@
  */
 package org.ow2.proactive.procci.service;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.ow2.proactive.procci.model.ModelConstant;
+import org.ow2.proactive.procci.model.InstanceModel;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
-import org.ow2.proactive.procci.model.exception.ServerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.ow2.proactive.procci.service.transformer.TransformerProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,95 +47,64 @@ import org.springframework.stereotype.Service;
 @Service
 public class CloudAutomationInstanceClient {
 
-    private static final String INSTANCE_ENDPOINT = "cloud-automation-service.instances.endpoint";
-
-    private final Logger logger = LoggerFactory.getLogger(CloudAutomationInstanceClient.class);
+    static final String PCA_INSTANCES_ENDPOINT = "cloud-automation-service.instances.endpoint";
 
     @Autowired
     private RequestUtils requestUtils;
 
     /**
-     * Get the deployed instances from Cloud Automation Model
-     *
-     * @return a json object containing the service results
+     *  Give the list of models saved in cloud-automation
+     * @return a list of Model
      */
-    public JSONObject getRequest() {
-        final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
-        try {
-            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet getRequest = new HttpGet(url);
+    public List<Model> getModels() {
+        JSONObject jsonModels = requestUtils.getRequest(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT));
 
-            HttpResponse response = httpClient.execute(getRequest);
-            String serverOutput = requestUtils.readHttpResponse(response, url, "GET");
-            httpClient.close();
-            return parseJSON(serverOutput);
-        } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest " + ", exception : " +
-                         ex.getMessage());
-            throw new ServerException();
-        }
+        return (List<Model>) jsonModels.values()
+                                       .stream()
+                                       .map(jsonModel -> new Model((JSONObject) jsonModel))
+                                       .collect(Collectors.toList());
     }
 
     /**
-     * Get the instance of cloud automation service and return the first occurance with variableValue matching variableName
+     * Get the cloud automation model from the database which matches with the parameters
      *
      * @param variableName  a key in variables
      * @param variableValue the value matching with the variableName key
-     * @return the first occurance which match with variablename and variableValue
+     * @return the first occurance which match with variableName and variableValue
      */
     public Optional<Model> getInstanceByVariable(String variableName, String variableValue) {
 
-        JSONObject instances = getRequest();
-
-        return instances.keySet()
-                        .stream()
-                        .map(key -> ((JSONObject) instances.get(key)).get(ModelConstant.VARIABLES))
-                        .filter(vars -> ((JSONObject) vars).containsKey(variableName))
-                        .filter(vars -> ((JSONObject) vars).get(variableName).equals(variableValue))
-                        .findFirst()
-                        .map(vars -> ((JSONObject) vars).get(ModelConstant.INSTANCE_ID))
-                        .map(id -> new Model((JSONObject) instances.get(id)));
+        return getModels().stream()
+                          .filter(model -> variableValue.equals(model.getVariables().get(variableName)))
+                          .findFirst();
     }
 
     /**
-     * Send a service to pca service with a header containing the session id and sending content
-     *
-     * @param content is which is send to the cloud automation service
-     * @return the information about gathered from cloud automation service
+     *  Give an optional containing an instance model if the parameters match with an instance in cloud automation
+     * @param variableName is a key in the variables for the cloud automation model
+     * @param variableValue is a value in the variables for the cloud automation model
+     * @param transformerProvider is a transformer for converting the cloud automation model into an instance model
+     * @return an instance model if the parameters match otherwise return an empty optional
      */
-    public JSONObject postRequest(JSONObject content) {
-
-        final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String url = requestUtils.getProperty(INSTANCE_ENDPOINT);
-        try {
-            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost postRequest = new HttpPost(url);
-            postRequest.addHeader(PCA_SERVICE_SESSIONID, requestUtils.getSessionId());
-            StringEntity input = new StringEntity(content.toJSONString());
-            input.setContentType("application/json");
-            postRequest.setEntity(input);
-
-            HttpResponse response = httpClient.execute(postRequest);
-
-            String serverOutput = requestUtils.readHttpResponse(response, url, "POST " + content.toJSONString());
-            httpClient.close();
-            return parseJSON(serverOutput);
-        } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest " + ", exception : " +
-                         ex.getMessage());
-            throw new ServerException();
-        }
+    public Optional<InstanceModel> getInstanceModel(String variableName, String variableValue,
+            TransformerProvider transformerProvider) {
+        return getInstanceByVariable(variableName,
+                                     variableValue).map(model -> transformerProvider.toInstanceModel(model));
     }
 
-    private JSONObject parseJSON(String jsonString) {
-        try {
-            return (JSONObject) new JSONParser().parse(jsonString);
-        } catch (ParseException ex) {
-            logger.error(" Parse exception in CloudAutomationInstanceClient::parseJSON " + ", exception : " +
-                         ex.getMessage());
-            throw new ServerException();
-        }
-
+    /**
+     * Create an instance in cloud automation from instanceModel
+     * @param instanceModel is the model that is used to create the instance
+     * @param actionType is the action to apply on the instance
+     * @param transformerProvider is the transformer to apply on the instance model
+     * @return an instance model return by cloud automation
+     */
+    public InstanceModel postInstanceModel(InstanceModel instanceModel, String actionType,
+            TransformerProvider transformerProvider) {
+        return transformerProvider.toInstanceModel(new Model(requestUtils.postRequest(transformerProvider.toCloudAutomationModel(instanceModel,
+                                                                                                                                 actionType)
+                                                                                                         .getJson(),
+                                                                                      requestUtils.getProperty(PCA_INSTANCES_ENDPOINT))));
     }
 
 }

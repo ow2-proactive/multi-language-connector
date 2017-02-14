@@ -37,9 +37,9 @@ import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
-import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.InstanceService;
 import org.ow2.proactive.procci.service.occi.MixinService;
+import org.ow2.proactive.procci.service.transformer.TransformerManager;
 import org.ow2.proactive.procci.service.transformer.TransformerType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +69,9 @@ public class ComputeRest {
     @Autowired
     private InstanceService instanceService;
 
+    @Autowired
+    private TransformerManager transformerManager;
+
     //-------------------Retrieve All Computes--------------------------------------------------------
 
     @RequestMapping(method = RequestMethod.GET)
@@ -76,7 +79,7 @@ public class ComputeRest {
         logger.debug("Get all Compute instances");
         try {
 
-            List<EntityRendering> entityRenderings = instanceService.getInstancesRendering();
+            List<EntityRendering> entityRenderings = instanceService.getInstancesRendering(mixinService);
             return new ResponseEntity<>(new EntitiesRendering.Builder().addEntities(entityRenderings).build(),
                                         HttpStatus.OK);
         } catch (ClientException e) {
@@ -95,13 +98,11 @@ public class ComputeRest {
         logger.debug("Get Compute ");
         try {
 
-            Optional<Entity> compute = instanceService.getEntity(ConvertUtils.formatURL(id));
+            Optional<Entity> compute = instanceService.getEntity(id,
+                                                                 transformerManager.getTransformerProvider(TransformerType.COMPUTE));
             if (!compute.isPresent()) {
                 return new ResponseEntity(HttpStatus.NOT_FOUND);
             } else {
-
-                //transformerManager.getTransformer(TransformerType.SWARN).toRendering((Compute)compute.get())
-
                 return new ResponseEntity<>(((Compute) compute.get()).getRendering(), HttpStatus.OK);
             }
         } catch (ClientException e) {
@@ -122,8 +123,10 @@ public class ComputeRest {
         logger.debug("Creating Compute " + computeRendering.toString());
         try {
             computeRendering.checkAttributes(Compute.getAttributes(), "Compute");
-            ComputeBuilder computeBuilder = new ComputeBuilder(mixinService, computeRendering);
-            Resource response = instanceService.create(computeBuilder.build(), TransformerType.COMPUTE);
+
+            Resource response = instanceService.create(new ComputeBuilder(mixinService, computeRendering).build(),
+                                                       transformerManager.getTransformerProvider(TransformerType.COMPUTE),
+                                                       mixinService);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.CREATED);
         } catch (ClientException e) {
             logger.error(this.getClass().getName(), e);

@@ -32,11 +32,15 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.exception.ServerException;
@@ -52,6 +56,49 @@ import org.springframework.stereotype.Service;
 public class RequestUtils {
 
     private final Logger logger = LoggerFactory.getLogger(RequestUtils.class);
+
+    /**
+     * Send a service to pca service with a header containing the session id and sending content
+     *
+     * @param content is which is send to the cloud automation service
+     * @return the information about gathered from cloud automation service
+     */
+    public JSONObject postRequest(JSONObject content, String url) {
+
+        final String PCA_SERVICE_SESSIONID = "sessionid";
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+            HttpPost postRequest = new HttpPost(url);
+            postRequest.addHeader(PCA_SERVICE_SESSIONID, getSessionId());
+            StringEntity input = new StringEntity(content.toJSONString());
+            input.setContentType("application/json");
+            postRequest.setEntity(input);
+
+            HttpResponse response = httpClient.execute(postRequest);
+
+            String serverOutput = readHttpResponse(response, url, "POST " + content.toJSONString());
+            return parseJSON(serverOutput);
+        } catch (IOException ex) {
+            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest ", ex);
+            throw new ServerException();
+        }
+    }
+
+    /**
+     * Get the deployed instances from Cloud Automation Model
+     *
+     * @return a json object containing the service results
+     */
+    public JSONObject getRequest(String url) {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+            HttpGet getRequest = new HttpGet(url);
+            HttpResponse response = httpClient.execute(getRequest);
+            String serverOutput = readHttpResponse(response, url, "GET");
+            return parseJSON(serverOutput);
+        } catch (IOException ex) {
+            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest ", ex);
+            throw new ServerException();
+        }
+    }
 
     /**
      * Read an http respond and convert it into a string
@@ -79,26 +126,13 @@ public class RequestUtils {
      */
     public String getProperty(String propertyKey) {
         Properties prop = new Properties();
-        InputStream input = null;
-
         try {
             prop.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
-
-            // return the property value
             return prop.getProperty(propertyKey);
 
         } catch (IOException ex) {
             logger.error("Unable to get the cloud automation service url from config.properties", ex);
             throw new ServerException();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    logger.error("Unable to get the cloud automation service url from config.properties", e);
-                    throw new ServerException();
-                }
-            }
         }
     }
 
@@ -131,11 +165,14 @@ public class RequestUtils {
     }
 
     /**
+     * The method parse the server response
+     * if the response is valid it returns the string value
+     * if the response is not valid it throws an exception then it logs the error
      *
-     * @param response
-     * @param url
-     * @param request
-     * @return
+     * @param response is an HttpResponse containing the server response
+     * @param url is where the request was sent
+     * @param request is the string request sent to the server
+     * @return a string which contains the server response
      */
     public String readHttpResponse(HttpResponse response, String url, String request) {
         int status = response.getStatusLine().getStatusCode();
@@ -163,5 +200,14 @@ public class RequestUtils {
     private void logError(String url, String request) {
         logger.error("url : " + url);
         logger.error("request : " + request);
+    }
+
+    private JSONObject parseJSON(String jsonString) {
+        try {
+            return (JSONObject) new JSONParser().parse(jsonString);
+        } catch (ParseException ex) {
+            logger.error(" Parse exception in RequestUtils::parseJSON", ex);
+            throw new ServerException();
+        }
     }
 }

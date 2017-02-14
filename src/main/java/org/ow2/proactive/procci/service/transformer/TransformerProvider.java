@@ -50,8 +50,32 @@ public abstract class TransformerProvider {
 
     }
 
+    /**
+     * Give the type associated to the transformer class
+     * @return the TransformerType associated
+     */
     public abstract TransformerType getType();
 
+    /**
+     *  Convert the instance model into a cloud automaton model
+     * @param instanceModel is the model that will be converted
+     * @param actionType is the action that is intended on the object
+     * @return an model converted from instanceModel
+     */
     public abstract Model toCloudAutomationModel(InstanceModel instanceModel, String actionType);
+
+    /**
+     *  Convert the model from cloud automation to an instance model
+     * @param model is the cloud automation model that is converted
+     * @return a instance model converted from cloud automation model
+     */
+    public abstract InstanceModel toInstanceModel(Model model);
+
+    /**
+     *  Check if instance model is an applicable instance for the transformer
+     * @param instanceModel is the instance model that will be tested
+     * @return true if the instance model is applicable for the transformer otherwise return false
+     */
+    public abstract boolean isInstanceOfType(InstanceModel instanceModel);
 
 }
