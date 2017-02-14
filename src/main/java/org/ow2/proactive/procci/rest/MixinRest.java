@@ -113,4 +113,22 @@ public class MixinRest {
         return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
     }
 
+    //-------------------Remove a Mixin--------------------------------------------------------
+    @RequestMapping(value = "{mixinTitle}", method = RequestMethod.DELETE)
+    public ResponseEntity<MixinRendering> removeMixin(@PathVariable("mixinTitle") String mixinTitle) {
+        logger.debug("Deleting Mixin " + mixinTitle);
+
+        Mixin mixin = null;
+        try {
+            mixin = mixinService.getMixinByTitle(mixinTitle);
+            mixinService.removeMixin(mixinTitle);
+        } catch (ServerException ex) {
+            logger.error(this.getClass().getName(), ex);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ClientException ex) {
+            return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(mixin.getRendering(), HttpStatus.OK);
+    }
+
 }

@@ -86,7 +86,7 @@ public class ComputeTransformer extends TransformerProvider {
 
     @Override
     public InstanceModel toInstanceModel(Model model) {
-        return new ComputeBuilder(model).addMixins(mixinService.getMixinsById(model.getVariables().get(ID_NAME)))
+        return new ComputeBuilder(model).addMixins(mixinService.getMixinsByEntityId(model.getVariables().get(ID_NAME)))
                                         .build();
     }
 

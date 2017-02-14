@@ -95,8 +95,8 @@ public class InstanceService {
                                             .stream()
                                             .filter(model -> model.getVariables().containsKey(ID_NAME))
                                             .map(model -> getResourceBuilder(model))
-                                            .map(resourceBuilder -> (resourceBuilder).addMixins(mixinService.getMixinsById((resourceBuilder).getUrl()
-                                                                                                                                            .orElse(""))))
+                                            .map(resourceBuilder -> (resourceBuilder).addMixins(mixinService.getMixinsByEntityId((resourceBuilder).getUrl()
+                                                                                                                                                  .orElse(""))))
                                             .map(resourceBuilder -> (resourceBuilder).build().getRendering())
                                             .collect(Collectors.toList());
     }
