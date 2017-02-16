@@ -26,11 +26,12 @@
 package org.ow2.proactive.procci.service.occi;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
@@ -70,8 +72,12 @@ public class MixinServiceTest {
     @Mock
     private InstanceService instanceService;
 
+    private ObjectMapper mapper;
+
+
     @Before
     public void setUp() {
+        mapper = new ObjectMapper();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -121,7 +127,6 @@ public class MixinServiceTest {
     public void getMixinsByEntityIdTest() throws IOException {
 
         String entityId = "entity";
-        ObjectMapper mapper = new ObjectMapper();
 
         Mixin mixin1FromEntity = new MixinBuilder("mixinFromEntity", "test1").build();
         Mixin mixin2FromEntity = new MixinBuilder("mixinFromEntity", "test2").build();
@@ -149,7 +154,7 @@ public class MixinServiceTest {
         Set<String> references = new HashSet<>();
         references.add("ref1Test");
         references.add("ref2Test");
-        when(cloudAutomationVariablesClient.get("idTest")).thenReturn(new ObjectMapper().writeValueAsString(references));
+        when(cloudAutomationVariablesClient.get("idTest")).thenReturn(mapper.writeValueAsString(references));
         Set<String> result = mixinService.getMixinNamesFromEntity("idTest");
         assertThat(result).contains("ref1Test");
         assertThat(result).contains("ref2Test");
@@ -174,8 +179,6 @@ public class MixinServiceTest {
 
     @Test
     public void addReferenceTest() throws IOException {
-
-        ObjectMapper mapper = new ObjectMapper();
 
         //test update object and update mixin
 
@@ -223,8 +226,6 @@ public class MixinServiceTest {
 
     @Test
     public void removeMixinTest() throws IOException {
-
-        ObjectMapper mapper = new ObjectMapper();
 
         Mixin mixin1 = new MixinBuilder("mixinTest", "toKeep1").build();
         Mixin mixin2 = new MixinBuilder("mixinTest", "toKeep2").build();
@@ -278,6 +279,70 @@ public class MixinServiceTest {
             ex = e;
         }
 
+        assertThat(ex).isInstanceOf(CloudAutomationClientException.class);
+    }
+
+    @Test
+    public void deleteEntityTest() throws  IOException {
+
+        String entityIdToDelete = "entityIdToDelete";
+        String oneEntityMixinToUpdateTitle = "oneEntityMixinToUpdate";
+        String severalEntitiesMixinToUpdateTitle = "severalEntitiesMixinToUpdate";
+
+        Entity mockEntity = new ResourceBuilder().build();
+
+        Entity entity = new ResourceBuilder()
+                .url(entityIdToDelete)
+                .build();
+
+        Mixin oneEntityMixinToUpdate  = new MixinBuilder(oneEntityMixinToUpdateTitle,"term")
+                .addEntity(entity)
+                .build();
+
+        Mixin severalEntitiesMixinToUpdate = new MixinBuilder(severalEntitiesMixinToUpdateTitle,"term")
+                .addEntity(entity)
+                .addEntity(mockEntity)
+                .build();
+
+        Set<String> mixinToUpdateId = new HashSet<>();
+        mixinToUpdateId.add(oneEntityMixinToUpdateTitle);
+        mixinToUpdateId.add(severalEntitiesMixinToUpdateTitle);
+
+        when(cloudAutomationVariablesClient.get(entityIdToDelete))
+                .thenReturn(mapper.writeValueAsString(mixinToUpdateId));
+        when(cloudAutomationVariablesClient.get(oneEntityMixinToUpdateTitle))
+                .thenReturn(mapper.writeValueAsString(oneEntityMixinToUpdate.getRendering()));
+        when(cloudAutomationVariablesClient.get(severalEntitiesMixinToUpdateTitle))
+                .thenReturn(mapper.writeValueAsString(severalEntitiesMixinToUpdate.getRendering()));
+        when(instanceService.getMixinsFreeEntity(mockEntity.getId()))
+                .thenReturn(Optional.of(mockEntity));
+        when(instanceService.getMixinsFreeEntity(entity.getId()))
+                .thenReturn(Optional.of(entity));
+
+        mixinService.deleteEntity(entityIdToDelete);
+
+        verify(cloudAutomationVariablesClient).delete(entityIdToDelete);
+        verify(cloudAutomationVariablesClient).get(oneEntityMixinToUpdateTitle);
+        verify(cloudAutomationVariablesClient).get(severalEntitiesMixinToUpdateTitle);
+        verify(instanceService,times(2)).getMixinsFreeEntity(entity.getId());
+        verify(instanceService,times(1)).getMixinsFreeEntity(mockEntity.getId());
+    }
+
+    @Test
+    public void failEntityDeletion(){
+
+
+        String wrongEntityId = "wrongEntityId";
+
+        when(cloudAutomationVariablesClient.get(wrongEntityId)).thenThrow(new CloudAutomationClientException("not found"));
+        Exception ex = null;
+        try{
+            mixinService.deleteEntity(wrongEntityId);
+        }catch (Exception e){
+            ex = e;
+        }
+
+        assertThat(ex).isNotNull();
         assertThat(ex).isInstanceOf(CloudAutomationClientException.class);
 
     }

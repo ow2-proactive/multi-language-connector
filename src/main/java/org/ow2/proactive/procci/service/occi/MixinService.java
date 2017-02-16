@@ -187,6 +187,24 @@ public class MixinService {
     }
 
     /**
+     * Delete the entity from the variable database and update his mixins references
+     * @param entityId is the id of the entity to remove
+     */
+    public void deleteEntity(String entityId) {
+        List<Mixin> mixinToUpdate = this.getMixinsByEntityId(entityId);
+
+        cloudAutomationVariablesClient.delete(entityId);
+
+        mixinToUpdate.forEach( mixin -> {
+            cloudAutomationVariablesClient.update(mixin.getTitle(),mapObject(mixin.getEntities()
+                    .stream()
+                    .map(entity -> entity.getId())
+                    .filter(id -> id!=entityId)
+                    .collect(Collectors.toSet())));
+        });
+    }
+
+    /**
      *  Give a the name of each mixin
      *
      * @return a set containing the name of each mixin
@@ -250,5 +268,4 @@ public class MixinService {
             cloudAutomationVariablesClient.post(entityId, mapObject(entityReferences));
         }
     }
-
 }
