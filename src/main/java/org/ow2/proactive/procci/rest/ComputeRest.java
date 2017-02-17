@@ -137,4 +137,22 @@ public class ComputeRest {
         }
     }
 
+    //-------------------Delete a Compute--------------------------------------------------------
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResourceRendering> deleteCompute(@PathVariable String computeId) {
+        logger.debug("Deleting Compute " + computeId);
+        try {
+
+            Resource response = (Resource) instanceService.delete(computeId,
+                                                                  transformerManager.getTransformerProvider(TransformerType.COMPUTE),
+                                                                  mixinService);
+            return new ResponseEntity<>(response.getRendering(), HttpStatus.OK);
+        } catch (ClientException e) {
+            logger.error(this.getClass().getName(), e);
+            return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
+        } catch (ServerException e) {
+            logger.error(this.getClass().getName(), e);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

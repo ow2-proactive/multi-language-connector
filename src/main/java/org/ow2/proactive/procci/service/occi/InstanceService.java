@@ -134,12 +134,12 @@ public class InstanceService {
         }
     }
 
-    public Entity delete(String entityId,TransformerProvider transformerProvider, MixinService mixinService){
+    public Entity delete(String entityId, TransformerProvider transformerProvider, MixinService mixinService) {
 
         mixinService.deleteEntity(entityId);
 
-        Entity deletedEntity = this.getEntity(entityId,transformerProvider)
-                .orElseThrow(() -> new CloudAutomationClientException(entityId+" not found"));
+        Entity deletedEntity = this.getEntity(entityId, transformerProvider)
+                                   .orElseThrow(() -> new CloudAutomationClientException(entityId + " not found"));
 
         cloudAutomationInstanceClient.deleteInstanceModel(entityId);
 

@@ -195,12 +195,12 @@ public class MixinService {
 
         cloudAutomationVariablesClient.delete(entityId);
 
-        mixinToUpdate.forEach( mixin -> {
-            cloudAutomationVariablesClient.update(mixin.getTitle(),mapObject(mixin.getEntities()
-                    .stream()
-                    .map(entity -> entity.getId())
-                    .filter(id -> id!=entityId)
-                    .collect(Collectors.toSet())));
+        mixinToUpdate.forEach(mixin -> {
+            cloudAutomationVariablesClient.update(mixin.getTitle(), mapObject(mixin.getEntities()
+                                                                                   .stream()
+                                                                                   .map(entity -> entity.getId())
+                                                                                   .filter(id -> id != entityId)
+                                                                                   .collect(Collectors.toSet())));
         });
     }
 

@@ -112,6 +112,6 @@ public class CloudAutomationInstanceClient {
      * @param entityId
      */
     public void deleteInstanceModel(String entityId) {
-        requestUtils.deleteRequest(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT),entityId);
+        requestUtils.deleteRequest(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT), entityId);
     }
 }

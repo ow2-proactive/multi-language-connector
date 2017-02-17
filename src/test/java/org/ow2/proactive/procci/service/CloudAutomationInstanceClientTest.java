@@ -225,7 +225,7 @@ public class CloudAutomationInstanceClientTest {
     }
 
     @Test
-    public void deleteInstanceModelTest(){
+    public void deleteInstanceModelTest() {
 
         String entityIdToDelete = "entityIdToDelete";
         String url = "url";
@@ -234,7 +234,7 @@ public class CloudAutomationInstanceClientTest {
 
         cloudAutomationInstanceClient.deleteInstanceModel(entityIdToDelete);
 
-        verify(requestUtils,times(1)).getProperty(PCA_INSTANCES_ENDPOINT);
-        verify(requestUtils,times(1)).deleteRequest(url,entityIdToDelete);
+        verify(requestUtils, times(1)).getProperty(PCA_INSTANCES_ENDPOINT);
+        verify(requestUtils, times(1)).deleteRequest(url, entityIdToDelete);
     }
 }

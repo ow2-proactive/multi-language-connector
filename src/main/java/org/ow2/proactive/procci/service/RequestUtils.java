@@ -101,18 +101,18 @@ public class RequestUtils {
         }
     }
 
-    public void deleteRequest(String url, String instanceId){
+    public void deleteRequest(String url, String instanceId) {
         final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String deleteUrl = url + "?instanceId="+instanceId;
+        final String deleteUrl = url + "?instanceId=" + instanceId;
 
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
 
             HttpDelete deleteRequest = new HttpDelete(deleteUrl);
-            deleteRequest.addHeader(PCA_SERVICE_SESSIONID,getSessionId());
+            deleteRequest.addHeader(PCA_SERVICE_SESSIONID, getSessionId());
 
             HttpResponse response = httpClient.execute(deleteRequest);
 
-            readHttpResponse(response, deleteUrl, "DELETE "+instanceId);
+            readHttpResponse(response, deleteUrl, "DELETE " + instanceId);
         } catch (IOException ex) {
             logger.error(" IO exception in CloudAutomationInstanceClient::DeleteRequest ", ex);
             throw new ServerException();

@@ -74,7 +74,6 @@ public class MixinServiceTest {
 
     private ObjectMapper mapper;
 
-
     @Before
     public void setUp() {
         mapper = new ObjectMapper();
@@ -283,7 +282,7 @@ public class MixinServiceTest {
     }
 
     @Test
-    public void deleteEntityTest() throws  IOException {
+    public void deleteEntityTest() throws IOException {
 
         String entityIdToDelete = "entityIdToDelete";
         String oneEntityMixinToUpdateTitle = "oneEntityMixinToUpdate";
@@ -291,54 +290,44 @@ public class MixinServiceTest {
 
         Entity mockEntity = new ResourceBuilder().build();
 
-        Entity entity = new ResourceBuilder()
-                .url(entityIdToDelete)
-                .build();
+        Entity entity = new ResourceBuilder().url(entityIdToDelete).build();
 
-        Mixin oneEntityMixinToUpdate  = new MixinBuilder(oneEntityMixinToUpdateTitle,"term")
-                .addEntity(entity)
-                .build();
+        Mixin oneEntityMixinToUpdate = new MixinBuilder(oneEntityMixinToUpdateTitle, "term").addEntity(entity).build();
 
-        Mixin severalEntitiesMixinToUpdate = new MixinBuilder(severalEntitiesMixinToUpdateTitle,"term")
-                .addEntity(entity)
-                .addEntity(mockEntity)
-                .build();
+        Mixin severalEntitiesMixinToUpdate = new MixinBuilder(severalEntitiesMixinToUpdateTitle, "term")
+                                                                                                        .addEntity(entity)
+                                                                                                        .addEntity(mockEntity)
+                                                                                                        .build();
 
         Set<String> mixinToUpdateId = new HashSet<>();
         mixinToUpdateId.add(oneEntityMixinToUpdateTitle);
         mixinToUpdateId.add(severalEntitiesMixinToUpdateTitle);
 
-        when(cloudAutomationVariablesClient.get(entityIdToDelete))
-                .thenReturn(mapper.writeValueAsString(mixinToUpdateId));
-        when(cloudAutomationVariablesClient.get(oneEntityMixinToUpdateTitle))
-                .thenReturn(mapper.writeValueAsString(oneEntityMixinToUpdate.getRendering()));
-        when(cloudAutomationVariablesClient.get(severalEntitiesMixinToUpdateTitle))
-                .thenReturn(mapper.writeValueAsString(severalEntitiesMixinToUpdate.getRendering()));
-        when(instanceService.getMixinsFreeEntity(mockEntity.getId()))
-                .thenReturn(Optional.of(mockEntity));
-        when(instanceService.getMixinsFreeEntity(entity.getId()))
-                .thenReturn(Optional.of(entity));
+        when(cloudAutomationVariablesClient.get(entityIdToDelete)).thenReturn(mapper.writeValueAsString(mixinToUpdateId));
+        when(cloudAutomationVariablesClient.get(oneEntityMixinToUpdateTitle)).thenReturn(mapper.writeValueAsString(oneEntityMixinToUpdate.getRendering()));
+        when(cloudAutomationVariablesClient.get(severalEntitiesMixinToUpdateTitle)).thenReturn(mapper.writeValueAsString(severalEntitiesMixinToUpdate.getRendering()));
+        when(instanceService.getMixinsFreeEntity(mockEntity.getId())).thenReturn(Optional.of(mockEntity));
+        when(instanceService.getMixinsFreeEntity(entity.getId())).thenReturn(Optional.of(entity));
 
         mixinService.deleteEntity(entityIdToDelete);
 
         verify(cloudAutomationVariablesClient).delete(entityIdToDelete);
         verify(cloudAutomationVariablesClient).get(oneEntityMixinToUpdateTitle);
         verify(cloudAutomationVariablesClient).get(severalEntitiesMixinToUpdateTitle);
-        verify(instanceService,times(2)).getMixinsFreeEntity(entity.getId());
-        verify(instanceService,times(1)).getMixinsFreeEntity(mockEntity.getId());
+        verify(instanceService, times(2)).getMixinsFreeEntity(entity.getId());
+        verify(instanceService, times(1)).getMixinsFreeEntity(mockEntity.getId());
     }
 
     @Test
-    public void failEntityDeletion(){
-
+    public void failEntityDeletion() {
 
         String wrongEntityId = "wrongEntityId";
 
         when(cloudAutomationVariablesClient.get(wrongEntityId)).thenThrow(new CloudAutomationClientException("not found"));
         Exception ex = null;
-        try{
+        try {
             mixinService.deleteEntity(wrongEntityId);
-        }catch (Exception e){
+        } catch (Exception e) {
             ex = e;
         }
 
