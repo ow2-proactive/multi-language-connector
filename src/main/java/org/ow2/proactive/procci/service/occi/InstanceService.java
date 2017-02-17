@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
@@ -131,5 +132,17 @@ public class InstanceService {
             default:
                 return new ResourceBuilder(model);
         }
+    }
+
+    public Entity delete(String entityId,TransformerProvider transformerProvider, MixinService mixinService){
+
+        mixinService.deleteEntity(entityId);
+
+        Entity deletedEntity = this.getEntity(entityId,transformerProvider)
+                .orElseThrow(() -> new CloudAutomationClientException(entityId+" not found"));
+
+        cloudAutomationInstanceClient.deleteInstanceModel(entityId);
+
+        return deletedEntity;
     }
 }

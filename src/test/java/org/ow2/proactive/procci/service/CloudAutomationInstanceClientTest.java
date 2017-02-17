@@ -26,6 +26,8 @@
 package org.ow2.proactive.procci.service;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
 import static org.ow2.proactive.procci.service.CloudAutomationInstanceClient.PCA_INSTANCES_ENDPOINT;
@@ -220,6 +222,19 @@ public class CloudAutomationInstanceClientTest {
 
         assertThat(computeResult.getHostname().get()).matches(endpointTest);
         assertThat(computeResult).isEqualTo(receiveCompute);
+    }
 
+    @Test
+    public void deleteInstanceModelTest(){
+
+        String entityIdToDelete = "entityIdToDelete";
+        String url = "url";
+
+        when(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT)).thenReturn(url);
+
+        cloudAutomationInstanceClient.deleteInstanceModel(entityIdToDelete);
+
+        verify(requestUtils,times(1)).getProperty(PCA_INSTANCES_ENDPOINT);
+        verify(requestUtils,times(1)).deleteRequest(url,entityIdToDelete);
     }
 }

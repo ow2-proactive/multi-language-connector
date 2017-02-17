@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -56,6 +57,23 @@ import org.springframework.stereotype.Service;
 public class RequestUtils {
 
     private final Logger logger = LoggerFactory.getLogger(RequestUtils.class);
+
+    /**
+     * Get the deployed instances from Cloud Automation Model
+     *
+     * @return a json object containing the service results
+     */
+    public JSONObject getRequest(String url) {
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+            HttpGet getRequest = new HttpGet(url);
+            HttpResponse response = httpClient.execute(getRequest);
+            String serverOutput = readHttpResponse(response, url, "GET");
+            return parseJSON(serverOutput);
+        } catch (IOException ex) {
+            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest ", ex);
+            throw new ServerException();
+        }
+    }
 
     /**
      * Send a service to pca service with a header containing the session id and sending content
@@ -83,19 +101,20 @@ public class RequestUtils {
         }
     }
 
-    /**
-     * Get the deployed instances from Cloud Automation Model
-     *
-     * @return a json object containing the service results
-     */
-    public JSONObject getRequest(String url) {
+    public void deleteRequest(String url, String instanceId){
+        final String PCA_SERVICE_SESSIONID = "sessionid";
+        final String deleteUrl = url + "?instanceId="+instanceId;
+
         try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            HttpGet getRequest = new HttpGet(url);
-            HttpResponse response = httpClient.execute(getRequest);
-            String serverOutput = readHttpResponse(response, url, "GET");
-            return parseJSON(serverOutput);
+
+            HttpDelete deleteRequest = new HttpDelete(deleteUrl);
+            deleteRequest.addHeader(PCA_SERVICE_SESSIONID,getSessionId());
+
+            HttpResponse response = httpClient.execute(deleteRequest);
+
+            readHttpResponse(response, deleteUrl, "DELETE "+instanceId);
         } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest ", ex);
+            logger.error(" IO exception in CloudAutomationInstanceClient::DeleteRequest ", ex);
             throw new ServerException();
         }
     }
