@@ -191,10 +191,12 @@ public class MixinService {
      * @param entityId is the id of the entity to remove
      */
     public void deleteEntity(String entityId) {
+        System.out.println("getting entity " + entityId);
+
         List<Mixin> mixinToUpdate = this.getMixinsByEntityId(entityId);
-
+        System.out.println("got mixins");
         cloudAutomationVariablesClient.delete(entityId);
-
+        System.out.println("entity deleted in variables");
         mixinToUpdate.forEach(mixin -> {
             cloudAutomationVariablesClient.update(mixin.getTitle(), mapObject(mixin.getEntities()
                                                                                    .stream()
@@ -202,6 +204,7 @@ public class MixinService {
                                                                                    .filter(id -> id != entityId)
                                                                                    .collect(Collectors.toSet())));
         });
+        System.out.println("mixins deleted in variables");
     }
 
     /**

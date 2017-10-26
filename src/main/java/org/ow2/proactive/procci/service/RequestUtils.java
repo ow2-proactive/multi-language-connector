@@ -25,11 +25,12 @@
  */
 package org.ow2.proactive.procci.service;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
+
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -101,7 +102,13 @@ public class RequestUtils {
         }
     }
 
+    /**
+     * TODO change the delete request to include the body
+     * @param url
+     * @param instanceId
+     */
     public void deleteRequest(String url, String instanceId) {
+        logger.info("Sending request in " + url + " to delete " + instanceId);
         final String PCA_SERVICE_SESSIONID = "sessionid";
         final String deleteUrl = url + "?instanceId=" + instanceId;
 
@@ -112,7 +119,7 @@ public class RequestUtils {
 
             HttpResponse response = httpClient.execute(deleteRequest);
 
-            readHttpResponse(response, deleteUrl, "DELETE " + instanceId);
+            logger.info("Delete request response :" + readHttpResponse(response, deleteUrl, "DELETE " + instanceId));
         } catch (IOException ex) {
             logger.error(" IO exception in CloudAutomationInstanceClient::DeleteRequest ", ex);
             throw new ServerException();

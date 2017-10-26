@@ -139,8 +139,9 @@ public class ComputeRest {
 
     //-------------------Delete a Compute--------------------------------------------------------
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResourceRendering> deleteCompute(@PathVariable String computeId) {
+    public ResponseEntity<ResourceRendering> deleteCompute(@PathVariable(value = "id") String computeId) {
         logger.debug("Deleting Compute " + computeId);
+        logger.info("delete " + computeId);
         try {
 
             Resource response = (Resource) instanceService.delete(computeId,

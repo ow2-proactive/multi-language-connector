@@ -133,6 +133,10 @@ public class Model {
         return query;
     }
 
+    public String getVariableValue(String variableName){
+        return variables.get(variableName);
+    }
+
     public static class Builder {
 
         private final String serviceModel;

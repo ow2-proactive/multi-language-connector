@@ -29,11 +29,14 @@ import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelA
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.ow2.proactive.procci.model.ModelConstant;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
+import org.ow2.proactive.procci.model.exception.NotFoundException;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
@@ -94,7 +97,9 @@ public class InstanceService {
 
         return cloudAutomationInstanceClient.getModels()
                                             .stream()
+                                            .peek(model -> System.out.println(model.getVariables().keySet()))
                                             .filter(model -> model.getVariables().containsKey(ID_NAME))
+                                            .peek(model -> System.out.println("good model found"))
                                             .map(model -> getResourceBuilder(model))
                                             .map(resourceBuilder -> (resourceBuilder).addMixins(mixinService.getMixinsByEntityId((resourceBuilder).getUrl()
                                                                                                                                                   .orElse(""))))
@@ -135,13 +140,10 @@ public class InstanceService {
     }
 
     public Entity delete(String entityId, TransformerProvider transformerProvider, MixinService mixinService) {
-
-        mixinService.deleteEntity(entityId);
-
         Entity deletedEntity = this.getEntity(entityId, transformerProvider)
                                    .orElseThrow(() -> new CloudAutomationClientException(entityId + " not found"));
-
         cloudAutomationInstanceClient.deleteInstanceModel(entityId);
+        mixinService.deleteEntity(entityId);
 
         return deletedEntity;
     }
