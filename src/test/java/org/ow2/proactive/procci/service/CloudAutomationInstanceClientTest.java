@@ -37,6 +37,7 @@ import java.util.Optional;
 
 import org.json.simple.JSONObject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -60,9 +61,6 @@ public class CloudAutomationInstanceClientTest {
 
     @Mock
     private TransformerManager transformerManager;
-
-    @Mock
-    private CloudAutomationVariablesClient cloudAutomationVariablesClient;
 
     @Mock
     private ComputeTransformer computeTransformer;

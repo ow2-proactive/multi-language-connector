@@ -45,7 +45,6 @@ import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataAtt
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataKinds;
 import org.ow2.proactive.procci.model.occi.platform.constants.PlatformAttributes;
-import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
 import org.ow2.proactive.procci.service.occi.MixinService;
 
 
@@ -53,9 +52,6 @@ public class SwarmTest {
 
     @Mock
     private MixinService mixinService;
-
-    @Mock
-    private CloudAutomationVariablesClient cloudAutomationVariablesClient;
 
     @Before
     public void setUp() {

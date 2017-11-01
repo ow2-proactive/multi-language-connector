@@ -33,8 +33,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.MultipartAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -43,6 +45,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
+import io.swagger.client.ApiClient;
+import io.swagger.client.api.VariablesRestApi;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -56,6 +60,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @author ActiveEon Team
  */
 @SpringBootApplication
+@Import({ ApiClient.class, VariablesRestApi.class, RestTemplate.class })
 @EnableAutoConfiguration(exclude = { MultipartAutoConfiguration.class })
 @EnableSwagger2
 @PropertySource("classpath:application.properties")

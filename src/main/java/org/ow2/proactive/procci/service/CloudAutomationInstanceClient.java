@@ -57,12 +57,9 @@ public class CloudAutomationInstanceClient {
      * @return a list of Model
      */
     public List<Model> getModels() {
-        System.out.println("getting models");
         JSONObject jsonModels = requestUtils.getRequest(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT));
-        System.out.println("get models sucess");
         return (List<Model>) jsonModels.values()
                                        .stream()
-                                       .peek(val -> System.out.println("json models : " + val))
                                        .map(jsonModel -> new Model((JSONObject) jsonModel))
                                        .collect(Collectors.toList());
     }
@@ -77,8 +74,6 @@ public class CloudAutomationInstanceClient {
     public Optional<Model> getInstanceByVariable(String variableName, String variableValue) {
 
         return getModels().stream()
-                          .peek(model -> System.out.println("is " + model.getVariables().get(variableName) +
-                                                            " equals to " + variableValue))
                           .filter(model -> variableValue.equals(model.getVariables().get(variableName)))
                           .findFirst();
     }
@@ -116,7 +111,6 @@ public class CloudAutomationInstanceClient {
      * @param entityId
      */
     public void deleteInstanceModel(String entityId) {
-        System.out.println("delete entityId is failing");
-        //requestUtils.deleteRequest(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT), (Model) entityId);
+        requestUtils.deleteRequest(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT), entityId);
     }
 }

@@ -46,12 +46,14 @@ import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableMap;
+
+import io.swagger.client.api.VariablesRestApi;
 
 
 /**
@@ -70,7 +72,7 @@ public class MixinService {
     private InstanceService instanceService;
 
     @Autowired
-    private CloudAutomationVariablesClient cloudAutomationVariablesClient;
+    private VariablesRestApi variablesRestApi;
 
     public MixinService() {
         providerMixin = new ImmutableMap.Builder<String, Supplier<MixinBuilder>>().put(InfrastructureIdentifiers.VM_IMAGE,
@@ -143,7 +145,7 @@ public class MixinService {
                                               .map(mixin -> mixin.getTitle())
                                               .collect(Collectors.toSet());
         //add entity references
-        cloudAutomationVariablesClient.post(entity.getId(), mapObject(entityMixinsTitle));
+        variablesRestApi.createVariableUsingPOST(entity.getId(), mapObject(entityMixinsTitle));
 
         //add entity to mixin references
         entity.getMixins().forEach(mixin -> setMixinReferences(mixin.getRendering()));
@@ -156,7 +158,7 @@ public class MixinService {
      */
     public void addMixin(Mixin mixin) {
         //add the new entity references
-        cloudAutomationVariablesClient.post(mixin.getTitle(), mapObject(mixin.getRendering()));
+        variablesRestApi.createVariableUsingPOST(mixin.getTitle(), mapObject(mixin.getRendering()));
 
         //add mixin to entity references
         for (String entityId : mixin.getEntities().stream().map(entity -> entity.getId()).collect(Collectors.toSet())) {
@@ -172,8 +174,7 @@ public class MixinService {
         Mixin mixinToRemove = getMixinByTitle(mixinTitle);
         List<Entity> entities = mixinToRemove.getEntities();
 
-        cloudAutomationVariablesClient.delete(mixinTitle);
-
+        variablesRestApi.deleteVariableUsingDELETE(mixinTitle);
         entities.forEach(entity -> {
             getMixinNamesFromEntity(entity.getId()).remove(mixinTitle);
         });
@@ -181,7 +182,7 @@ public class MixinService {
         entities.forEach(entity -> {
             Set<String> entityMixins = getMixinNamesFromEntity(entity.getId());
             entityMixins.remove(mixinTitle);
-            cloudAutomationVariablesClient.update(entity.getId(), mapObject(entityMixins));
+            variablesRestApi.updateVariableUsingPUT(entity.getId(), mapObject(entityMixins));
         });
 
     }
@@ -191,20 +192,15 @@ public class MixinService {
      * @param entityId is the id of the entity to remove
      */
     public void deleteEntity(String entityId) {
-        System.out.println("getting entity " + entityId);
-
         List<Mixin> mixinToUpdate = this.getMixinsByEntityId(entityId);
-        System.out.println("got mixins");
-        cloudAutomationVariablesClient.delete(entityId);
-        System.out.println("entity deleted in variables");
+        variablesRestApi.deleteVariableUsingDELETE(entityId);
         mixinToUpdate.forEach(mixin -> {
-            cloudAutomationVariablesClient.update(mixin.getTitle(), mapObject(mixin.getEntities()
-                                                                                   .stream()
-                                                                                   .map(entity -> entity.getId())
-                                                                                   .filter(id -> id != entityId)
-                                                                                   .collect(Collectors.toSet())));
+            variablesRestApi.updateVariableUsingPUT(mixin.getTitle(), mapObject(mixin.getEntities()
+                                                                                     .stream()
+                                                                                     .map(entity -> entity.getId())
+                                                                                     .filter(id -> id != entityId)
+                                                                                     .collect(Collectors.toSet())));
         });
-        System.out.println("mixins deleted in variables");
     }
 
     /**
@@ -224,7 +220,7 @@ public class MixinService {
      * @throws CloudAutomationServerException if there is an error in the cloud automation service response
      */
     Set<String> getMixinNamesFromEntity(String entityId) {
-        String references = cloudAutomationVariablesClient.get(entityId);
+        String references = variablesRestApi.getVariableUsingGET(entityId);
 
         TypeReference<Set<String>> mapType = new TypeReference<Set<String>>() {
         };
@@ -232,7 +228,7 @@ public class MixinService {
     }
 
     private MixinRendering getMixinRenderingByTitle(String title) throws ClientException {
-        return MixinRendering.convertMixinFromString(cloudAutomationVariablesClient.get(title));
+        return MixinRendering.convertMixinFromString(variablesRestApi.getVariableUsingGET(title));
     }
 
     /**
@@ -246,9 +242,9 @@ public class MixinService {
         try {
             Set<String> entitiesId = getMixinRenderingByTitle(mixinRendering.getTitle()).getEntities();
             mixinRendering.getEntities().addAll(entitiesId);
-            cloudAutomationVariablesClient.update(mixinRendering.getTitle(), mapObject(mixinRendering));
-        } catch (CloudAutomationClientException ex) {
-            cloudAutomationVariablesClient.post(mixinRendering.getTitle(), mapObject(mixinRendering));
+            variablesRestApi.updateVariableUsingPUT(mixinRendering.getTitle(), mapObject(mixinRendering));
+        } catch (CloudAutomationClientException | HttpClientErrorException ex) {
+            variablesRestApi.createVariableUsingPOST(mixinRendering.getTitle(), mapObject(mixinRendering));
         }
     }
 
@@ -266,9 +262,9 @@ public class MixinService {
         entityReferences.add(mixinsId);
         try {
             entityReferences.addAll(getMixinNamesFromEntity(entityId));
-            cloudAutomationVariablesClient.update(entityId, mapObject(entityReferences));
+            variablesRestApi.updateVariableUsingPUT(entityId, mapObject(entityReferences));
         } catch (CloudAutomationServerException ex) {
-            cloudAutomationVariablesClient.post(entityId, mapObject(entityReferences));
+            variablesRestApi.createVariableUsingPOST(entityId, mapObject(entityReferences));
         }
     }
 }

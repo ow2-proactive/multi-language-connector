@@ -43,7 +43,6 @@ import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureKinds;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
-import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
 import org.ow2.proactive.procci.service.occi.MixinService;
 
 
@@ -54,9 +53,6 @@ public class LinkTest {
 
     @Mock
     private MixinService mixinService;
-
-    @Mock
-    private CloudAutomationVariablesClient cloudAutomationVariablesClient;
 
     @Before
     public void setUp() {

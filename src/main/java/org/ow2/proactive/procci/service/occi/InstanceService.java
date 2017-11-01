@@ -97,9 +97,7 @@ public class InstanceService {
 
         return cloudAutomationInstanceClient.getModels()
                                             .stream()
-                                            .peek(model -> System.out.println(model.getVariables().keySet()))
                                             .filter(model -> model.getVariables().containsKey(ID_NAME))
-                                            .peek(model -> System.out.println("good model found"))
                                             .map(model -> getResourceBuilder(model))
                                             .map(resourceBuilder -> (resourceBuilder).addMixins(mixinService.getMixinsByEntityId((resourceBuilder).getUrl()
                                                                                                                                                   .orElse(""))))

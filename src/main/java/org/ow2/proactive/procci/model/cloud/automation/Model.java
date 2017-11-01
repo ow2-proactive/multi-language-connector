@@ -133,7 +133,7 @@ public class Model {
         return query;
     }
 
-    public String getVariableValue(String variableName){
+    public String getVariableValue(String variableName) {
         return variables.get(variableName);
     }
 

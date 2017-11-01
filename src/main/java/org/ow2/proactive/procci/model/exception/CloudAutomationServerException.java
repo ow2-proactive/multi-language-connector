@@ -46,10 +46,14 @@ public class CloudAutomationServerException extends ServerException {
     private JSONObject jsonError;
 
     public CloudAutomationServerException(String exception, String url, String request) {
-        jsonError = new JSONObject();
-        jsonError.put("error", exception);
+        this(exception);
         jsonError.put("url", url);
         jsonError.put("request", request);
+    }
+
+    public CloudAutomationServerException(String exception) {
+        jsonError = new JSONObject();
+        jsonError.put("error", exception);
     }
 
     @Override
