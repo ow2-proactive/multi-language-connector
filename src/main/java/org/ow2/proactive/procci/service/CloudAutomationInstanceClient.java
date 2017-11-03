@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
 import org.ow2.proactive.procci.model.InstanceModel;
+import org.ow2.proactive.procci.model.ModelConstant;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.service.transformer.TransformerProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CloudAutomationInstanceClient {
 
-    static final String PCA_INSTANCES_ENDPOINT = "cloud-automation-service.instances.endpoint";
-
     @Autowired
     private RequestUtils requestUtils;
 
@@ -57,7 +56,7 @@ public class CloudAutomationInstanceClient {
      * @return a list of Model
      */
     public List<Model> getModels() {
-        JSONObject jsonModels = requestUtils.getRequest(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT));
+        JSONObject jsonModels = requestUtils.getRequest();
         return (List<Model>) jsonModels.values()
                                        .stream()
                                        .map(jsonModel -> new Model((JSONObject) jsonModel))
@@ -95,22 +94,21 @@ public class CloudAutomationInstanceClient {
      * Create an instance in cloud automation from instanceModel
      * @param instanceModel is the model that is used to create the instance
      * @param actionType is the action to apply on the instance
-     * @param transformerProvider is the transformer to apply on the instance model
+     * @param transformerProvider is the transformer to apply on the instance model to get the pca model
      * @return an instance model return by cloud automation
      */
     public InstanceModel postInstanceModel(InstanceModel instanceModel, String actionType,
             TransformerProvider transformerProvider) {
         return transformerProvider.toInstanceModel(new Model(requestUtils.postRequest(transformerProvider.toCloudAutomationModel(instanceModel,
                                                                                                                                  actionType)
-                                                                                                         .getJson(),
-                                                                                      requestUtils.getProperty(PCA_INSTANCES_ENDPOINT))));
+                                                                                                         .getJson())));
     }
 
     /**
-     *
-     * @param entityId
+     * Delete an instanceModel
+     * @param deleteModel the service model to delete
      */
-    public void deleteInstanceModel(String entityId) {
-        requestUtils.deleteRequest(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT), entityId);
+    public void deleteInstanceModel(Model deleteModel) {
+        requestUtils.deleteRequest(deleteModel);
     }
 }

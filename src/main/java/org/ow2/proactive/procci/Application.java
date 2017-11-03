@@ -46,6 +46,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
 import io.swagger.client.ApiClient;
+import io.swagger.client.api.ServiceInstanceRestApi;
 import io.swagger.client.api.VariablesRestApi;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -60,7 +61,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @author ActiveEon Team
  */
 @SpringBootApplication
-@Import({ ApiClient.class, VariablesRestApi.class, RestTemplate.class })
+@Import({ ApiClient.class, VariablesRestApi.class, ServiceInstanceRestApi.class, RestTemplate.class })
 @EnableAutoConfiguration(exclude = { MultipartAutoConfiguration.class })
 @EnableSwagger2
 @PropertySource("classpath:application.properties")

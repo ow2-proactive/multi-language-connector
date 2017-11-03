@@ -46,6 +46,7 @@ import org.ow2.proactive.procci.service.occi.MixinService;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 
 /**

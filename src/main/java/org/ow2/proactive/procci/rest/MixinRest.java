@@ -26,6 +26,7 @@
 package org.ow2.proactive.procci.rest;
 
 import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.NotFoundException;
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.ow2.proactive.procci.model.occi.metamodel.Mixin;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
@@ -43,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 
 
 /**
@@ -71,7 +73,11 @@ public class MixinRest {
         } catch (ClientException ex) {
             return new ResponseEntity(ex.getJsonError(), HttpStatus.BAD_REQUEST);
         } catch (ServerException exception) {
-            return new ResponseEntity(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                                      HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (HttpClientErrorException ex) {
+            logger.info("Mixin not found", ex);
+            return new ResponseEntity(new NotFoundException().getJsonError(), HttpStatus.NOT_FOUND);
         }
     }
 

@@ -32,6 +32,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.ow2.proactive.procci.model.InstanceModel;
 import org.ow2.proactive.procci.model.ModelConstant;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.ClientException;
@@ -42,6 +43,7 @@ import org.ow2.proactive.procci.model.occi.infrastructure.constants.Infrastructu
 import org.ow2.proactive.procci.model.occi.metamodel.Entity;
 import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.ResourceBuilder;
+import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.SwarmBuilder;
 import org.ow2.proactive.procci.model.occi.platform.bigdata.constants.BigDataIdentifiers;
@@ -114,14 +116,12 @@ public class InstanceService {
      */
     public Resource create(Resource resource, TransformerProvider transformerProvider, MixinService mixinService) {
 
-        final String CREATION_KEYWORD = "create";
-
         //update the references between mixin and compute
         mixinService.addEntity(resource);
 
         //create a resource according to the creation request sent to cloud-automation-service
         return (Resource) cloudAutomationInstanceClient.postInstanceModel(resource,
-                                                                          CREATION_KEYWORD,
+                                                                          ModelConstant.ACTION_TYPE_CREATE,
                                                                           transformerProvider);
     }
 
@@ -137,12 +137,16 @@ public class InstanceService {
         }
     }
 
-    public Entity delete(String entityId, TransformerProvider transformerProvider, MixinService mixinService) {
-        Entity deletedEntity = this.getEntity(entityId, transformerProvider)
-                                   .orElseThrow(() -> new CloudAutomationClientException(entityId + " not found"));
-        cloudAutomationInstanceClient.deleteInstanceModel(entityId);
+    public InstanceModel delete(String entityId, TransformerProvider transformerProvider, MixinService mixinService) {
+
+        Model modelToDelete = cloudAutomationInstanceClient.getInstanceByVariable(MetamodelAttributes.ID_NAME, entityId)
+                                                           .orElseThrow(() -> new CloudAutomationClientException(entityId +
+                                                                                                                 " not found"));
+
+        InstanceModel instanceModel = transformerProvider.toInstanceModel(modelToDelete);
+        cloudAutomationInstanceClient.deleteInstanceModel(modelToDelete);
         mixinService.deleteEntity(entityId);
 
-        return deletedEntity;
+        return instanceModel;
     }
 }

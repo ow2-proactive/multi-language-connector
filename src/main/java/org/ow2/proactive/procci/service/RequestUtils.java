@@ -41,12 +41,18 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.ow2.proactive.procci.model.InstanceModel;
+import org.ow2.proactive.procci.model.ModelConstant;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import io.swagger.client.api.ServiceInstanceRestApi;
 
 
 /**
@@ -57,21 +63,16 @@ public class RequestUtils {
 
     private final Logger logger = LoggerFactory.getLogger(RequestUtils.class);
 
+    @Autowired
+    private ServiceInstanceRestApi serviceInstanceRestApi;
+
     /**
      * Get the deployed instances from Cloud Automation Model
      *
      * @return a json object containing the service results
      */
-    public JSONObject getRequest(String url) {
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            HttpGet getRequest = new HttpGet(url);
-            HttpResponse response = httpClient.execute(getRequest);
-            String serverOutput = readHttpResponse(response, url, "GET");
-            return parseJSON(serverOutput);
-        } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest ", ex);
-            throw new ServerException();
-        }
+    public JSONObject getRequest() {
+        return parseJSON(serviceInstanceRestApi.getRunningServiceInstancesUsingGET());
     }
 
     /**
@@ -80,49 +81,17 @@ public class RequestUtils {
      * @param content is which is send to the cloud automation service
      * @return the information about gathered from cloud automation service
      */
-    public JSONObject postRequest(JSONObject content, String url) {
-
-        final String PCA_SERVICE_SESSIONID = "sessionid";
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            HttpPost postRequest = new HttpPost(url);
-            postRequest.addHeader(PCA_SERVICE_SESSIONID, getSessionId());
-            StringEntity input = new StringEntity(content.toJSONString());
-            input.setContentType("application/json");
-            postRequest.setEntity(input);
-
-            HttpResponse response = httpClient.execute(postRequest);
-
-            String serverOutput = readHttpResponse(response, url, "POST " + content.toJSONString());
-            return parseJSON(serverOutput);
-        } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest ", ex);
-            throw new ServerException();
-        }
+    public JSONObject postRequest(JSONObject content) {
+        return parseJSON(serviceInstanceRestApi.createRunningServiceInstancesUsingPOST(content.toJSONString(),
+                                                                                       getSessionId()));
     }
 
     /**
-     * TODO change the delete request to include the body
-     * @param url
-     * @param instanceId
+     * @param serviceModel the model describing the service
      */
-    public void deleteRequest(String url, String instanceId) {
-
-        logger.info("Sending request in " + url + " to delete " + instanceId);
-        final String PCA_SERVICE_SESSIONID = "sessionid";
-        final String deleteUrl = url + "?instanceId=" + instanceId;
-
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-
-            HttpDelete deleteRequest = new HttpDelete(deleteUrl);
-            deleteRequest.addHeader(PCA_SERVICE_SESSIONID, getSessionId());
-
-            HttpResponse response = httpClient.execute(deleteRequest);
-
-            logger.info("Delete request response :" + readHttpResponse(response, deleteUrl, "DELETE " + instanceId));
-        } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::DeleteRequest ", ex);
-            throw new ServerException();
-        }
+    public void deleteRequest(Model serviceModel) {
+        serviceInstanceRestApi.deleteRunningServiceInstancesUsingDELETE(getSessionId(),
+                                                                        serviceModel.getJson().toJSONString());
     }
 
     /**

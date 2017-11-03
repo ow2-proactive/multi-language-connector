@@ -37,6 +37,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
+import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.InstanceService;
 import org.ow2.proactive.procci.service.occi.MixinService;
 import org.ow2.proactive.procci.service.transformer.TransformerManager;
@@ -144,7 +145,7 @@ public class ComputeRest {
         logger.info("delete " + computeId);
         try {
 
-            Resource response = (Resource) instanceService.delete(computeId,
+            Resource response = (Resource) instanceService.delete(ConvertUtils.formatURL(computeId),
                                                                   transformerManager.getTransformerProvider(TransformerType.COMPUTE),
                                                                   mixinService);
             return new ResponseEntity<>(response.getRendering(), HttpStatus.OK);

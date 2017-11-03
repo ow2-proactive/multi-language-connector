@@ -192,15 +192,22 @@ public class MixinService {
      * @param entityId is the id of the entity to remove
      */
     public void deleteEntity(String entityId) {
+
+        //update mixin references
         List<Mixin> mixinToUpdate = this.getMixinsByEntityId(entityId);
-        variablesRestApi.deleteVariableUsingDELETE(entityId);
-        mixinToUpdate.forEach(mixin -> {
-            variablesRestApi.updateVariableUsingPUT(mixin.getTitle(), mapObject(mixin.getEntities()
-                                                                                     .stream()
-                                                                                     .map(entity -> entity.getId())
-                                                                                     .filter(id -> id != entityId)
-                                                                                     .collect(Collectors.toSet())));
+        mixinToUpdate.stream().map(mixin -> mixin.getRendering()).forEach(mixinRendering -> {
+            Set<String> updatedEntities = mixinRendering.getEntities()
+                                                        .stream()
+                                                        .filter(entity -> entity != entityId)
+                                                        .collect(Collectors.toSet());
+            MixinRendering updateRendering = MixinRendering.createMixinRenderingBuilder(mixinRendering)
+                                                           .entities(updatedEntities)
+                                                           .build();
+            variablesRestApi.updateVariableUsingPUT(mixinRendering.getTitle(), mapObject(updateRendering));
         });
+
+        //delete entity reference
+        variablesRestApi.deleteVariableUsingDELETE(entityId);
     }
 
     /**
@@ -232,7 +239,7 @@ public class MixinService {
     }
 
     /**
-     * if the mixin is already defined update the references however catch the not found excpetion thrown
+     * if the mixin is already defined update the references however catch the not found exception thrown
      * and create the mixin references
      *
      * @param mixinRendering the mixin to add references

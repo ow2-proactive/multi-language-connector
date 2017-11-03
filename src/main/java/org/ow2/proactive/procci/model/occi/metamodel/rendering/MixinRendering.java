@@ -103,4 +103,17 @@ public class MixinRendering {
             throw new ServerException();
         }
     }
+
+    public static MixinRendering.Builder createMixinRenderingBuilder(MixinRendering mixinRendering) {
+        return MixinRendering.builder()
+                             .scheme(mixinRendering.scheme)
+                             .term(mixinRendering.term)
+                             .title(mixinRendering.title)
+                             .attributes(mixinRendering.attributes)
+                             .actions(mixinRendering.actions)
+                             .depends(mixinRendering.depends)
+                             .applies(mixinRendering.applies)
+                             .location(mixinRendering.location)
+                             .entities(mixinRendering.entities);
+    }
 }
