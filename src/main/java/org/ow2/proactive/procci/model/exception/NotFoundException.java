@@ -25,39 +25,16 @@
  */
 package org.ow2.proactive.procci.model.exception;
 
-import org.json.simple.JSONObject;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 
-/**
- * Created by the Activeeon Team on 21/06/16.
- */
-
-/**
- * The Exception occur when an http service fail with an other Cloud Automation microservice
- */
 @Getter
-@AllArgsConstructor
-@ToString
-public class CloudAutomationServerException extends ServerException {
-    private JSONObject jsonError;
-
-    public CloudAutomationServerException(String exception, String url, String request) {
-        this(exception);
-        jsonError.put("url", url);
-        jsonError.put("request", request);
-    }
-
-    public CloudAutomationServerException(String exception) {
-        jsonError = new JSONObject();
-        jsonError.put("error", exception);
-    }
+@NoArgsConstructor
+public class NotFoundException extends ClientException {
 
     @Override
     public String getJsonError() {
-        return jsonError.toJSONString();
+        return "{\"error\" : \" Content not found \"}";
     }
 }

@@ -73,4 +73,10 @@ public class ModelConstant {
 
     public static final String ERROR_STATE = "ERROR";
 
+    //cloud automation action type
+
+    public static final String ACTION_TYPE_CREATE = "create";
+
+    public static final String ACTION_TYPE_DELETE = "delete";
+
 }

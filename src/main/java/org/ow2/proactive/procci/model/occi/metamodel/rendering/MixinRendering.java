@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.ow2.proactive.procci.model.exception.ClientException;
+import org.ow2.proactive.procci.model.exception.NotFoundException;
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,7 +89,8 @@ public class MixinRendering {
             return mapper.readValue(mixinRendering, MixinRendering.class);
         } catch (IOException ex) {
             logger.error("IO Exception in MixinRendering :", ex.getMessage());
-            throw new ServerException();
+            logger.error("Unable to convert " + mixinRendering + " into MixinRendering class");
+            throw new NotFoundException();
         }
     }
 
@@ -99,5 +102,18 @@ public class MixinRendering {
             logger.error("IO Exception in MixinRendering :", ex.getMessage());
             throw new ServerException();
         }
+    }
+
+    public static MixinRendering.Builder createMixinRenderingBuilder(MixinRendering mixinRendering) {
+        return MixinRendering.builder()
+                             .scheme(mixinRendering.scheme)
+                             .term(mixinRendering.term)
+                             .title(mixinRendering.title)
+                             .attributes(mixinRendering.attributes)
+                             .actions(mixinRendering.actions)
+                             .depends(mixinRendering.depends)
+                             .applies(mixinRendering.applies)
+                             .location(mixinRendering.location)
+                             .entities(mixinRendering.entities);
     }
 }

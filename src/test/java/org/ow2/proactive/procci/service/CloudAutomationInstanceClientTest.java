@@ -28,7 +28,6 @@ package org.ow2.proactive.procci.service;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.when;
 import static org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelAttributes.ID_NAME;
-import static org.ow2.proactive.procci.service.CloudAutomationInstanceClient.PCA_INSTANCES_ENDPOINT;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +42,8 @@ import org.ow2.proactive.procci.model.InstanceModel;
 import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureAttributes;
+import org.ow2.proactive.procci.model.occi.infrastructure.constants.InfrastructureIdentifiers;
 import org.ow2.proactive.procci.service.transformer.TransformerManager;
 import org.ow2.proactive.procci.service.transformer.TransformerType;
 import org.ow2.proactive.procci.service.transformer.occi.ComputeTransformer;
@@ -60,9 +61,6 @@ public class CloudAutomationInstanceClientTest {
     private TransformerManager transformerManager;
 
     @Mock
-    private CloudAutomationVariablesClient cloudAutomationVariablesClient;
-
-    @Mock
     private ComputeTransformer computeTransformer;
 
     @Before
@@ -78,8 +76,7 @@ public class CloudAutomationInstanceClientTest {
         Model model2 = new Model.Builder("modelT2est", "actionTest").build();
 
         //test for empty database
-        when(requestUtils.getRequest(url)).thenReturn(new JSONObject());
-        when(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT)).thenReturn(url);
+        when(requestUtils.getRequest()).thenReturn(new JSONObject());
 
         List<Model> noModel = cloudAutomationInstanceClient.getModels();
 
@@ -89,7 +86,7 @@ public class CloudAutomationInstanceClientTest {
         JSONObject oneItemJson = new JSONObject();
         oneItemJson.put("id1", model1.getJson());
 
-        when(requestUtils.getRequest(url)).thenReturn(oneItemJson);
+        when(requestUtils.getRequest()).thenReturn(oneItemJson);
 
         List<Model> uniqueModel = cloudAutomationInstanceClient.getModels();
 
@@ -100,7 +97,7 @@ public class CloudAutomationInstanceClientTest {
         twoItemJson.put("id2", model1.getJson());
         twoItemJson.put("id3", model2.getJson());
 
-        when(requestUtils.getRequest(url)).thenReturn(twoItemJson);
+        when(requestUtils.getRequest()).thenReturn(twoItemJson);
 
         List<Model> twoModels = cloudAutomationInstanceClient.getModels();
 
@@ -109,7 +106,6 @@ public class CloudAutomationInstanceClientTest {
 
     @Test
     public void getInstanceByVariablesTest() {
-        String url = "urlTest";
 
         String id1 = "id1";
         String id2 = "id2";
@@ -117,10 +113,8 @@ public class CloudAutomationInstanceClientTest {
         Model model1 = new Model.Builder("model1Test", "actionTest").addVariable(ID_NAME, id1).build();
         Model model2 = new Model.Builder("modelT2est", "actionTest").addVariable(ID_NAME, id2).build();
 
-        when(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT)).thenReturn(url);
-
         //test for empty database
-        when(requestUtils.getRequest(url)).thenReturn(new JSONObject());
+        when(requestUtils.getRequest()).thenReturn(new JSONObject());
 
         Optional<Model> noModel = cloudAutomationInstanceClient.getInstanceByVariable("noKey", "noValue");
 
@@ -129,7 +123,7 @@ public class CloudAutomationInstanceClientTest {
         //test for one item in the database
         JSONObject oneItemJson = new JSONObject();
         oneItemJson.put("id1", model1.getJson());
-        when(requestUtils.getRequest(url)).thenReturn(oneItemJson);
+        when(requestUtils.getRequest()).thenReturn(oneItemJson);
 
         //with the good key and value
         Optional<Model> goodModel = cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME, id1);
@@ -148,7 +142,7 @@ public class CloudAutomationInstanceClientTest {
         twoItemJson.put("id2", model1.getJson());
         twoItemJson.put("id3", model2.getJson());
 
-        when(requestUtils.getRequest(url)).thenReturn(twoItemJson);
+        when(requestUtils.getRequest()).thenReturn(twoItemJson);
 
         Optional<Model> goodModel2 = cloudAutomationInstanceClient.getInstanceByVariable(ID_NAME, id2);
 
@@ -157,19 +151,18 @@ public class CloudAutomationInstanceClientTest {
 
     @Test
     public void getInstanceModelTest() {
-        String url = "urlTest";
         String id1 = "id1";
         String endpointTest = "endpointTest";
 
-        Model model1 = new Model.Builder("model1Test", "actionTest").addVariable(PCA_INSTANCES_ENDPOINT, endpointTest)
+        Model model1 = new Model.Builder("model1Test", "actionTest")
+                                                                    .addVariable(InfrastructureAttributes.HOSTNAME_NAME,
+                                                                                 endpointTest)
                                                                     .addVariable(ID_NAME, id1)
                                                                     .build();
         Compute computeReceive = new ComputeBuilder(model1).build();
 
-        when(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT)).thenReturn(url);
-
         //test for empty database
-        when(requestUtils.getRequest(url)).thenReturn(new JSONObject());
+        when(requestUtils.getRequest()).thenReturn(new JSONObject());
 
         Optional<InstanceModel> emptyModel = cloudAutomationInstanceClient.getInstanceModel("noKey",
                                                                                             "noValue",
@@ -179,7 +172,7 @@ public class CloudAutomationInstanceClientTest {
         //test for one item in the database
         JSONObject oneItemJson = new JSONObject();
         oneItemJson.put("id1", model1.getJson());
-        when(requestUtils.getRequest(url)).thenReturn(oneItemJson);
+        when(requestUtils.getRequest()).thenReturn(oneItemJson);
         when(transformerManager.getTransformerProvider(TransformerType.COMPUTE)).thenReturn(computeTransformer);
         when(computeTransformer.toInstanceModel(model1)).thenReturn(computeReceive);
 
@@ -194,7 +187,6 @@ public class CloudAutomationInstanceClientTest {
 
     @Test
     public void postInstanceModelTest() {
-        String url = "urlTest";
         String id1 = "id1";
         String endpointTest = "endpointTest";
         Compute sendCompute = new ComputeBuilder().url(id1).build();
@@ -204,9 +196,8 @@ public class CloudAutomationInstanceClientTest {
                                                                           .addVariable("endpoint", endpointTest)
                                                                           .build();
 
-        when(requestUtils.getProperty(PCA_INSTANCES_ENDPOINT)).thenReturn(url);
         when(transformerManager.getTransformerProvider(TransformerType.COMPUTE)).thenReturn(computeTransformer);
-        when(requestUtils.postRequest(sendModel.getJson(), url)).thenReturn(receiveModel.getJson());
+        when(requestUtils.postRequest(sendModel.getJson())).thenReturn(receiveModel.getJson());
         when(computeTransformer.toCloudAutomationModel(sendCompute, "create")).thenReturn(sendModel);
         when(computeTransformer.toInstanceModel(receiveModel)).thenReturn(receiveCompute);
 
@@ -220,6 +211,6 @@ public class CloudAutomationInstanceClientTest {
 
         assertThat(computeResult.getHostname().get()).matches(endpointTest);
         assertThat(computeResult).isEqualTo(receiveCompute);
-
     }
+
 }

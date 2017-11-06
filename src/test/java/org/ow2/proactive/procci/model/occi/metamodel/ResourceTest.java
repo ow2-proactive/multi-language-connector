@@ -46,7 +46,6 @@ import org.ow2.proactive.procci.model.occi.infrastructure.Compute;
 import org.ow2.proactive.procci.model.occi.infrastructure.ComputeBuilder;
 import org.ow2.proactive.procci.model.occi.infrastructure.state.ComputeState;
 import org.ow2.proactive.procci.model.occi.metamodel.constants.MetamodelKinds;
-import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
 import org.ow2.proactive.procci.service.occi.MixinService;
 
 
@@ -54,9 +53,6 @@ import org.ow2.proactive.procci.service.occi.MixinService;
  * Created by the Activeeon team  on 2/25/16.
  */
 public class ResourceTest {
-
-    @Mock
-    CloudAutomationVariablesClient cloudAutomationVariablesClient;
 
     @Mock
     private MixinService mixinService;

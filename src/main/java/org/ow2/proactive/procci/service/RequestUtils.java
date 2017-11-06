@@ -27,11 +27,11 @@ package org.ow2.proactive.procci.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -41,12 +41,18 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.ow2.proactive.procci.model.InstanceModel;
+import org.ow2.proactive.procci.model.ModelConstant;
+import org.ow2.proactive.procci.model.cloud.automation.Model;
 import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.CloudAutomationServerException;
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import io.swagger.client.api.ServiceInstanceRestApi;
 
 
 /**
@@ -57,47 +63,35 @@ public class RequestUtils {
 
     private final Logger logger = LoggerFactory.getLogger(RequestUtils.class);
 
-    /**
-     * Send a service to pca service with a header containing the session id and sending content
-     *
-     * @param content is which is send to the cloud automation service
-     * @return the information about gathered from cloud automation service
-     */
-    public JSONObject postRequest(JSONObject content, String url) {
-
-        final String PCA_SERVICE_SESSIONID = "sessionid";
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            HttpPost postRequest = new HttpPost(url);
-            postRequest.addHeader(PCA_SERVICE_SESSIONID, getSessionId());
-            StringEntity input = new StringEntity(content.toJSONString());
-            input.setContentType("application/json");
-            postRequest.setEntity(input);
-
-            HttpResponse response = httpClient.execute(postRequest);
-
-            String serverOutput = readHttpResponse(response, url, "POST " + content.toJSONString());
-            return parseJSON(serverOutput);
-        } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::postRequest ", ex);
-            throw new ServerException();
-        }
-    }
+    @Autowired
+    private ServiceInstanceRestApi serviceInstanceRestApi;
 
     /**
      * Get the deployed instances from Cloud Automation Model
      *
      * @return a json object containing the service results
      */
-    public JSONObject getRequest(String url) {
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-            HttpGet getRequest = new HttpGet(url);
-            HttpResponse response = httpClient.execute(getRequest);
-            String serverOutput = readHttpResponse(response, url, "GET");
-            return parseJSON(serverOutput);
-        } catch (IOException ex) {
-            logger.error(" IO exception in CloudAutomationInstanceClient::getRequest ", ex);
-            throw new ServerException();
-        }
+    public JSONObject getRequest() {
+        return parseJSON(serviceInstanceRestApi.getRunningServiceInstancesUsingGET());
+    }
+
+    /**
+     * Send a service to pca service with a header containing the session id and sending content
+     *
+     * @param content is which is send to the cloud automation service
+     * @return the information about gathered from cloud automation service
+     */
+    public JSONObject postRequest(JSONObject content) {
+        return parseJSON(serviceInstanceRestApi.createRunningServiceInstancesUsingPOST(content.toJSONString(),
+                                                                                       getSessionId()));
+    }
+
+    /**
+     * @param serviceModel the model describing the service
+     */
+    public void deleteRequest(Model serviceModel) {
+        serviceInstanceRestApi.deleteRunningServiceInstancesUsingDELETE(getSessionId(),
+                                                                        serviceModel.getJson().toJSONString());
     }
 
     /**
@@ -210,4 +204,5 @@ public class RequestUtils {
             throw new ServerException();
         }
     }
+
 }

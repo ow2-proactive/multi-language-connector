@@ -37,6 +37,7 @@ import org.ow2.proactive.procci.model.occi.metamodel.Resource;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntitiesRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.EntityRendering;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.ResourceRendering;
+import org.ow2.proactive.procci.model.utils.ConvertUtils;
 import org.ow2.proactive.procci.service.occi.InstanceService;
 import org.ow2.proactive.procci.service.occi.MixinService;
 import org.ow2.proactive.procci.service.transformer.TransformerManager;
@@ -137,4 +138,23 @@ public class ComputeRest {
         }
     }
 
+    //-------------------Delete a Compute--------------------------------------------------------
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResourceRendering> deleteCompute(@PathVariable(value = "id") String computeId) {
+        logger.debug("Deleting Compute " + computeId);
+        logger.info("delete " + computeId);
+        try {
+
+            Resource response = (Resource) instanceService.delete(ConvertUtils.formatURL(computeId),
+                                                                  transformerManager.getTransformerProvider(TransformerType.COMPUTE),
+                                                                  mixinService);
+            return new ResponseEntity<>(response.getRendering(), HttpStatus.OK);
+        } catch (ClientException e) {
+            logger.error(this.getClass().getName(), e);
+            return new ResponseEntity(e.getJsonError(), HttpStatus.BAD_REQUEST);
+        } catch (ServerException e) {
+            logger.error(this.getClass().getName(), e);
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

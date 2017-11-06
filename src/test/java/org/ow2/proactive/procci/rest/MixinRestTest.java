@@ -40,7 +40,6 @@ import org.ow2.proactive.procci.model.exception.CloudAutomationClientException;
 import org.ow2.proactive.procci.model.exception.ServerException;
 import org.ow2.proactive.procci.model.occi.metamodel.MixinBuilder;
 import org.ow2.proactive.procci.model.occi.metamodel.rendering.MixinRendering;
-import org.ow2.proactive.procci.service.CloudAutomationVariablesClient;
 import org.ow2.proactive.procci.service.occi.MixinService;
 import org.springframework.http.ResponseEntity;
 
@@ -52,9 +51,6 @@ public class MixinRestTest {
 
     @InjectMocks
     private MixinRest mixinRest;
-
-    @Mock
-    private CloudAutomationVariablesClient cloudAutomationVariables;
 
     @Mock
     private MixinService mixinService;
